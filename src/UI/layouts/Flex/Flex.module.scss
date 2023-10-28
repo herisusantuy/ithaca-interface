@@ -1,0 +1,57 @@
+.flex {
+	display: flex;
+	position: relative;
+	width: 100%;
+}
+
+.flex--row {
+	flex-direction: row;
+
+	@include breakpoint(tablet) {
+		flex-direction: column;
+	}
+}
+
+.flex--row-center {
+	flex-direction: row;
+	align-items: center;
+}
+
+.flex--row-wrap {
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	@include breakpoint(tablet) {
+		flex-direction: column;
+	}
+}
+
+.flex--row-wrap-center {
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+
+	@include breakpoint(tablet) {
+		flex-direction: column;
+	}
+}
+
+.flex--column {
+	flex-direction: column;
+}
+
+.flex--row-space-between {
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.flex--row-start-space-between {
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+
+	@include breakpoint(tablet) {
+		flex-direction: column;
+	}
+}

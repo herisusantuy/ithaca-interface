@@ -1,0 +1,34 @@
+.header {
+	@include spacing(padding, 16, 'top+bottom');
+	background: var(--gray-rgba);
+	backdrop-filter: blur(px-to-rem(12));
+	width: 100%;
+}
+
+.container {
+	@include spacing(padding, 40, 'left+right');
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	max-width: map-get($container-sizes, xl);
+	margin: 0 auto;
+
+	@include breakpoint(tablet) {
+		@include spacing(padding, 24, 'left+right');
+	}
+}
+
+.left,
+.right {
+	display: flex;
+	align-items: center;
+}
+
+.left {
+	gap: px-to-rem(48);
+}
+
+.right {
+	gap: px-to-rem(12);
+}
