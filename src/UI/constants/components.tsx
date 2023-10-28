@@ -11,41 +11,64 @@ const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
 	ssr: false,
 });
 
-const COMPONENTS_BASE = [
+const COMPONENT_GROUPS = [
 	{
-		name: 'Button',
-		component: (
-			<Button title='Click to perform action' onClick={() => {}}>
-				Button
-			</Button>
-		),
+		groupName: 'Controls',
+		components: [
+			{
+				name: 'Button',
+				component: (
+					<Button title='Click to perform action' onClick={() => {}}>
+						Button
+					</Button>
+				),
+			},
+			{
+				name: 'Hamburger',
+				component: <Hamburger onClick={() => {}} isActive={false} className='display-inline-flex' />,
+			},
+		],
 	},
 	{
-		name: 'Hamburger',
-		component: <Hamburger onClick={() => {}} isActive={false} className='display-inline-flex' />,
+		groupName: 'Loaders',
+		components: [
+			{
+				name: 'Loader',
+				component: <Loader />,
+			},
+		],
 	},
 	{
-		name: 'Loader',
-		component: <Loader />,
+		groupName: 'Modals',
+		components: [
+			{
+				name: 'Modal',
+				component: (
+					<Modal title='Modal' isOpen={false} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
+						Test
+					</Modal>
+				),
+			},
+		],
 	},
 	{
-		name: 'Modal',
-		component: (
-			<Modal title='Modal' isOpen={false} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
-				Test
-			</Modal>
-		),
-	},
-	{
-		name: 'Navigation',
-		component: <Navigation />,
+		groupName: 'Navigation',
+		components: [
+			{
+				name: 'Navigation',
+				component: <Navigation />,
+			},
+		],
 	},
 ];
 
 export const COMPONENTS_LIST = (componentCodes: { [key: string]: { tsx: string; scss: string | null } }) => {
-	return COMPONENTS_BASE.map(comp => ({
-		...comp,
-		code: componentCodes[comp.name]?.tsx,
-		scssCode: componentCodes[comp.name]?.scss,
+	return COMPONENT_GROUPS.map(group => ({
+		groupName: group.groupName,
+		components: group.components.map(comp => ({
+			...comp,
+			code: componentCodes[comp.name].tsx,
+			scssCode: componentCodes[comp.name].scss,
+		})),
 	}));
 };

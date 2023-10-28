@@ -17,27 +17,27 @@ import ComponentLayout from '@/UI/layouts/ComponentsLayout/ComponentsLayout';
 
 // Types
 type ComponentProps = {
-	componentCodes: {
-		[key: string]: {
-			tsx: string;
-			scss: string | null;
-		};
-	};
+	componentCodes: Record<string, { tsx: string; scss: string | null }>;
 };
 
 const Components = ({ componentCodes }: ComponentProps) => {
-	const [activeComponent, setActiveComponent] = useState<number>(0);
+	const initialActiveComponent = { groupIndex: 0, componentIndex: 0 };
 
+	const [activeComponent, setActiveComponent] = useState<{ groupIndex: number; componentIndex: number } | null>(initialActiveComponent);
 	const updatedComponentsList = COMPONENTS_LIST(componentCodes);
 
-	// Sidebar items
-	const sidebarElements = updatedComponentsList.map((comp, index) => (
-		<Button title='Click to view component' key={index} onClick={() => setActiveComponent(index)} variant='tertiary'>
-			{comp.name}
-		</Button>
+	const sidebarElements = updatedComponentsList.map((group, groupIndex) => (
+		<div key={group.groupName}>
+			<h3>{group.groupName}</h3>
+			{group.components.map((comp, compIndex) => (
+				<Button title='Click to view component' key={comp.name} onClick={() => setActiveComponent({ groupIndex, componentIndex: compIndex })} variant='tertiary'>
+					{comp.name}
+				</Button>
+			))}
+		</div>
 	));
 
-	const selectedComponentItem = activeComponent !== null ? updatedComponentsList[activeComponent] : null;
+	const selectedComponentItem = activeComponent ? updatedComponentsList[activeComponent.groupIndex].components[activeComponent.componentIndex] : null;
 
 	return (
 		<>
