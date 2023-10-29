@@ -69,6 +69,8 @@ export const COMPONENTS_LIST = (componentCodes: { [key: string]: { tsx: string; 
 			...comp,
 			code: componentCodes[comp.name].tsx,
 			scssCode: componentCodes[comp.name].scss,
+			tsxFileName: `${comp.name}.tsx`,
+			scssFileName: componentCodes[comp.name].scss ? `${comp.name}.module.scss` : null,
 		})),
 	}));
 };

@@ -32,3 +32,27 @@
 .component {
 	@include spacing(margin, 40, 'top+bottom');
 }
+
+.codeBlock {
+	position: relative;
+	margin: 20px 0;
+
+	.titleBar {
+		@include font-size('text-sm', 'bold');
+		@include spacing(padding, 12, 'all');
+		display: flex;
+		justify-content: space-between;
+		background-color: #24292e;
+		color: var(--white);
+		border-top-left-radius: px-to-rem(8);
+		border-top-right-radius: px-to-rem(8);
+	}
+
+	pre {
+		margin: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		border-bottom-left-radius: px-to-rem(8);
+		border-bottom-right-radius: px-to-rem(8);
+	}
+}

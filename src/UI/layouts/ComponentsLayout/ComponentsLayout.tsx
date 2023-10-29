@@ -11,6 +11,8 @@ type ComponentItem = {
 	component: JSX.Element;
 	code: string;
 	scssCode: string | null;
+	tsxFileName: string;
+	scssFileName: string | null;
 };
 
 type ComponentLayoutProps = {
@@ -30,13 +32,19 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
 				{selectedComponent && (
 					<>
 						<div className={styles.component}>{selectedComponent.component}</div>
-						<pre>
-							<code className='language-javascript'>{selectedComponent.code}</code>
-						</pre>
-						{selectedComponent.scssCode && (
+						<div className={styles.codeBlock}>
+							<div className={styles.titleBar}>{selectedComponent.tsxFileName}</div>
 							<pre>
-								<code className='language-css'>{selectedComponent.scssCode}</code>
+								<code className='language-javascript'>{selectedComponent.code}</code>
 							</pre>
+						</div>
+						{selectedComponent.scssCode && (
+							<div className={styles.codeBlock}>
+								<div className={styles.titleBar}>{selectedComponent.scssFileName}</div>
+								<pre>
+									<code className='language-css'>{selectedComponent.scssCode}</code>
+								</pre>
+							</div>
 						)}
 					</>
 				)}

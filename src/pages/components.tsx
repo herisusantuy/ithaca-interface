@@ -12,7 +12,6 @@ import Button from '@/UI/components/Button/Button';
 
 // Layout
 import Main from '@/UI/layouts/Main/Main';
-import Container from '@/UI/layouts/Container/Container';
 import ComponentLayout from '@/UI/layouts/ComponentsLayout/ComponentsLayout';
 
 // Types
@@ -51,41 +50,27 @@ const Components = ({ componentCodes }: ComponentProps) => {
 
 export default Components;
 
+type ComponentCode = {
+	tsx: string;
+	scss: string | null;
+};
+
+type ComponentCodes = {
+	[key: string]: ComponentCode;
+};
+
 export const getStaticProps = async () => {
-	const componentPaths = {
-		Button: {
-			tsx: 'src/UI/components/Button/Button.tsx',
-			scss: 'src/UI/components/Button/Button.module.scss',
-		},
-		Hamburger: {
-			tsx: 'src/UI/components/Hamburger/Hamburger.tsx',
-			scss: 'src/UI/components/Hamburger/Hamburger.module.scss',
-		},
-		Loader: {
-			tsx: 'src/UI/components/Loader/Loader.tsx',
-			scss: 'src/UI/components/Loader/Loader.module.scss',
-		},
-		Modal: {
-			tsx: 'src/UI/components/Modal/Modal.tsx',
-			scss: 'src/UI/components/Modal/Modal.module.scss',
-		},
-		Navigation: {
-			tsx: 'src/UI/components/Navigation/Navigation.tsx',
-			scss: 'src/UI/components/Navigation/Navigation.module.scss',
-		},
-	};
+	const components = ['Button', 'Hamburger', 'Loader', 'Modal', 'Navigation'];
 
-	let componentCodes: {
-		[key: string]: {
-			tsx: string;
-			scss: string | null;
-		};
-	} = {};
+	let componentCodes: ComponentCodes = {};
 
-	for (const [componentName, { tsx, scss }] of Object.entries(componentPaths)) {
+	for (const componentName of components) {
+		const tsxPath = `src/UI/components/${componentName}/${componentName}.tsx`;
+		const scssPath = `src/UI/components/${componentName}/${componentName}.module.scss`;
+
 		componentCodes[componentName] = {
-			tsx: fs.readFileSync(path.join(process.cwd(), tsx), 'utf-8'),
-			scss: fs.existsSync(path.join(process.cwd(), scss)) ? fs.readFileSync(path.join(process.cwd(), scss), 'utf-8') : null,
+			tsx: fs.readFileSync(path.join(process.cwd(), tsxPath), 'utf-8'),
+			scss: fs.existsSync(path.join(process.cwd(), scssPath)) ? fs.readFileSync(path.join(process.cwd(), scssPath), 'utf-8') : null,
 		};
 	}
 
