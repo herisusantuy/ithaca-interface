@@ -6,17 +6,29 @@
 }
 
 .sidebar {
+	@include spacing(padding, 40, 'left+right');
 	display: flex;
 	flex-direction: column;
-	flex: 0 0 20%;
-	overflow: auto;
+	width: 20%;
+	position: fixed;
+	height: 100vh;
+	overflow-y: auto;
+	background: var(--gray-rgba);
+	backdrop-filter: blur(px-to-rem(12));
+
+	h3 {
+		@include font-size('text-sm', 'bold');
+		color: var(--white);
+	}
 }
 
 .main {
+	@include spacing(padding, 40, 'left+right');
 	flex: 1;
-	overflow: auto;
+	margin-left: 20%;
+	max-width: 80%;
 }
 
 .component {
-	margin-bottom: 20px;
+	@include spacing(margin, 40, 'top+bottom');
 }

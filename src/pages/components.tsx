@@ -43,9 +43,7 @@ const Components = ({ componentCodes }: ComponentProps) => {
 		<>
 			<Meta />
 			<Main>
-				<Container>
-					<ComponentLayout sidebarContent={sidebarElements} selectedComponent={selectedComponentItem} />
-				</Container>
+				<ComponentLayout sidebarContent={sidebarElements} selectedComponent={selectedComponentItem} />
 			</Main>
 		</>
 	);

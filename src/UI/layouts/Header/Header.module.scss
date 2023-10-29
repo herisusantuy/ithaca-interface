@@ -3,6 +3,11 @@
 	background: var(--gray-rgba);
 	backdrop-filter: blur(px-to-rem(12));
 	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
 }
 
 .container {
