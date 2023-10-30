@@ -1,0 +1,10 @@
+.asset {
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(8);
+}
+
+.label {
+  @include font-size('text-lg', 'regular');
+  color: var(--white);
+}

@@ -1,13 +1,20 @@
+// Packages
+import { ReactNode } from 'react';
+
 // Styles
 import styles from './Asset.module.scss';
 
 // Types
-type AssetProps = {};
+type AssetProps = {
+  icon: ReactNode;
+  label: string;
+};
 
-const Asset = ({}: AssetProps) => {
+const Asset = ({ icon, label }: AssetProps) => {
   return (
     <div className={styles.asset}>
-      <p>Asset</p>
+      {icon}
+      <p className={styles.label}>{label}</p>
     </div>
   );
 };

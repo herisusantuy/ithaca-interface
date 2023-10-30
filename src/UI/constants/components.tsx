@@ -17,6 +17,7 @@ import Tabs from '@/UI/components/Tabs/Tabs';
 import Toggle from '@/UI/components/Toggle/Toggle';
 import ChevronDown from '@/UI/components/Icons/ChevronDown';
 import ChevronUp from '@/UI/components/Icons/ChevronUp';
+import LogoEth from '@/UI/components/Icons/LogoEth';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -34,8 +35,8 @@ const COMPONENT_GROUPS = [
     components: [
       {
         name: 'Asset',
-        component: <Asset />,
-        status: 'In Progress',
+        component: <Asset icon={<LogoEth />} label='ETH' />,
+        status: 'Done',
       },
       {
         name: 'Button',
