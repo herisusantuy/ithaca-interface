@@ -1,0 +1,12 @@
+.buttons {
+  @include spacing(margin, 24, 'bottom');
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(24);
+}
+
+.isActive {
+  @include font-size('text-md', 'semibold');
+  color: var(--white);
+  border-color: var(--purple);
+}

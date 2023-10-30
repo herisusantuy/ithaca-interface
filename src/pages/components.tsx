@@ -1,7 +1,7 @@
 // Packages
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
 
@@ -47,6 +47,7 @@ const Components = ({ componentCodes }: ComponentProps) => {
     return activeGroups.includes(groupIndex);
   };
 
+  // Render chevron icon
   const renderIcon = (gIndex: number) => {
     return isActiveGroup(gIndex) ? <ChevronUp /> : <ChevronDown />;
   };
@@ -67,7 +68,7 @@ const Components = ({ componentCodes }: ComponentProps) => {
   };
 
   const sidebarElements = updatedComponentsList.map((group, groupIndex) => (
-    <>
+    <Fragment key={groupIndex}>
       <Button
         title='Click to expand component group'
         variant='dropdown'
@@ -103,7 +104,7 @@ const Components = ({ componentCodes }: ComponentProps) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </Fragment>
   ));
 
   const selectedComponentItem = activeComponent

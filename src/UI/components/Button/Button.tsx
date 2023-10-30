@@ -13,7 +13,7 @@ type ButtonProps = {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   title: string;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'icon' | 'dropdown' | 'link';
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'icon' | 'dropdown' | 'link' | 'tab';
   disabled?: any;
 };
 

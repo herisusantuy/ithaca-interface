@@ -25,6 +25,9 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Header from '@/UI/layouts/Header/Header';
 import Main from '@/UI/layouts/Main/Main';
 
+// Constants
+import { TABS } from './tabs';
+
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
 });
@@ -64,8 +67,8 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Tabs',
-        component: <Tabs />,
-        status: 'In Progress',
+        component: <Tabs tabs={TABS} />,
+        status: 'Done',
       },
       {
         name: 'Toggle',
@@ -159,6 +162,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChevronUp',
         component: <ChevronUp />,
+        status: 'Done',
+      },
+      {
+        name: 'LogoEth',
+        component: <LogoEth />,
         status: 'Done',
       },
     ],
