@@ -1,4 +1,6 @@
 .btn {
+  @include font-size('text-sm', 'bold');
+  transition: $transition_all;
   display: inline-flex;
   appearance: none;
   align-items: center;
@@ -41,6 +43,7 @@
 
 .btn[disabled],
 .btn[disabled]:hover {
+  border-radius: px-to-rem(16);
   cursor: not-allowed;
   background: var(--gray-800);
   color: var(--gray-400);
@@ -48,13 +51,12 @@
 
 // Variants
 .btn--primary {
-  @include font-size('text-sm', 'bold');
+  border-radius: px-to-rem(16);
   background: var(--green);
-  border-radius: px-to-rem(8);
 }
 
 .btn--tertiary {
-  @include font-size('text-sm', 'bold');
+  border-radius: px-to-rem(16);
   color: var(--white);
   background: #1c2028;
   border-bottom: px-to-rem(1) solid var(--gray-800);
@@ -63,4 +65,41 @@
 .btn--icon {
   background: none;
   padding: 0;
+}
+
+.btn--dropdown {
+  background: var(--purple-rgba);
+  color: var(--white);
+  border: px-to-rem(1) solid var(--purple);
+  border-bottom: 0;
+  justify-content: space-between;
+
+  &:last-child {
+    border-bottom: px-to-rem(1) solid var(--purple);
+  }
+
+  &:hover {
+    background: var(--purple);
+  }
+}
+
+.btn--link {
+  @include font-size('text-sm', 'regular');
+  background: none;
+  color: var(--gray-300);
+  justify-content: flex-start;
+
+  &:hover {
+    background: var(--gray-950);
+    color: var(--gray-100);
+  }
+}
+
+.btn--tab {
+  @include spacing(padding, 8, 'bottom');
+  @include font-size('text-md', 'regular');
+  background: none;
+  padding: 0;
+  border-bottom: px-to-rem(1) solid transparent;
+  color: var(--gray-400);
 }

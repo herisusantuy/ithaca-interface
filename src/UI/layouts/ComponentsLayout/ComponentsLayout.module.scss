@@ -6,15 +6,15 @@
 }
 
 .sidebar {
-  @include spacing(padding, 40, 'all');
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 15%;
   position: fixed;
   height: 100vh;
   overflow-y: auto;
   background: var(--gray-rgba);
   backdrop-filter: blur(px-to-rem(12));
+  border-right: px-to-rem(1) solid var(--gray-800);
 
   h3 {
     @include font-size('text-sm', 'bold');
@@ -25,8 +25,10 @@
 .main {
   @include spacing(padding, 40, 'all');
   flex: 1;
-  margin-left: 20%;
-  max-width: 80%;
+  margin: 0 auto;
+  // max-width: 90%;
+  color: var(--white);
+  max-width: map-get($container-sizes, md);
 }
 
 .component {
@@ -62,4 +64,34 @@
   align-items: center;
   justify-content: space-between;
   color: var(--white);
+
+  span {
+    @include font-size('text-sm', 'bold');
+    display: flex;
+    align-items: center;
+    gap: px-to-rem(8);
+  }
+}
+
+.badge {
+  @include font-size('text-sm', 'bold');
+  @include spacing(padding, 4, 'top+bottom');
+  @include spacing(padding, 8, 'left+right');
+  border-radius: px-to-rem(8);
+  border: px-to-rem(1) solid;
+}
+
+.yellow {
+  background-color: var(--yellow-rgba);
+  border-color: var(--yellow);
+}
+
+.green {
+  background-color: var(--green-rgba);
+  border-color: var(--green);
+}
+
+.red {
+  background-color: var(--red-rgba);
+  border-color: var(--red);
 }
