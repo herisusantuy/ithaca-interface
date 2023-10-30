@@ -69,8 +69,8 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Toggle',
-        component: <Toggle />,
-        status: 'In Progress',
+        component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
+        status: 'Done',
       },
     ],
   },

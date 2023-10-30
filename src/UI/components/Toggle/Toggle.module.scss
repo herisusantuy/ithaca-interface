@@ -1,0 +1,41 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(10);
+  width: px-to-rem(112);
+  cursor: pointer;
+  user-select: none;
+
+  p {
+    @include font-size('text-xs', 'regular');
+    color: var(--gray-400);
+    transition: $transition_all;
+
+    &.isActive {
+      color: var(--white);
+    }
+  }
+
+  .switch {
+    width: px-to-rem(44);
+    height: px-to-rem(26);
+    background-color: var(--gray-500);
+    border-radius: px-to-rem(25);
+    position: relative;
+
+    div {
+      width: px-to-rem(18);
+      height: px-to-rem(18);
+      background-color: var(--white);
+      border-radius: 50%;
+      position: absolute;
+      top: px-to-rem(4);
+      left: px-to-rem(4);
+      transition: $transition_all;
+
+      &.slide {
+        transform: translateX(100%);
+      }
+    }
+  }
+}
