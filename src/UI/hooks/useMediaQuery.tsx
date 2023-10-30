@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 const useMediaQuery = (width: number) => {
   const [breakpoint, setBreakpoint] = useState(false);
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const updateBreakpoint = useCallback((e: any) => {
     if (e.matches) {
       setBreakpoint(true);

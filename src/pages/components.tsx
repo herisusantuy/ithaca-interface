@@ -76,7 +76,7 @@ type ComponentCodes = {
 export const getStaticProps = async () => {
   const components = ['Button', 'Hamburger', 'Loader', 'Modal', 'Navigation'];
 
-  let componentCodes: ComponentCodes = {};
+  const componentCodes: ComponentCodes = {};
 
   for (const componentName of components) {
     const tsxPath = `src/UI/components/${componentName}/${componentName}.tsx`;
