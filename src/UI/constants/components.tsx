@@ -15,6 +15,8 @@ import Navigation from '@/UI/components/Navigation/Navigation';
 import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Tabs from '@/UI/components/Tabs/Tabs';
 import Toggle from '@/UI/components/Toggle/Toggle';
+import ChevronDown from '@/UI/components/Icons/ChevronDown';
+import ChevronUp from '@/UI/components/Icons/ChevronUp';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -146,6 +148,16 @@ const COMPONENT_GROUPS = [
       {
         name: 'Close',
         component: <Close />,
+        status: 'Done',
+      },
+      {
+        name: 'ChevronDown',
+        component: <ChevronDown />,
+        status: 'Done',
+      },
+      {
+        name: 'ChevronUp',
+        component: <ChevronUp />,
         status: 'Done',
       },
     ],
