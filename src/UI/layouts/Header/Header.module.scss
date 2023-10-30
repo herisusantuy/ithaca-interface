@@ -37,3 +37,9 @@
 .right {
   gap: px-to-rem(12);
 }
+
+.headerComponents {
+  & div:first-child {
+    max-width: none;
+  }
+}

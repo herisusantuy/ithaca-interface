@@ -1,6 +1,7 @@
 // Packages
 import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useRouter } from 'next/router';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
@@ -20,14 +21,23 @@ import styles from './Header.module.scss';
 const Header = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+  const router = useRouter();
 
   const handleHamburgerClick = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
     document.body.classList.toggle('is-active');
   };
 
+  const getHeaderClassName = () => {
+    let className = styles.header;
+    if (router.pathname === '/components') {
+      className += ` ${styles.headerComponents}`;
+    }
+    return className;
+  };
+
   return (
-    <header className={styles.header}>
+    <header className={getHeaderClassName()}>
       <div className={styles.container}>
         <div className={styles.left}>
           <Logo />
