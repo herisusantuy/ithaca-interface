@@ -22,10 +22,12 @@ const COMPONENT_GROUPS = [
             Button
           </Button>
         ),
+        status: 'In Progress',
       },
       {
         name: 'Hamburger',
         component: <Hamburger onClick={() => {}} isActive={false} className='display-inline-flex' />,
+        status: 'In Progress',
       },
     ],
   },
@@ -35,6 +37,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Loader',
         component: <Loader />,
+        status: 'In Progress',
       },
     ],
   },
@@ -48,6 +51,7 @@ const COMPONENT_GROUPS = [
             Test
           </Modal>
         ),
+        status: 'In Progress',
       },
     ],
   },
@@ -57,12 +61,15 @@ const COMPONENT_GROUPS = [
       {
         name: 'Navigation',
         component: <Navigation />,
+        status: 'In Progress',
       },
     ],
   },
 ];
 
-export const COMPONENTS_LIST = (componentCodes: { [key: string]: { tsx: string; scss: string | null } }) => {
+export const COMPONENTS_LIST = (componentCodes: {
+  [key: string]: { tsx: string; scss: string | null; lastUpdated: string };
+}) => {
   return COMPONENT_GROUPS.map(group => ({
     groupName: group.groupName,
     components: group.components.map(comp => ({
@@ -71,6 +78,8 @@ export const COMPONENTS_LIST = (componentCodes: { [key: string]: { tsx: string; 
       scssCode: componentCodes[comp.name].scss,
       tsxFileName: `${comp.name}.tsx`,
       scssFileName: componentCodes[comp.name].scss ? `${comp.name}.module.scss` : null,
+      status: comp.status || 'Not Started',
+      lastUpdated: componentCodes[comp.name].lastUpdated,
     })),
   }));
 };

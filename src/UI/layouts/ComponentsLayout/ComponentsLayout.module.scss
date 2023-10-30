@@ -56,3 +56,10 @@
     border-bottom-right-radius: px-to-rem(8);
   }
 }
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--white);
+}

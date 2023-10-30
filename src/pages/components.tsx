@@ -1,4 +1,5 @@
 // Packages
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import fs from 'fs';
 import path from 'path';
@@ -12,11 +13,14 @@ import Button from '@/UI/components/Button/Button';
 
 // Layout
 import Main from '@/UI/layouts/Main/Main';
-import ComponentLayout from '@/UI/layouts/ComponentsLayout/ComponentsLayout';
+
+const ComponentLayout = dynamic(() => import('@/UI/layouts/ComponentsLayout/ComponentsLayout'), {
+  ssr: false,
+});
 
 // Types
 type ComponentProps = {
-  componentCodes: Record<string, { tsx: string; scss: string | null }>;
+  componentCodes: ComponentCodes;
 };
 
 const Components = ({ componentCodes }: ComponentProps) => {
@@ -62,6 +66,7 @@ export default Components;
 type ComponentCode = {
   tsx: string;
   scss: string | null;
+  lastUpdated: string;
 };
 
 type ComponentCodes = {
@@ -77,11 +82,15 @@ export const getStaticProps = async () => {
     const tsxPath = `src/UI/components/${componentName}/${componentName}.tsx`;
     const scssPath = `src/UI/components/${componentName}/${componentName}.module.scss`;
 
+    const tsxStats = fs.statSync(path.join(process.cwd(), tsxPath));
+    const lastUpdated = tsxStats.mtime.toISOString();
+
     componentCodes[componentName] = {
       tsx: fs.readFileSync(path.join(process.cwd(), tsxPath), 'utf-8'),
       scss: fs.existsSync(path.join(process.cwd(), scssPath))
         ? fs.readFileSync(path.join(process.cwd(), scssPath), 'utf-8')
         : null,
+      lastUpdated,
     };
   }
 

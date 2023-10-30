@@ -13,6 +13,8 @@ type ComponentItem = {
   scssCode: string | null;
   tsxFileName: string;
   scssFileName: string | null;
+  status: string;
+  lastUpdated: string;
 };
 
 type ComponentLayoutProps = {
@@ -31,6 +33,10 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
       <div className={styles.main}>
         {selectedComponent && (
           <>
+            <div className={styles.info}>
+              <span>Status: {selectedComponent.status}</span>
+              <span>Last Updated: {new Date(selectedComponent.lastUpdated).toLocaleString()}</span>
+            </div>
             <div className={styles.component}>{selectedComponent.component}</div>
             <div className={styles.codeBlock}>
               <div className={styles.titleBar}>{selectedComponent.tsxFileName}</div>
