@@ -28,11 +28,18 @@ const Button = ({
   variant = 'primary',
   disabled,
 }: ButtonProps) => {
+  // Get button classes based on size and variant props
+  const getButtonClass = () => {
+    let classList = [styles.btn, styles[`btn--${size}`], styles[`btn--${variant}`]];
+    if (className) classList.push(className);
+    return classList.join(' ');
+  };
+
   return (
     <button
       role={role}
       type={type}
-      className={`${styles.btn} ${styles[`btn--${size}`]} ${styles[`btn--${variant}`]} ${className ? className : ''}`}
+      className={getButtonClass()}
       onClick={onClick}
       title={title}
       aria-label={title}
