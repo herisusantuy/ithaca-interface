@@ -30,7 +30,7 @@ const Button = ({
 }: ButtonProps) => {
   // Get button classes based on size and variant props
   const getButtonClass = () => {
-    let classList = [styles.btn, styles[`btn--${size}`], styles[`btn--${variant}`]];
+    const classList = [styles.btn, styles[`btn--${size}`], styles[`btn--${variant}`]];
     if (className) classList.push(className);
     return classList.join(' ');
   };
