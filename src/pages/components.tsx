@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Constants
-import { COMPONENTS_LIST } from '@/UI/constants/components';
+import { COMPONENTS_LIST, GET_COMPONENT_NAMES } from '@/UI/constants/components';
 
 // Components
 import Meta from '@/UI/components/Meta/Meta';
@@ -74,21 +74,47 @@ type ComponentCodes = {
 };
 
 export const getStaticProps = async () => {
-  const components = ['Button', 'Hamburger', 'Loader', 'Modal', 'Navigation'];
+  const components = GET_COMPONENT_NAMES();
 
   let componentCodes: ComponentCodes = {};
 
-  for (const componentName of components) {
-    const tsxPath = `src/UI/components/${componentName}/${componentName}.tsx`;
-    const scssPath = `src/UI/components/${componentName}/${componentName}.module.scss`;
+  const iconsDir = 'src/UI/components/Icons';
+  const layoutsDir = 'src/UI/layouts';
 
-    const tsxStats = fs.statSync(path.join(process.cwd(), tsxPath));
+  const getFilePaths = (dir: string, componentName: string) => {
+    if (dir === iconsDir) {
+      return {
+        tsx: `${dir}/${componentName}.tsx`,
+        scss: `${dir}/${componentName}.module.scss`,
+      };
+    }
+    return {
+      tsx: `${dir}/${componentName}/${componentName}.tsx`,
+      scss: `${dir}/${componentName}/${componentName}.module.scss`,
+    };
+  };
+
+  const iconFiles = fs.readdirSync(path.join(process.cwd(), iconsDir));
+  const iconNames = iconFiles.map(file => path.basename(file, '.tsx'));
+
+  for (const componentName of components) {
+    let paths;
+
+    if (iconNames.includes(componentName)) {
+      paths = getFilePaths(iconsDir, componentName);
+    } else if (fs.existsSync(path.join(process.cwd(), layoutsDir, componentName))) {
+      paths = getFilePaths(layoutsDir, componentName);
+    } else {
+      paths = getFilePaths('src/UI/components', componentName);
+    }
+
+    const tsxStats = fs.statSync(path.join(process.cwd(), paths.tsx));
     const lastUpdated = tsxStats.mtime.toISOString();
 
     componentCodes[componentName] = {
-      tsx: fs.readFileSync(path.join(process.cwd(), tsxPath), 'utf-8'),
-      scss: fs.existsSync(path.join(process.cwd(), scssPath))
-        ? fs.readFileSync(path.join(process.cwd(), scssPath), 'utf-8')
+      tsx: fs.readFileSync(path.join(process.cwd(), paths.tsx), 'utf-8'),
+      scss: fs.existsSync(path.join(process.cwd(), paths.scss))
+        ? fs.readFileSync(path.join(process.cwd(), paths.scss), 'utf-8')
         : null,
       lastUpdated,
     };
