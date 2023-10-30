@@ -27,6 +27,19 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
     Prism.highlightAll();
   }, [selectedComponent]);
 
+  const getBadgeColor = (status: string) => {
+    switch (status) {
+      case 'In Progress':
+        return styles.yellow;
+      case 'Done':
+        return styles.green;
+      case 'Blocked':
+        return styles.red;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>{sidebarContent}</div>
@@ -34,8 +47,15 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
         {selectedComponent && (
           <>
             <div className={styles.info}>
-              <span>Status: {selectedComponent.status}</span>
-              <span>Last Updated: {new Date(selectedComponent.lastUpdated).toLocaleString()}</span>
+              <span>
+                Status:{' '}
+                <span className={`${styles.badge} ${getBadgeColor(selectedComponent.status)}`}>
+                  {selectedComponent.status}
+                </span>
+              </span>
+              <span>
+                Last Updated: <span>{new Date(selectedComponent.lastUpdated).toLocaleString()}</span>
+              </span>
             </div>
             <div className={styles.component}>{selectedComponent.component}</div>
             <div className={styles.codeBlock}>

@@ -1,3 +1,19 @@
 .display-inline-flex {
   display: inline-flex !important;
 }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.isDropdownActive {
+  background: var(--purple);
+}
+
+.isLinkActive {
+  @include font-size('text-sm', 'bold');
+  background: var(--gray-950);
+  color: var(--gray-100);
+  cursor: default;
+}
