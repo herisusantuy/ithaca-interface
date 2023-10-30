@@ -14,7 +14,7 @@ type ButtonProps = {
   title: string;
   type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'tertiary' | 'icon' | 'dropdown' | 'link' | 'tab';
-  disabled?: any;
+  disabled?: boolean;
 };
 
 const Button = ({

@@ -74,7 +74,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
       onClick={() => onCloseModal()}
     >
       <motion.div
-        onClick={(e: any) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent<Element, Event>) => e.stopPropagation()}
         className={styles.modal}
         variants={animatedModal}
         initial='hidden'

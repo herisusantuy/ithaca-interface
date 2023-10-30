@@ -136,7 +136,7 @@ type ComponentCodes = {
 export const getStaticProps = async () => {
   const components = GET_COMPONENT_NAMES();
 
-  let componentCodes: ComponentCodes = {};
+  const componentCodes: ComponentCodes = {};
 
   const iconsDir = 'src/UI/components/Icons';
   const layoutsDir = 'src/UI/layouts';
