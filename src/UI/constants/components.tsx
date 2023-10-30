@@ -174,7 +174,7 @@ const COMPONENT_GROUPS = [
 ];
 
 export const GET_COMPONENT_NAMES = (): string[] => {
-  let componentNames: string[] = [];
+  const componentNames: string[] = [];
   COMPONENT_GROUPS.forEach(group => {
     group.components.forEach(comp => {
       componentNames.push(comp.name);

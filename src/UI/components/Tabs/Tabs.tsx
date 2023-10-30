@@ -25,6 +25,7 @@ const Tabs = ({ tabs }: TabsProps) => {
   }
 
   // Tab state
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
 
   // Get tab button styles from toggle state

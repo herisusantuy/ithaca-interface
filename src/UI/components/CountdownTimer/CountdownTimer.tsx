@@ -1,10 +1,7 @@
 // Styles
 import styles from './CountdownTimer.module.scss';
 
-// Types
-type CountdownProps = {};
-
-const CountdownTimer = ({}: CountdownProps) => {
+const CountdownTimer = () => {
   return (
     <div className={styles.countdownTimer}>
       <p>Countdown Timer</p>
