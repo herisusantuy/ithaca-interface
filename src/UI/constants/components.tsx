@@ -18,6 +18,8 @@ import Toggle from '@/UI/components/Toggle/Toggle';
 import ChevronDown from '@/UI/components/Icons/ChevronDown';
 import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
+import Plus from '@/UI/components/Icons/Plus';
+import Bookmark from '@/UI/components/Icons/Bookmark';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -44,11 +46,23 @@ const COMPONENT_GROUPS = [
       {
         name: 'Button',
         component: (
-          <Button title='Click to perform action' onClick={() => {}}>
-            Button
-          </Button>
+          <Flex direction='row-space-around'>
+            <Button title='Click to perform action' onClick={() => {}}>
+              Primary
+            </Button>
+            <Button title='Click to perform action' variant='secondary' onClick={() => {}}>
+              <Plus /> Secondary
+            </Button>
+            <Button title='Click to perform action' variant='tertiary' onClick={() => {}}>
+              <Bookmark />
+              Tertiary
+            </Button>
+            <Button title='Click to perform action' disabled onClick={() => {}}>
+              Disabled
+            </Button>
+          </Flex>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
       {
         name: 'LabelValue',
@@ -150,6 +164,11 @@ const COMPONENT_GROUPS = [
     groupName: 'Icons',
     components: [
       {
+        name: 'Bookmark',
+        component: <Bookmark />,
+        status: 'Done',
+      },
+      {
         name: 'Close',
         component: <Close />,
         status: 'Done',
@@ -167,6 +186,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'LogoEth',
         component: <LogoEth />,
+        status: 'Done',
+      },
+      {
+        name: 'Plus',
+        component: <Plus />,
         status: 'Done',
       },
     ],

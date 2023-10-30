@@ -43,23 +43,31 @@
 
 .btn[disabled],
 .btn[disabled]:hover {
-  border-radius: px-to-rem(16);
+  border-radius: px-to-rem(25);
   cursor: not-allowed;
-  background: var(--gray-800);
-  color: var(--gray-400);
+  background: var(--gray-600);
+  color: var(--gray-900);
 }
 
 // Variants
 .btn--primary {
-  border-radius: px-to-rem(16);
+  border-radius: px-to-rem(25);
   background: var(--green);
 }
 
-.btn--tertiary {
-  border-radius: px-to-rem(16);
+.btn--secondary {
+  border-radius: px-to-rem(25);
+  border: 1px solid var(--Purple1, #561198);
+  background: var(--Purple-1-Button, rgba(86, 17, 152, 0.2));
   color: var(--white);
-  background: #1c2028;
-  border-bottom: px-to-rem(1) solid var(--gray-800);
+  gap: px-to-rem(4);
+}
+
+.btn--tertiary {
+  border-radius: px-to-rem(25);
+  gap: px-to-rem(8);
+  color: #5ee192;
+  background: none;
 }
 
 .btn--icon {
