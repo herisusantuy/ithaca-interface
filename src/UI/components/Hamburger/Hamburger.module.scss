@@ -1,0 +1,70 @@
+.hamburger {
+  display: none;
+  cursor: pointer;
+  transition-property: filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  overflow: visible;
+
+  @include breakpoint(tablet) {
+    display: flex;
+  }
+}
+
+.hamburger.isActive .inner,
+.hamburger.isActive .inner::before,
+.hamburger.isActive .inner::after {
+  background-color: var(--white);
+}
+
+.hamburger.isActive .inner {
+  transform: rotate(-180deg);
+}
+
+.hamburger.isActive .inner::before {
+  transform: translate3d(-9px, 3px, 0) rotate(-45deg) scale(0.4, 1);
+}
+
+.hamburger.isActive .inner::after {
+  transform: translate3d(-9px, -3px, 0) rotate(45deg) scale(0.4, 1);
+}
+
+.box {
+  width: px-to-rem(24);
+  height: px-to-rem(12);
+  display: inline-block;
+  position: relative;
+}
+
+.inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px;
+}
+
+.inner,
+.inner::before,
+.inner::after {
+  width: px-to-rem(24);
+  height: px-to-rem(2);
+  background-color: var(--white);
+  border-radius: px-to-rem(4);
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+.inner::before,
+.inner::after {
+  content: '';
+  display: block;
+}
+
+.inner::before {
+  top: -6px;
+}
+
+.inner::after {
+  bottom: -6px;
+}

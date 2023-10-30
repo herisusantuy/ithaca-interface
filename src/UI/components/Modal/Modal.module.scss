@@ -1,0 +1,124 @@
+.modal {
+  @include spacing(padding, 24, 'all');
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gray-900);
+  border: px-to-rem(2) solid var(--green-300);
+  width: px-to-rem(480);
+  color: var(--white);
+  border-radius: px-to-rem(8);
+  cursor: default;
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  height: 100%;
+  width: 100%;
+  background: rgba(12, 17, 29, 0.7);
+  backdrop-filter: blur(px-to-rem(12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: hidden;
+  cursor: pointer;
+}
+
+.modalHeader,
+.modalContent,
+.modalFooter {
+  width: 100%;
+}
+
+.modalHeader {
+  @include spacing(margin, 24, 'bottom');
+}
+
+.modalContent {
+  @include spacing(margin, 32, 'bottom');
+}
+
+.modalHeader {
+  @include spacing(padding, 16, 'bottom');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: px-to-rem(1) solid var(--gray-800);
+
+  h4 {
+    @include font-size('text-xl', 'semibold');
+  }
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: center;
+}
+
+.buttonClose {
+  transition: transform 0.5s;
+  display: flex;
+  background: none;
+  padding: 0;
+  width: auto;
+}
+
+.buttonClose:hover {
+  transform: rotate(180deg);
+  background: none;
+}
+
+.confirmButton {
+  @include font-size('text-md', 'semibold');
+  @include spacing(padding, 12, 'top+bottom');
+  @include spacing(padding, 24, 'left+right');
+  transition: $transition_all;
+  background: var(--green-300);
+  color: var(--gray-950);
+  border-radius: px-to-rem(8);
+  display: inline-flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  gap: px-to-rem(16);
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    background: var(--green-600);
+    color: var(--white);
+
+    svg {
+      transform: translateX(px-to-rem(2));
+    }
+
+    svg path {
+      stroke: var(--white);
+    }
+  }
+
+  svg {
+    transition: $transition_all;
+
+    path {
+      transition: $transition_all;
+    }
+  }
+}
+
+.buttonLoading {
+  background: var(--green-600);
+  color: var(--white);
+}
