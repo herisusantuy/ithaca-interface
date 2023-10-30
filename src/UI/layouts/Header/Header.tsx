@@ -18,29 +18,29 @@ import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 import styles from './Header.module.scss';
 
 const Header = () => {
-	const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
-	const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
-	const handleHamburgerClick = () => {
-		setIsHamburgerOpen(!isHamburgerOpen);
-		document.body.classList.toggle('is-active');
-	};
+  const handleHamburgerClick = () => {
+    setIsHamburgerOpen(!isHamburgerOpen);
+    document.body.classList.toggle('is-active');
+  };
 
-	return (
-		<header className={styles.header}>
-			<div className={styles.container}>
-				<div className={styles.left}>
-					<Logo />
-					{!tabletBreakpoint && <Navigation />}
-				</div>
-				<div className={styles.right}>
-					<ConnectButton />
-					{tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
-				</div>
-			</div>
-			{tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
-		</header>
-	);
+  return (
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <div className={styles.left}>
+          <Logo />
+          {!tabletBreakpoint && <Navigation />}
+        </div>
+        <div className={styles.right}>
+          <ConnectButton />
+          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
+        </div>
+      </div>
+      {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
+    </header>
+  );
 };
 
 export default Header;

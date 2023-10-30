@@ -1,7 +1,7 @@
 .Main {
-	@include spacing(padding, 72, 'top+bottom');
-	flex: 1;
-	width: 100%;
-	margin: 0 auto;
-	position: relative;
+  @include spacing(padding, 72, 'top+bottom');
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
 }

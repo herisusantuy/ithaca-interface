@@ -22,33 +22,33 @@ import 'src/UI/stylesheets/_global.scss';
 const font = Lato({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
-	return (
-		<WagmiConfig config={wagmiConfig}>
-			<RainbowKitProvider appInfo={appInfo} chains={chains} theme={darkTheme()}>
-				<div className={`${font.className} appWrapper`}>
-					<Header />
-					<Component {...pageProps} />
-					<Toaster
-						position='top-right'
-						toastOptions={{
-							className: 'toast',
-							duration: 5000,
-							success: {
-								style: TOAST_STYLES.success,
-							},
-							error: {
-								style: TOAST_STYLES.error,
-							},
-						}}
-					/>
-				</div>
-			</RainbowKitProvider>
-		</WagmiConfig>
-	);
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider appInfo={appInfo} chains={chains} theme={darkTheme()}>
+        <div className={`${font.className} appWrapper`}>
+          <Header />
+          <Component {...pageProps} />
+          <Toaster
+            position='top-right'
+            toastOptions={{
+              className: 'toast',
+              duration: 5000,
+              success: {
+                style: TOAST_STYLES.success,
+              },
+              error: {
+                style: TOAST_STYLES.error,
+              },
+            }}
+          />
+        </div>
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-	return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
+  return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
 export default App;

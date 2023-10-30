@@ -1,23 +1,23 @@
 .nav {
-	display: flex;
-	align-items: center;
-	gap: px-to-rem(40);
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(40);
 }
 
 .nav a {
-	@include font-size('text-sm', 'regular');
-	color: var(--white);
-	opacity: 0.6;
+  @include font-size('text-sm', 'regular');
+  color: var(--white);
+  opacity: 0.6;
 
-	&:hover {
-		color: var(--white);
-		opacity: 0.8;
-	}
+  &:hover {
+    color: var(--white);
+    opacity: 0.8;
+  }
 
-	&.isActive {
-		@include font-size('text-sm', 'semibold');
-		cursor: default;
-		color: var(--white);
-		opacity: 1;
-	}
+  &.isActive {
+    @include font-size('text-sm', 'semibold');
+    cursor: default;
+    color: var(--white);
+    opacity: 1;
+  }
 }

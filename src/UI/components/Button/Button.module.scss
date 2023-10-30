@@ -1,66 +1,66 @@
 .btn {
-	display: inline-flex;
-	appearance: none;
-	align-items: center;
-	justify-content: center;
-	user-select: none;
-	position: relative;
-	white-space: nowrap;
-	vertical-align: middle;
-	outline: none;
-	border: 0;
-	cursor: pointer;
-	padding: 0;
+  display: inline-flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
 }
 
 // Sizes
 .btn--sm {
-	@include spacing(padding, 8, 'left+right');
-	@include spacing(padding, 8, 'top+bottom');
+  @include spacing(padding, 8, 'left+right');
+  @include spacing(padding, 8, 'top+bottom');
 }
 
 .btn--md {
-	@include spacing(padding, 16, 'left+right');
-	@include spacing(padding, 12, 'top+bottom');
+  @include spacing(padding, 16, 'left+right');
+  @include spacing(padding, 12, 'top+bottom');
 }
 
 .btn--lg {
-	@include spacing(padding, 32, 'left+right');
-	@include spacing(padding, 12, 'top+bottom');
+  @include spacing(padding, 32, 'left+right');
+  @include spacing(padding, 12, 'top+bottom');
 }
 
 .btn--xl {
-	@include spacing(padding, 24, 'left+right');
-	@include spacing(padding, 12, 'top+bottom');
+  @include spacing(padding, 24, 'left+right');
+  @include spacing(padding, 12, 'top+bottom');
 }
 
 .btn--2xl {
-	@include spacing(padding, 32, 'left+right');
-	@include spacing(padding, 16, 'top+bottom');
+  @include spacing(padding, 32, 'left+right');
+  @include spacing(padding, 16, 'top+bottom');
 }
 
 .btn[disabled],
 .btn[disabled]:hover {
-	cursor: not-allowed;
-	background: var(--gray-800);
-	color: var(--gray-400);
+  cursor: not-allowed;
+  background: var(--gray-800);
+  color: var(--gray-400);
 }
 
 // Variants
 .btn--primary {
-	@include font-size('text-sm', 'bold');
-	background: var(--green);
-	border-radius: px-to-rem(8);
+  @include font-size('text-sm', 'bold');
+  background: var(--green);
+  border-radius: px-to-rem(8);
 }
 
 .btn--tertiary {
-	@include font-size('text-sm', 'bold');
-	color: var(--white);
-	background: #1c2028;
-	border-bottom: px-to-rem(1) solid var(--gray-800);
+  @include font-size('text-sm', 'bold');
+  color: var(--white);
+  background: #1c2028;
+  border-bottom: px-to-rem(1) solid var(--gray-800);
 }
 
 .btn--icon {
-	background: none;
-	padding: 0;
+  background: none;
+  padding: 0;
 }

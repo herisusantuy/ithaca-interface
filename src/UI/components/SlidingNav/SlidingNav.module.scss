@@ -1,32 +1,32 @@
 .slidingNav {
-	transition: $transition_all;
-	background: var(--white);
-	position: fixed;
-	top: px-to-rem(60);
-	transform: translate(100%);
-	bottom: 0;
-	z-index: 1;
-	left: 0;
-	right: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  transition: $transition_all;
+  background: var(--white);
+  position: fixed;
+  top: px-to-rem(60);
+  transform: translate(100%);
+  bottom: 0;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-	nav {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
+  nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-		a {
-			@include font-size('display-sm', 'medium');
-		}
-	}
+    a {
+      @include font-size('display-sm', 'medium');
+    }
+  }
 }
 
 .isOpen {
-	transform: translateX(0);
+  transform: translateX(0);
 
-	@include breakpoint(tablet) {
-		overflow-y: scroll;
-	}
+  @include breakpoint(tablet) {
+    overflow-y: scroll;
+  }
 }

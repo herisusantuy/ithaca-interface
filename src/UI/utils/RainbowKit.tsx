@@ -9,7 +9,7 @@ import { configureChains, createConfig } from 'wagmi';
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
 if (!projectId) {
-	throw new Error('Environment variable PROJECT_ID is not set.');
+  throw new Error('Environment variable PROJECT_ID is not set.');
 }
 
 // Chains
@@ -17,31 +17,31 @@ const { chains, publicClient, webSocketPublicClient } = configureChains([polygon
 
 // Info
 const appInfo = {
-	appName: 'Ithaca',
+  appName: 'Ithaca',
 };
 
 // Wallets
 const { wallets } = getDefaultWallets({
-	appName: appInfo.appName,
-	projectId,
-	chains,
+  appName: appInfo.appName,
+  projectId,
+  chains,
 });
 
 // Connectors
 const connectors = connectorsForWallets([
-	...wallets,
-	{
-		groupName: 'Other',
-		wallets: [ledgerWallet({ projectId, chains })],
-	},
+  ...wallets,
+  {
+    groupName: 'Other',
+    wallets: [ledgerWallet({ projectId, chains })],
+  },
 ]);
 
 // Wagmi Config
 const wagmiConfig = createConfig({
-	autoConnect: true,
-	connectors,
-	publicClient,
-	webSocketPublicClient,
+  autoConnect: true,
+  connectors,
+  publicClient,
+  webSocketPublicClient,
 });
 
 export { chains, appInfo, wagmiConfig };

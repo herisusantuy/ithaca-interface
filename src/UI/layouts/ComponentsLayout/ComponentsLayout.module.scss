@@ -1,58 +1,58 @@
 .container {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	gap: px-to-rem(32);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: px-to-rem(32);
 }
 
 .sidebar {
-	@include spacing(padding, 40, 'left+right');
-	display: flex;
-	flex-direction: column;
-	width: 20%;
-	position: fixed;
-	height: 100vh;
-	overflow-y: auto;
-	background: var(--gray-rgba);
-	backdrop-filter: blur(px-to-rem(12));
+  @include spacing(padding, 40, 'left+right');
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--gray-rgba);
+  backdrop-filter: blur(px-to-rem(12));
 
-	h3 {
-		@include font-size('text-sm', 'bold');
-		color: var(--white);
-	}
+  h3 {
+    @include font-size('text-sm', 'bold');
+    color: var(--white);
+  }
 }
 
 .main {
-	@include spacing(padding, 40, 'left+right');
-	flex: 1;
-	margin-left: 20%;
-	max-width: 80%;
+  @include spacing(padding, 40, 'left+right');
+  flex: 1;
+  margin-left: 20%;
+  max-width: 80%;
 }
 
 .component {
-	@include spacing(margin, 40, 'top+bottom');
+  @include spacing(margin, 40, 'top+bottom');
 }
 
 .codeBlock {
-	position: relative;
-	margin: 20px 0;
+  position: relative;
+  margin: 20px 0;
 
-	.titleBar {
-		@include font-size('text-sm', 'bold');
-		@include spacing(padding, 12, 'all');
-		display: flex;
-		justify-content: space-between;
-		background-color: #24292e;
-		color: var(--white);
-		border-top-left-radius: px-to-rem(8);
-		border-top-right-radius: px-to-rem(8);
-	}
+  .titleBar {
+    @include font-size('text-sm', 'bold');
+    @include spacing(padding, 12, 'all');
+    display: flex;
+    justify-content: space-between;
+    background-color: #24292e;
+    color: var(--white);
+    border-top-left-radius: px-to-rem(8);
+    border-top-right-radius: px-to-rem(8);
+  }
 
-	pre {
-		margin: 0;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-		border-bottom-left-radius: px-to-rem(8);
-		border-bottom-right-radius: px-to-rem(8);
-	}
+  pre {
+    margin: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: px-to-rem(8);
+    border-bottom-right-radius: px-to-rem(8);
+  }
 }

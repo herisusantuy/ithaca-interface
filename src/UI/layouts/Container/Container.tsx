@@ -6,13 +6,13 @@ import styles from './Container.module.scss';
 
 // Types
 type ContainerProps = {
-	size?: 'sm' | 'md' | 'lg' | 'xl';
-	margin?: string;
-	children: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  margin?: string;
+  children: ReactNode;
 };
 
 const Container = ({ margin, size = 'xl', children }: ContainerProps) => {
-	return <div className={`${styles.container} ${styles[size]} ${margin ? margin : ''}`}>{children}</div>;
+  return <div className={`${styles.container} ${styles[size]} ${margin ? margin : ''}`}>{children}</div>;
 };
 
 export default Container;
