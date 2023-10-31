@@ -6,6 +6,8 @@ import Asset from '@/UI/components/Asset/Asset';
 import Button from '@/UI/components/Button/Button';
 import Close from '@/UI/components/Icons/Close';
 import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
+import Chart from '@/UI/components/Chart/Chart';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import LabelValue from '@/UI/components/LabelValue/LabelValue';
 import Loader from '@/UI/components/Loader/Loader';
@@ -71,11 +73,14 @@ const COMPONENT_GROUPS = [
         component: (
           <Flex gap='gap-12'>
             <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
-            <LabelValue label='Next Auction' value='00 Hrs : 05 Mins : 59 Secs' />
+            <LabelValue
+              label='Next Auction'
+              value={<CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />}
+            />
             <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
       {
         name: 'Loader',
@@ -101,6 +106,21 @@ const COMPONENT_GROUPS = [
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
         status: 'Done',
+      },
+    ],
+  },
+  {
+    groupName: 'Charts',
+    components: [
+      {
+        name: 'Chart',
+        component: <Chart />,
+        status: 'In Progress',
+      },
+      {
+        name: 'ChartPayoff',
+        component: <ChartPayoff />,
+        status: 'In Progress',
       },
     ],
   },
@@ -134,8 +154,8 @@ const COMPONENT_GROUPS = [
     components: [
       {
         name: 'CountdownTimer',
-        component: <CountdownTimer />,
-        status: 'In Progress',
+        component: <CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />,
+        status: 'Done',
       },
       {
         name: 'Meta',
