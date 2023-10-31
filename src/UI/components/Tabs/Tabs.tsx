@@ -18,18 +18,19 @@ type Tab = {
 
 type TabsProps = {
   tabs: Tab[];
+  className?: string;
 };
 
-const Tabs = ({ tabs }: TabsProps) => {
-  const router = useRouter()
+const Tabs = ({ tabs, className }: TabsProps) => {
   // Ensure tabs is defined and has at least one tab
   if (!tabs || tabs.length === 0) {
     return <div className={styles.tabs}>No tabs available.</div>;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const router = useRouter()
   const initialTab = tabs.find((t) => {
     return t.path === '/' ? router.pathname === t.path : router.pathname.includes(t.path || '');
   })
-  console.log(initialTab)
   // Tab state
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState(initialTab?.id || tabs[0]?.id);
@@ -39,14 +40,17 @@ const Tabs = ({ tabs }: TabsProps) => {
     return tabId === activeTab ? styles.isActive : '';
   };
 
+  const buttonsClass = `${styles.buttons} ${className || ''}`;
+
   return (
     <>
-      <div className={styles.buttons}>
+      <div className={buttonsClass.trim()}>
         {tabs.map(tab => (
           <Button
             key={tab.id}
-            onClick={() => {
-              setActiveTab(tab.id)
+            onClick={e => {
+              e.stopPropagation();
+              setActiveTab(tab.id);
               if (tab.path) {
                 router.push(tab.path)
               }

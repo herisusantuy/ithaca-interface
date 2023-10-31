@@ -1,0 +1,110 @@
+.container {
+  display: flex;
+  gap: px-to-rem(16);
+  width: 100%;
+  height: 100%;
+}
+
+.leftPanel,
+.rightPanel {
+  border: px-to-rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
+  background: var(--panel, linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%));
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(px-to-rem(10));
+  border-radius: px-to-rem(30);
+}
+
+.leftPanel {
+  width: 40%;
+}
+
+.tab {
+  @include spacing(padding, 24, 'left+right');
+  @include spacing(padding, 34, 'top+bottom');
+  display: flex;
+  align-items: flex-start;
+  gap: px-to-rem(16);
+  cursor: pointer;
+  position: relative;
+
+  &:first-child {
+    border-top-left-radius: px-to-rem(30);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: px-to-rem(30);
+  }
+
+  &:after {
+    content: '';
+    height: px-to-rem(1);
+    background: #5a5b62;
+    position: absolute;
+    bottom: 0;
+    left: px-to-rem(20);
+    right: px-to-rem(20);
+  }
+
+  &:last-child:after {
+    display: none;
+  }
+}
+
+.isActive {
+  background: var(
+    --Selected-fill,
+    linear-gradient(270deg, rgba(94, 225, 145, 0) 45.44%, rgba(94, 225, 154, 0.25) 100%)
+  );
+
+  &:first-child {
+    border-top-left-radius: px-to-rem(30);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: px-to-rem(30);
+  }
+}
+
+.tabInfo {
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+
+  h3 {
+    @include spacing(margin, 10, 'bottom');
+    @include font-size('text-md', 'semibold');
+  }
+
+  p {
+    @include font-size('text-xs', 'regular');
+    opacity: 0.6;
+  }
+}
+
+.subTabs {
+  width: 45%;
+
+  button {
+    width: 100%;
+    border: px-to-rem(1) solid;
+
+    &:first-child {
+      border-top-left-radius: px-to-rem(8);
+      border-bottom-left-radius: px-to-rem(8);
+    }
+
+    &:last-child {
+      border-top-right-radius: px-to-rem(8);
+      border-bottom-right-radius: px-to-rem(8);
+    }
+  }
+}
+
+.rightPanel {
+  @include spacing(padding, 42, 'left+right');
+  @include spacing(padding, 32, 'top+bottom');
+  flex: 1;
+}
