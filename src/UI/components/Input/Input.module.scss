@@ -1,0 +1,36 @@
+.input input::-webkit-outer-spin-button,
+.input input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.input {
+  display: inline-block;
+  position: relative;
+}
+
+.input svg {
+  position: absolute;
+  right: px-to-rem(10);
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.input input {
+  @include spacing(padding, 8, 'top+bottom');
+  @include spacing(padding, 10, 'left+right');
+  background: none;
+  outline: 0;
+  border: px-to-rem(1) solid rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  border-radius: px-to-rem(24);
+
+  transition: $transition_all;
+
+  &:focus {
+    border-color: var(--white);
+  }
+}
+
+.input input::placeholder {
+  color: var(--gray-500);
+}
