@@ -1,5 +1,5 @@
 // Packages
-import { ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 
 // Styles
 import styles from './Button.module.scss';
@@ -8,7 +8,7 @@ import styles from './Button.module.scss';
 type ButtonProps = {
   children: ReactNode;
   className?: string;
-  onClick: () => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   role?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   title: string;

@@ -17,3 +17,11 @@
   color: var(--gray-100);
   cursor: default;
 }
+
+.gap-0 {
+  gap: 0 !important;
+}
+
+.mb-10 {
+  margin-bottom: px-to-rem(10) !important;
+}

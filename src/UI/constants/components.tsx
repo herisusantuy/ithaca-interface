@@ -20,6 +20,7 @@ import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import Plus from '@/UI/components/Icons/Plus';
 import Bookmark from '@/UI/components/Icons/Bookmark';
+import TabCard from '@/UI/components/TabCard/TabCard';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -29,6 +30,7 @@ import Main from '@/UI/layouts/Main/Main';
 
 // Constants
 import { TABS } from './tabs';
+import { TRADING_MARKET_TABS } from './tabCard';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -83,6 +85,11 @@ const COMPONENT_GROUPS = [
         name: 'Tabs',
         component: <Tabs tabs={TABS} />,
         status: 'Done',
+      },
+      {
+        name: 'TabCard',
+        component: <TabCard tabs={TRADING_MARKET_TABS} />,
+        status: 'In Progress',
       },
       {
         name: 'Toggle',
