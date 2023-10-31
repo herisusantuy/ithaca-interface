@@ -5,7 +5,8 @@ import { ReactNode } from 'react';
 type Tab = {
   id: string;
   label: string;
-  content: ReactNode;
+  content?: ReactNode;
+  path?: string;
 };
 
 export const TABS: Tab[] = [
@@ -23,5 +24,38 @@ export const TABS: Tab[] = [
     id: 'riskless-lending',
     label: 'Riskless Lending',
     content: <p>Content for Riskless Lending</p>,
+  },
+];
+
+
+export const TRADING_LITE_TABS_ITEMS: Tab[] = [
+  {
+    id: 'market',
+    path: '/trading/lite/market',
+    label: 'Market',
+  },
+  {
+    id: 'stories',
+    path: '/trading/lite/stories',
+    label: 'Stories',
+  },
+];
+
+
+export const TRADING_PRO_TABS_ITEMS: Tab[] = [
+  {
+    id: 'position-builder',
+    path: '/trading/pro/position-builder',
+    label: 'Position Builder',
+  },
+  {
+    id: 'dynamic-option-strategies',
+    path: '/trading/pro/dynamic-option-strategies',
+    label: 'Dynamic Option Strategies',
+  },
+  {
+    id: 'riskless-lending',
+    path: '/trading/pro/riskless-lending',
+    label: 'Riskless Lending',
   },
 ];

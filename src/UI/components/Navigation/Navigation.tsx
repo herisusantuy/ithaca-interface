@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 // Constants
-import { NavigationItems, NAVIGATION_ITEMS } from '@/UI/constants/navigation';
+import { NAVIGATION_ITEMS } from '@/UI/constants/navigation';
 
 // Styles
 import styles from './Navigation.module.scss';
@@ -11,10 +11,9 @@ import styles from './Navigation.module.scss';
 // Types
 type NavigationProps = {
   onClick?: () => void;
-  navigationItems?: NavigationItems[]
 };
 
-const Navigation = ({ onClick, navigationItems }: NavigationProps) => {
+const Navigation = ({ onClick }: NavigationProps) => {
   const router = useRouter();
 
   const checkIsActivePath = (path: string) => {
@@ -23,7 +22,7 @@ const Navigation = ({ onClick, navigationItems }: NavigationProps) => {
 
   return (
     <nav className={styles.nav}>
-      {(navigationItems || NAVIGATION_ITEMS).map(nav => (
+      {NAVIGATION_ITEMS.map(nav => (
         <Link
           key={nav.titleKey}
           href={nav.path}

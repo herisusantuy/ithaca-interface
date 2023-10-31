@@ -1,8 +1,7 @@
 // Styles
 
-
-import Navigation from '@/UI/components/Navigation/Navigation';
-import { TRADING_LITE_NAVIGATION_ITEMS, TRADING_PRO_NAVIGATION_ITEMS } from '@/UI/constants/navigation';
+import Tabs from '@/UI/components/Tabs/Tabs';
+import { TRADING_LITE_TABS_ITEMS, TRADING_PRO_TABS_ITEMS } from '@/UI/constants/tabs';
 
 // Types
 type TradingLayoutProps = {
@@ -12,7 +11,7 @@ type TradingLayoutProps = {
 const TradingLayout = (props: TradingLayoutProps) => {
   const { isLite } = props;
 
-  return <Navigation navigationItems={isLite ? TRADING_LITE_NAVIGATION_ITEMS : TRADING_PRO_NAVIGATION_ITEMS}></Navigation>
+  return <Tabs tabs={isLite ? TRADING_LITE_TABS_ITEMS : TRADING_PRO_TABS_ITEMS}></Tabs>
 };
-
+ 
 export default TradingLayout;
