@@ -30,6 +30,7 @@ import Container from '@/UI/layouts/Container/Container';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Header from '@/UI/layouts/Header/Header';
 import Main from '@/UI/layouts/Main/Main';
+import Panel from '@/UI/layouts/Panel/Panel';
 
 // Constants
 import { TABS } from './tabs';
@@ -155,6 +156,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'Main',
         component: <Main>Main</Main>,
+        status: 'Done',
+      },
+      {
+        name: 'Panel',
+        component: <Panel>Panel</Panel>,
         status: 'Done',
       },
     ],
