@@ -1,22 +1,72 @@
 import React from 'react';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, CartesianAxis } from 'recharts';
+
+interface Prop {
+  baseValue: number;
+}
 
 const data = [
-  { name: 'Jan', value: 12 },
-  { name: 'Feb', value: 15 },
-  { name: 'Mar', value: 20 },
-  { name: 'Apr', value: 18 },
+  {
+    name: 'Jan',
+    value: -50,
+  },
+  {
+    name: 'Feb',
+    value: -50,
+  },
+  {
+    name: 'Mar',
+    value: 100,
+  },
+  {
+    name: 'Apr',
+    value: 200,
+  },
+  {
+    name: 'May',
+    value: 300,
+  },
 ];
 
-const ChartPayoff = () => {
+const ChartPayoff = (props: Prop) => {
+  let baseValue = props.baseValue;
+  baseValue = 100;
+
+  const modifiedData = data.map(item => ({
+    ...item,
+    value: item.value - baseValue,
+  }));
+
+  const gradientOffset = () => {
+    const dataMax = Math.max(...modifiedData.map(i => i.value));
+    const dataMin = Math.min(...modifiedData.map(i => i.value));
+
+    if (dataMax <= 0) {
+      return 0;
+    }
+    if (dataMin >= 0) {
+      return 1;
+    }
+
+    return dataMax / (dataMax - dataMin);
+  };
+  const off = gradientOffset();
   return (
-    <LineChart width={400} height={300} data={data}>
-      <Line type='monotone' dataKey='value' stroke='#8884d8' />
-      <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
-      <XAxis dataKey='name' />
-      <YAxis />
+    <AreaChart width={400} height={300} data={modifiedData}>
+      <defs>
+        <linearGradient id='splitColor' gradientTransform="rotate(90)">
+          <stop offset={off} stopColor='#5ee192' stopOpacity={0.2} />
+          <stop offset={off} stopColor='#FF3F57' stopOpacity={0.2} />
+        </linearGradient>
+      </defs>
       <Tooltip />
-    </LineChart>
+      <Area
+        type='monotone'
+        dataKey='value'
+        fill='url(#splitColor)'
+      />
+      <ReferenceLine y={0} stroke='red' />
+    </AreaChart>
   );
 };
 
