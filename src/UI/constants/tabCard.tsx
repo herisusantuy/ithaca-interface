@@ -48,3 +48,58 @@ export const TRADING_MARKET_TABS: Tab[] = [
     ],
   },
 ];
+
+
+export const TRADING_STORIES_TABS: Tab[] = [
+  {
+    id: 'bet',
+    title: 'Bet',
+    description:
+      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range. If order filled earn shown return on your Bet Capital at risk.',
+    contentId: 'betChart',
+    subTabs: [
+      { id: 'insideRange', label: 'Inside Range', contentId: 'optionsInsideRange' },
+      { id: 'outsideRange', label: 'Outside Range', contentId: 'optionsOutsideRange' },
+    ],
+  },
+  {
+    id: 'earn',
+    title: 'Earn',
+    description:
+      'Earn risky yield on your capital at risk. Define an asset price target.',
+    contentId: 'earnChart',
+  },
+  {
+    id: 'noGainNoPayin',
+    title: 'No Gain, No Payin’',
+    description:
+      'Buy an option with maximum downside amount to be lost if asset price ends up at the strike.',
+    contentId: 'noGainNoPayinChart',
+    subTabs: [
+      { id: 'call', label: 'Call', contentId: 'optionsCall' },
+      { id: 'put', label: 'Put', contentId: 'optionsPut' },
+    ],
+  },
+  {
+    id: 'bonusTwinWin',
+    title: 'Bonus | Twin-Win',
+    description:
+      'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
+    contentId: 'bonusTwinWinChart',
+    subTabs: [
+      { id: 'bonus', label: 'Bonus', contentId: 'optionsBonus' },
+      { id: 'twinWin', label: 'Twin-Win', contentId: 'optionsTwinWin' },
+    ],
+  },
+  {
+    id: 'barriers',
+    title: 'Barriers',
+    description:
+      'Set the upper and lower barriers and control if the price of the underlying asset falls in or outside that range.',
+    contentId: 'barriersChart',
+    // subTabs: [
+    //   { id: 'bonus', label: 'Bonus', contentId: 'optionsBonus' },
+    //   { id: 'twinWin', label: 'Twin-Win', contentId: 'optionsTwinWin' },
+    // ],
+  },
+];
