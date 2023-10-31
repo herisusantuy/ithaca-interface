@@ -76,7 +76,7 @@ const COMPONENT_GROUPS = [
             <Input icon={<LogoEth />} />
           </>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
       {
         name: 'LabelValue',
