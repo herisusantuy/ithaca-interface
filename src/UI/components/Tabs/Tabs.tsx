@@ -42,7 +42,10 @@ const Tabs = ({ tabs, className }: TabsProps) => {
         {tabs.map(tab => (
           <Button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={e => {
+              e.stopPropagation();
+              setActiveTab(tab.id);
+            }}
             className={getTabClass(tab.id)}
             role='tab'
             aria-selected={tab.id === activeTab}
