@@ -68,7 +68,13 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'LabelValue',
-        component: <LabelValue />,
+        component: (
+          <Flex gap='gap-12'>
+            <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
+            <LabelValue label='Next Auction' value='00 Hrs : 05 Mins : 59 Secs' />
+            <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+          </Flex>
+        ),
         status: 'In Progress',
       },
       {

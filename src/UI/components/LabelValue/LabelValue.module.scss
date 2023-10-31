@@ -1,0 +1,47 @@
+.labelValue {
+  @include spacing(padding, 12, 'left');
+  display: flex;
+  flex-direction: column;
+  gap: px-to-rem(4);
+  border-left: px-to-rem(1) solid var(--gray-800);
+}
+
+.label {
+  @include font-size('text-sm', 'regular');
+  color: var(--Logo-Green1, #5ee192);
+}
+
+.labelDropdown {
+  flex-direction: row;
+  align-items: center;
+  gap: px-to-rem(4);
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: px-to-rem(4);
+}
+
+.dropdownIcon {
+  @include spacing(padding, 4, 'all');
+  border-radius: px-to-rem(4);
+  background: var(--gray-800);
+
+  svg {
+    height: px-to-rem(12);
+    width: px-to-rem(12);
+  }
+}
+
+.value {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: px-to-rem(4);
+}
+
+.subValue {
+  @include font-size('text-xs', 'regular');
+  color: #9a9daa;
+}
