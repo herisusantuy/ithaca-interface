@@ -5,7 +5,7 @@ import { ChangeEvent, ReactNode } from 'react';
 import { preventScrollOnNumberInput } from '@/UI/utils/Input';
 
 // Types
-type Props = {
+type InputProps = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   value?: number;
   icon?: ReactNode;
@@ -16,7 +16,7 @@ type Props = {
 // Styles
 import styles from './Input.module.scss';
 
-const Input = ({ onChange, value, icon, disabled, placeholder = '0' }: Props) => {
+const Input = ({ onChange, value, icon, disabled, placeholder = '0' }: InputProps) => {
   return (
     <div className={styles.input}>
       <input
