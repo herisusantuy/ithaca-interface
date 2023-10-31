@@ -22,6 +22,10 @@
   gap: 0 !important;
 }
 
+.gap-12 {
+  gap: px-to-rem(12) !important;
+}
+
 .mb-10 {
   margin-bottom: px-to-rem(10) !important;
 }
