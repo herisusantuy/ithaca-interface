@@ -16,7 +16,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  max-width: map-get($container-sizes, xl);
   margin: 0 auto;
 
   @include breakpoint(tablet) {
