@@ -1,13 +1,13 @@
 // Types
-type NavigationProps = {
+export type NavigationItems = {
   path: string;
   titleKey: string;
   displayText: string;
 };
 
-export const NAVIGATION_ITEMS: NavigationProps[] = [
+export const NAVIGATION_ITEMS: NavigationItems[] = [
   {
-    path: '/',
+    path: '/trading',
     titleKey: 'Click to visit trading',
     displayText: 'Trading',
   },
@@ -22,3 +22,4 @@ export const NAVIGATION_ITEMS: NavigationProps[] = [
     displayText: 'Components',
   },
 ];
+

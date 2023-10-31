@@ -6,12 +6,14 @@ import Button from '@/UI/components/Button/Button';
 
 // Styles
 import styles from './Tabs.module.scss';
+import { useRouter } from 'next/router';
 
 // Types
 type Tab = {
   id: string;
   label: string;
-  content: ReactNode;
+  content?: ReactNode;
+  path?: string;
 };
 
 type TabsProps = {
@@ -24,10 +26,14 @@ const Tabs = ({ tabs, className }: TabsProps) => {
   if (!tabs || tabs.length === 0) {
     return <div className={styles.tabs}>No tabs available.</div>;
   }
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const router = useRouter()
+  const initialTab = tabs.find((t) => {
+    return t.path === '/' ? router.pathname === t.path : router.pathname.includes(t.path || '');
+  })
   // Tab state
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeTab, setActiveTab] = useState(tabs[0]?.id);
+  const [activeTab, setActiveTab] = useState(initialTab?.id || tabs[0]?.id);
 
   // Get tab button styles from toggle state
   const getTabClass = (tabId: string) => {
@@ -45,6 +51,9 @@ const Tabs = ({ tabs, className }: TabsProps) => {
             onClick={e => {
               e.stopPropagation();
               setActiveTab(tab.id);
+              if (tab.path) {
+                router.push(tab.path)
+              }
             }}
             className={getTabClass(tab.id)}
             role='tab'
