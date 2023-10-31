@@ -26,9 +26,8 @@
   @include spacing(padding, 40, 'all');
   flex: 1;
   margin: 0 auto;
-  // max-width: 90%;
   color: var(--white);
-  max-width: map-get($container-sizes, md);
+  margin-left: 15%;
 }
 
 .component {
@@ -37,7 +36,8 @@
 
 .codeBlock {
   position: relative;
-  margin: 20px 0;
+  margin: px-to-rem(20) auto;
+  max-width: map-get($container-sizes, md);
 
   .titleBar {
     @include font-size('text-sm', 'bold');

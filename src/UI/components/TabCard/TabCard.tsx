@@ -38,7 +38,7 @@ const TabCard = ({ tabs }: TabCardProps) => {
 
   // Get main tab class from tab card state
   const getMainTabClass = (tabName: string) => {
-    return `${styles.mainTab} ${selectedMainTab === tabName ? styles.activeMainTab : ''}`;
+    return `${styles.tab} ${selectedMainTab === tabName ? styles.isActive : ''}`;
   };
 
   return (
@@ -51,16 +51,21 @@ const TabCard = ({ tabs }: TabCardProps) => {
             onClick={() => setSelectedMainTab(tab.title)}
             role='button'
           >
-            <h3>{tab.title}</h3>
-            <p>{tab.description}</p>
-            {tab.subTabs && (
-              <Tabs
-                tabs={tab.subTabs.map(subTab => ({
-                  ...subTab,
-                  content: getChartMapper(subTab.contentId),
-                }))}
-              />
-            )}
+            <div className={styles.tabInfo}>
+              <h3>{tab.title}</h3>
+              <p>{tab.description}</p>
+            </div>
+            <div className={styles.subTabs}>
+              {tab.subTabs && (
+                <Tabs
+                  className='gap-0 mb-10'
+                  tabs={tab.subTabs.map(subTab => ({
+                    ...subTab,
+                    content: getChartMapper(subTab.contentId),
+                  }))}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>

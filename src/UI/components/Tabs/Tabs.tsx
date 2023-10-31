@@ -16,9 +16,10 @@ type Tab = {
 
 type TabsProps = {
   tabs: Tab[];
+  className?: string;
 };
 
-const Tabs = ({ tabs }: TabsProps) => {
+const Tabs = ({ tabs, className }: TabsProps) => {
   // Ensure tabs is defined and has at least one tab
   if (!tabs || tabs.length === 0) {
     return <div className={styles.tabs}>No tabs available.</div>;
@@ -33,9 +34,11 @@ const Tabs = ({ tabs }: TabsProps) => {
     return tabId === activeTab ? styles.isActive : '';
   };
 
+  const buttonsClass = `${styles.buttons} ${className || ''}`;
+
   return (
     <>
-      <div className={styles.buttons}>
+      <div className={buttonsClass.trim()}>
         {tabs.map(tab => (
           <Button
             key={tab.id}

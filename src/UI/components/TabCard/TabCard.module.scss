@@ -1,52 +1,93 @@
-// TabCard.module.scss
-
 .container {
   display: flex;
+  gap: px-to-rem(16);
   width: 100%;
-  height: 100vh;
+  height: 100%;
+}
+
+.leftPanel,
+.rightPanel {
+  border: px-to-rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
+  background: var(--panel, linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%));
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(px-to-rem(10));
+  border-radius: px-to-rem(30);
 }
 
 .leftPanel {
   width: 40%;
-  padding: 20px;
-  border-right: 1px solid #444; // To visually separate the left and right panels
-  overflow-y: auto; // In case the content exceeds the viewport height
+}
 
-  .mainTab {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #333;
-    border-radius: 5px;
-    cursor: pointer;
+.tab {
+  @include spacing(padding, 24, 'all');
+  display: flex;
+  align-items: flex-start;
+  gap: px-to-rem(16);
+  cursor: pointer;
+  &:first-child {
+    border-top-left-radius: px-to-rem(30);
   }
 
-  .activeMainTab {
-    background-color: #222;
+  &:last-child {
+    border-bottom-left-radius: px-to-rem(30);
+  }
+}
+
+.isActive {
+  background: var(
+    --Selected-fill,
+    linear-gradient(270deg, rgba(94, 225, 145, 0) 45.44%, rgba(94, 225, 154, 0.25) 100%)
+  );
+
+  &:first-child {
+    border-top-left-radius: px-to-rem(30);
   }
 
-  .subTabs {
-    display: flex;
-    gap: 10px; // Spacing between the sub tabs
+  &:last-child {
+    border-bottom-left-radius: px-to-rem(30);
+  }
+}
 
-    .subTab {
-      padding: 5px 10px;
-      background-color: #555;
-      border-radius: 5px;
-      cursor: pointer;
+.tabInfo {
+  display: flex;
+  flex-direction: column;
+  width: 55%;
 
-      &:hover {
-        background-color: #666; // Hover effect for subTabs
-      }
+  h3 {
+    @include spacing(margin, 10, 'bottom');
+    @include font-size('text-md', 'semibold');
+  }
+
+  p {
+    @include font-size('text-xs', 'regular');
+    opacity: 0.6;
+  }
+}
+
+.subTabs {
+  width: 45%;
+
+  button {
+    width: 100%;
+    border: px-to-rem(1) solid;
+
+    &:first-child {
+      border-top-left-radius: px-to-rem(8);
+      border-bottom-left-radius: px-to-rem(8);
     }
 
-    .activeSubTab {
-      background-color: #444; // Active subTab styling
+    &:last-child {
+      border-top-right-radius: px-to-rem(8);
+      border-bottom-right-radius: px-to-rem(8);
     }
   }
 }
 
 .rightPanel {
-  flex: 1; // This makes it take up the remaining width
-  padding: 20px;
-  background-color: #222;
+  @include spacing(padding, 42, 'left+right');
+  @include spacing(padding, 32, 'top+bottom');
+  flex: 1;
 }
