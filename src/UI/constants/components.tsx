@@ -23,6 +23,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import Plus from '@/UI/components/Icons/Plus';
 import Bookmark from '@/UI/components/Icons/Bookmark';
 import TabCard from '@/UI/components/TabCard/TabCard';
+import Input from '@/UI/components/Input/Input';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -65,6 +66,15 @@ const COMPONENT_GROUPS = [
               Disabled
             </Button>
           </Flex>
+        ),
+        status: 'Done',
+      },
+      {
+        name: 'Input',
+        component: (
+          <>
+            <Input icon={<LogoEth />} />
+          </>
         ),
         status: 'Done',
       },
