@@ -10,7 +10,7 @@
 }
 
 // Convert px to rem
-@function px-to-rem($px) {
+@function rem($px) {
   @return ($px / 16) * 1rem;
 }
 
@@ -24,49 +24,29 @@ $font-weights: (
 
 // Font sizes
 $font-sizes: (
-  'display-2xl': (
-    font-size: px-to-rem(72),
-    line-height: px-to-rem(90),
-  ),
-  'display-xl': (
-    font-size: px-to-rem(60),
-    line-height: px-to-rem(72),
-  ),
-  'display-lg': (
-    font-size: px-to-rem(48),
-    line-height: px-to-rem(60),
-  ),
-  'display-md': (
-    font-size: px-to-rem(36),
-    line-height: px-to-rem(44),
-  ),
-  'display-sm': (
-    font-size: px-to-rem(30),
-    line-height: px-to-rem(38),
-  ),
-  'display-xs': (
-    font-size: px-to-rem(24),
-    line-height: px-to-rem(32),
-  ),
   'text-xl': (
-    font-size: px-to-rem(20),
-    line-height: px-to-rem(30),
+    font-size: rem(24),
+    line-height: normal,
   ),
   'text-lg': (
-    font-size: px-to-rem(18),
-    line-height: px-to-rem(28),
+    font-size: rem(18),
+    line-height: normal,
   ),
   'text-md': (
-    font-size: px-to-rem(16),
-    line-height: px-to-rem(24),
+    font-size: rem(16),
+    line-height: normal,
   ),
   'text-sm': (
-    font-size: px-to-rem(14),
-    line-height: px-to-rem(20),
+    font-size: rem(14),
+    line-height: normal,
   ),
   'text-xs': (
-    font-size: px-to-rem(12),
-    line-height: px-to-rem(18),
+    font-size: rem(12),
+    line-height: normal,
+  ),
+  'text-xxs': (
+    font-size: rem(10),
+    line-height: normal,
   ),
 );
 
@@ -79,36 +59,36 @@ $font-sizes: (
 
 // Spacing pattern
 $spacings: (
-  2: px-to-rem(2),
-  4: px-to-rem(4),
-  6: px-to-rem(6),
-  8: px-to-rem(8),
-  10: px-to-rem(10),
-  12: px-to-rem(12),
-  14: px-to-rem(14),
-  16: px-to-rem(16),
-  20: px-to-rem(20),
-  24: px-to-rem(24),
-  32: px-to-rem(32),
-  34: px-to-rem(34),
-  40: px-to-rem(40),
-  48: px-to-rem(48),
-  56: px-to-rem(56),
-  60: px-to-rem(60),
-  64: px-to-rem(64),
-  72: px-to-rem(72),
-  73: px-to-rem(73),
-  80: px-to-rem(80),
-  84: px-to-rem(84),
-  88: px-to-rem(88),
-  96: px-to-rem(96),
-  119: px-to-rem(119),
-  124: px-to-rem(124),
-  128: px-to-rem(128),
-  160: px-to-rem(160),
-  192: px-to-rem(192),
-  224: px-to-rem(224),
-  256: px-to-rem(256),
+  2: rem(2),
+  4: rem(4),
+  6: rem(6),
+  8: rem(8),
+  10: rem(10),
+  12: rem(12),
+  14: rem(14),
+  16: rem(16),
+  20: rem(20),
+  24: rem(24),
+  32: rem(32),
+  34: rem(34),
+  40: rem(40),
+  48: rem(48),
+  56: rem(56),
+  60: rem(60),
+  64: rem(64),
+  72: rem(72),
+  73: rem(73),
+  80: rem(80),
+  84: rem(84),
+  88: rem(88),
+  96: rem(96),
+  119: rem(119),
+  124: rem(124),
+  128: rem(128),
+  160: rem(160),
+  192: rem(192),
+  224: rem(224),
+  256: rem(256),
 );
 
 // Mixin for spacing
@@ -136,9 +116,9 @@ $spacings: (
 
 // Breakpoints
 $breakpoints: (
-  mobile: px-to-rem(480),
-  tablet: px-to-rem(990),
-  desktop: px-to-rem(1440),
+  mobile: rem(480),
+  tablet: rem(990),
+  desktop: rem(1440),
 );
 
 // Mixin for breakpoints
@@ -154,9 +134,9 @@ $breakpoints: (
 
 // Container sizes
 $container-sizes: (
-  sm: px-to-rem(480),
-  blog: px-to-rem(720),
-  md: px-to-rem(990),
-  lg: px-to-rem(1024),
-  xl: px-to-rem(1440),
+  sm: rem(480),
+  blog: rem(720),
+  md: rem(990),
+  lg: rem(1024),
+  xl: rem(1440),
 );

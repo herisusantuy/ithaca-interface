@@ -43,7 +43,7 @@
 
 .btn[disabled],
 .btn[disabled]:hover {
-  border-radius: px-to-rem(25);
+  border-radius: rem(25);
   cursor: not-allowed;
   background: var(--gray-600);
   color: var(--gray-900);
@@ -51,16 +51,16 @@
 
 // Variants
 .btn--primary {
-  border-radius: px-to-rem(25);
+  border-radius: rem(25);
   background: var(--green);
 }
 
 .btn--secondary {
-  border-radius: px-to-rem(25);
+  border-radius: rem(25);
   border: 1px solid var(--Purple1, #561198);
   background: var(--Purple-1-Button, rgba(86, 17, 152, 0.2));
   color: var(--white);
-  gap: px-to-rem(4);
+  gap: rem(4);
 
   svg path {
     fill: var(--white);
@@ -68,8 +68,8 @@
 }
 
 .btn--tertiary {
-  border-radius: px-to-rem(25);
-  gap: px-to-rem(8);
+  border-radius: rem(25);
+  gap: rem(8);
   color: #5ee192;
   background: none;
 }
@@ -82,12 +82,12 @@
 .btn--dropdown {
   background: var(--purple-rgba);
   color: var(--white);
-  border: px-to-rem(1) solid var(--purple);
+  border: rem(1) solid var(--purple);
   border-bottom: 0;
   justify-content: space-between;
 
   &:last-child {
-    border-bottom: px-to-rem(1) solid var(--purple);
+    border-bottom: rem(1) solid var(--purple);
   }
 
   &:hover {
@@ -112,6 +112,6 @@
   @include font-size('text-md', 'regular');
   background: none;
   padding: 0;
-  border-bottom: px-to-rem(1) solid transparent;
+  border-bottom: rem(1) solid transparent;
   color: var(--gray-400);
 }

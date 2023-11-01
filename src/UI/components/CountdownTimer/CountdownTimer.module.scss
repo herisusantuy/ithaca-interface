@@ -1,7 +1,7 @@
 .countdownTimer {
   display: flex;
   align-items: center;
-  gap: px-to-rem(4);
+  gap: rem(4);
 
   span {
     @include font-size('text-xs', 'regular');

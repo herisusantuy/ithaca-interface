@@ -1,7 +1,7 @@
 .header {
   @include spacing(padding, 16, 'top+bottom');
   background: var(--gray-rgba);
-  backdrop-filter: blur(px-to-rem(12));
+  backdrop-filter: blur(rem(12));
   width: 100%;
   position: fixed;
   top: 0;
@@ -30,11 +30,11 @@
 }
 
 .left {
-  gap: px-to-rem(48);
+  gap: rem(48);
 }
 
 .right {
-  gap: px-to-rem(12);
+  gap: rem(12);
 }
 
 .headerComponents {

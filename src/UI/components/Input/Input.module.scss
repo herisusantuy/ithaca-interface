@@ -10,7 +10,7 @@
 
 .input svg {
   position: absolute;
-  right: px-to-rem(10);
+  right: rem(10);
   top: 50%;
   transform: translate(0%, -50%);
 }
@@ -21,9 +21,9 @@
   @include spacing(padding, 40, 'right');
   background: none;
   outline: 0;
-  border: px-to-rem(1) solid rgba(255, 255, 255, 0.1);
+  border: rem(1) solid rgba(255, 255, 255, 0.1);
   color: var(--white);
-  border-radius: px-to-rem(24);
+  border-radius: rem(24);
 
   transition: $transition_all;
 
