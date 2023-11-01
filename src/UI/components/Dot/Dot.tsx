@@ -2,13 +2,14 @@
 import styles from './Dot.module.scss';
 
 // Types
-export type DotTypes = 'Call' | 'Put' | 'BinaryCall' | 'BinaryPut' | 'Forward';
+export type DotTypes = 'White' | 'Call' | 'Put' | 'BinaryCall' | 'BinaryPut' | 'Forward';
 
 type DotProps = {
   type: DotTypes;
 };
 
 const TYPE_TO_COLOR: Record<DotTypes, string> = {
+  White: styles.white,
   Call: styles.blue,
   Put: styles.red,
   BinaryCall: styles.orange,
