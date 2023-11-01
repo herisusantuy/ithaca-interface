@@ -1,0 +1,313 @@
+.row {
+  @include spacing(margin, 64, 'bottom');
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  @include spacing(padding, 16, 'bottom');
+  @include spacing(margin, 32, 'bottom');
+  @include font-size('text-xs', 'medium');
+  color: var(--gray-500);
+  border-bottom: px-to-rem(1) solid var(--gray-800);
+}
+
+.column {
+  width: calc(100% / 3);
+  display: flex;
+  flex-direction: column;
+  gap: px-to-rem(32);
+}
+
+// Roboto Display 2xl
+.RobotoDisplay2xlRegular {
+  font-family: $roboto;
+  @include font-size('display-2xl', 'regular');
+}
+
+.RobotoDisplay2xlMedium {
+  font-family: $roboto;
+  @include font-size('display-2xl', 'medium');
+}
+
+.RobotoDisplay2xlBold {
+  font-family: $roboto;
+  @include font-size('display-2xl', 'bold');
+}
+
+// Roboto Display Xl
+.RobotoDisplayXlRegular {
+  font-family: $roboto;
+  @include font-size('display-xl', 'regular');
+}
+
+.RobotoDisplayXlMedium {
+  font-family: $roboto;
+  @include font-size('display-xl', 'medium');
+}
+
+.RobotoDisplayXlBold {
+  font-family: $roboto;
+  @include font-size('display-xl', 'bold');
+}
+
+// Roboto Display Md
+.RobotoDisplayMdRegular {
+  font-family: $roboto;
+  @include font-size('display-md', 'regular');
+}
+
+.RobotoDisplayMdMedium {
+  font-family: $roboto;
+  @include font-size('display-md', 'medium');
+}
+
+.RobotoDisplayMdBold {
+  font-family: $roboto;
+  @include font-size('display-md', 'bold');
+}
+
+// Roboto Display Xs
+.RobotoDisplayXsRegular {
+  font-family: $roboto;
+  @include font-size('display-xs', 'regular');
+}
+
+.RobotoDisplayXsMedium {
+  font-family: $roboto;
+  @include font-size('display-xs', 'medium');
+}
+
+.RobotoDisplayXsBold {
+  font-family: $roboto;
+  @include font-size('display-xs', 'bold');
+}
+
+// Roboto Text Xl
+.RobotoTextXlRegular {
+  font-family: $roboto;
+  @include font-size('text-xl', 'regular');
+}
+
+.RobotoTextXlMedium {
+  font-family: $roboto;
+  @include font-size('text-xl', 'medium');
+}
+
+.RobotoTextXlBold {
+  font-family: $roboto;
+  @include font-size('text-xl', 'bold');
+}
+
+// Roboto Text Lg
+.RobotoTextLgRegular {
+  font-family: $roboto;
+  @include font-size('text-lg', 'regular');
+}
+
+.RobotoTextLgMedium {
+  font-family: $roboto;
+  @include font-size('text-lg', 'medium');
+}
+
+.RobotoTextLgBold {
+  font-family: $roboto;
+  @include font-size('text-lg', 'bold');
+}
+
+// Roboto Text Md
+.RobotoTextMdRegular {
+  font-family: $roboto;
+  @include font-size('text-md', 'regular');
+}
+
+.RobotoTextMdMedium {
+  font-family: $roboto;
+  @include font-size('text-md', 'medium');
+}
+
+.RobotoTextMdBold {
+  font-family: $roboto;
+  @include font-size('text-md', 'bold');
+}
+
+// Roboto Text Sm
+.RobotoTextSmRegular {
+  font-family: $roboto;
+  @include font-size('text-sm', 'regular');
+}
+
+.RobotoTextSmMedium {
+  font-family: $roboto;
+  @include font-size('text-sm', 'medium');
+}
+
+.RobotoTextSmBold {
+  font-family: $roboto;
+  @include font-size('text-sm', 'bold');
+}
+
+// Roboto Text Xs
+.RobotoTextXsRegular {
+  font-family: $roboto;
+  @include font-size('text-xs', 'regular');
+}
+
+.RobotoTextXsMedium {
+  font-family: $roboto;
+  @include font-size('text-xs', 'medium');
+}
+
+.RobotoTextXsBold {
+  font-family: $roboto;
+  @include font-size('text-xs', 'bold');
+}
+
+// Lato Display 2xl
+.LatoDisplay2xlRegular {
+  font-family: $lato;
+  @include font-size('display-2xl', 'regular');
+}
+
+.LatoDisplay2xlMedium {
+  font-family: $lato;
+  @include font-size('display-2xl', 'medium');
+}
+
+.LatoDisplay2xlBold {
+  font-family: $lato;
+  @include font-size('display-2xl', 'bold');
+}
+
+// Lato Display Xl
+.LatoDisplayXlRegular {
+  font-family: $lato;
+  @include font-size('display-xl', 'regular');
+}
+
+.LatoDisplayXlMedium {
+  font-family: $lato;
+  @include font-size('display-xl', 'medium');
+}
+
+.LatoDisplayXlBold {
+  font-family: $lato;
+  @include font-size('display-xl', 'bold');
+}
+
+// Lato Display Md
+.LatoDisplayMdRegular {
+  font-family: $lato;
+  @include font-size('display-md', 'regular');
+}
+
+.LatoDisplayMdMedium {
+  font-family: $lato;
+  @include font-size('display-md', 'medium');
+}
+
+.LatoDisplayMdBold {
+  font-family: $lato;
+  @include font-size('display-md', 'bold');
+}
+
+// Lato Display Xs
+.LatoDisplayXsRegular {
+  font-family: $lato;
+  @include font-size('display-xs', 'regular');
+}
+
+.LatoDisplayXsMedium {
+  font-family: $lato;
+  @include font-size('display-xs', 'medium');
+}
+
+.LatoDisplayXsBold {
+  font-family: $lato;
+  @include font-size('display-xs', 'bold');
+}
+
+// Lato Text Xl
+.LatoTextXlRegular {
+  font-family: $lato;
+  @include font-size('text-xl', 'regular');
+}
+
+.LatoTextXlMedium {
+  font-family: $lato;
+  @include font-size('text-xl', 'medium');
+}
+
+.LatoTextXlBold {
+  font-family: $lato;
+  @include font-size('text-xl', 'bold');
+}
+
+// Lato Text Lg
+.LatoTextLgRegular {
+  font-family: $lato;
+  @include font-size('text-lg', 'regular');
+}
+
+.LatoTextLgMedium {
+  font-family: $lato;
+  @include font-size('text-lg', 'medium');
+}
+
+.LatoTextLgBold {
+  font-family: $lato;
+  @include font-size('text-lg', 'bold');
+}
+
+// Lato Text Md
+.LatoTextMdRegular {
+  font-family: $lato;
+  @include font-size('text-md', 'regular');
+}
+
+.LatoTextMdMedium {
+  font-family: $lato;
+  @include font-size('text-md', 'medium');
+}
+
+.LatoTextMdBold {
+  font-family: $lato;
+  @include font-size('text-md', 'bold');
+}
+
+// Lato Text Sm
+.LatoTextSmRegular {
+  font-family: $lato;
+  @include font-size('text-sm', 'regular');
+}
+
+.LatoTextSmMedium {
+  font-family: $lato;
+  @include font-size('text-sm', 'medium');
+}
+
+.LatoTextSmBold {
+  font-family: $lato;
+  @include font-size('text-sm', 'bold');
+}
+
+// Lato Text Xs
+.LatoTextXsRegular {
+  font-family: $lato;
+  @include font-size('text-xs', 'regular');
+}
+
+.LatoTextXsMedium {
+  font-family: $lato;
+  @include font-size('text-xs', 'medium');
+}
+
+.LatoTextXsBold {
+  font-family: $lato;
+  @include font-size('text-xs', 'bold');
+}

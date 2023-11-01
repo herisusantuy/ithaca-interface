@@ -1,11 +1,11 @@
 // Packages
 import { Toaster } from 'react-hot-toast';
-import { Lato } from 'next/font/google';
 import { AppProps } from 'next/app';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
 
 // Constants
+import { LATO, ROBOTO } from '@/UI/constants/fonts';
 import { TOAST_STYLES } from '@/UI/constants/toast';
 
 // Utils
@@ -19,13 +19,11 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
 
-const font = Lato({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
-
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider appInfo={appInfo} chains={chains} theme={darkTheme()}>
-        <div className={`${font.className} appWrapper`}>
+        <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
           <Header />
           <Component {...pageProps} />
           <Toaster
