@@ -3,10 +3,6 @@ import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, C
 import CustomTooltip from './CustomTooltip';
 import BookmarkBar from './BookmarkBar';
 
-type Prop = {
-  baseValue: number;
-};
-
 const data = [
   {
     name: 'Jan',
@@ -30,9 +26,8 @@ const data = [
   },
 ];
 
-const ChartPayoff = (props: Prop) => {
-  let baseValue = props.baseValue;
-  baseValue = 200;
+const ChartPayoff = () => {
+  const baseValue = 200;
 
   const modifiedData = data.map(item => ({
     ...item,
