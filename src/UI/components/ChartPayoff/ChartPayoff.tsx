@@ -2,6 +2,7 @@ import React from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine } from 'recharts';
 import CustomTooltip from './CustomTooltip';
 import BookmarkBar from './BookmarkBar';
+import CustomLabel from './CustomLabel';
 
 const data = [
   {
@@ -28,8 +29,13 @@ const data = [
 
 const ChartPayoff = () => {
   const [isClient, setIsClient] = React.useState(false);
-
+  const [dataMax, setDataMax] = React.useState(0);
+  const [dataMin, setDataMin] = React.useState(0);
   React.useEffect(() => {
+    const max = Math.max(...modifiedData.map(i => i.value));
+    const min = Math.min(...modifiedData.map(i => i.value));
+    setDataMax(max);
+    setDataMin(min);
     setIsClient(true);
   }, []);
   const baseValue = 200;
@@ -40,17 +46,17 @@ const ChartPayoff = () => {
   }));
 
   const gradientOffset = () => {
-    const dataMax = Math.max(...modifiedData.map(i => i.value));
-    const dataMin = Math.min(...modifiedData.map(i => i.value));
+    const max = Math.max(...modifiedData.map(i => i.value));
+    const min = Math.min(...modifiedData.map(i => i.value));
 
-    if (dataMax <= 0) {
+    if (max <= 0) {
       return 0;
     }
-    if (dataMin >= 0) {
+    if (min >= 0) {
       return 1;
     }
 
-    return dataMax / (dataMax - dataMin);
+    return max / (max - min);
   };
   const off = gradientOffset();
   return (
@@ -67,13 +73,20 @@ const ChartPayoff = () => {
 
               <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
                 <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
-                <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+                <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
                 <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
               </linearGradient>
             </defs>
-            <Tooltip content={<CustomTooltip base={baseValue} />} />
-            <Area type='linear' stroke='url(#lineGradient)' strokeWidth='3' dataKey='value' fill='url(#fillGradient)' />
+            <Area
+              type='linear'
+              stroke='url(#lineGradient)'
+              strokeWidth='3'
+              dataKey='value'
+              fill='url(#fillGradient)'
+              label={<CustomLabel base={baseValue} max={dataMax} min={dataMin} />}
+            />
             <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
+            <Tooltip cursor={{ fill: 'rgba(255, 255, 255, 0.3)' }} content={<CustomTooltip base={baseValue} />} />
           </AreaChart>
           <BookmarkBar />
         </div>
