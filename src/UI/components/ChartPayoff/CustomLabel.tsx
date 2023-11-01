@@ -1,5 +1,4 @@
 import React from 'react';
-import { base } from 'viem/chains';
 
 interface LabelProps {
   x?: number | string;

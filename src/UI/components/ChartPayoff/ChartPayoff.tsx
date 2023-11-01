@@ -51,44 +51,6 @@ const ChartPayoff = () => {
     dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,
   }));
 
-  // const interpolateData = (data: Array<DataTypeProps>) => {
-  //   const interpolatedData = [];
-
-  //   for (let i = 0; i < data.length - 1; i++) {
-  //     interpolatedData.push(data[i]);
-
-  //     const startValue = data[i].value;
-  //     const endValue = data[i + 1].value;
-
-  //     if (endValue - startValue > 1) {
-  //       for (let j = startValue + 1; j < endValue; j++) {
-  //         interpolatedData.push({ value: j });
-  //       }
-  //     } else if (endValue === startValue) {
-  //       // Find the total number of repeated values
-  //       let repetitions = 0;
-  //       for (let k = i + 1; k < data.length && data[k].value === startValue; k++) {
-  //         repetitions++;
-  //       }
-
-  //       if (repetitions > 0) {
-  //         // Calculate the step for repeated values
-  //         const step = (endValue - startValue) / (repetitions + 1);
-
-  //         for (let k = 1; k <= repetitions; k++) {
-  //           interpolatedData.push({ value: startValue + step * k });
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   interpolatedData.push(data[data.length - 1]);
-
-  //   return interpolatedData;
-  // };
-
-  // const makingData = interpolateData(modifiedData);
-
   const gradientOffset = () => {
     const max = Math.max(...modifiedData.map(i => i.value));
     const min = Math.min(...modifiedData.map(i => i.value));
@@ -110,7 +72,7 @@ const ChartPayoff = () => {
         <div style={{ width: '400px', height: '400px' }}>
           <div className={styles.unlimited}>
             <h3>Potential P&L:</h3>
-            <p>{ '+' + '' + changeVal }</p>
+            <p>{'+' + '' + changeVal}</p>
             <LogoUsdc />
           </div>
           <div className={styles.unlimited}>
@@ -147,7 +109,7 @@ const ChartPayoff = () => {
             <Area
               type='linear'
               stroke='url(#lineGradient)'
-              strokeWidth='3'
+              strokeWidth='1'
               dataKey='value'
               fill='url(#fillGradient)'
               label={<CustomLabel base={baseValue} max={dataMax} min={dataMin} />}
@@ -167,10 +129,10 @@ const ChartPayoff = () => {
               <Label
                 content={
                   <>
-                    <text x={0} y={230} fill='#FF3F57' fontSize={10} textAnchor='left'>
-                      {-2354}
+                    <text x={10} y={220} fill='#FF3F57' fontSize={10} textAnchor='left'>
+                      -{2354}
                     </text>
-                    <CustomLogoUsdc x={30} y={217} />
+                    <CustomLogoUsdc x={40} y={207} />
                   </>
                 }
                 position='insideBottom'
