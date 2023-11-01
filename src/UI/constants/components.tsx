@@ -22,9 +22,14 @@ import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Plus from '@/UI/components/Icons/Plus';
+import Minus from '@/UI/components/Icons/Minus';
 import Bookmark from '@/UI/components/Icons/Bookmark';
 import TabCard from '@/UI/components/TabCard/TabCard';
 import Input from '@/UI/components/Input/Input';
+import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
+import Dot from '@/UI/components/Dot/Dot';
+import Typography from '@/UI/components/Typography/Typography';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -36,6 +41,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Constants
 import { TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
+import { DUMMY_STRATEGY_DATA } from './tables';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -72,6 +78,11 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'Dot',
+        component: <Dot type='Call' />,
+        status: 'Done',
+      },
+      {
         name: 'Input',
         component: (
           <>
@@ -105,6 +116,28 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'RadioButton',
+        component: (
+          <Flex gap='gap-12'>
+            <RadioButton
+              options={['Call', 'Put']}
+              name='callOrPut'
+              defaultOption='Call'
+              onChange={value => console.log(value)}
+            />
+            <RadioButton
+              options={[<Plus key='plus' />, <Minus key='minus' />]}
+              valueProps={['Plus', 'Minus']}
+              name='plusOrMinus'
+              defaultOption='Plus'
+              orientation='vertical'
+              onChange={value => console.log(value)}
+            />
+          </Flex>
+        ),
+        status: 'Done',
+      },
+      {
         name: 'Tabs',
         component: <Tabs tabs={TABS} />,
         status: 'Done',
@@ -117,6 +150,21 @@ const COMPONENT_GROUPS = [
       {
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
+        status: 'Done',
+      },
+    ],
+  },
+  {
+    groupName: 'Tables',
+    components: [
+      {
+        name: 'TableStrategy',
+        component: (
+          <Panel>
+            <h3 className='mb-14'>Strategy</h3>
+            <TableStrategy data={DUMMY_STRATEGY_DATA} />
+          </Panel>
+        ),
         status: 'Done',
       },
     ],
@@ -244,9 +292,24 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'Minus',
+        component: <Minus />,
+        status: 'Done',
+      },
+      {
         name: 'Plus',
         component: <Plus />,
         status: 'Done',
+      },
+    ],
+  },
+  {
+    groupName: 'Variables',
+    components: [
+      {
+        name: 'Typography',
+        component: <Typography />,
+        status: 'Blocked',
       },
     ],
   },

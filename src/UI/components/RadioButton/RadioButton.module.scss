@@ -1,0 +1,57 @@
+.radioButton {
+  display: flex;
+  gap: px-to-rem(6);
+
+  &.vertical {
+    flex-direction: column;
+
+    label {
+      @include spacing(padding, 2, 'top+bottom');
+
+      svg {
+        height: px-to-rem(16);
+        width: px-to-rem(16);
+      }
+    }
+  }
+}
+
+.option {
+  position: relative;
+
+  input[type='radio'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  label {
+    @include font-size('text-xs', 'bold');
+    @include spacing(padding, 10, 'top+bottom');
+    @include spacing(padding, 16, 'left+right');
+    transition: $transition_all;
+    font-family: $roboto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: px-to-rem(1) solid var(--white-10, #35333e);
+    border-radius: px-to-rem(24);
+    color: var(--gray-500);
+    cursor: pointer;
+    min-width: px-to-rem(65);
+
+    &:hover {
+      color: var(--white);
+      background: var(--white-10, #35333e);
+    }
+  }
+
+  input[type='radio']:checked + label {
+    background: var(--white-10, #35333e);
+    border-color: var(--white);
+    color: var(--white);
+    cursor: default;
+  }
+}

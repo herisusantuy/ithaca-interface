@@ -1,4 +1,5 @@
 // Packages
+import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 
 // Components
@@ -6,7 +7,6 @@ import Button from '@/UI/components/Button/Button';
 
 // Styles
 import styles from './Tabs.module.scss';
-import { useRouter } from 'next/router';
 
 // Types
 type Tab = {
@@ -27,10 +27,10 @@ const Tabs = ({ tabs, className }: TabsProps) => {
     return <div className={styles.tabs}>No tabs available.</div>;
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const router = useRouter()
-  const initialTab = tabs.find((t) => {
+  const router = useRouter();
+  const initialTab = tabs.find(t => {
     return t.path === '/' ? router.pathname === t.path : router.pathname.includes(t.path || '');
-  })
+  });
   // Tab state
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState(initialTab?.id || tabs[0]?.id);
@@ -52,7 +52,7 @@ const Tabs = ({ tabs, className }: TabsProps) => {
               e.stopPropagation();
               setActiveTab(tab.id);
               if (tab.path) {
-                router.push(tab.path)
+                router.push(tab.path);
               }
             }}
             className={getTabClass(tab.id)}
