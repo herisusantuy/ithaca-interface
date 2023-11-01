@@ -22,9 +22,12 @@ import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Plus from '@/UI/components/Icons/Plus';
+import Minus from '@/UI/components/Icons/Minus';
 import Bookmark from '@/UI/components/Icons/Bookmark';
 import TabCard from '@/UI/components/TabCard/TabCard';
 import Input from '@/UI/components/Input/Input';
+import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
+import Dot from '@/UI/components/Dot/Dot';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -36,6 +39,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Constants
 import { TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
+import { DUMMY_STRATEGY_DATA } from './tables';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -69,6 +73,11 @@ const COMPONENT_GROUPS = [
             </Button>
           </Flex>
         ),
+        status: 'Done',
+      },
+      {
+        name: 'Dot',
+        component: <Dot type='Call' />,
         status: 'Done',
       },
       {
@@ -117,6 +126,21 @@ const COMPONENT_GROUPS = [
       {
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
+        status: 'Done',
+      },
+    ],
+  },
+  {
+    groupName: 'Tables',
+    components: [
+      {
+        name: 'TableStrategy',
+        component: (
+          <Panel>
+            <h3 className='mb-14'>Strategy</h3>
+            <TableStrategy data={DUMMY_STRATEGY_DATA} />
+          </Panel>
+        ),
         status: 'Done',
       },
     ],
@@ -241,6 +265,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'LogoEth',
         component: <LogoEth />,
+        status: 'Done',
+      },
+      {
+        name: 'Minus',
+        component: <Minus />,
         status: 'Done',
       },
       {
