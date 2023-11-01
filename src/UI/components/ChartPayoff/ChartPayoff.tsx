@@ -1,33 +1,14 @@
 import React from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
-import CustomTooltip from './CustomTooltip';
-import BookmarkBar from './BookmarkBar';
-import CustomLabel from './CustomLabel';
-import CustomDot from './CustomDot';
-import LogoUsdc from '../Icons/LogoUsdc';
+import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
+import BookmarkBar from '@/UI/components/ChartPayoff/BookmarkBar';
+import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
+import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import CustomLogoUsdc from '@/UI/components/Icons/CustomLogoUsdc';
+import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
 
-import styles from './ChartPayoff.module.scss';
-import CustomLogoUsdc from '../Icons/CustomLogoUsdc';
-
-const data = [
-  {
-    value: 100,
-    dashValue: 0,
-  },
-  {
-    value: 100,
-    dashValue: 100,
-  },
-  {
-    value: 200,
-  },
-  {
-    value: 300,
-  },
-  {
-    value: 400,
-  },
-];
+import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
 const ChartPayoff = () => {
   const [isClient, setIsClient] = React.useState(false);
@@ -45,7 +26,7 @@ const ChartPayoff = () => {
 
   const baseValue = 200;
 
-  const modifiedData = data.map(item => ({
+  const modifiedData = PAYOFF_DUMMY_DATA.map(item => ({
     ...item,
     value: item.value - baseValue,
     dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,

@@ -1,8 +1,8 @@
 .dot {
-  width: px-to-rem(8);
-  height: px-to-rem(8);
+  width: rem(8);
+  height: rem(8);
   border-radius: 50%;
-  box-shadow: 0px px-to-rem(4) px-to-rem(4) rgba(0, 0, 0, 0.25);
+  box-shadow: 0px rem(4) rem(4) rgba(0, 0, 0, 0.25);
 }
 
 .blue {
@@ -27,4 +27,8 @@
 
 .gray {
   background-color: gray;
+}
+
+.white {
+  background-color: var(--white);
 }

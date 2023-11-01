@@ -23,25 +23,86 @@
 }
 
 .gap-12 {
-  gap: px-to-rem(12) !important;
+  gap: rem(12) !important;
 }
 
 .mb-10 {
-  margin-bottom: px-to-rem(10) !important;
+  margin-bottom: rem(10) !important;
+}
+
+.mt-10 {
+  margin-top: rem(10) !important;
 }
 
 .mb-14 {
-  margin-bottom: px-to-rem(14) !important;
+  margin-bottom: rem(14) !important;
 }
 
 .mb-24 {
-  margin-bottom: px-to-rem(24) !important;
+  margin-bottom: rem(24) !important;
 }
 
 .mt-64 {
-  margin-top: px-to-rem(64) !important;
+  margin-top: rem(64) !important;
 }
 
 .font-lato {
   font-family: $lato !important;
+}
+
+.mb-5 {
+  margin-bottom: rem(5) !important;
+}
+
+.mt-32 {
+  margin-top: rem(32) !important;
+}
+
+.mr-10 {
+  margin-right: rem(10) !important;
+}
+
+.mr-20 {
+  margin-right: rem(20) !important;
+}
+
+.mr-2 {
+  margin-right: rem(2) !important;
+}
+
+.ml-2 {
+  margin-left: rem(2) !important;
+}
+
+.mt-14 {
+  margin-top: rem(14) !important;
+}
+
+.mr-50 {
+  margin-right: rem(50) !important;
+}
+
+.ml-24 {
+  margin-left: rem(24) !important;
+}
+
+.width-90 {
+  width: 90px !important;
+}
+
+.nowrap {
+  white-space: nowrap
+}
+
+.p-20 {
+  @include spacing(padding, 20, 'left+right');
+  @include spacing(padding, 20, 'top+bottom');
+}
+
+.color-white {
+  color: var(--white);
+}
+
+.color-grey-400 {
+  color: var(--gray-400);
 }

@@ -5,7 +5,7 @@ import { DotTypes } from '@/UI/components/Dot/Dot';
 export const STRATEGY_TABLE_HEADER: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price', ''];
 
 // Strategy table dummy Data
-type StrategyProps = {
+export type StrategyType = {
   type: DotTypes;
   side: '+' | '-';
   size: number;
@@ -13,7 +13,7 @@ type StrategyProps = {
   enterPrice: number;
 };
 
-export const DUMMY_STRATEGY_DATA: StrategyProps[] = [
+export const DUMMY_STRATEGY_DATA: StrategyType[] = [
   {
     type: 'Call',
     side: '+',
@@ -29,7 +29,7 @@ export const DUMMY_STRATEGY_DATA: StrategyProps[] = [
     enterPrice: 950,
   },
   {
-    type: 'Forward',
+    type: 'Forward (8 Oct 23)',
     side: '+',
     size: 80,
     strike: 6800,

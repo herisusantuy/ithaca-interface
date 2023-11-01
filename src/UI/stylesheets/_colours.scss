@@ -1,6 +1,11 @@
 :root {
+  // White
   --white: #ffffff;
-  --black: #000000;
+  --white-60: #9d9daa;
+  --white-30: #54565b;
+  --white-20: #394050;
+  --white-10: #35333e;
+  --white-5: #212027;
 
   // Gray
   --gray-25: #fcfcfd;
@@ -17,13 +22,21 @@
   --gray-950: #0b0e15;
 
   // Green
-  --green: #5ee192;
+  --green-30: #5ee192;
+  --green-40: #68f4a0;
+  --green: #4bb475;
+  --dark-green: #132422;
+  --light-green: #68f4a0;
 
   // Green RGBA
   --green-rgba: rgba(94, 225, 146, 0.2);
 
   // Purple
   --purple: #561198;
+
+  --purple-10: #1a0e2f;
+  --purple-20: #220f3d;
+  --purple-30: #561198;
 
   // Purple RGBA
   --purple-rgba: rgba(86, 17, 152, 0.3);
@@ -32,7 +45,7 @@
   --gray-rgba: rgba(28, 30, 38, 0.3);
 
   // Red
-  --red: #ff4405;
+  --red: #ff3f57;
 
   // Red RGBA
   --red-rgba: rgba(255, 68, 5, 0.3);

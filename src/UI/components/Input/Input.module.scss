@@ -6,23 +6,26 @@
 .input {
   display: inline-block;
   position: relative;
+  width: inherit;
 }
 
 .input svg {
   position: absolute;
-  right: px-to-rem(10);
+  right: rem(10);
   top: 50%;
   transform: translate(0%, -50%);
 }
 
 .input input {
   @include spacing(padding, 8, 'top+bottom');
-  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'left');
+  @include spacing(padding, 40, 'right');
   background: none;
   outline: 0;
-  border: px-to-rem(1) solid rgba(255, 255, 255, 0.1);
+  border: rem(1) solid rgba(255, 255, 255, 0.1);
   color: var(--white);
-  border-radius: px-to-rem(24);
+  border-radius: rem(24);
+  width: inherit;
 
   transition: $transition_all;
 

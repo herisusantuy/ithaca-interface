@@ -34,7 +34,7 @@ const RadioButton = ({
 
   const renderOptions = (optionList: (string | ReactNode)[]) => {
     return optionList.map((option, index) => {
-      const keyIdentifier = typeof option === 'string' ? option : `option-${index}`;
+      const keyIdentifier = typeof option === 'string' ? `${option}-${name}` : `option-${index}-${name}`;
       const logValue = valueProps && valueProps[index];
 
       return (

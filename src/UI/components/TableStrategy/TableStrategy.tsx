@@ -1,6 +1,3 @@
-// Packages
-import { useState } from 'react';
-
 // Constants
 import { STRATEGY_TABLE_HEADER } from '@/UI/constants/tables';
 
@@ -17,7 +14,7 @@ import Close from '@/UI/components/Icons/Close';
 import styles from './TableStrategy.module.scss';
 
 // Types
-type StrategyProps = {
+type StrategyType = {
   type: DotTypes;
   side: '+' | '-';
   size: number;
@@ -26,35 +23,29 @@ type StrategyProps = {
 };
 
 type StrategyTableProps = {
-  data: StrategyProps[];
+  data: StrategyType[];
+  removeRow?: (index: number) => void;
 };
 
-const TableStrategy = ({ data: initialData }: StrategyTableProps) => {
-  // Table strategy state
-  const [data, setData] = useState(initialData);
-
-  // Handler to remove a strategy from the data array
-  const handleRemoveRow = (index: number) => {
-    const updatedData = [...data];
-    updatedData.splice(index, 1);
-    setData(updatedData);
-  };
-
+const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
   return (
     <div className={styles.table}>
       <div className={`${styles.row} ${styles.header}`}>
-        {STRATEGY_TABLE_HEADER.map((header, idx) => (
+        {STRATEGY_TABLE_HEADER.map((header, idx) => {
+         return (
           <div className={styles.cell} key={idx}>
-            {header}
+            {header === 'Type' ?
+            <div className={`${styles.strategy} ml-24 mr-20`}>{header}</div>
+            :<>{header}</>}
           </div>
-        ))}
+        )})}
       </div>
       {data.map((strategy, idx) => (
-        <div className={styles.row} key={idx}>
+        <div className={`${styles.row} ${styles.data}`} key={idx}>
           <div className={styles.cell}>
             <div className={styles.dot}>
               <Dot type={strategy.type} />
-              {strategy.type}
+              <div className={styles.strategy}>{strategy.type}</div>
             </div>
           </div>
           <div className={styles.cell}>{displaySideIcon(strategy.side)}</div>
@@ -62,7 +53,7 @@ const TableStrategy = ({ data: initialData }: StrategyTableProps) => {
           <div className={styles.cell}>{formatWithCommas(strategy.strike)}</div>
           <div className={styles.cell}>{formatWithCommas(strategy.enterPrice)}</div>
           <div className={styles.cell}>
-            <Button title='Click to remove row' variant='icon' onClick={() => handleRemoveRow(idx)}>
+            <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
               <Close />
             </Button>
           </div>

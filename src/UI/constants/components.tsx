@@ -6,7 +6,6 @@ import Asset from '@/UI/components/Asset/Asset';
 import Button from '@/UI/components/Button/Button';
 import Close from '@/UI/components/Icons/Close';
 import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Chart from '@/UI/components/Chart/Chart';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import LabelValue from '@/UI/components/LabelValue/LabelValue';
@@ -54,28 +53,57 @@ const COMPONENT_GROUPS = [
       {
         name: 'Asset',
         component: <Asset icon={<LogoEth />} label='ETH' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Button',
         component: (
-          <Flex direction='row-space-around'>
-            <Button title='Click to perform action' onClick={() => {}}>
-              Primary
-            </Button>
-            <Button title='Click to perform action' variant='secondary' onClick={() => {}}>
-              <Plus /> Secondary
-            </Button>
-            <Button title='Click to perform action' variant='tertiary' onClick={() => {}}>
-              <Bookmark />
-              Tertiary
-            </Button>
-            <Button title='Click to perform action' disabled onClick={() => {}}>
-              Disabled
-            </Button>
-          </Flex>
+          <>
+            <Flex direction='row-space-between' margin='mb-32'>
+              <Button title='Click to perform action' onClick={() => {}} size='sm'>
+                Primary Small
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}} size='sm' disabled>
+                Primary Small Disabled
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}}>
+                Primary Large
+              </Button>
+              <Button title='Click to perform action' disabled onClick={() => {}}>
+                Primary Large Disabled
+              </Button>
+            </Flex>
+            <Flex direction='row-space-between' margin='mb-32'>
+              <Button title='Click to perform action' variant='secondary' size='sm' onClick={() => {}}>
+                Secondary Small
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='sm' disabled onClick={() => {}}>
+                Secondary Small Disabled
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' onClick={() => {}}>
+                Secondary Large
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' disabled onClick={() => {}}>
+                Secondary Large Disabled
+              </Button>
+            </Flex>
+            <Flex direction='row-space-between'>
+              <Button title='Click to perform action' variant='outline' size='sm' onClick={() => {}}>
+                Outline Small
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='sm' disabled onClick={() => {}}>
+                Outline Small Disabled
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='lg' onClick={() => {}}>
+                Outline Large
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='lg' disabled onClick={() => {}}>
+                Outline Large Disabled
+              </Button>
+            </Flex>
+          </>
         ),
-        status: 'Done',
+        status: 'In Progress',
       },
       {
         name: 'Dot',
@@ -89,7 +117,7 @@ const COMPONENT_GROUPS = [
             <Input icon={<LogoEth />} />
           </>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'LabelValue',
@@ -98,17 +126,17 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
             <LabelValue
               label='Next Auction'
-              value={<CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />}
+              value={<CountdownTimer />}
             />
-            <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+            <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Loader',
         component: <Loader />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Logo',
@@ -135,12 +163,12 @@ const COMPONENT_GROUPS = [
             />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Tabs',
         component: <Tabs tabs={TABS} />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'TabCard',
@@ -150,7 +178,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -165,7 +193,7 @@ const COMPONENT_GROUPS = [
             <TableStrategy data={DUMMY_STRATEGY_DATA} />
           </Panel>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -173,13 +201,12 @@ const COMPONENT_GROUPS = [
     groupName: 'Charts',
     components: [
       {
-        name: 'Chart',
-        component: <Chart />,
-        status: 'In Progress',
-      },
-      {
         name: 'ChartPayoff',
-        component: <ChartPayoff />,
+        component: (
+          <Panel>
+            <ChartPayoff />
+          </Panel>
+        ),
         status: 'In Progress',
       },
     ],
@@ -219,8 +246,8 @@ const COMPONENT_GROUPS = [
     components: [
       {
         name: 'CountdownTimer',
-        component: <CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />,
-        status: 'Done',
+        component: <CountdownTimer />,
+        status: 'Waiting on Figma',
       },
       {
         name: 'Meta',
@@ -234,7 +261,7 @@ const COMPONENT_GROUPS = [
             Test
           </Modal>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -309,7 +336,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Typography',
         component: <Typography />,
-        status: 'Blocked',
+        status: 'Done',
       },
     ],
   },

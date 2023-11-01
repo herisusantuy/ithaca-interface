@@ -2,7 +2,7 @@
   transition: $transition_all;
   background: var(--white);
   position: fixed;
-  top: px-to-rem(60);
+  top: rem(60);
   transform: translate(100%);
   bottom: 0;
   z-index: 1;
@@ -18,7 +18,7 @@
     width: 100%;
 
     a {
-      @include font-size('display-sm', 'medium');
+      @include font-size('text-sm', 'medium');
     }
   }
 }

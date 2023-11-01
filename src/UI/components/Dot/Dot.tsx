@@ -2,18 +2,20 @@
 import styles from './Dot.module.scss';
 
 // Types
-export type DotTypes = 'Call' | 'Put' | 'BinaryCall' | 'BinaryPut' | 'Forward';
+export type DotTypes = 'White' | 'Call' | 'Put' | 'Binary Call' | 'Binary Put' | 'Forward (8 Oct 23)' | 'Forward (Next Auction)';
 
 type DotProps = {
   type: DotTypes;
 };
 
 const TYPE_TO_COLOR: Record<DotTypes, string> = {
+  White: styles.white,
   Call: styles.blue,
   Put: styles.red,
-  BinaryCall: styles.orange,
-  BinaryPut: styles.purple,
-  Forward: styles.green,
+  'Binary Call': styles.orange,
+  'Binary Put': styles.purple,
+  'Forward (8 Oct 23)': styles.green,
+  'Forward (Next Auction)': styles.primary,
 };
 
 const Dot = ({ type }: DotProps) => {
