@@ -29,6 +29,7 @@ import Input from '@/UI/components/Input/Input';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -112,6 +113,18 @@ const COMPONENT_GROUPS = [
       {
         name: 'Logo',
         component: <Logo />,
+        status: 'Done',
+      },
+      {
+        name: 'RadioButton',
+        component: (
+          <RadioButton
+            options={['Call', 'Put']}
+            name='options'
+            defaultOption='Call'
+            onChange={value => console.log(value)}
+          />
+        ),
         status: 'Done',
       },
       {
