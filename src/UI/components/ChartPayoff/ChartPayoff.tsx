@@ -1,40 +1,24 @@
-import React from 'react';
+// Packages
+import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine } from 'recharts';
-import CustomTooltip from './CustomTooltip';
-import BookmarkBar from './BookmarkBar';
 
-const data = [
-  {
-    name: 'Jan',
-    value: 100,
-  },
-  {
-    name: 'Feb',
-    value: 100,
-  },
-  {
-    name: 'Mar',
-    value: 200,
-  },
-  {
-    name: 'Apr',
-    value: 300,
-  },
-  {
-    name: 'May',
-    value: 400,
-  },
-];
+// Components
+import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
+import Key from '@/UI/components/ChartPayoff/Key';
+
+// Constants
+import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
 
 const ChartPayoff = () => {
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsClient(true);
   }, []);
+
   const baseValue = 200;
 
-  const modifiedData = data.map(item => ({
+  const modifiedData = PAYOFF_DUMMY_DATA.map(item => ({
     ...item,
     value: item.value - baseValue,
   }));
@@ -52,7 +36,9 @@ const ChartPayoff = () => {
 
     return dataMax / (dataMax - dataMin);
   };
+
   const off = gradientOffset();
+
   return (
     <>
       {isClient && (
@@ -75,7 +61,7 @@ const ChartPayoff = () => {
             <Area type='linear' stroke='url(#lineGradient)' strokeWidth='3' dataKey='value' fill='url(#fillGradient)' />
             <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
           </AreaChart>
-          <BookmarkBar />
+          <Key />
         </div>
       )}
     </>

@@ -6,7 +6,6 @@ import Asset from '@/UI/components/Asset/Asset';
 import Button from '@/UI/components/Button/Button';
 import Close from '@/UI/components/Icons/Close';
 import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Chart from '@/UI/components/Chart/Chart';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import LabelValue from '@/UI/components/LabelValue/LabelValue';
@@ -173,13 +172,12 @@ const COMPONENT_GROUPS = [
     groupName: 'Charts',
     components: [
       {
-        name: 'Chart',
-        component: <Chart />,
-        status: 'In Progress',
-      },
-      {
         name: 'ChartPayoff',
-        component: <ChartPayoff />,
+        component: (
+          <Panel>
+            <ChartPayoff />
+          </Panel>
+        ),
         status: 'In Progress',
       },
     ],
