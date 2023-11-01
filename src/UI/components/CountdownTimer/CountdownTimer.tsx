@@ -53,7 +53,7 @@ const CountdownTimer = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, nextAuction]);
+  }, [time, nextAuction, fetchNextAuction]);
 
   return (
     <div className={styles.countdownTimer}>
