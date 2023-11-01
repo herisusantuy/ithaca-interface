@@ -23,7 +23,9 @@ export interface AuctionTimes {
 
 export interface ReadSdkSlice {
     nextAuction: AuctionTimes;
+    expiryDates: number[];
     fetchNextAuction: () => void;
+    fetchExpiryDateList: () => void;
 }
 
 export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
@@ -33,6 +35,7 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         second: 0,
         milliseconds: 0
     },
+    expiryDates: [],
     fetchNextAuction: async () => {
         const nextAuction = dayjs(await ithacaSDK.protocol.nextAuction());
         const currentTime = dayjs();
@@ -42,5 +45,15 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
             second: nextAuction.diff(currentTime, 'second')%60,
             milliseconds: nextAuction.diff(currentTime)
         } })
+    },
+    fetchExpiryDateList: async () => {
+        const contractList = await ithacaSDK.protocol.contractList();
+        const filteredList = contractList.reduce((arr, val) => {
+            if(!arr.includes(val.economics.expiry)) {
+                arr.push(val.economics.expiry)
+            }
+            return arr;
+        }, []).sort();
+        set({expiryDates: filteredList})
     },
 })
