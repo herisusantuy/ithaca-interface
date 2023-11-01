@@ -18,20 +18,20 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: px-to-rem(16);
+  gap: rem(16);
 }
 
 .badge {
   @include spacing(padding, 4, 'top+bottom');
   @include spacing(padding, 8, 'left+right');
   background: var(--gray-600);
-  border-radius: px-to-rem(10);
+  border-radius: rem(10);
 }
 
 .key {
   display: flex;
   align-items: center;
-  gap: px-to-rem(4);
+  gap: rem(4);
 
   p {
     font-family: $lato;

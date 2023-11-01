@@ -23,11 +23,11 @@
 }
 
 .gap-12 {
-  gap: px-to-rem(12) !important;
+  gap: rem(12) !important;
 }
 
 .mb-10 {
-  margin-bottom: px-to-rem(10) !important;
+  margin-bottom: rem(10) !important;
 }
 
 .mt-10 {
@@ -35,15 +35,19 @@
 }
 
 .mb-14 {
-  margin-bottom: px-to-rem(14) !important;
+  margin-bottom: rem(14) !important;
 }
 
 .mb-24 {
-  margin-bottom: px-to-rem(24) !important;
+  margin-bottom: rem(24) !important;
+}
+
+.mb-32 {
+  margin-bottom: rem(32) !important;
 }
 
 .mt-64 {
-  margin-top: px-to-rem(64) !important;
+  margin-top: rem(64) !important;
 }
 
 .font-lato {

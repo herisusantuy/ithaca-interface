@@ -2,8 +2,8 @@
   @include spacing(padding, 12, 'left');
   display: flex;
   flex-direction: column;
-  gap: px-to-rem(4);
-  border-left: px-to-rem(1) solid var(--gray-800);
+  gap: rem(4);
+  border-left: rem(1) solid var(--gray-800);
 }
 
 .label {
@@ -14,23 +14,23 @@
 .labelDropdown {
   flex-direction: row;
   align-items: center;
-  gap: px-to-rem(4);
+  gap: rem(4);
 }
 
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  gap: px-to-rem(4);
+  gap: rem(4);
 }
 
 .dropdownIcon {
   @include spacing(padding, 4, 'all');
-  border-radius: px-to-rem(4);
+  border-radius: rem(4);
   background: var(--gray-800);
 
   svg {
-    height: px-to-rem(12);
-    width: px-to-rem(12);
+    height: rem(12);
+    width: rem(12);
   }
 }
 
@@ -38,7 +38,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  gap: px-to-rem(4);
+  gap: rem(4);
   color: var(--white);
 }
 

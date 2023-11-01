@@ -30,8 +30,8 @@
 }
 
 .box {
-  width: px-to-rem(24);
-  height: px-to-rem(12);
+  width: rem(24);
+  height: rem(12);
   display: inline-block;
   position: relative;
 }
@@ -45,10 +45,10 @@
 .inner,
 .inner::before,
 .inner::after {
-  width: px-to-rem(24);
-  height: px-to-rem(2);
+  width: rem(24);
+  height: rem(2);
   background-color: var(--white);
-  border-radius: px-to-rem(4);
+  border-radius: rem(4);
   position: absolute;
   transition-property: transform;
   transition-duration: 0.15s;

@@ -1,6 +1,7 @@
 .btn {
-  @include font-size('text-sm', 'bold');
   transition: $transition_all;
+  font-family: $roboto;
+  border-radius: rem(24);
   display: inline-flex;
   appearance: none;
   align-items: center;
@@ -24,55 +25,67 @@
 
 .btn--md {
   @include spacing(padding, 16, 'left+right');
-  @include spacing(padding, 12, 'top+bottom');
+  @include spacing(padding, 10, 'top+bottom');
+  @include font-size('text-xs', 'bold');
 }
 
 .btn--lg {
-  @include spacing(padding, 32, 'left+right');
+  @include spacing(padding, 16, 'left+right');
   @include spacing(padding, 12, 'top+bottom');
-}
-
-.btn--xl {
-  @include spacing(padding, 24, 'left+right');
-  @include spacing(padding, 12, 'top+bottom');
-}
-
-.btn--2xl {
-  @include spacing(padding, 32, 'left+right');
-  @include spacing(padding, 16, 'top+bottom');
-}
-
-.btn[disabled],
-.btn[disabled]:hover {
-  border-radius: px-to-rem(25);
-  cursor: not-allowed;
-  background: var(--gray-600);
-  color: var(--gray-900);
+  @include font-size('text-sm', 'bold');
 }
 
 // Variants
 .btn--primary {
-  border-radius: px-to-rem(25);
-  background: var(--green);
-}
+  background: var(--green-30);
+  color: var(--white-20);
 
-.btn--secondary {
-  border-radius: px-to-rem(25);
-  border: 1px solid var(--Purple1, #561198);
-  background: var(--Purple-1-Button, rgba(86, 17, 152, 0.2));
-  color: var(--white);
-  gap: px-to-rem(4);
+  &:hover {
+    background: var(--green-40);
+  }
 
-  svg path {
-    fill: var(--white);
+  &[disabled],
+  &[disabled]:hover {
+    background: var(--white-30);
+    color: var(--white-10);
+    cursor: not-allowed;
   }
 }
 
-.btn--tertiary {
-  border-radius: px-to-rem(25);
-  gap: px-to-rem(8);
-  color: #5ee192;
-  background: none;
+.btn--secondary {
+  background: var(--purple-10);
+  border: rem(1) solid var(--purple-30);
+  color: var(--white);
+
+  &:hover {
+    background: var(--purple-20);
+  }
+
+  &[disabled],
+  &[disabled]:hover {
+    background: transparent;
+    color: var(--white-30);
+    border-color: var(--white-30);
+    cursor: not-allowed;
+  }
+}
+
+.btn--outline {
+  background: transparent;
+  border: rem(1) solid var(--green-30);
+  color: var(--green-30);
+
+  &:hover {
+    background: rgba(94, 225, 146, 0.1);
+  }
+
+  &[disabled],
+  &[disabled]:hover {
+    background: transparent;
+    color: var(--white-30);
+    border-color: var(--white-30);
+    cursor: not-allowed;
+  }
 }
 
 .btn--icon {
@@ -80,15 +93,18 @@
   padding: 0;
 }
 
+// TO BE REMOVED
 .btn--dropdown {
+  @include spacing(padding, 12, 'all');
+  border-radius: 0;
   background: var(--purple-rgba);
   color: var(--white);
-  border: px-to-rem(1) solid var(--purple);
+  border: rem(1) solid var(--purple);
   border-bottom: 0;
   justify-content: space-between;
 
   &:last-child {
-    border-bottom: px-to-rem(1) solid var(--purple);
+    border-bottom: rem(1) solid var(--purple);
   }
 
   &:hover {
@@ -97,13 +113,15 @@
 }
 
 .btn--link {
+  @include spacing(padding, 12, 'all');
   @include font-size('text-sm', 'regular');
+  border-radius: 0;
   background: none;
   color: var(--gray-300);
   justify-content: flex-start;
 
   &:hover {
-    background: var(--gray-950);
+    background: var(--purple-30);
     color: var(--gray-100);
   }
 }
@@ -113,6 +131,6 @@
   @include font-size('text-md', 'regular');
   background: none;
   padding: 0;
-  border-bottom: px-to-rem(1) solid transparent;
+  border-bottom: rem(1) solid transparent;
   color: var(--gray-400);
 }

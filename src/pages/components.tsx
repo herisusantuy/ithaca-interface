@@ -73,7 +73,6 @@ const Components = ({ componentCodes }: ComponentProps) => {
         title='Click to expand component group'
         variant='dropdown'
         onClick={() => toggleGroup(groupIndex)}
-        size='md'
         className={isActiveGroup(groupIndex) ? 'isDropdownActive' : ''}
       >
         {group.groupName} {renderIcon(groupIndex)}
@@ -95,7 +94,6 @@ const Components = ({ componentCodes }: ComponentProps) => {
                 key={comp.name}
                 onClick={() => setActiveComponent({ groupIndex, componentIndex: compIndex })}
                 variant='link'
-                size='md'
                 className={isActiveComponent(groupIndex, compIndex)}
               >
                 {comp.name}

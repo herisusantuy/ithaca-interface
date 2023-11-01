@@ -1,8 +1,8 @@
 .toggle {
   display: flex;
   align-items: center;
-  gap: px-to-rem(10);
-  width: px-to-rem(112);
+  gap: rem(10);
+  width: rem(112);
   cursor: pointer;
   user-select: none;
 
@@ -17,20 +17,20 @@
   }
 
   .switch {
-    width: px-to-rem(44);
-    height: px-to-rem(26);
+    width: rem(44);
+    height: rem(26);
     background-color: var(--gray-500);
-    border-radius: px-to-rem(25);
+    border-radius: rem(25);
     position: relative;
 
     div {
-      width: px-to-rem(18);
-      height: px-to-rem(18);
+      width: rem(18);
+      height: rem(18);
       background-color: var(--white);
       border-radius: 50%;
       position: absolute;
-      top: px-to-rem(4);
-      left: px-to-rem(4);
+      top: rem(4);
+      left: rem(4);
       transition: $transition_all;
 
       &.slide {
