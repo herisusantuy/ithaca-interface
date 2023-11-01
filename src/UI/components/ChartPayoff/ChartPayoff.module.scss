@@ -89,3 +89,24 @@
   border-radius: 50%;
   background-color: #ff6e1d;
 }
+
+.unlimited {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+  p {
+    color: #5EE192;
+    font-size: 10px;
+  }
+  h3 {
+    color: #fff;
+    font-weight: 700;
+    font-size: 10px;
+  }
+}
+
+.minusContainer {
+
+}

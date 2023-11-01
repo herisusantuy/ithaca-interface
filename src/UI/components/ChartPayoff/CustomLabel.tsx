@@ -12,7 +12,6 @@ interface LabelProps {
 
 const CustomLabel = (props: LabelProps) => {
   const { x, y, value, base, max, min } = props;
-    console.log('----------', max);
   const showRenderItem = () => {
     if (value == 0) {
       return (
