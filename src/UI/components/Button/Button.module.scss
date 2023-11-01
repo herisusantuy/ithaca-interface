@@ -19,6 +19,7 @@
 .btn--sm {
   @include spacing(padding, 8, 'left+right');
   @include spacing(padding, 8, 'top+bottom');
+  height: 35px;
 }
 
 .btn--md {

@@ -25,7 +25,9 @@
         padding: 0;
       }
     }
-
+    &.data {
+      color: var(--white);
+    }
     .cell {
       @include spacing(padding, 6, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
@@ -33,6 +35,9 @@
 
       display: flex;
       flex: 1;
+      .strategy {
+      width: 150px;
+      }
 
       .dot {
         display: flex;

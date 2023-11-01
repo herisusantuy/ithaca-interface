@@ -6,6 +6,7 @@
 .input {
   display: inline-block;
   position: relative;
+  width: inherit;
 }
 
 .input svg {
@@ -23,6 +24,7 @@
   border: px-to-rem(1) solid rgba(255, 255, 255, 0.1);
   color: var(--white);
   border-radius: px-to-rem(24);
+  width: inherit;
 
   transition: $transition_all;
 

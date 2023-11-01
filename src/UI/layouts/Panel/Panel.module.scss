@@ -1,5 +1,5 @@
 .panel {
-  @include spacing(padding, 20, 'all');
+  // @include spacing(padding, 20, 'all');
   border: px-to-rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
   background: var(--panel, linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%));
   box-shadow:

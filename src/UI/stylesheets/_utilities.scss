@@ -45,3 +45,36 @@
 .font-lato {
   font-family: $lato !important;
 }
+
+.mb-5 {
+  margin-bottom: px-to-rem(5) !important;
+}
+
+.mt-32 {
+  margin-top: px-to-rem(32) !important;
+}
+
+.mr-10 {
+  margin-right: px-to-rem(10) !important;
+}
+
+.mr-20 {
+  margin-right: px-to-rem(20) !important;
+}
+
+.ml-24 {
+  margin-left: px-to-rem(24) !important;
+}
+
+.width-90 {
+  width: 90px !important;
+}
+
+.nowrap {
+  white-space: nowrap
+}
+
+.p-20 {
+  @include spacing(padding, 20, 'left+right');
+  @include spacing(padding, 20, 'top+bottom');
+}

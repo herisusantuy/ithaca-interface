@@ -3,6 +3,15 @@
   margin-top: 24px;
 }
 
+.positionTitle {
+  margin-bottom: 18px;
+  margin-top: 24px;
+  color: var(--white);
+  & p {
+    color: var(--gray-400);
+  }
+}
+
 .positionBuilder {
   margin-top: 15px;
   height: 257px;
@@ -19,12 +28,19 @@
   border-radius: 30px;
 }
 
-.strategy {
-  height: 550px;
-  width: 465px;
-  border-radius: 30px;
-  padding: 20px;
-  background-color: rgba(28, 32, 40, 0.4);
-  margin-left: 16px;
+.strategyPanel {
+  margin-left: 15px;
+}
+
+.diagramPlaceholder {
+  width: 425px;
+  height: 264px;
+  border: 1px solid white;
+  padding: 10px;
+  color: var(--white);
+  margin-top: 5px;
+}
+
+.payOffTitle {
   color: white;
 }
