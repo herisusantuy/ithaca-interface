@@ -28,6 +28,7 @@ import TabCard from '@/UI/components/TabCard/TabCard';
 import Input from '@/UI/components/Input/Input';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import Dot from '@/UI/components/Dot/Dot';
+import Typography from '@/UI/components/Typography/Typography';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -276,6 +277,16 @@ const COMPONENT_GROUPS = [
         name: 'Plus',
         component: <Plus />,
         status: 'Done',
+      },
+    ],
+  },
+  {
+    groupName: 'Variables',
+    components: [
+      {
+        name: 'Typography',
+        component: <Typography />,
+        status: 'Blocked',
       },
     ],
   },
