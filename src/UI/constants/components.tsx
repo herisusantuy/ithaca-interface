@@ -58,23 +58,52 @@ const COMPONENT_GROUPS = [
       {
         name: 'Button',
         component: (
-          <Flex direction='row-space-around'>
-            <Button title='Click to perform action' onClick={() => {}}>
-              Primary
-            </Button>
-            <Button title='Click to perform action' variant='secondary' onClick={() => {}}>
-              <Plus /> Secondary
-            </Button>
-            <Button title='Click to perform action' variant='tertiary' onClick={() => {}}>
-              <Bookmark />
-              Tertiary
-            </Button>
-            <Button title='Click to perform action' disabled onClick={() => {}}>
-              Disabled
-            </Button>
-          </Flex>
+          <>
+            <Flex direction='row-space-between' margin='mb-32'>
+              <Button title='Click to perform action' onClick={() => {}} size='sm'>
+                Primary Small
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}} size='sm' disabled>
+                Primary Small Disabled
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}}>
+                Primary Large
+              </Button>
+              <Button title='Click to perform action' disabled onClick={() => {}}>
+                Primary Large Disabled
+              </Button>
+            </Flex>
+            <Flex direction='row-space-between' margin='mb-32'>
+              <Button title='Click to perform action' variant='secondary' size='sm' onClick={() => {}}>
+                Secondary Small
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='sm' disabled onClick={() => {}}>
+                Secondary Small Disabled
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' onClick={() => {}}>
+                Secondary Large
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' disabled onClick={() => {}}>
+                Secondary Large Disabled
+              </Button>
+            </Flex>
+            <Flex direction='row-space-between'>
+              <Button title='Click to perform action' variant='outline' size='sm' onClick={() => {}}>
+                Outline Small
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='sm' disabled onClick={() => {}}>
+                Outline Small Disabled
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='lg' onClick={() => {}}>
+                Outline Large
+              </Button>
+              <Button title='Click to perform action' variant='outline' size='lg' disabled onClick={() => {}}>
+                Outline Large Disabled
+              </Button>
+            </Flex>
+          </>
         ),
-        status: 'Waiting on Figma',
+        status: 'In Progress',
       },
       {
         name: 'Dot',
@@ -307,7 +336,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Typography',
         component: <Typography />,
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
     ],
   },

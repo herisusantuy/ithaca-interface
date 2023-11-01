@@ -10,7 +10,7 @@ type ButtonProps = {
   className?: string;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   role?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  size?: 'sm' | 'lg';
   title: string;
   type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'tertiary' | 'icon' | 'dropdown' | 'link' | 'tab';
