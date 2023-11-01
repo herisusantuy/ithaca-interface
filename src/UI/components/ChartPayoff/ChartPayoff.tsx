@@ -1,36 +1,38 @@
 import React from 'react';
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, CartesianAxis } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, CartesianAxis, Label } from 'recharts';
+import CustomTooltip from './CustomTooltip';
+import BookmarkBar from './BookmarkBar';
 
-interface Prop {
+type Prop = {
   baseValue: number;
-}
+};
 
 const data = [
   {
     name: 'Jan',
-    value: -50,
-  },
-  {
-    name: 'Feb',
-    value: -50,
-  },
-  {
-    name: 'Mar',
     value: 100,
   },
   {
-    name: 'Apr',
+    name: 'Feb',
+    value: 100,
+  },
+  {
+    name: 'Mar',
     value: 200,
   },
   {
-    name: 'May',
+    name: 'Apr',
     value: 300,
+  },
+  {
+    name: 'May',
+    value: 400,
   },
 ];
 
 const ChartPayoff = (props: Prop) => {
   let baseValue = props.baseValue;
-  baseValue = 100;
+  baseValue = 200;
 
   const modifiedData = data.map(item => ({
     ...item,
@@ -52,22 +54,29 @@ const ChartPayoff = (props: Prop) => {
   };
   const off = gradientOffset();
   return (
-    <AreaChart width={400} height={300} data={modifiedData}>
-      <defs>
-        <linearGradient id='splitColor' gradientTransform='rotate(90)'>
-          <stop offset={off} stopColor='#5ee192' stopOpacity={0.2} />
-          <stop offset={off} stopColor='#FF3F57' stopOpacity={0.2} />
-        </linearGradient>
-        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='5%' stopColor='#8884d8' stopOpacity={0.4} />
-          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='95%' stopColor='#8884d8' stopOpacity={0.4} />
-        </linearGradient>
-      </defs>
-      <Tooltip />
-      <Area type='linear' stroke='#8884d8' dataKey='value' fill='url(#fillGradient)' />
-      <ReferenceLine y={0} stroke='red' />
-    </AreaChart>
+    <>
+      <div style={{ width: '400px', height: '400px' }}>
+        <AreaChart width={400} height={300} data={modifiedData}>
+          <defs>
+            <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
+              <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+              <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
+            </linearGradient>
+
+            <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
+              <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+              <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
+            </linearGradient>
+          </defs>
+          <Tooltip content={<CustomTooltip base={baseValue}/>} />
+          <Area type='linear' stroke='url(#lineGradient)' strokeWidth='3' dataKey='value' fill='url(#fillGradient)' />
+          <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
+        </AreaChart>
+        <BookmarkBar />
+      </div>
+    </>
   );
 };
 
