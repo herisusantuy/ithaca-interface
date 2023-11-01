@@ -7,8 +7,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './CountdownTimer.module.scss';
 
 const CountdownTimer = () => {
+  const { fetchNextAuction } = useAppStore();
   const nextAuction = useFromStore(useAppStore, state => state.nextAuction)
-  console.log(nextAuction)
   const [time, setTime] = useState({
     hours: nextAuction?.hour || 0,
     minutes: nextAuction?.minute || 0,
@@ -17,6 +17,7 @@ const CountdownTimer = () => {
 
   useEffect(() => {
     const resetTimer = () => {
+      fetchNextAuction();
       setTime({
         hours: nextAuction?.hour || 0,
         minutes: nextAuction?.minute || 0,
