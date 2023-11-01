@@ -35,7 +35,7 @@ const Index = () => {
                 <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
                 <LabelValue
                   label='Next Auction'
-                  value={<CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />}
+                  value={<CountdownTimer />}
                 />
                 <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
               </Flex>
@@ -76,7 +76,7 @@ const Index = () => {
                 valueOptions={['Forward (8 Oct 23)', 'Forward (Next Auction)']}
                 addStrategy={(value: StrategyType) =>
                   setStrategyList([...strategyList, value])}
-                defaultOption='Call'
+                defaultOption='Forward (Next Auction)'
                 submitAuction={() => { }}
                 id='forwards-row'
               />

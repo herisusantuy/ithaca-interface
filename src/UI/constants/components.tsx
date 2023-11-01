@@ -126,7 +126,7 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
             <LabelValue
               label='Next Auction'
-              value={<CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />}
+              value={<CountdownTimer />}
             />
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
@@ -246,7 +246,7 @@ const COMPONENT_GROUPS = [
     components: [
       {
         name: 'CountdownTimer',
-        component: <CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />,
+        component: <CountdownTimer />,
         status: 'Waiting on Figma',
       },
       {

@@ -18,6 +18,7 @@ import Header from '@/UI/layouts/Header/Header';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
@@ -46,7 +47,15 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
+  const { nextAuction, fetchNextAuction } = useAppStore();
+  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction);
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
+}
+
+const getTimeNextAuction = async (timeUntilNexAuction: number, fetchNextAuction: () => void) => {
+  setTimeout(() => {
+    fetchNextAuction();
+  }, timeUntilNexAuction)
 }
 
 export default App;

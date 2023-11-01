@@ -24,7 +24,7 @@ type StrategyType = {
 
 type StrategyTableProps = {
   data: StrategyType[];
-  removeRow?: () => void;
+  removeRow?: (index: number) => void;
 };
 
 const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {

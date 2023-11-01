@@ -1,8 +1,10 @@
 // Packages
+import { StrategyType } from '@/UI/constants/tables';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import { ReactNode, useState } from 'react';
 import Button from '../Button/Button';
+import { DotTypes } from '../Dot/Dot';
 import LogoEth from '../Icons/LogoEth';
 import LogoUsdc from '../Icons/LogoUsdc';
 import Minus from '../Icons/Minus';
@@ -15,16 +17,16 @@ import styles from './PositionBuilderRow.module.scss';
 // Types
 type PositionBuilderRowProps = {
   options: (string | ReactNode)[];
-  valueOptions: string[];
-  addStrategy: () => void;
-  defaultOption: string;
-  submitAuction: () => void;
+  valueOptions: DotTypes[];
+  addStrategy: (value: StrategyType) => void;
+  defaultOption: DotTypes;
+  submitAuction: (value: StrategyType) => void;
   id: string;
 };
 
 const PositionBuilderRow = ({ options, valueOptions, addStrategy, defaultOption, submitAuction, id }: PositionBuilderRowProps) => {
   // Radio button state
-  const [selectedType, setselectedType] = useState<string | undefined>(defaultOption);
+  const [selectedType, setselectedType] = useState<DotTypes>(defaultOption);
   const [posNeg, setPosNeg] = useState<string | undefined>('Plus');
 
   return (
@@ -36,7 +38,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, defaultOption,
               valueProps={valueOptions}
               name={`${id}-type`}
               defaultOption={defaultOption}
-              onChange={(value: string) => setselectedType(value)} />
+              onChange={(value: string) => setselectedType(value as DotTypes)} />
           </div>
           <div className='mr-10'>
             <RadioButton
@@ -66,7 +68,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, defaultOption,
             <Button size='sm' title='Click to add to Strategy' variant='secondary' onClick={() => {
               addStrategy({
                 type: selectedType,
-                side: posNeg,
+                side: posNeg === 'Plus' ? '+' : '-',
                 size: 120,
                 strike: 6500,
                 enterPrice: 800,
@@ -80,7 +82,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, defaultOption,
             <Button size='sm' title='Click to add to Submit to Auction' onClick={() => {
               submitAuction({
                 type: selectedType,
-                side: posNeg,
+                side: posNeg === 'Plus' ? '+' : '-',
                 size: 120,
                 strike: 6500,
                 enterPrice: 800,
