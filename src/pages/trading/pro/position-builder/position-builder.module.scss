@@ -1,5 +1,5 @@
 .title {
-  color: white;
+  color: var(--white);
   margin-top: 24px;
 }
 
@@ -17,12 +17,10 @@
   height: 257px;
   background-color: rgba(28, 32, 40, 0.4);
   border-radius: 30px;
-  width: 912px;
 }
 
 .summary {
   height: 80px;
-  width: 912px;
   margin-top: 118px;
   background-color: rgba(28, 32, 40, 0.4);
   border-radius: 30px;
@@ -30,19 +28,6 @@
 
 .strategyPanel {
   margin-left: 15px;
-}
-
-.diagramPlaceholder {
-  width: 425px;
-  height: 264px;
-  border: 1px solid white;
-  padding: 10px;
-  color: var(--white);
-  margin-top: 5px;
-}
-
-.payOffTitle {
-  color: white;
 }
 
 .summaryWrapper {

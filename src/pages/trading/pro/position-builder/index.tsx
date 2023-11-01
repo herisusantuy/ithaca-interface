@@ -19,6 +19,8 @@ import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
 import { useState } from 'react';
 import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
+import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 
 const Index = () => {
 
@@ -53,49 +55,55 @@ const Index = () => {
                   <p>Premium</p> */}
                 </Flex>
               </div>
-              <PositionBuilderRow 
+              <PositionBuilderRow
                 options={['Call', 'Put']}
                 valueOptions={['Call', 'Put']}
-                addStrategy={(value: StrategyType) => 
+                addStrategy={(value: StrategyType) =>
                   setStrategyList([...strategyList, value])}
                 defaultOption='Call'
-                submitAuction={() => {}}
+                submitAuction={() => { }}
                 id='options-row'
-                />
+              />
               <h4 className={styles.positionTitle}>Digital Options</h4>
-              <PositionBuilderRow 
+              <PositionBuilderRow
                 options={['Call', 'Put']}
                 valueOptions={['Binary Call', 'Binary Put']}
-                addStrategy={(value: StrategyType) => 
+                addStrategy={(value: StrategyType) =>
                   setStrategyList([...strategyList, value])}
                 defaultOption='Call'
                 submitAuction={(value: StrategyType) => console.log(value)}
                 id='digital-options-row'
-                />
+              />
               <h4 className={styles.positionTitle}>Forwards</h4>
-              <PositionBuilderRow 
+              <PositionBuilderRow
                 options={['8Oct23', 'Next Auction']}
                 valueOptions={['Forward (8 Oct 23)', 'Forward (Next Auction)']}
-                addStrategy={(value: StrategyType) => 
+                addStrategy={(value: StrategyType) =>
                   setStrategyList([...strategyList, value])}
                 defaultOption='Call'
-                submitAuction={() => {}}
+                submitAuction={() => { }}
                 id='forwards-row'
-                />
-              <Panel>Order Summary</Panel>
+              />
+              <div className={styles.summaryWrapper}>
+                <OrderSummary
+                  limit='100'
+                  collatarelETH='120.2k'
+                  collatarelUSDC='200.1k'
+                  premium='1500'
+                  submitAuction={() => { }} />
+              </div>
             </div>
             <div className={styles.strategyPanel}>
               <Panel>
                 <div className='p-20'>
-                  <h3 className={`${styles.payOffTitle} mb-5`}>Strategy</h3>
-                  {/* <div className={styles.title}></div> */}
+                  <h3 className={`color-white mb-5`}>Strategy</h3>
                   <TableStrategy data={strategyList} removeRow={(index: number) => {
                     const updatedData = [...strategyList];
                     updatedData.splice(index, 1);
                     setStrategyList(updatedData);
                   }}></TableStrategy>
-                  <h3 className={`${styles.payOffTitle} mb-5 mt-32`}>Payoff Diagram</h3>
-                  <div className={styles.diagramPlaceholder}>Diagram placeholder</div>
+                  <h3 className={`color-white mb-5 mt-32`}>Payoff Diagram</h3>
+                  <ChartPayoff />
                 </div>
               </Panel>
             </div>
