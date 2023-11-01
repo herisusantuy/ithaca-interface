@@ -4,6 +4,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import { ReactNode, useState } from 'react';
 import Button from '../Button/Button';
 import LogoEth from '../Icons/LogoEth';
+import LogoUsdc from '../Icons/LogoUsdc';
 import Minus from '../Icons/Minus';
 import Plus from '../Icons/Plus';
 import Input from '../Input/Input';
@@ -50,16 +51,16 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, defaultOption,
             <Input icon={<LogoEth />} />
           </div>
           <div className='width-90 mr-10'>
-            <Input icon={<LogoEth />} />
+            <Input icon={<LogoUsdc />} />
           </div>
           <div className='width-90 mr-10'>
-            <Input icon={<LogoEth />} />
+            <Input icon={<LogoUsdc />} />
           </div>
           <div className='mr-10 nowrap'>
             <p>38.3 <LogoEth /></p>
           </div>
           <div className='mr-10 nowrap'>
-            <p>1500 <LogoEth /></p>
+            <p>1500 <LogoUsdc /></p>
           </div>
           <div className='mr-10'>
             <Button size='sm' title='Click to add to Strategy' variant='secondary' onClick={() => {

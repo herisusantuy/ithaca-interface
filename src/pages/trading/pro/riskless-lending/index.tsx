@@ -27,7 +27,7 @@ const Index = () => {
                   label='Next Auction'
                   value={<CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />}
                 />
-                <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+                <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
               </Flex>
               <p className={styles.title}>Riskless Lending</p>
               <div className={styles.positionBuilder}>Riskless Lending content</div>

@@ -35,7 +35,6 @@ const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
     <div className={styles.table}>
       <div className={`${styles.row} ${styles.header}`}>
         {STRATEGY_TABLE_HEADER.map((header, idx) => {
-          console.log(header === 'Type')
          return (
           <div className={styles.cell} key={idx}>
             {header === 'Type' ?

@@ -28,7 +28,7 @@ const Index = () => {
               label='Next Auction'
               value={<CountdownTimer durationHours={0} durationMinutes={0} durationSeconds={20} />}
             />
-            <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+            <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
           <div className={styles.tabWrapper }>
             <TabCard tabs={TRADING_STORIES_TABS} />

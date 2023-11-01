@@ -30,6 +30,10 @@
   margin-bottom: px-to-rem(10) !important;
 }
 
+.mt-10 {
+  margin-top: px-to-rem(10) !important;
+}
+
 .mb-14 {
   margin-bottom: px-to-rem(14) !important;
 }
@@ -62,6 +66,22 @@
   margin-right: px-to-rem(20) !important;
 }
 
+.mr-2 {
+  margin-right: px-to-rem(2) !important;
+}
+
+.ml-2 {
+  margin-left: px-to-rem(2) !important;
+}
+
+.mt-14 {
+  margin-top: px-to-rem(14) !important;
+}
+
+.mr-50 {
+  margin-right: px-to-rem(50) !important;
+}
+
 .ml-24 {
   margin-left: px-to-rem(24) !important;
 }
@@ -77,4 +97,12 @@
 .p-20 {
   @include spacing(padding, 20, 'left+right');
   @include spacing(padding, 20, 'top+bottom');
+}
+
+.color-white {
+  color: var(--white);
+}
+
+.color-grey-400 {
+  color: var(--gray-400);
 }
