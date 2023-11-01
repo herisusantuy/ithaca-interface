@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: px-to-rem(32);
+  gap: rem(32);
 }
 
 .sidebar {
@@ -14,8 +14,8 @@
   height: 100vh;
   overflow-y: auto;
   background: var(--gray-rgba);
-  backdrop-filter: blur(px-to-rem(12));
-  border-right: px-to-rem(1) solid var(--gray-800);
+  backdrop-filter: blur(rem(12));
+  border-right: rem(1) solid var(--gray-800);
 
   h3 {
     @include font-size('text-sm', 'bold');
@@ -37,7 +37,7 @@
 
 .codeBlock {
   position: relative;
-  margin: px-to-rem(20) auto;
+  margin: rem(20) auto;
   max-width: map-get($container-sizes, md);
 
   .titleBar {
@@ -47,16 +47,16 @@
     justify-content: space-between;
     background-color: #24292e;
     color: var(--white);
-    border-top-left-radius: px-to-rem(8);
-    border-top-right-radius: px-to-rem(8);
+    border-top-left-radius: rem(8);
+    border-top-right-radius: rem(8);
   }
 
   pre {
     margin: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-left-radius: px-to-rem(8);
-    border-bottom-right-radius: px-to-rem(8);
+    border-bottom-left-radius: rem(8);
+    border-bottom-right-radius: rem(8);
   }
 }
 
@@ -70,7 +70,7 @@
     @include font-size('text-sm', 'bold');
     display: flex;
     align-items: center;
-    gap: px-to-rem(8);
+    gap: rem(8);
   }
 }
 
@@ -78,8 +78,8 @@
   @include font-size('text-sm', 'bold');
   @include spacing(padding, 4, 'top+bottom');
   @include spacing(padding, 8, 'left+right');
-  border-radius: px-to-rem(8);
-  border: px-to-rem(1) solid;
+  border-radius: rem(8);
+  border: rem(1) solid;
 }
 
 .yellow {

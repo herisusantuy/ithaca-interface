@@ -1,11 +1,11 @@
 .panel {
   @include spacing(padding, 20, 'all');
-  border: px-to-rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
+  border: rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
   background: var(--panel, linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%));
   box-shadow:
     2px 2px 4px 0px rgba(0, 0, 0, 0.15),
     0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
     0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
-  backdrop-filter: blur(px-to-rem(10));
-  border-radius: px-to-rem(30);
+  backdrop-filter: blur(rem(10));
+  border-radius: rem(30);
 }

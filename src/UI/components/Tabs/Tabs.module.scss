@@ -2,7 +2,7 @@
   @include spacing(margin, 24, 'bottom');
   display: flex;
   align-items: center;
-  gap: px-to-rem(24);
+  gap: rem(24);
 }
 
 .isActive {

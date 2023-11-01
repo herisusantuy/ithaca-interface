@@ -46,7 +46,7 @@ a {
 .appWrapper::before {
   animation: beforeMove 5s infinite alternate;
   background: var(--purple-rgba);
-  filter: blur(px-to-rem(100));
+  filter: blur(rem(100));
   top: 0;
   left: -50%;
   bottom: 50%;
@@ -56,7 +56,7 @@ a {
 .appWrapper::after {
   animation: afterMove 5s infinite alternate;
   background: var(--green-rgba);
-  filter: blur(px-to-rem(100));
+  filter: blur(rem(100));
   top: 50%;
   right: -50%;
   bottom: 0;

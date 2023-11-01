@@ -1,7 +1,7 @@
 .table {
   display: flex;
   flex-direction: column;
-  gap: px-to-rem(8);
+  gap: rem(8);
 
   .row {
     display: flex;
@@ -9,10 +9,10 @@
     align-items: center;
     background: linear-gradient(180deg, rgba(28, 30, 38, 0.3) 11.98%, rgba(28, 30, 38, 0.6) 100%);
     box-shadow:
-      px-to-rem(2) px-to-rem(2) px-to-rem(5) px-to-rem(0) rgba(0, 0, 0, 0.25),
-      px-to-rem(0) px-to-rem(0) px-to-rem(5) px-to-rem(2) rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(px-to-rem(10));
-    border-radius: px-to-rem(18);
+      rem(2) rem(2) rem(5) rem(0) rgba(0, 0, 0, 0.25),
+      rem(0) rem(0) rem(5) rem(2) rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(rem(10));
+    border-radius: rem(18);
 
     &.header {
       @include font-size('text-xs', 'regular');
@@ -37,7 +37,7 @@
       .dot {
         display: flex;
         align-items: center;
-        gap: px-to-rem(8);
+        gap: rem(8);
       }
 
       button {
@@ -46,8 +46,8 @@
         background: #35333e;
 
         svg {
-          height: px-to-rem(12);
-          width: px-to-rem(12);
+          height: rem(12);
+          width: rem(12);
         }
       }
 

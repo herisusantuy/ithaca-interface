@@ -1,6 +1,6 @@
 .radioButton {
   display: flex;
-  gap: px-to-rem(6);
+  gap: rem(6);
 
   &.vertical {
     flex-direction: column;
@@ -9,8 +9,8 @@
       @include spacing(padding, 2, 'top+bottom');
 
       svg {
-        height: px-to-rem(16);
-        width: px-to-rem(16);
+        height: rem(16);
+        width: rem(16);
       }
     }
   }
@@ -36,11 +36,11 @@
     justify-content: center;
     align-items: center;
     background-color: transparent;
-    border: px-to-rem(1) solid var(--white-10, #35333e);
-    border-radius: px-to-rem(24);
+    border: rem(1) solid var(--white-10, #35333e);
+    border-radius: rem(24);
     color: var(--gray-500);
     cursor: pointer;
-    min-width: px-to-rem(65);
+    min-width: rem(65);
 
     &:hover {
       color: var(--white);
