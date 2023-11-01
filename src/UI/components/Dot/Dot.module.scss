@@ -1,0 +1,30 @@
+.dot {
+  width: px-to-rem(8);
+  height: px-to-rem(8);
+  border-radius: 50%;
+  box-shadow: 0px px-to-rem(4) px-to-rem(4) rgba(0, 0, 0, 0.25);
+}
+
+.blue {
+  background-color: #07a6c9;
+}
+
+.red {
+  background-color: #ff3f57;
+}
+
+.orange {
+  background-color: #ff6e1d;
+}
+
+.purple {
+  background-color: #b5b5f8;
+}
+
+.green {
+  background-color: #4bb475;
+}
+
+.gray {
+  background-color: gray;
+}
