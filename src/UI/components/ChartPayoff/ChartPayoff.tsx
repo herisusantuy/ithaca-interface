@@ -1,5 +1,5 @@
 import React from 'react';
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, CartesianAxis, Label } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine } from 'recharts';
 import CustomTooltip from './CustomTooltip';
 import BookmarkBar from './BookmarkBar';
 
