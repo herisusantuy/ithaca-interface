@@ -1,48 +1,64 @@
 // Packages
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 // Styles
 import styles from './RadioButton.module.scss';
 
-// Types
 type RadioButtonProps = {
-  options: string[];
+  options: (string | ReactNode)[];
+  valueProps?: string[];
   name: string;
-  defaultOption?: string;
+  defaultOption?: string | ReactNode;
   disabled?: boolean;
+  orientation?: 'horizontal' | 'vertical';
   onChange?: (value: string) => void;
 };
 
-const RadioButton = ({ options, name, defaultOption, disabled = false, onChange }: RadioButtonProps) => {
-  // Radio button state
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(defaultOption);
+const RadioButton = ({
+  options,
+  valueProps,
+  name,
+  defaultOption,
+  disabled = false,
+  orientation = 'horizontal',
+  onChange,
+}: RadioButtonProps) => {
+  const [selectedOption, setSelectedOption] = useState<string | ReactNode | undefined>(defaultOption);
 
-  // Handle selected radio button option
-  const handleRadioChange = (value: string) => {
+  const handleRadioChange = (value: string | ReactNode, logValue?: string) => {
     setSelectedOption(value);
     if (onChange) {
-      onChange(value);
+      onChange(logValue || (value as string));
     }
   };
 
-  return (
-    <div className={styles.radioButton}>
-      {options.map((option, index) => (
-        <div key={index} className={styles.option}>
+  const renderOptions = (optionList: (string | ReactNode)[]) => {
+    return optionList.map((option, index) => {
+      const keyIdentifier = typeof option === 'string' ? option : `option-${index}`;
+      const logValue = valueProps && valueProps[index];
+
+      return (
+        <div key={keyIdentifier} className={styles.option}>
           <input
             type='radio'
-            id={option}
+            id={keyIdentifier}
             name={name}
-            value={option}
+            value={keyIdentifier}
             disabled={disabled}
             checked={option === selectedOption}
-            onChange={() => handleRadioChange(option)}
+            onChange={() => handleRadioChange(option, logValue)}
           />
-          <label htmlFor={option} className={styles.label}>
-            {option}
+          <label htmlFor={keyIdentifier} className={styles.label}>
+            {typeof option === 'string' ? option : option}
           </label>
         </div>
-      ))}
+      );
+    });
+  };
+
+  return (
+    <div className={styles.radioButton + (orientation === 'vertical' ? ` ${styles.vertical}` : '')}>
+      {renderOptions(options)}
     </div>
   );
 };

@@ -1,6 +1,19 @@
 .radioButton {
   display: flex;
   gap: px-to-rem(6);
+
+  &.vertical {
+    flex-direction: column;
+
+    label {
+      @include spacing(padding, 2, 'top+bottom');
+
+      svg {
+        height: px-to-rem(16);
+        width: px-to-rem(16);
+      }
+    }
+  }
 }
 
 .option {

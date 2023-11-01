@@ -118,12 +118,22 @@ const COMPONENT_GROUPS = [
       {
         name: 'RadioButton',
         component: (
-          <RadioButton
-            options={['Call', 'Put']}
-            name='options'
-            defaultOption='Call'
-            onChange={value => console.log(value)}
-          />
+          <Flex gap='gap-12'>
+            <RadioButton
+              options={['Call', 'Put']}
+              name='callOrPut'
+              defaultOption='Call'
+              onChange={value => console.log(value)}
+            />
+            <RadioButton
+              options={[<Plus key='plus' />, <Minus key='minus' />]}
+              valueProps={['Plus', 'Minus']}
+              name='plusOrMinus'
+              defaultOption='Plus'
+              orientation='vertical'
+              onChange={value => console.log(value)}
+            />
+          </Flex>
         ),
         status: 'Done',
       },
