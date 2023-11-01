@@ -1,29 +1,26 @@
 // Packages
+import useFromStore from '@/UI/hooks/useFromStore';
+import { useAppStore } from '@/UI/lib/zustand/store';
 import React, { useState, useEffect } from 'react';
 
 // Styles
 import styles from './CountdownTimer.module.scss';
 
-// Types
-type CountdownTimerProps = {
-  durationHours?: number;
-  durationMinutes?: number;
-  durationSeconds?: number;
-};
-
-const CountdownTimer = ({ durationHours = 0, durationMinutes = 59, durationSeconds = 59 }: CountdownTimerProps) => {
+const CountdownTimer = () => {
+  const nextAuction = useFromStore(useAppStore, state => state.nextAuction)
+  console.log(nextAuction)
   const [time, setTime] = useState({
-    hours: durationHours,
-    minutes: durationMinutes,
-    seconds: durationSeconds,
+    hours: nextAuction?.hour || 0,
+    minutes: nextAuction?.minute || 0,
+    seconds: nextAuction?.second || 0,
   });
 
   useEffect(() => {
     const resetTimer = () => {
       setTime({
-        hours: durationHours,
-        minutes: durationMinutes,
-        seconds: durationSeconds,
+        hours: nextAuction?.hour || 0,
+        minutes: nextAuction?.minute || 0,
+        seconds: nextAuction?.second || 0,
       });
     };
 
@@ -39,11 +36,15 @@ const CountdownTimer = ({ durationHours = 0, durationMinutes = 59, durationSecon
         hours--;
         minutes = 59;
         seconds = 59;
-      } else {
-        resetTimer();
+      } 
+      if (seconds === 0 && minutes === 0 && hours === 0) {
+        resetTimer()
       }
-
-      setTime({ hours, minutes, seconds });
+      else {
+        setTime({
+          hours, minutes, seconds
+        })
+      }
     };
 
     const interval = setInterval(() => {
@@ -51,7 +52,7 @@ const CountdownTimer = ({ durationHours = 0, durationMinutes = 59, durationSecon
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, durationHours, durationMinutes, durationSeconds]);
+  }, [time, nextAuction]);
 
   return (
     <div className={styles.countdownTimer}>
