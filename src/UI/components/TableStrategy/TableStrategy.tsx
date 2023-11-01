@@ -1,6 +1,3 @@
-// Packages
-import { useState } from 'react';
-
 // Constants
 import { STRATEGY_TABLE_HEADER } from '@/UI/constants/tables';
 
@@ -27,7 +24,7 @@ type StrategyType = {
 
 type StrategyTableProps = {
   data: StrategyType[];
-  removeRow?: Function;
+  removeRow?: () => void;
 };
 
 const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {

@@ -16,9 +16,9 @@ import styles from './PositionBuilderRow.module.scss';
 type PositionBuilderRowProps = {
   options: (string | ReactNode)[];
   valueOptions: string[];
-  addStrategy: Function;
+  addStrategy: () => void;
   defaultOption: string;
-  submitAuction: Function;
+  submitAuction: () => void;
   id: string;
 };
 

@@ -13,7 +13,7 @@ type OrderSummaryProps = {
   collatarelETH: string;
   collatarelUSDC: string;
   premium: string;
-  submitAuction: Function;
+  submitAuction: () => void;
 };
 
 const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, submitAuction }: OrderSummaryProps) => (
