@@ -20,6 +20,7 @@ import Toggle from '@/UI/components/Toggle/Toggle';
 import ChevronDown from '@/UI/components/Icons/ChevronDown';
 import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Plus from '@/UI/components/Icons/Plus';
 import Bookmark from '@/UI/components/Icons/Bookmark';
 import TabCard from '@/UI/components/TabCard/TabCard';
@@ -218,11 +219,6 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
-        name: 'Close',
-        component: <Close />,
-        status: 'Done',
-      },
-      {
         name: 'ChevronDown',
         component: <ChevronDown />,
         status: 'Done',
@@ -230,6 +226,16 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChevronUp',
         component: <ChevronUp />,
+        status: 'Done',
+      },
+      {
+        name: 'Close',
+        component: <Close />,
+        status: 'Done',
+      },
+      {
+        name: 'LogoUsdc',
+        component: <LogoUsdc />,
         status: 'Done',
       },
       {
