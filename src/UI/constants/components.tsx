@@ -6,7 +6,6 @@ import Asset from '@/UI/components/Asset/Asset';
 import Button from '@/UI/components/Button/Button';
 import Close from '@/UI/components/Icons/Close';
 import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Chart from '@/UI/components/Chart/Chart';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import LabelValue from '@/UI/components/LabelValue/LabelValue';
@@ -54,7 +53,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Asset',
         component: <Asset icon={<LogoEth />} label='ETH' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Button',
@@ -75,7 +74,7 @@ const COMPONENT_GROUPS = [
             </Button>
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Dot',
@@ -89,7 +88,7 @@ const COMPONENT_GROUPS = [
             <Input icon={<LogoEth />} />
           </>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'LabelValue',
@@ -103,12 +102,12 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Loader',
         component: <Loader />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Logo',
@@ -135,12 +134,12 @@ const COMPONENT_GROUPS = [
             />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Tabs',
         component: <Tabs tabs={TABS} />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'TabCard',
@@ -150,7 +149,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -165,7 +164,7 @@ const COMPONENT_GROUPS = [
             <TableStrategy data={DUMMY_STRATEGY_DATA} />
           </Panel>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -173,13 +172,12 @@ const COMPONENT_GROUPS = [
     groupName: 'Charts',
     components: [
       {
-        name: 'Chart',
-        component: <Chart />,
-        status: 'In Progress',
-      },
-      {
         name: 'ChartPayoff',
-        component: <ChartPayoff />,
+        component: (
+          <Panel>
+            <ChartPayoff />
+          </Panel>
+        ),
         status: 'In Progress',
       },
     ],
@@ -220,7 +218,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'CountdownTimer',
         component: <CountdownTimer durationHours={2} durationMinutes={30} durationSeconds={0} />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Meta',
@@ -234,7 +232,7 @@ const COMPONENT_GROUPS = [
             Test
           </Modal>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
     ],
   },
@@ -309,7 +307,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Typography',
         component: <Typography />,
-        status: 'Blocked',
+        status: 'Waiting on Figma',
       },
     ],
   },

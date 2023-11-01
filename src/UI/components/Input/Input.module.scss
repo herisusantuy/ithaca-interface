@@ -18,7 +18,8 @@
 
 .input input {
   @include spacing(padding, 8, 'top+bottom');
-  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'left');
+  @include spacing(padding, 40, 'right');
   background: none;
   outline: 0;
   border: px-to-rem(1) solid rgba(255, 255, 255, 0.1);

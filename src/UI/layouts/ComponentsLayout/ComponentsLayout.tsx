@@ -33,7 +33,7 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
         return styles.yellow;
       case 'Done':
         return styles.green;
-      case 'Blocked':
+      case 'Waiting on Figma':
         return styles.red;
       default:
         return '';

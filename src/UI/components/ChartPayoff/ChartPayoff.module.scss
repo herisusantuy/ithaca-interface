@@ -1,0 +1,45 @@
+.tooltipLabel {
+  font-family: 'Roboto';
+  color: #ffffff99;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.tooltipValue {
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 3px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: px-to-rem(16);
+}
+
+.badge {
+  @include spacing(padding, 4, 'top+bottom');
+  @include spacing(padding, 8, 'left+right');
+  background: var(--gray-600);
+  border-radius: px-to-rem(10);
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(4);
+
+  p {
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+    color: var(--gray-300);
+  }
+
+  &.badge p {
+    color: var(--white);
+  }
+}
