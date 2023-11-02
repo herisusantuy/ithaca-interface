@@ -196,7 +196,7 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'Loader',
@@ -312,7 +312,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'CountdownTimer',
         component: <CountdownTimer />,
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'Meta',

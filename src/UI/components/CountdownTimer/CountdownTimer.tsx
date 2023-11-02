@@ -1,14 +1,19 @@
 // Packages
-import useFromStore from '@/UI/hooks/useFromStore';
+import { useState, useEffect } from 'react';
+
+// Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
-import React, { useState, useEffect } from 'react';
+
+// Hooks
+import useFromStore from '@/UI/hooks/useFromStore';
 
 // Styles
 import styles from './CountdownTimer.module.scss';
 
 const CountdownTimer = () => {
   const { fetchNextAuction } = useAppStore();
-  const nextAuction = useFromStore(useAppStore, state => state.nextAuction)
+  const nextAuction = useFromStore(useAppStore, state => state.nextAuction);
+
   const [time, setTime] = useState({
     hours: nextAuction?.hour || 0,
     minutes: nextAuction?.minute || 0,
@@ -37,14 +42,15 @@ const CountdownTimer = () => {
         hours--;
         minutes = 59;
         seconds = 59;
-      } 
-      if (seconds === 0 && minutes === 0 && hours === 0) {
-        resetTimer()
       }
-      else {
+      if (seconds === 0 && minutes === 0 && hours === 0) {
+        resetTimer();
+      } else {
         setTime({
-          hours, minutes, seconds
-        })
+          hours,
+          minutes,
+          seconds,
+        });
       }
     };
 
@@ -57,8 +63,10 @@ const CountdownTimer = () => {
 
   return (
     <div className={styles.countdownTimer}>
-      {time.hours.toString().padStart(2, '0')} <span>Hrs</span> : {time.minutes.toString().padStart(2, '0')}
-      <span>Mins</span> : {time.seconds.toString().padStart(2, '0')} <span>Secs</span>
+      {time.hours.toString().padStart(2, '0')} <span>Hrs</span> <span className={styles.white}>:</span>{' '}
+      {time.minutes.toString().padStart(2, '0')}
+      <span>Mins</span> <span className={styles.white}>:</span> {time.seconds.toString().padStart(2, '0')}{' '}
+      <span>Secs</span>
     </div>
   );
 };

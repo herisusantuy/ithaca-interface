@@ -3,12 +3,13 @@
   display: flex;
   flex-direction: column;
   gap: rem(4);
-  border-left: rem(1) solid var(--gray-800);
+  border-left: rem(1) solid var(--white-10);
 }
 
 .label {
-  @include font-size('text-sm', 'regular');
-  color: var(--Logo-Green1, #5ee192);
+  @include font-size('text-xs', 'regular');
+  font-family: $lato;
+  color: var(--green-30);
 }
 
 .labelDropdown {
@@ -23,18 +24,8 @@
   gap: rem(4);
 }
 
-.dropdownIcon {
-  @include spacing(padding, 4, 'all');
-  border-radius: rem(4);
-  background: var(--gray-800);
-
-  svg {
-    height: rem(12);
-    width: rem(12);
-  }
-}
-
 .value {
+  @include font-size('text-sm', 'regular');
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -43,6 +34,6 @@
 }
 
 .subValue {
-  @include font-size('text-xs', 'regular');
-  color: #9a9daa;
+  @include font-size('text-xxs', 'regular');
+  color: var(--white-60);
 }

@@ -2,7 +2,7 @@
 import React, { ReactNode } from 'react';
 
 // Components
-import ChevronDown from '@/UI/components/Icons/ChevronDown';
+import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Styles
 import styles from './LabelValue.module.scss';
@@ -30,11 +30,7 @@ const LabelValue = ({ label, value, subValue, hasDropdown = false }: LabelValueP
           {subValue && <span className={styles.subValue}>{subValue}</span>}
         </span>
       </div>
-      {hasDropdown && (
-        <span className={styles.dropdownIcon}>
-          <ChevronDown />
-        </span>
-      )}
+      {hasDropdown && <Dropdown />}
     </div>
   );
 };
