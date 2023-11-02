@@ -1,7 +1,6 @@
 import React from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
-import BookmarkBar from '@/UI/components/ChartPayoff/BookmarkBar';
 import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
 import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
