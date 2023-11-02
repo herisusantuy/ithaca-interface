@@ -6,5 +6,6 @@
 
 .label {
   @include font-size('text-lg', 'regular');
+  font-family: $lato;
   color: var(--white);
 }

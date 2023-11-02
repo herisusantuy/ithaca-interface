@@ -53,7 +53,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Asset',
         component: <Asset icon={<LogoEth />} label='ETH' />,
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'Button',
