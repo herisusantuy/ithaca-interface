@@ -171,7 +171,7 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
       {
         name: 'Dot',
