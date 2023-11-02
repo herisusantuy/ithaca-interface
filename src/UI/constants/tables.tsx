@@ -58,7 +58,7 @@ export const DUMMY_STRATEGY_DATA: StrategyType[] = [
     enterPrice: 950,
   },
   {
-    type: 'Forward (8 Oct 23)',
+    type: 'Forward (10 Nov 23)',
     side: '+',
     size: 80,
     strike: 6800,

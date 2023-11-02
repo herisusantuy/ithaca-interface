@@ -11,7 +11,7 @@ const TradingControls = () => {
     return (
         <Flex gap='gap-12'>
             <Asset icon={<LogoEth />} label='ETH' />
-            <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
+            <LabelValue label='Expiry Date' value='10Nov23' hasDropdown={true} />
             <LabelValue
                 label='Next Auction'
                 value={<CountdownTimer />}

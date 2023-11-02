@@ -206,7 +206,7 @@ const COMPONENT_GROUPS = [
         name: 'LabelValue',
         component: (
           <Flex gap='gap-12'>
-            <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
+            <LabelValue label='Expiry Date' value='10Nov23' hasDropdown={true} />
             <LabelValue label='Next Auction' value={<CountdownTimer />} />
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
