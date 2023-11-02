@@ -1,16 +1,42 @@
 .radioButton {
   display: flex;
-  gap: rem(6);
+  gap: rem(5);
 
   &.vertical {
     flex-direction: column;
 
     label {
       @include spacing(padding, 2, 'top+bottom');
+      height: rem(15);
+      min-width: rem(38);
 
       svg {
         height: rem(16);
         width: rem(16);
+      }
+    }
+
+    .option:first-of-type {
+      label:hover,
+      input[type='radio']:checked + label {
+        background: var(--green-10);
+        border-color: var(--green-20);
+
+        svg path {
+          fill: var(--green-20);
+        }
+      }
+    }
+
+    .option:last-of-type {
+      label:hover,
+      input[type='radio']:checked + label {
+        background: var(--red-10);
+        border-color: var(--red-20);
+
+        svg path {
+          fill: var(--red-20);
+        }
       }
     }
   }
@@ -36,20 +62,20 @@
     justify-content: center;
     align-items: center;
     background-color: transparent;
-    border: rem(1) solid var(--white-10, #35333e);
+    border: rem(1) solid var(--white-10);
     border-radius: rem(24);
-    color: var(--gray-500);
+    color: var(--white-60);
     cursor: pointer;
     min-width: rem(65);
 
     &:hover {
       color: var(--white);
-      background: var(--white-10, #35333e);
+      background: var(--white-10);
     }
   }
 
   input[type='radio']:checked + label {
-    background: var(--white-10, #35333e);
+    background: var(--white-10);
     border-color: var(--white);
     color: var(--white);
     cursor: default;
