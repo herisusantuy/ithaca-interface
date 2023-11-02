@@ -14,31 +14,33 @@
   border: 0;
   cursor: pointer;
   padding: 0;
+
+  svg {
+    height: rem(16);
+    width: rem(16);
+  }
 }
 
 // Sizes
 .btn--sm {
-  @include spacing(padding, 8, 'left+right');
-  @include spacing(padding, 8, 'top+bottom');
-  height: 35px;
-}
-
-.btn--md {
   @include spacing(padding, 16, 'left+right');
   @include spacing(padding, 10, 'top+bottom');
   @include font-size('text-xs', 'bold');
+  height: rem(35);
 }
 
 .btn--lg {
   @include spacing(padding, 16, 'left+right');
   @include spacing(padding, 12, 'top+bottom');
   @include font-size('text-sm', 'bold');
+  height: rem(40);
 }
 
 // Variants
 .btn--primary {
   background: var(--green-30);
   color: var(--white-20);
+  gap: rem(10);
 
   &:hover {
     background: var(--green-40);
@@ -50,12 +52,17 @@
     color: var(--white-10);
     cursor: not-allowed;
   }
+
+  svg path {
+    stroke: var(--white-20);
+  }
 }
 
 .btn--secondary {
   background: var(--purple-10);
   border: rem(1) solid var(--purple-30);
   color: var(--white);
+  gap: rem(4);
 
   &:hover {
     background: var(--purple-20);
@@ -67,6 +74,14 @@
     color: var(--white-30);
     border-color: var(--white-30);
     cursor: not-allowed;
+
+    svg path {
+      stroke: var(--white-30);
+    }
+  }
+
+  svg path {
+    stroke: var(--white);
   }
 }
 
@@ -74,9 +89,10 @@
   background: transparent;
   border: rem(1) solid var(--green-30);
   color: var(--green-30);
+  gap: rem(10);
 
   &:hover {
-    background: rgba(94, 225, 146, 0.1);
+    background: var(--green-10);
   }
 
   &[disabled],
@@ -85,6 +101,14 @@
     color: var(--white-30);
     border-color: var(--white-30);
     cursor: not-allowed;
+
+    svg path {
+      stroke: var(--white-30);
+    }
+  }
+
+  svg path {
+    stroke: var(--green-30);
   }
 }
 
