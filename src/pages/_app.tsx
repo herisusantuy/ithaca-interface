@@ -47,14 +47,18 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { nextAuction, fetchNextAuction } = useAppStore();
-  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction);
+  const { nextAuction, fetchNextAuction, fetchContractList, fetchReferencePrices } = useAppStore();
+  // fetchContractList()
+  // fetchReferencePrices()
+  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction, fetchContractList, fetchReferencePrices);
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
-const getTimeNextAuction = async (timeUntilNexAuction: number, fetchNextAuction: () => void) => {
+const getTimeNextAuction = async (timeUntilNexAuction: number, fetchNextAuction: () => void,  fetchContractList: () => void, fetchReferencePrices: () => void) => {
   setTimeout(() => {
     fetchNextAuction();
+    fetchContractList();
+    fetchReferencePrices();
   }, timeUntilNexAuction)
 }
 
