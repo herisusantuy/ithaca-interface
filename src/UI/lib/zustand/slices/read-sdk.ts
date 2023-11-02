@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 import { createPublicClient, http } from 'viem'
 import { polygonMumbai } from 'viem/chains'
 import { IthacaSDK, IthacaNetwork } from '@ithaca-finance/sdk';
+import { getNumber } from '../../../utils/Numbers';
 import dayjs from 'dayjs'
 
 const publicClient = createPublicClient({ 
@@ -21,11 +22,39 @@ export interface AuctionTimes {
     milliseconds: number
 }
 
+export interface ReferencePrices {
+    contractId: number;
+    highRange: number;
+    lastPrice: number;
+    lowRange: number;
+    referencePrice: number;
+    updatedAt: string;
+}
+
+export interface Contract {
+    contractId: number;
+    economics: Economics;
+    payoff: string;
+    tradeable: boolean;
+}
+
+export interface Economics {
+    currencyPair: string;
+    expiry: number;
+    priceCurrency: string;
+    qtyCurrency: string;
+    strike: number;
+}
+
+
 export interface ReadSdkSlice {
     nextAuction: AuctionTimes;
-    expiryDates: number[];
+    contractList: Record<string, Contract[]>;
+    referencePrices: ReferencePrices[];
+    currentExpiryDate: number;
     fetchNextAuction: () => void;
-    fetchExpiryDateList: () => void;
+    fetchContractList: () => void;
+    fetchReferencePrices: () => void;
 }
 
 export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
@@ -35,7 +64,9 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         second: 0,
         milliseconds: 0
     },
-    expiryDates: [],
+    contractList: {},
+    currentExpiryDate: 0,
+    referencePrices: [],
     fetchNextAuction: async () => {
         const nextAuction = dayjs(await ithacaSDK.protocol.nextAuction());
         const currentTime = dayjs();
@@ -46,14 +77,21 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
             milliseconds: nextAuction.diff(currentTime)
         } })
     },
-    fetchExpiryDateList: async () => {
+    fetchContractList: async () => {
         const contractList = await ithacaSDK.protocol.contractList();
-        const filteredList = contractList.reduce((arr, val) => {
-            if(!arr.includes(val.economics.expiry)) {
-                arr.push(val.economics.expiry)
+        const filteredList = contractList.reduce((obj, val) => {
+            if (obj[val.economics.expiry]) {
+                obj[val.economics.expiry].push(val)
             }
-            return arr;
-        }, []).sort();
-        set({expiryDates: filteredList})
+            else {
+                obj[val.economics.expiry] = [val];
+            }
+            return obj;
+        }, {});
+        set({contractList: filteredList, currentExpiryDate: getNumber(Object.keys(filteredList)[1])});
+    },
+    fetchReferencePrices: async () => {
+        const referencePrices = await ithacaSDK.market.referencePrices(0, 'WETH/USDC');
+        set({referencePrices: referencePrices})
     },
 })
