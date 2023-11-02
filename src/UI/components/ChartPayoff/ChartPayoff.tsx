@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
 import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
@@ -11,12 +11,12 @@ import Key from '@/UI/components/ChartPayoff/Key';
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
 const ChartPayoff = () => {
-  const [isClient, setIsClient] = React.useState(false);
-  const [dataMax, setDataMax] = React.useState(0);
-  const [dataMin, setDataMin] = React.useState(0);
-  const [changeVal, setChangeVal] = React.useState(0);
+  const [isClient, setIsClient] = useState(false);
+  const [dataMax, setDataMax] = useState(0);
+  const [dataMin, setDataMin] = useState(0);
+  const [changeVal, setChangeVal] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const max = Math.max(...modifiedData.map(i => i.value));
     const min = Math.min(...modifiedData.map(i => i.value));
     setDataMax(max);
