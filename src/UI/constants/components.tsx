@@ -179,7 +179,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Dot',
         component: <Dot type='Call' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Input',
@@ -193,7 +193,7 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'LabelValue',
@@ -204,7 +204,7 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Loader',
@@ -246,7 +246,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'TabCard',
         component: <TabCard tabs={TRADING_MARKET_TABS} />,
-        status: 'In Progress',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Toggle',
@@ -300,7 +300,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Header',
         component: <Header className='position-relative' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Main',
@@ -320,7 +320,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Wallet',
         component: <Wallet />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'CountdownTimer',
@@ -349,17 +349,17 @@ const COMPONENT_GROUPS = [
       {
         name: 'Hamburger',
         component: <Hamburger onClick={() => {}} isActive={false} className='display-inline-flex' />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'Navigation',
         component: <Navigation />,
-        status: 'Done',
+        status: 'Waiting on Figma',
       },
       {
         name: 'SlidingNav',
         component: <SlidingNav isActive={false} onClick={() => {}} />,
-        status: 'In Progress',
+        status: 'Waiting on Figma',
       },
     ],
   },
