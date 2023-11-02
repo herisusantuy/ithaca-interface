@@ -149,12 +149,3 @@
     color: var(--gray-100);
   }
 }
-
-.btn--tab {
-  @include spacing(padding, 8, 'bottom');
-  @include font-size('text-md', 'regular');
-  background: none;
-  padding: 0;
-  border-bottom: rem(1) solid transparent;
-  color: var(--gray-400);
-}
