@@ -5,6 +5,9 @@ import Link from 'next/link';
 // Constants
 import { NAVIGATION_ITEMS } from '@/UI/constants/navigation';
 
+// Components
+import ChevronDown from '@/UI/components/Icons/ChevronDown';
+
 // Styles
 import styles from './Navigation.module.scss';
 
@@ -31,6 +34,7 @@ const Navigation = ({ onClick }: NavigationProps) => {
           onClick={onClick}
         >
           {nav.displayText}
+          {nav.displayText === 'More' && <ChevronDown />}
         </Link>
       ))}
     </nav>

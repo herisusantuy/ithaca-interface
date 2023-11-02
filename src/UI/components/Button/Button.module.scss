@@ -127,6 +127,10 @@
   border-bottom: 0;
   justify-content: space-between;
 
+  svg path {
+    stroke: var(--white);
+  }
+
   &:last-child {
     border-bottom: rem(1) solid var(--purple);
   }

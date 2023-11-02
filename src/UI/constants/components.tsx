@@ -30,6 +30,7 @@ import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import Dropdown from '@/UI/components/Icons/Dropdown';
+import Wallet from '@/UI/components/Wallet/Wallet';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -297,7 +298,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Header',
-        component: <Header />,
+        component: <Header className='position-relative' />,
         status: 'Done',
       },
       {
@@ -315,6 +316,11 @@ const COMPONENT_GROUPS = [
   {
     groupName: 'Utilities',
     components: [
+      {
+        name: 'Wallet',
+        component: <Wallet />,
+        status: 'Done',
+      },
       {
         name: 'CountdownTimer',
         component: <CountdownTimer />,
