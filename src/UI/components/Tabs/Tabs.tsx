@@ -26,11 +26,13 @@ const Tabs = ({ tabs, className }: TabsProps) => {
   if (!tabs || tabs.length === 0) {
     return <div className={styles.tabs}>No tabs available.</div>;
   }
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const initialTab = tabs.find(t => {
     return t.path === '/' ? router.pathname === t.path : router.pathname.includes(t.path || '');
   });
+
   // Tab state
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState(initialTab?.id || tabs[0]?.id);
@@ -60,7 +62,6 @@ const Tabs = ({ tabs, className }: TabsProps) => {
             aria-selected={tab.id === activeTab}
             aria-controls={`tab-panel-${tab.id}`}
             title='Click to select tab'
-            variant='tab'
           >
             {tab.label}
           </Button>

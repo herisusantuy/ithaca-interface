@@ -3,10 +3,30 @@
   display: flex;
   align-items: center;
   gap: rem(24);
-}
 
-.isActive {
-  @include font-size('text-md', 'semibold');
-  color: var(--white);
-  border-color: var(--purple);
+  button {
+    @include font-size('text-md', 'regular');
+    font-family: $lato;
+    padding-bottom: rem(8) !important;
+    height: auto;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    border-bottom: rem(1) solid transparent;
+    color: var(--white-60);
+    transition:
+      color 0.3s,
+      border-color 0.3s;
+
+    &:hover {
+      background: none;
+      color: var(--white);
+    }
+
+    &.isActive {
+      @include font-size('text-md', 'semibold');
+      color: var(--white);
+      border-color: var(--purple-30);
+    }
+  }
 }

@@ -239,7 +239,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Tabs',
         component: <Tabs tabs={TABS} />,
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'TabCard',
