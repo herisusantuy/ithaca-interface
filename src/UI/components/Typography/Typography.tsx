@@ -1,6 +1,3 @@
-// Components
-import Panel from '@/UI/layouts/Panel/Panel';
-
 // Styles
 import styles from './Typography.module.scss';
 
@@ -26,22 +23,20 @@ const Typography = () => {
       {fonts.map(font => (
         <div key={font}>
           <h1 className={font === 'Lato' ? 'mt-64 mb-24 font-lato' : 'mb-24'}>{font}</h1>
-          <Panel>
-            {fontSizes.map(({ name, size }) => {
-              return (
-                <div className='mb-32' key={name}>
-                  <p className={styles.label}>{size}</p>
-                  <div className={styles.row}>
-                    {variations.map(variation => (
-                      <div key={name + variation} className={styles.column}>
-                        <p className={styles[`${font}${name}${variation}`]}>{`${font} ${name}`}</p>
-                      </div>
-                    ))}
-                  </div>
+          {fontSizes.map(({ name, size }) => {
+            return (
+              <div className='mb-32' key={name}>
+                <p className={styles.label}>{size}</p>
+                <div className={styles.row}>
+                  {variations.map(variation => (
+                    <div key={name + variation} className={styles.column}>
+                      <p className={styles[`${font}${name}${variation}`]}>{`${font} ${name}`}</p>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
-          </Panel>
+              </div>
+            );
+          })}
         </div>
       ))}
     </>

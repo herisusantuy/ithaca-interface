@@ -1,29 +1,29 @@
 // Types
 type PayoffDataProps = {
-  name: string;
   value: number;
+  dashValue: number | undefined;
 };
 
 // Payoff chart dummy data
 export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [
   {
-    name: 'Jan',
     value: 100,
+    dashValue: 0,
   },
   {
-    name: 'Feb',
     value: 100,
+    dashValue: 100,
   },
   {
-    name: 'Mar',
     value: 200,
+    dashValue: undefined,
   },
   {
-    name: 'Apr',
     value: 300,
+    dashValue: undefined,
   },
   {
-    name: 'May',
     value: 400,
+    dashValue: undefined,
   },
 ];

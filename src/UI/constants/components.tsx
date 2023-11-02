@@ -261,10 +261,10 @@ const COMPONENT_GROUPS = [
       {
         name: 'TableStrategy',
         component: (
-          <Panel>
+          <>
             <h3 className='mb-14'>Strategy</h3>
             <TableStrategy data={DUMMY_STRATEGY_DATA} />
-          </Panel>
+          </>
         ),
         status: 'Waiting on Figma',
       },

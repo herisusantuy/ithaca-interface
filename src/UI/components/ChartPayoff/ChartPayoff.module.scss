@@ -1,24 +1,53 @@
 .tooltipLabel {
-  font-family: 'Roboto';
-  color: #ffffff99;
-  font-size: 9px;
-  font-weight: 600;
+  @include font-size('text-xxs', 'semibold');
+  font-family: $roboto;
+  color: var(--gray-650);
   text-align: center;
 }
 
 .tooltipValue {
-  font-family: 'Roboto';
-  font-size: 12px;
-  font-weight: 400;
+  @include font-size('text-xs', 'regular');
+  font-family: $roboto;
   text-align: center;
-  margin-top: 3px;
+  margin-top: rem(3);
+}
+
+.contentList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: rem(10);
+  margin-top: rem(10);
+}
+
+.unlimited {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: rem(5);
+  margin-bottom: rem(5);
+  p {
+    font-family: $roboto;
+    @include font-size('text-xs', 'regular');
+    color: var(--green-30);
+  }
+  h2 {
+    font-family: $roboto;
+    @include font-size('text-xxs', 'regular');
+    color: var(--green-30);
+  }
+  h3 {
+    font-family: $roboto;
+    @include font-size('text-xxs', 'bold');
+    color: var(--white);
+  }
 }
 
 .container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: rem(16);
+  justify-content: center;
+  gap: rem(8);
 }
 
 .badge {
@@ -34,8 +63,8 @@
   gap: rem(4);
 
   p {
-    font-family: $lato;
     @include font-size('text-xs', 'regular');
+    font-family: $roboto;
     color: var(--gray-300);
   }
 
