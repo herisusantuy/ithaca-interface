@@ -1,7 +1,5 @@
-// Styles
 import styles from './ChartPayoff.module.scss';
 
-// Types
 type CustomTooltipProps = {
   base: number | string;
   active?: boolean;
@@ -18,7 +16,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
     setChangeVal(payload && Math.abs(payload[0].value) >= 0 ? payload[0].value + Number(base) : 0);
     return (
         <div>
-          <p className={styles.tooltipLabel}>price at Expiry</p>
+          <p className={styles.tooltipLabel}>Price at Expiry</p>
           <p className={styles.tooltipValue}>{`${
             payload && Math.abs(payload[0].value) >= 0 ? payload[0].value + Number(base) : 0
           }`}</p>

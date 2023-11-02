@@ -1,6 +1,11 @@
-const LogoUsdc = () => {
+interface PositionProps {
+  x?: number | undefined;
+  y?: number | undefined;
+}
+
+const LogoUsdc = (props: PositionProps) => {
   return (
-    <svg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg width='17' height='17' x={props.x} y={props.y} viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <g clipPath='url(#clip0_1323_139587)'>
         <path
           d='M8.01562 16.5C12.449 16.5 16.0156 12.9334 16.0156 8.5C16.0156 4.06664 12.449 0.5 8.01562 0.5C3.58227 0.5 0.015625 4.06664 0.015625 8.5C0.015625 12.9334 3.58227 16.5 8.01562 16.5Z'

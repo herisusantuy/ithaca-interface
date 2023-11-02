@@ -1,45 +1,42 @@
 .tooltipLabel {
+  @include font-size('text-xxs', 'semibold');
   font-family: 'Roboto';
-  color: #ffffff99;
-  font-size: 9px;
-  font-weight: 600;
+  color: var(--gray-650);
   text-align: center;
 }
 
 .tooltipValue {
+  @include font-size('text-xs', 'regular');
   font-family: 'Roboto';
-  font-size: 12px;
-  font-weight: 400;
   text-align: center;
-  margin-top: 3px;
+  margin-top: rem(3);
 }
 
 .contentList {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: rem(10);
+  margin-top: rem(10);
 }
 
 .unlimited {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: rem(5);
+  margin-bottom: rem(5);
   p {
-    color: #5ee192;
-    font-size: 12px;
+    @include font-size('text-xs', 'regular');
+    color: var(--green-30);
   }
   h2 {
-    color: #5ee192;
-    font-size: 10px;
+    @include font-size('text-xxs', 'regular');
+    color: var(--green-30);
   }
   h3 {
+    @include font-size('text-xxs', 'bold');
     color: var(--white);
-    font-weight: 700;
-    font-size: 10px;
   }
 }
 
@@ -47,24 +44,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: rem(8);
 }
 
 .badge {
   @include spacing(padding, 4, 'top+bottom');
   @include spacing(padding, 8, 'left+right');
   background: var(--gray-600);
-  border-radius: 10px;
+  border-radius: rem(10);
 }
 
 .key {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: rem(4);
 
   p {
-    font-family: $lato;
     @include font-size('text-xs', 'regular');
+    font-family: $lato;
     color: var(--gray-300);
   }
 

@@ -1,6 +1,4 @@
-import React from 'react';
-
-interface CustomDotProps {
+type CustomDotProps = {
   cx?: number;
   cy?: number;
   stroke?: string;
