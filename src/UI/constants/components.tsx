@@ -26,12 +26,17 @@ import Bookmark from '@/UI/components/Icons/Bookmark';
 import TabCard from '@/UI/components/TabCard/TabCard';
 import Input from '@/UI/components/Input/Input';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
+import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import Dropdown from '@/UI/components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
+import CloseProp from '@/UI/components/Icons/CloseProp';
+import Sort from '@/UI/components/Icons/Sort';
+import Next from '@/UI/components/Icons/Next';
+import Filter from '@/UI/components/Icons/Filter';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -44,6 +49,8 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import { TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { DUMMY_STRATEGY_DATA } from './tables';
+
+
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -268,6 +275,11 @@ const COMPONENT_GROUPS = [
         ),
         status: 'Waiting on Figma',
       },
+      {
+        name: 'TableOrder',
+        component: <TableOrder />,
+        status: 'In Progress',
+      },
     ],
   },
   {
@@ -392,6 +404,11 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'CloseProp',
+        component: <CloseProp />,
+        status: 'Done',
+      },
+      {
         name: 'Dropdown',
         component: <Dropdown />,
         status: 'Done',
@@ -414,6 +431,21 @@ const COMPONENT_GROUPS = [
       {
         name: 'Plus',
         component: <Plus />,
+        status: 'Done',
+      },
+      {
+        name: 'Sort',
+        component: <Sort />,
+        status: 'Done',
+      },
+      {
+        name: 'Next',
+        component: <Next />,
+        status: 'Done',
+      },
+      {
+        name: 'Filter',
+        component: <Filter />,
         status: 'Done',
       },
     ],
