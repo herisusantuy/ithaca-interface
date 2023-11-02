@@ -1,7 +1,8 @@
 .header {
   @include spacing(padding, 16, 'top+bottom');
-  background: var(--gray-rgba);
+  background: rgba(28, 30, 38, 0.3);
   backdrop-filter: blur(rem(12));
+  border-radius: rem(30);
   width: 100%;
   position: fixed;
   top: 0;
@@ -11,16 +12,12 @@
 }
 
 .container {
-  @include spacing(padding, 40, 'left+right');
+  @include spacing(padding, 24, 'left+right');
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
-
-  @include breakpoint(tablet) {
-    @include spacing(padding, 24, 'left+right');
-  }
 }
 
 .left,
@@ -30,15 +27,9 @@
 }
 
 .left {
-  gap: rem(48);
+  gap: rem(45);
 }
 
 .right {
-  gap: rem(12);
-}
-
-.headerComponents {
-  & div:first-child {
-    max-width: none;
-  }
+  gap: rem(25);
 }

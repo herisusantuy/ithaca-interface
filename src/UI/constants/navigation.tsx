@@ -17,9 +17,18 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     displayText: 'Analytics',
   },
   {
+    path: '/dashboard',
+    titleKey: 'Click to visit dashboard',
+    displayText: 'Dashboard',
+  },
+  {
+    path: '#',
+    titleKey: 'Click to view more',
+    displayText: 'More',
+  },
+  {
     path: '/components',
     titleKey: 'Click to visit components',
     displayText: 'Components',
   },
 ];
-

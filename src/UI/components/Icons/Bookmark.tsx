@@ -1,19 +1,20 @@
 const Bookmark = () => {
   return (
-    <svg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <g clipPath='url(#clip0_1110_5678)'>
+    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <g clipPath='url(#clip0_1634_99653)'>
         <path
-          d='M8 11.8333L4 14.5V5.16667C4 4.45942 4.28095 3.78115 4.78105 3.28105C5.28115 2.78095 5.95942 2.5 6.66667 2.5H9.33333C10.0406 2.5 10.7189 2.78095 11.219 3.28105C11.719 3.78115 12 4.45942 12 5.16667V8.5'
+          d='M12 17L6 21V7C6 5.93913 6.42143 4.92172 7.17157 4.17157C7.92172 3.42143 8.93913 3 10 3H14C15.0609 3 16.0783 3.42143 16.8284 4.17157C17.5786 4.92172 18 5.93913 18 7V12'
           stroke='#5EE192'
-          strokeLinecap='round'
-          strokeLinejoin='round'
+          stroke-width='1.5'
+          stroke-linecap='round'
+          stroke-linejoin='round'
         />
-        <path d='M10.667 13.1665H14.667' stroke='#5EE192' strokeLinecap='round' strokeLinejoin='round' />
-        <path d='M12.667 11.1665V15.1665' stroke='#5EE192' strokeLinecap='round' strokeLinejoin='round' />
+        <path d='M16 19H22' stroke='#5EE192' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
+        <path d='M19 16V22' stroke='#5EE192' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
       </g>
       <defs>
-        <clipPath id='clip0_1110_5678'>
-          <rect width='16' height='16' fill='white' transform='translate(0 0.5)' />
+        <clipPath id='clip0_1634_99653'>
+          <rect width='24' height='24' fill='white' />
         </clipPath>
       </defs>
     </svg>

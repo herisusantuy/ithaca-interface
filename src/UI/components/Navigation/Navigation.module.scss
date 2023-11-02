@@ -5,19 +5,28 @@
 }
 
 .nav a {
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+  font-family: $lato;
   @include font-size('text-sm', 'regular');
-  color: var(--white);
-  opacity: 0.6;
+  color: var(--white-60);
 
   &:hover {
     color: var(--white);
-    opacity: 0.8;
+  }
+
+  &:hover svg path {
+    stroke: var(--white);
+  }
+
+  svg path {
+    transition: $transition_all;
   }
 
   &.isActive {
     @include font-size('text-sm', 'semibold');
     cursor: default;
     color: var(--white);
-    opacity: 1;
   }
 }
