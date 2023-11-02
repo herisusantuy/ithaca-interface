@@ -23,19 +23,16 @@ const Toggle = ({ leftLabel = '', rightLabel = '', defaultState = 'left', onChan
     if (onChange) onChange(newState);
   };
 
-  // Get label styles from toggle state
-  const getLabelStyle = (position: 'left' | 'right') => (state === position ? styles.isActive : '');
-
   // Get switch styles from toggle state
   const getSwitchStyle = () => (state === 'right' ? styles.slide : '');
 
   return (
     <div className={styles.toggle} onClick={handleToggle}>
-      {leftLabel && <p className={getLabelStyle('left')}>{leftLabel}</p>}
+      {leftLabel && <p>{leftLabel}</p>}
       <div className={styles.switch}>
         <div className={getSwitchStyle()}></div>
       </div>
-      {rightLabel && <p className={getLabelStyle('right')}>{rightLabel}</p>}
+      {rightLabel && <p>{rightLabel}</p>}
     </div>
   );
 };

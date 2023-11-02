@@ -8,18 +8,15 @@
 
   p {
     @include font-size('text-xs', 'regular');
-    color: var(--gray-400);
+    font-family: $lato;
+    color: var(--white);
     transition: $transition_all;
-
-    &.isActive {
-      color: var(--white);
-    }
   }
 
   .switch {
-    width: rem(44);
+    width: rem(53);
     height: rem(26);
-    background-color: var(--gray-500);
+    background-color: var(--white-10);
     border-radius: rem(25);
     position: relative;
 
@@ -29,12 +26,13 @@
       background-color: var(--white);
       border-radius: 50%;
       position: absolute;
-      top: rem(4);
-      left: rem(4);
+      top: 50%;
+      transform: translate(0%, -50%);
+      left: rem(5);
       transition: $transition_all;
 
       &.slide {
-        transform: translateX(100%);
+        left: calc(100% - rem(18 + 5));
       }
     }
   }
