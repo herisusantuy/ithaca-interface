@@ -7,6 +7,7 @@ import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import CustomLogoUsdc from '@/UI/components/Icons/CustomLogoUsdc';
 import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
+import Key from '@/UI/components/ChartPayoff/Key';
 
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
@@ -57,7 +58,7 @@ const ChartPayoff = () => {
             <LogoUsdc />
           </div>
           <div className={styles.unlimited}>
-            <p>Unlimited Upside</p>
+            <h2>Unlimited Upside</h2>
             <LogoUsdc />
           </div>
           <AreaChart width={400} height={300} data={modifiedData}>
@@ -120,7 +121,7 @@ const ChartPayoff = () => {
               />
             </XAxis>
           </AreaChart>
-          <BookmarkBar />
+          <Key />
         </div>
       )}
     </>

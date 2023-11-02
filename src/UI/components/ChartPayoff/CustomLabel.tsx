@@ -14,19 +14,19 @@ const CustomLabel = (props: LabelProps) => {
   const showRenderItem = () => {
     if (value == 0) {
       return (
-        <text x={x} y={y} dy={20} fill='#fff' fontSize={10} textAnchor='middle'>
+        <text x={x} y={y} dy={20} fill='#fff' fontSize={12} textAnchor='middle'>
           {Number(value) + Number(base)}
         </text>
       );
     } else if (value == max) {
       return (
-        <text x={x} y={y} dy={20} dx={-10} fill='#fff' fontSize={10} textAnchor='middle'>
+        <text x={x} y={y} dy={20} dx={-10} fill='#fff' fontSize={12} textAnchor='middle'>
           {Number(value) + Number(base)}
         </text>
       );
     } else if (value == min) {
       return (
-        <text x={x} y={y} dy={-20} dx={10} fill='#fff' fontSize={10} textAnchor='middle'>
+        <text x={x} y={y} dy={-20} dx={10} fill='#fff' fontSize={12} textAnchor='middle'>
           {Number(value) + Number(base)}
         </text>
       );

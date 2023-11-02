@@ -22,74 +22,6 @@
   margin-top: 10px;
 }
 
-.totalContainer {
-  background-color: #35333e;
-  padding: 4px 8px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
-.totalCircle {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #fff;
-}
-
-.cContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  p {
-    color: #9a9daa;
-  }
-}
-
-.cCircle {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #b5b5f8;
-}
-
-.pContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  p {
-    color: #9a9daa;
-  }
-}
-
-.pCircle {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #ff3f57;
-}
-
-.fContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  p {
-    color: #9a9daa;
-  }
-}
-
-.fCircle {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #ff6e1d;
-}
-
 .unlimited {
   display: flex;
   justify-content: flex-end;
@@ -98,43 +30,45 @@
   margin-bottom: 5px;
   p {
     color: #5ee192;
+    font-size: 12px;
+  }
+  h2 {
+    color: #5ee192;
     font-size: 10px;
   }
   h3 {
-    color: #fff;
+    color: var(--white);
     font-weight: 700;
     font-size: 10px;
   }
 }
 
-.minusContainer {
-  .container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: rem(16);
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.badge {
+  @include spacing(padding, 4, 'top+bottom');
+  @include spacing(padding, 8, 'left+right');
+  background: var(--gray-600);
+  border-radius: 10px;
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  p {
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+    color: var(--gray-300);
   }
 
-  .badge {
-    @include spacing(padding, 4, 'top+bottom');
-    @include spacing(padding, 8, 'left+right');
-    background: var(--gray-600);
-    border-radius: rem(10);
-  }
-
-  .key {
-    display: flex;
-    align-items: center;
-    gap: rem(4);
-
-    p {
-      font-family: $lato;
-      @include font-size('text-xs', 'regular');
-      color: var(--gray-300);
-    }
-
-    &.badge p {
-      color: var(--white);
-    }
+  &.badge p {
+    color: var(--white);
   }
 }
