@@ -59,7 +59,9 @@ const COMPONENT_GROUPS = [
         name: 'Button',
         component: (
           <>
-            <Flex direction='row-space-between' margin='mb-32'>
+            {/** Primary */}
+            <h3 className='mb-16'>Primary</h3>
+            <Flex direction='row-space-around' margin='mb-32'>
               <Button title='Click to perform action' onClick={() => {}} size='sm'>
                 Primary Small
               </Button>
@@ -73,7 +75,30 @@ const COMPONENT_GROUPS = [
                 Primary Large Disabled
               </Button>
             </Flex>
-            <Flex direction='row-space-between' margin='mb-32'>
+
+            {/** Primary icon */}
+            <Flex direction='row-space-around' margin='mb-32'>
+              <Button title='Click to perform action' onClick={() => {}} size='sm'>
+                Primary Small
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}} size='sm' disabled>
+                Primary Small Disabled
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' onClick={() => {}}>
+                Primary Large
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' disabled onClick={() => {}}>
+                Primary Large Disabled
+                <ChevronDown />
+              </Button>
+            </Flex>
+
+            {/** Secondary */}
+            <h3 className='mb-16'>Secondary</h3>
+            <Flex direction='row-space-around' margin='mb-32'>
               <Button title='Click to perform action' variant='secondary' size='sm' onClick={() => {}}>
                 Secondary Small
               </Button>
@@ -87,7 +112,30 @@ const COMPONENT_GROUPS = [
                 Secondary Large Disabled
               </Button>
             </Flex>
-            <Flex direction='row-space-between'>
+
+            {/** Secondary icon */}
+            <Flex direction='row-space-around' margin='mb-32'>
+              <Button title='Click to perform action' variant='secondary' size='sm' onClick={() => {}}>
+                <Plus />
+                Secondary Small
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='sm' disabled onClick={() => {}}>
+                <Plus />
+                Secondary Small Disabled
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' onClick={() => {}}>
+                <Plus />
+                Secondary Large
+              </Button>
+              <Button title='Click to perform action' variant='secondary' size='lg' disabled onClick={() => {}}>
+                <Plus />
+                Secondary Large Disabled
+              </Button>
+            </Flex>
+
+            {/** Outline */}
+            <h3 className='mb-16'>Outline</h3>
+            <Flex direction='row-space-around' margin='mb-32'>
               <Button title='Click to perform action' variant='outline' size='sm' onClick={() => {}}>
                 Outline Small
               </Button>
@@ -99,6 +147,26 @@ const COMPONENT_GROUPS = [
               </Button>
               <Button title='Click to perform action' variant='outline' size='lg' disabled onClick={() => {}}>
                 Outline Large Disabled
+              </Button>
+            </Flex>
+
+            {/** Outline icon */}
+            <Flex direction='row-space-around'>
+              <Button title='Click to perform action' variant='outline' onClick={() => {}} size='sm'>
+                Outline Small
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' variant='outline' onClick={() => {}} size='sm' disabled>
+                Outline Small Disabled
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' variant='outline' onClick={() => {}}>
+                Outline Large
+                <ChevronDown />
+              </Button>
+              <Button title='Click to perform action' variant='outline' disabled onClick={() => {}}>
+                Outline Large Disabled
+                <ChevronDown />
               </Button>
             </Flex>
           </>
@@ -124,10 +192,7 @@ const COMPONENT_GROUPS = [
         component: (
           <Flex gap='gap-12'>
             <LabelValue label='Expiry Date' value='8Oct23' hasDropdown={true} />
-            <LabelValue
-              label='Next Auction'
-              value={<CountdownTimer />}
-            />
+            <LabelValue label='Next Auction' value={<CountdownTimer />} />
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
         ),
