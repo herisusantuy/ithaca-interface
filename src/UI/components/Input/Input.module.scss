@@ -4,36 +4,42 @@
 }
 
 .input {
-  display: inline-block;
-  position: relative;
-  width: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(6);
 }
 
-.input svg {
-  position: absolute;
-  right: rem(10);
-  top: 50%;
-  transform: translate(0%, -50%);
-}
-
-.input input {
+.container {
   @include spacing(padding, 8, 'top+bottom');
-  @include spacing(padding, 10, 'left');
-  @include spacing(padding, 40, 'right');
-  background: none;
-  outline: 0;
-  border: rem(1) solid rgba(255, 255, 255, 0.1);
-  color: var(--white);
+  @include spacing(padding, 10, 'left+right');
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+  border: rem(1) solid var(--white-10);
   border-radius: rem(24);
-  width: inherit;
-
   transition: $transition_all;
 
-  &:focus {
+  &:focus-within {
     border-color: var(--white);
+  }
+
+  input {
+    flex: 1;
+    background: none;
+    outline: 0;
+    border: 0;
+    color: var(--white);
   }
 }
 
+.label,
 .input input::placeholder {
-  color: var(--gray-500);
+  color: var(--white-60);
+}
+
+.label {
+  font-family: $lato;
+  @include font-size('text-xs', 'regular');
+  cursor: pointer;
 }

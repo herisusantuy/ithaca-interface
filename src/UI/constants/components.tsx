@@ -29,6 +29,7 @@ import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -182,10 +183,15 @@ const COMPONENT_GROUPS = [
         name: 'Input',
         component: (
           <>
-            <Input icon={<LogoEth />} />
+            <Flex direction='row-space-around'>
+              <Input id='in' label='Input number' type='number' />
+              <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
+              <Input id='it' label='Input text' type='text' />
+              <Input id='iti' label='Input text with icon' type='text' icon={<Dropdown />} />
+            </Flex>
           </>
         ),
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'LabelValue',
