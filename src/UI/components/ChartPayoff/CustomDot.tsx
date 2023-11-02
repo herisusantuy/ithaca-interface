@@ -1,8 +1,9 @@
+// Types
 type CustomDotProps = {
   cx?: number;
   cy?: number;
   stroke?: string;
-}
+};
 
 const CustomDot = (props: CustomDotProps) => {
   const { cx, cy } = props;

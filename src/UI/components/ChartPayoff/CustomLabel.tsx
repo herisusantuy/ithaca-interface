@@ -1,3 +1,4 @@
+// Types
 type LabelProps = {
   x?: number | string;
   y?: number | string;
@@ -9,7 +10,7 @@ type LabelProps = {
 
 const CustomLabel = (props: LabelProps) => {
   const { x, y, value, base, max, min } = props;
-  
+
   const renderLabel = (dx: number = 0, dy: number = 0) => (
     <text x={x} y={y} dx={dx} dy={dy} fill='#fff' fontSize={12} textAnchor='middle'>
       {Number(value) + Number(base)}

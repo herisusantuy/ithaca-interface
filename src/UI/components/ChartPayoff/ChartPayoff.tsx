@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from 'react';
+// Packages
+import { useEffect, useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
+
+// Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
 import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
 import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
-import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
 import Key from '@/UI/components/ChartPayoff/Key';
 
+// Constants
+import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
+
+// Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
 const ChartPayoff = () => {
