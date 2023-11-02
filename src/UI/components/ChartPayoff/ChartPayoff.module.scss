@@ -1,13 +1,13 @@
 .tooltipLabel {
   @include font-size('text-xxs', 'semibold');
-  font-family: 'Roboto';
+  font-family: $roboto;
   color: var(--gray-650);
   text-align: center;
 }
 
 .tooltipValue {
   @include font-size('text-xs', 'regular');
-  font-family: 'Roboto';
+  font-family: $roboto;
   text-align: center;
   margin-top: rem(3);
 }
@@ -27,14 +27,17 @@
   gap: rem(5);
   margin-bottom: rem(5);
   p {
+    font-family: $roboto;
     @include font-size('text-xs', 'regular');
     color: var(--green-30);
   }
   h2 {
+    font-family: $roboto;
     @include font-size('text-xxs', 'regular');
     color: var(--green-30);
   }
   h3 {
+    font-family: $roboto;
     @include font-size('text-xxs', 'bold');
     color: var(--white);
   }
@@ -61,7 +64,7 @@
 
   p {
     @include font-size('text-xs', 'regular');
-    font-family: $lato;
+    font-family: $roboto;
     color: var(--gray-300);
   }
 
