@@ -82,15 +82,16 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
               onChange={(value: string) => {
                 setSide(value)
                 if (product) {
+                  const contractId = getContractId(isForwards ? 'Forward' : product,
+                    1500,
+                    currentExpiryDate,
+                    contractList
+                  );
                   setCollateral(calculateCollateral(
                     product,
                     value,
                     size,
-                    getContractId(product,
-                      1500,
-                      currentExpiryDate,
-                      contractList
-                    ),
+                    contractId,
                     contractList,
                     currentExpiryDate
                   ))
@@ -104,15 +105,16 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
                 const val = value.target.value && getNumber(value.target.value)
                 setSize(val || 0)
                 if (val && product) {
+                  const contractId = getContractId(isForwards ? 'Forward' : product,
+                    1500,
+                    currentExpiryDate,
+                    contractList
+                  );
                   setCollateral(calculateCollateral(
                     product,
                     side || '',
                     val,
-                    getContractId(product,
-                      1500,
-                      currentExpiryDate,
-                      contractList
-                    ),
+                    contractId,
                     contractList,
                     currentExpiryDate
                   ))
@@ -126,7 +128,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
           <div className={`${styles.inputWrapper} mr-10`}>
             <Input
               value={!isForwards ? 1500 : '-'}
-              onChange={() => {}}
+              onChange={() => { }}
               icon={<LogoUsdc />} />
           </div>
           <div className={`${styles.inputWrapper} mr-10`}>
@@ -151,7 +153,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
           </div>
           <div className='mr-10 nowrap'>
             <Flex>
-            <div className={styles.priceLabel}>
+              <div className={styles.priceLabel}>
                 {premium || '0'}
               </div>
               <div className={styles.logo}>
@@ -162,15 +164,16 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
           <div className='mr-10'>
             <Button size='sm' title='Click to add to Strategy' variant='secondary' onClick={() => {
               if (product) {
+                const contractId = getContractId(isForwards ? 'Forward' : product,
+                  1500,
+                  currentExpiryDate,
+                  contractList
+                );
                 addStrategy({
                   type: product,
                   side: side || 'BUY',
                   size,
-                  contractId: getContractId(product,
-                    1500,
-                    currentExpiryDate,
-                    contractList
-                  ),
+                  contractId,
                   strike: strike,
                   enterPrice: unitPrice as number,
                 })

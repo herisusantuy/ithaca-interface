@@ -45,7 +45,7 @@ export const createClientOrderId = (value: number = 101): number => {
 
 export const estimateOrderSingleLeg = (
     strategyType: string,
-    leg: PortfolioLeg,
+    leg: PortfolioLeg[],
     netPrice: number,
     expiry: number,
     // numeraireY = true,
@@ -63,8 +63,8 @@ export const estimateOrderSingleLeg = (
         ethAddress,
         netPrice,
         orderGenesis: 'CLIENT_PREDEFINED',
-        legs: [leg],
-        fwdPrice: strategyType === StrategyType.STRATEGY_FORWARD ? leg.referencePrice : undefined,
+        legs: leg,
+        fwdPrice: strategyType === StrategyType.STRATEGY_FORWARD ? leg[leg.length -1].referencePrice : undefined,
     }
     return createConditionalOrder(order);
 }
