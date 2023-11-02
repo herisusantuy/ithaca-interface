@@ -217,7 +217,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'RadioButton',
         component: (
-          <Flex gap='gap-12'>
+          <Flex direction='row-center' gap='gap-12'>
             <RadioButton
               options={['Call', 'Put']}
               name='callOrPut'
@@ -234,7 +234,7 @@ const COMPONENT_GROUPS = [
             />
           </Flex>
         ),
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'Tabs',
