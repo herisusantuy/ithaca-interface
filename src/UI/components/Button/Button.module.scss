@@ -18,12 +18,6 @@
 
 // Sizes
 .btn--sm {
-  @include spacing(padding, 8, 'left+right');
-  @include spacing(padding, 8, 'top+bottom');
-  height: 35px;
-}
-
-.btn--md {
   @include spacing(padding, 16, 'left+right');
   @include spacing(padding, 10, 'top+bottom');
   @include font-size('text-xs', 'bold');
@@ -76,7 +70,7 @@
   color: var(--green-30);
 
   &:hover {
-    background: rgba(94, 225, 146, 0.1);
+    background: var(--green-10);
   }
 
   &[disabled],
