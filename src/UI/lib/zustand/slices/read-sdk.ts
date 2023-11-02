@@ -31,9 +31,25 @@ export interface ReferencePrices {
     updatedAt: string;
 }
 
+export interface Contract {
+    contractId: number;
+    economics: Economics;
+    payoff: string;
+    tradeable: boolean;
+}
+
+export interface Economics {
+    currencyPair: string;
+    expiry: number;
+    priceCurrency: string;
+    qtyCurrency: string;
+    strike: number;
+}
+
+
 export interface ReadSdkSlice {
     nextAuction: AuctionTimes;
-    contractList: number[];
+    contractList: Record<string, Contract[]>;
     referencePrices: ReferencePrices[];
     currentExpiryDate: number;
     fetchNextAuction: () => void;
@@ -48,7 +64,7 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         second: 0,
         milliseconds: 0
     },
-    contractList: [],
+    contractList: {},
     currentExpiryDate: 0,
     referencePrices: [],
     fetchNextAuction: async () => {
@@ -66,9 +82,6 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         const filteredList = contractList.reduce((obj, val) => {
             if (obj[val.economics.expiry]) {
                 obj[val.economics.expiry].push(val)
-                if (val.economics.currencyPair !== "WETH/USDC") {
-                    console.log(val.economics)
-                }
             }
             else {
                 obj[val.economics.expiry] = [val];

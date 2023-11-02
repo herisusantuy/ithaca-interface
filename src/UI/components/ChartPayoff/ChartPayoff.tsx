@@ -27,6 +27,7 @@ const ChartPayoff = () => {
     setDataMax(max);
     setDataMin(min);
     setIsClient(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const baseValue = 200;

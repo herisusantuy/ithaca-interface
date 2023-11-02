@@ -1,4 +1,4 @@
-import { ReferencePrices } from "../lib/zustand/slices/read-sdk";
+import { Contract, ReferencePrices } from "../lib/zustand/slices/read-sdk";
 import { getNumber } from "./Numbers";
 
 const toPrecision = (value: number, precision: number): number => {
@@ -27,7 +27,7 @@ export const calculateCollateral = (
 	side: string,
 	size: number,
 	contractId: number,
-	contractList: ReferencePrices,
+	contractList: Record<string, Contract[]>,
 	expiry: number
 ) => {
 	if (side === 'BUY') return 0
@@ -36,12 +36,12 @@ export const calculateCollateral = (
 	return size
 }
 
-export const getStrike = (contractId: number, contractList: ReferencePrices, expiry: number): string => {
+export const getStrike = (contractId: number, contractList: Record<string, Contract[]>, expiry: number): string => {
     const contract = contractList[expiry].find((ctr) => ctr.contractId === contractId)
     return `${contract?.economics.strike ? contract.economics.strike : '-'}`
 }
 
-export const getContractId = (product: string, strike: number, currentExpiryDate: number, contractList: any) => {
+export const getContractId = (product: string, strike: number, currentExpiryDate: number, contractList: Record<string, Contract[]>) => {
 	const contractsByDate = contractList[currentExpiryDate];
 	const contract = contractsByDate.find((c) => c.payoff === product && (product === 'Forward' || c.economics.strike === strike) );
 	return contract?.contractId || 0;

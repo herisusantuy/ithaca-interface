@@ -9,8 +9,8 @@ const publicClient = createPublicClient({
 
 export interface Leg {
 	contractId: number;
-	side: "BUY" | "SELL";
-	quantity: string;
+	side: string;
+	quantity: number;
 }
 
 export interface ConditionalOrder {
@@ -32,6 +32,6 @@ const ithacaSDK = IthacaSDK.init({
     publicClient // Refer: https://viem.sh/docs/clients/public.html
 });
 
-export const estimateLock = (order: ConditionalOrder) => {
-    const test = ithacaSDK.calculation.estimateOrderLock(order);
+export const estimateLock = async (order: ConditionalOrder) => {
+    return await ithacaSDK.calculation.estimateOrderLock(order);
 };

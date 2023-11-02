@@ -14,7 +14,7 @@ export const getNumberValue = (value: string): string => {
   // remove spaces from string
   value = value.replace(/\s/g, '')
   // remove aphats from string
-  value = value.replace(/[^.\d\-]/g, '')
+  value = value.replace(/[^.\d]/g, '')
 
   return value
 }

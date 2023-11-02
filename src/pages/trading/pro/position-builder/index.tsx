@@ -13,18 +13,26 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import { DUMMY_STRATEGY_DATA, StrategyType } from '@/UI/constants/tables';
-import { useState } from 'react';
-import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
+import { useCallback, useState } from 'react';
+import PositionBuilderRow, { Strategy } from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs'
 import { estimateLock } from '@/UI/lib/sdk/estimateOrders';
 import { estimateOrderSingleLeg } from '@/UI/utils/estimate.order';
+import useFromStore from '@/UI/hooks/useFromStore';
+import { ConditionalOrder } from '@/UI/lib/sdk/ConditionalOrder';
 
 const Index = () => {
   const [strategyList, setStrategyList] = useState(DUMMY_STRATEGY_DATA);
-  const {currentExpiryDate} = useAppStore();
+  const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
+
+  const getOrderSummary = useCallback(async (payload: ConditionalOrder) => {
+    const test = await estimateLock(payload)
+    console.log(test)
+  }, []);
+
   return (
     <>
       <Meta />
@@ -35,7 +43,7 @@ const Index = () => {
             <div>
               <Flex gap='gap-12'>
                 <Asset icon={<LogoEth />} label='ETH' />
-                {/* <LabelValue label='Expiry Date' value={currentExpiryDate && dayjs(currentExpiryDate, 'YYYYMMDD').format('DDMMMYY')} hasDropdown={true} /> */}
+                <LabelValue label='Expiry Date' value={currentExpiryDate && dayjs(currentExpiryDate, 'YYYYMMDD').format('DDMMMYY')} hasDropdown={true} />
                 <LabelValue
                   label='Next Auction'
                   value={<CountdownTimer />}
@@ -58,18 +66,18 @@ const Index = () => {
                 isForwards={false}
                 options={['Call', 'Put']}
                 valueOptions={['Call', 'Put']}
-                addStrategy={(value: StrategyType) => {
-                  console.log(value)
+                addStrategy={(value: Strategy) => {
                   const payload = estimateOrderSingleLeg(value.type, {
                     contractId: value.contractId,
                     quantity: value.size,
                     side: value.side,
-                  }, value.enterPrice, 20231103)
-                  console.log(payload)
-                  estimateLock(payload)
-                  setStrategyList([...strategyList, value])
+                  }, value.enterPrice, 20231110)
+                  if (payload) {
+                    getOrderSummary(payload)
+                  }
+                  setStrategyList([...strategyList, value] as StrategyType[])
                 }}
-                submitAuction={() => { }}
+                // submitAuction={() => { }}
                 id='options-row'
               />
               <h4 className={styles.positionTitle}>Digital Options</h4>
@@ -77,18 +85,18 @@ const Index = () => {
                 isForwards={false}
                 options={['Call', 'Put']}
                 valueOptions={['BinaryCall', 'BinaryPut']}
-                addStrategy={(value: StrategyType) => {
-                  console.log(value)
+                addStrategy={(value: Strategy) => {
                   const payload = estimateOrderSingleLeg(value.type, {
                     contractId: value.contractId,
                     quantity: value.size,
                     side: value.side,
-                  }, value.enterPrice, 20231103)
-                  console.log(payload)
-                  estimateLock(payload)
-                  setStrategyList([...strategyList, value])
+                  }, value.enterPrice, 20231110)
+                  if (payload) {
+                    getOrderSummary(payload)
+                  }
+                  setStrategyList([...strategyList, value] as StrategyType[])
                 }}
-                submitAuction={(value: StrategyType) => console.log(value)}
+                // submitAuction={(value: StrategyType) => console.log(value)}
                 id='digital-options-row'
               />
               <h4 className={styles.positionTitle}>Forwards</h4>
@@ -96,18 +104,18 @@ const Index = () => {
                 isForwards={true}
                 options={['10Nov23', 'Next Auction']}
                 valueOptions={['Forward (10 Nov 23)', 'Forward (Next Auction)']}
-                addStrategy={(value: StrategyType) => {
-                  console.log(value)
+                addStrategy={(value: Strategy) => {
                   const payload = estimateOrderSingleLeg(value.type, {
                     contractId: value.contractId,
                     quantity: value.size,
                     side: value.side,
-                  }, value.enterPrice, 20231103)
-                  console.log(payload)
-                  estimateLock(payload)
-                  setStrategyList([...strategyList, value])
+                  }, value.enterPrice, 20231110)
+                  if (payload) {
+                    getOrderSummary(payload)
+                  }
+                  setStrategyList([...strategyList, value] as StrategyType[])
                 }}
-                submitAuction={() => { }}
+                // submitAuction={() => { }}
                 id='forwards-row'
               />
               <div className={styles.summaryWrapper}>

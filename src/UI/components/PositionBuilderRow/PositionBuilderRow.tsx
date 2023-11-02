@@ -1,5 +1,4 @@
 // Packages
-import { StrategyType } from '@/UI/constants/tables';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -21,19 +20,28 @@ import styles from './PositionBuilderRow.module.scss';
 type PositionBuilderRowProps = {
   options: (string | ReactNode)[];
   valueOptions: DotTypes[];
-  addStrategy: (value: StrategyType) => void;
-  submitAuction: (value: StrategyType) => void;
+  addStrategy: (value: Strategy) => void;
+  // submitAuction: (value: StrategyType) => void;
   id: string;
   isForwards: boolean;
 };
 
-const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction, id, isForwards }: PositionBuilderRowProps) => {
+export type Strategy = {
+  type: string;
+  side: string;
+  size: number;
+  contractId: number;
+  strike: number;
+  enterPrice: number;
+}
+
+const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards }: PositionBuilderRowProps) => {
   const { contractList, currentExpiryDate, referencePrices } = useAppStore();
   const [product, setProduct] = useState<DotTypes>();
   const [side, setSide] = useState<string | undefined>();
   const [size, setSize] = useState<number>(100);
   const [unitPrice, setUnitPrice] = useState<number | string>();
-  const [strike] = useState<number | string>(!isForwards && 1500);
+  const [strike] = useState<number>(1500);
   const [collateral, setCollateral] = useState<number>();
   const [premium, setPremium] = useState<number>();
   return (
@@ -44,15 +52,12 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
             <RadioButton options={options}
               valueProps={valueOptions}
               name={`${id}-type`}
-              // defaultOption={defaultOption}
               onChange={(value: string) => {
-                // console.log(calculateCollateral(value, side || '', `${size}`, getContractId(value, 1500, currentExpiryDate, contractList), contractList, currentExpiryDate))
                 const contractId = getContractId(isForwards ? 'Forward' : value,
                   1500,
                   currentExpiryDate,
                   contractList
                 );
-                console.log(contractId)
                 setProduct(value as DotTypes)
                 setCollateral(calculateCollateral(
                   value,
@@ -120,7 +125,8 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
           </div>
           <div className={`${styles.inputWrapper} mr-10`}>
             <Input
-              value={strike}
+              value={!isForwards ? 1500 : '-'}
+              onChange={() => {}}
               icon={<LogoUsdc />} />
           </div>
           <div className={`${styles.inputWrapper} mr-10`}>
@@ -158,7 +164,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               if (product) {
                 addStrategy({
                   type: product,
-                  side: side,
+                  side: side || 'BUY',
                   size,
                   contractId: getContractId(product,
                     1500,
@@ -166,7 +172,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
                     contractList
                   ),
                   strike: strike,
-                  enterPrice: unitPrice,
+                  enterPrice: unitPrice as number,
                 })
               }
             }}>
@@ -177,13 +183,13 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
           <div className='mr-10'>
             <Button size='sm' title='Click to add to Submit to Auction' onClick={() => {
               if (product) {
-                submitAuction({
-                  type: product,
-                  side: side === 'BUY' ? '+' : '-',
-                  size,
-                  strike: strike,
-                  enterPrice: unitPrice,
-                })
+                // submitAuction({
+                //   type: product,
+                //   side: side === 'BUY' ? '+' : '-',
+                //   size,
+                //   strike: strike,
+                //   enterPrice: unitPrice,
+                // })
               }
             }}>
               Submit to Auction

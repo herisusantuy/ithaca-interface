@@ -44,12 +44,12 @@ export const createClientOrderId = (value: number = 101): number => {
 
 
 export const estimateOrderSingleLeg = (
-    strategyType: StrategyType,
+    strategyType: string,
     leg: PortfolioLeg,
     netPrice: number,
     expiry: number,
-    numeraireY = true,
-    addCollateral = false
+    // numeraireY = true,
+    // addCollateral = false
 ) => {
     const currencyPair = 'WETH/USDC'
     //TODO: Remove in production

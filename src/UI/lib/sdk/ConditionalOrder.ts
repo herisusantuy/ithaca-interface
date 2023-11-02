@@ -17,7 +17,7 @@ export interface ConditionalOrder {
 export interface Leg {
     contractId: number
     side: string
-    quantity: string
+    quantity: number
 }
 
 /**
@@ -41,7 +41,7 @@ export interface SignedConditionalOrder {
 }
 
 export interface PortfolioOrder {
-    type: StrategyType
+    type: string
     expiry: number
     currencyPair: string
     collateralCurrency?: string
@@ -73,7 +73,7 @@ export interface PortfolioLegCreator extends PortfolioLeg {
 export interface PortfolioLeg {
     contractId: number
     side: string
-    quantity: string
+    quantity: number
     product?: string
     referencePrice?: number
 }
