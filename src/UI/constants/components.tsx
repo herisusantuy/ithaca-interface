@@ -33,7 +33,6 @@ import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import Dropdown from '@/UI/components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
-import CloseProp from '@/UI/components/Icons/CloseProp';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 
@@ -412,11 +411,6 @@ const COMPONENT_GROUPS = [
       {
         name: 'Close',
         component: <Close />,
-        status: 'Done',
-      },
-      {
-        name: 'CloseProp',
-        component: <CloseProp />,
         status: 'Done',
       },
       {
