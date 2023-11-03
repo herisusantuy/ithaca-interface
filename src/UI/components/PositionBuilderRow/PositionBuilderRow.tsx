@@ -1,8 +1,9 @@
 // Packages
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
+import { readOnlySDK } from '@/UI/lib/sdk/readOnlySDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { calculateCollateral, calculatePremium, getContractId, getUnitPrice } from '@/UI/utils/Cakculations';
+import { getContractId, getUnitPrice } from '@/UI/utils/Cakculations';
 import { getNumber } from '@/UI/utils/Numbers';
 import { ReactNode, useState } from 'react';
 import Button from '../Button/Button';
@@ -38,9 +39,9 @@ export type Strategy = {
 const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards }: PositionBuilderRowProps) => {
   const { contractList, currentExpiryDate, referencePrices } = useAppStore();
   const [product, setProduct] = useState<DotTypes>();
-  const [side, setSide] = useState<string | undefined>();
+  const [side, setSide] = useState<string>('BUY');
   const [size, setSize] = useState<number>(100);
-  const [unitPrice, setUnitPrice] = useState<number | string>();
+  const [unitPrice, setUnitPrice] = useState<number>();
   const [strike] = useState<number>(1500);
   const [collateral, setCollateral] = useState<number>();
   const [premium, setPremium] = useState<number>();
@@ -59,17 +60,20 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
                   contractList
                 );
                 setProduct(value as DotTypes)
-                setCollateral(calculateCollateral(
-                  value,
-                  side || '',
-                  size,
+                const leg = {
                   contractId,
-                  contractList,
-                  currentExpiryDate
+                  side,
+                  quantity: size
+                };
+                setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
+                  leg,
+                  value,
+                  strike,
+                  4
                 ))
                 const unit = getUnitPrice(contractId, referencePrices)
                 setUnitPrice(unit)
-                setPremium(calculatePremium(unit || 0, size))
+                setPremium(readOnlySDK.calculation.calcPremium(leg, unit || 0, 4))
               }} />
           </div>
           <div className='mr-10'>
@@ -87,13 +91,15 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
                     currentExpiryDate,
                     contractList
                   );
-                  setCollateral(calculateCollateral(
+                  setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
+                    {
+                      contractId,
+                      side: value,
+                      quantity: size
+                    },
                     product,
-                    value,
-                    size,
-                    contractId,
-                    contractList,
-                    currentExpiryDate
+                    strike,
+                    4
                   ))
                 }
               }} />
@@ -105,18 +111,20 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
                 const val = value.target.value && getNumber(value.target.value)
                 setSize(val || 0)
                 if (val && product) {
-                  const contractId = getContractId(isForwards ? 'Forward' : product,
+                  const contractId = getContractId(!isForwards ? 'Forward' : product,
                     1500,
                     currentExpiryDate,
                     contractList
                   );
-                  setCollateral(calculateCollateral(
+                  setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
+                    {
+                      contractId,
+                      side,
+                      quantity: value
+                    },
                     product,
-                    side || '',
-                    val,
-                    contractId,
-                    contractList,
-                    currentExpiryDate
+                    strike,
+                    4
                   ))
                 }
                 else {
@@ -136,8 +144,18 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
               value={unitPrice}
               onChange={(value) => {
                 const val = value.target.value && getNumber(value.target.value);
-                setUnitPrice(val)
-                setPremium(calculatePremium(val || 0, size || 0))
+                setUnitPrice(val || 0)
+                const contractId = getContractId(isForwards ? 'Forward' : (product || ''),
+                  1500,
+                  currentExpiryDate,
+                  contractList
+                );
+                const leg = {
+                  contractId,
+                  side,
+                  quantity: size
+                };
+                setPremium(readOnlySDK.calculation.calcPremium(leg, unitPrice || 0, 4))
               }}
               icon={<LogoUsdc />} />
           </div>

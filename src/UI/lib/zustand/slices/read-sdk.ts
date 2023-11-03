@@ -1,19 +1,9 @@
 import { StateCreator } from "zustand";
-import { createPublicClient, http } from 'viem'
-import { polygonMumbai } from 'viem/chains'
-import { IthacaSDK, IthacaNetwork } from '@ithaca-finance/sdk';
 import { getNumber } from '../../../utils/Numbers';
 import dayjs from 'dayjs'
+import { readOnlySDK } from "../../sdk/readOnlySDK";
 
-const publicClient = createPublicClient({ 
-    chain: polygonMumbai,
-    transport: http()
-});
 
-const ithacaSDK = IthacaSDK.init({
-    network: IthacaNetwork.MUMBAI,
-    publicClient // Refer: https://viem.sh/docs/clients/public.html
-});
 
 export interface AuctionTimes {
     hour: number,
@@ -68,7 +58,7 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
     currentExpiryDate: 0,
     referencePrices: [],
     fetchNextAuction: async () => {
-        const nextAuction = dayjs(await ithacaSDK.protocol.nextAuction());
+        const nextAuction = dayjs(await readOnlySDK.protocol.nextAuction());
         const currentTime = dayjs();
         set({ nextAuction: {
             hour: nextAuction.diff(currentTime, 'hour'),
@@ -78,7 +68,7 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         } })
     },
     fetchContractList: async () => {
-        const contractList = await ithacaSDK.protocol.contractList();
+        const contractList = await readOnlySDK.protocol.contractList();
         const filteredList = contractList.reduce((obj, val) => {
             if (obj[val.economics.expiry]) {
                 obj[val.economics.expiry].push(val)
@@ -91,7 +81,7 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
         set({contractList: filteredList, currentExpiryDate: getNumber(Object.keys(filteredList)[1])});
     },
     fetchReferencePrices: async () => {
-        const referencePrices = await ithacaSDK.market.referencePrices(0, 'WETH/USDC');
+        const referencePrices = await readOnlySDK.market.referencePrices(0, 'WETH/USDC');
         set({referencePrices: referencePrices})
     },
 })
