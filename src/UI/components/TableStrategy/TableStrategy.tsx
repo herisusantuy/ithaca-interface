@@ -1,5 +1,5 @@
 // Constants
-import { STRATEGY_TABLE_HEADER } from '@/UI/constants/tables';
+import { TABLE_STRATEGY_HEADERS } from '@/UI/constants/tableStrategy';
 
 // Utils
 import { displaySideIcon } from '@/UI/utils/Icons';
@@ -31,14 +31,13 @@ const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
   return (
     <div className={styles.table}>
       <div className={`${styles.row} ${styles.header}`}>
-        {STRATEGY_TABLE_HEADER.map((header, idx) => {
-         return (
-          <div className={styles.cell} key={idx}>
-            {header === 'Type' ?
-            <div className={`${styles.strategy} ml-24 mr-20`}>{header}</div>
-            :<>{header}</>}
-          </div>
-        )})}
+        {TABLE_STRATEGY_HEADERS.map((header, idx) => {
+          return (
+            <div className={styles.cell} key={idx}>
+              {header === 'Type' ? <div className={`${styles.strategy} ml-24 mr-20`}>{header}</div> : <>{header}</>}
+            </div>
+          );
+        })}
       </div>
       {data.map((strategy, idx) => (
         <div className={`${styles.row} ${styles.data}`} key={idx}>

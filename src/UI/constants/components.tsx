@@ -34,9 +34,8 @@ import Dropdown from '@/UI/components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
 import CloseProp from '@/UI/components/Icons/CloseProp';
-import Sort from '@/UI/components/Icons/Sort';
-import Next from '@/UI/components/Icons/Next';
 import Filter from '@/UI/components/Icons/Filter';
+import TableDescription from '@/UI/components/TableDescription/TableDescription';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -48,9 +47,8 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Constants
 import { TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
-import { DUMMY_STRATEGY_DATA } from './tables';
-
-
+import { TABLE_STRATEGY_DATA } from './tableStrategy';
+import { TABLE_ORDER_DATA } from './tableOrder';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -266,18 +264,31 @@ const COMPONENT_GROUPS = [
     groupName: 'Tables',
     components: [
       {
+        name: 'TableDescription',
+        component: (
+          <TableDescription
+            possibleReleaseX={10}
+            possibleReleaseY={20}
+            postOptimisationX={8}
+            postOptimisationY={18}
+            totalCollateral={30}
+          />
+        ),
+        status: 'In Progress',
+      },
+      {
         name: 'TableStrategy',
         component: (
           <>
             <h3 className='mb-14'>Strategy</h3>
-            <TableStrategy data={DUMMY_STRATEGY_DATA} />
+            <TableStrategy data={TABLE_STRATEGY_DATA} />
           </>
         ),
         status: 'Waiting on Figma',
       },
       {
         name: 'TableOrder',
-        component: <TableOrder />,
+        component: <TableOrder data={TABLE_ORDER_DATA} />,
         status: 'In Progress',
       },
     ],
@@ -431,16 +442,6 @@ const COMPONENT_GROUPS = [
       {
         name: 'Plus',
         component: <Plus />,
-        status: 'Done',
-      },
-      {
-        name: 'Sort',
-        component: <Sort />,
-        status: 'Done',
-      },
-      {
-        name: 'Next',
-        component: <Next />,
         status: 'Done',
       },
       {
