@@ -12,7 +12,7 @@ import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import { TABLE_STRATEGY_DATA, StrategyType } from '@/UI/constants/tableStrategy';
+import { StrategyType } from '@/UI/constants/tableStrategy';
 import { useCallback, useState } from 'react';
 import PositionBuilderRow, { Strategy } from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
