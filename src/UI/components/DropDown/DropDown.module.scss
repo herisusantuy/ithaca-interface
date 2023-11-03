@@ -1,0 +1,50 @@
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: rem(100);
+}
+
+.dropdownInputBox {
+  display: flex;
+  justify-content: space-between;
+  padding: rem(7) rem(8);
+  background: var(--gray-900);
+  border-radius: rem(12);
+}
+
+.displayValue {
+  @include font-size('text-sm', 'regular');
+  font-family: $roboto;
+  color: var(--white);
+  min-width: rem(60);
+}
+
+.toggleIcon {
+  transform: rotate(180);
+}
+
+.displayIcon {
+  cursor: pointer;
+}
+
+.listContainer {
+  list-style-type: none;
+  border-radius: rem(8);
+  background: #10141e;
+  padding: rem(10) rem(10);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: rem(8);
+}
+
+.hide {
+    display: none;
+}
+
+.listContainer li {
+  cursor: pointer;
+  @include font-size('text-sm', 'regular');
+  font-family: $roboto;
+  color: var(--white);
+}

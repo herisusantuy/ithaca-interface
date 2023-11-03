@@ -30,7 +30,8 @@ import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import Dropdown from '@/UI/components/Icons/Dropdown';
+import Dropdown from '../components/Icons/Dropdown';
+import DropdownComponent from '@/UI/components/DropDown/DropDown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
 import Filter from '@/UI/components/Icons/Filter';
@@ -256,6 +257,11 @@ const COMPONENT_GROUPS = [
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
         status: 'Done',
+      },
+      {
+        name: 'DropDown',
+        component: <DropdownComponent />,
+        status: 'In Progress',
       },
     ],
   },
