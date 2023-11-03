@@ -12,13 +12,13 @@ import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import { DUMMY_STRATEGY_DATA, StrategyType } from '@/UI/constants/tables';
+import { TABLE_STRATEGY_DATA, StrategyType } from '@/UI/constants/tableStrategy';
 import { useCallback, useState } from 'react';
 import PositionBuilderRow, { Strategy } from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import { estimateLock, Leg } from '@/UI/lib/sdk/estimateOrders';
 import { estimateOrderSingleLeg } from '@/UI/utils/estimate.order';
 import useFromStore from '@/UI/hooks/useFromStore';
@@ -28,10 +28,10 @@ const Index = () => {
   const [strategyList, setStrategyList] = useState<StrategyType[]>([]);
   const [previousLegs, setpreviousLegs] = useState<Leg[]>([]);
   const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
-  console.log(currentExpiryDate)
+  console.log(currentExpiryDate);
   const getOrderSummary = useCallback(async (payload: ConditionalOrder) => {
-    const test = await estimateLock(payload)
-    console.log(test)
+    const test = await estimateLock(payload);
+    console.log(test);
   }, []);
 
   return (
@@ -44,11 +44,12 @@ const Index = () => {
             <div>
               <Flex gap='gap-12'>
                 <Asset icon={<LogoEth />} label='ETH' />
-                <LabelValue label='Expiry Date' value={currentExpiryDate && dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DDMMMYY')} hasDropdown={true} />
                 <LabelValue
-                  label='Next Auction'
-                  value={<CountdownTimer />}
+                  label='Expiry Date'
+                  value={currentExpiryDate && dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DDMMMYY')}
+                  hasDropdown={true}
                 />
+                <LabelValue label='Next Auction' value={<CountdownTimer />} />
                 <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
               </Flex>
               <h3 className={styles.title}>Position Builder</h3>
@@ -68,20 +69,26 @@ const Index = () => {
                 options={['Call', 'Put']}
                 valueOptions={['Call', 'Put']}
                 addStrategy={(value: Strategy) => {
-                  const legs = [...previousLegs, {
-                    contractId: value.contractId,
-                    quantity: value.size,
-                    side: value.side,
-                  }]
-                  setpreviousLegs(legs)
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110)
+                  const legs = [
+                    ...previousLegs,
+                    {
+                      contractId: value.contractId,
+                      quantity: value.size,
+                      side: value.side,
+                    },
+                  ];
+                  setpreviousLegs(legs);
+                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
                   if (payload) {
-                    getOrderSummary(payload)
+                    getOrderSummary(payload);
                   }
-                  setStrategyList([...strategyList, {
-                    ...value,
-                    side: value.side === 'BUY' ? '+' : '-'
-                  }] as StrategyType[])
+                  setStrategyList([
+                    ...strategyList,
+                    {
+                      ...value,
+                      side: value.side === 'BUY' ? '+' : '-',
+                    },
+                  ] as StrategyType[]);
                 }}
                 // submitAuction={() => { }}
                 id='options-row'
@@ -92,20 +99,26 @@ const Index = () => {
                 options={['Call', 'Put']}
                 valueOptions={['BinaryCall', 'BinaryPut']}
                 addStrategy={(value: Strategy) => {
-                  const legs = [...previousLegs, {
-                    contractId: value.contractId,
-                    quantity: value.size,
-                    side: value.side,
-                  }]
-                  setpreviousLegs(legs)
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110)
+                  const legs = [
+                    ...previousLegs,
+                    {
+                      contractId: value.contractId,
+                      quantity: value.size,
+                      side: value.side,
+                    },
+                  ];
+                  setpreviousLegs(legs);
+                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
                   if (payload) {
-                    getOrderSummary(payload)
+                    getOrderSummary(payload);
                   }
-                  setStrategyList([...strategyList, {
-                    ...value,
-                    side: value.side === 'BUY' ? '+' : '-'
-                  }] as StrategyType[])
+                  setStrategyList([
+                    ...strategyList,
+                    {
+                      ...value,
+                      side: value.side === 'BUY' ? '+' : '-',
+                    },
+                  ] as StrategyType[]);
                 }}
                 // submitAuction={(value: StrategyType) => console.log(value)}
                 id='digital-options-row'
@@ -116,20 +129,26 @@ const Index = () => {
                 options={['10Nov23', 'Next Auction']}
                 valueOptions={['Forward (10 Nov 23)', 'Forward (Next Auction)']}
                 addStrategy={(value: Strategy) => {
-                  const legs = [...previousLegs, {
-                    contractId: value.contractId,
-                    quantity: value.size,
-                    side: value.side,
-                  }]
-                  setpreviousLegs(legs)
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110)
+                  const legs = [
+                    ...previousLegs,
+                    {
+                      contractId: value.contractId,
+                      quantity: value.size,
+                      side: value.side,
+                    },
+                  ];
+                  setpreviousLegs(legs);
+                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
                   if (payload) {
-                    getOrderSummary(payload)
+                    getOrderSummary(payload);
                   }
-                  setStrategyList([...strategyList, {
-                    ...value,
-                    side: value.side === 'BUY' ? '+' : '-'
-                  }] as StrategyType[])
+                  setStrategyList([
+                    ...strategyList,
+                    {
+                      ...value,
+                      side: value.side === 'BUY' ? '+' : '-',
+                    },
+                  ] as StrategyType[]);
                 }}
                 // submitAuction={() => { }}
                 id='forwards-row'
@@ -140,7 +159,8 @@ const Index = () => {
                   collatarelETH='120.2k'
                   collatarelUSDC='200.1k'
                   premium='1500'
-                  submitAuction={() => { }} />
+                  submitAuction={() => {}}
+                />
               </div>
             </div>
             <div className={styles.strategyPanel}>
@@ -148,11 +168,14 @@ const Index = () => {
                 <div className='p-20'>
                   <h3 className={`color-white mb-5`}>Strategy</h3>
                   <div className={styles.tableWrapper}>
-                    <TableStrategy data={strategyList} removeRow={(index: number) => {
-                      const updatedData = [...strategyList];
-                      updatedData.splice(index, 1);
-                      setStrategyList(updatedData);
-                    }}></TableStrategy>
+                    <TableStrategy
+                      data={strategyList}
+                      removeRow={(index: number) => {
+                        const updatedData = [...strategyList];
+                        updatedData.splice(index, 1);
+                        setStrategyList(updatedData);
+                      }}
+                    ></TableStrategy>
                   </div>
                   <h3 className={`color-white mb-5 mt-32`}>Payoff Diagram</h3>
                   <ChartPayoff />

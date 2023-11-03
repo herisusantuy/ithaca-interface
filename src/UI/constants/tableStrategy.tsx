@@ -1,10 +1,7 @@
-// Types
+// Imports
 import { DotTypes } from '@/UI/components/Dot/Dot';
 
-// Strategy table header
-export const STRATEGY_TABLE_HEADER: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price', ''];
-
-// Strategy table dummy Data
+// Types
 export type StrategyType = {
   type: DotTypes;
   side: '+' | '-';
@@ -13,7 +10,11 @@ export type StrategyType = {
   enterPrice: number;
 };
 
-export const DUMMY_STRATEGY_DATA: StrategyType[] = [
+// Table strategy headers
+export const TABLE_STRATEGY_HEADERS: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price', ''];
+
+// Table strategy data
+export const TABLE_STRATEGY_DATA: StrategyType[] = [
   {
     type: 'Call',
     side: '+',
