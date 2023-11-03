@@ -66,8 +66,7 @@ const ChartPayoff = () => {
             <h2>Unlimited Upside</h2>
             <LogoUsdc />
           </div>
-          <ResponsiveContainer width={400} height={300}>
-            <AreaChart data={modifiedData}>
+            <AreaChart data={modifiedData} width={400} height={300}>
               <defs>
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
@@ -101,7 +100,7 @@ const ChartPayoff = () => {
                 dataKey='value'
                 fill='url(#fillGradient)'
                 label={<CustomLabel base={baseValue} max={dataMax} min={dataMin} />}
-                dot={<CustomDot />}
+                dot={<CustomDot base={baseValue}/>}
               />
               <Area
                 type='linear'
@@ -111,7 +110,7 @@ const ChartPayoff = () => {
                 fill='transparent'
               />
               <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
-              <Tooltip content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />} />
+              <Tooltip isAnimationActive={false} animationDuration={1} content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />} />
 
               <XAxis tick={false} axisLine={false}>
                 <Label
@@ -127,7 +126,6 @@ const ChartPayoff = () => {
                 />
               </XAxis>
             </AreaChart>
-          </ResponsiveContainer>
           <Key />
         </div>
       )}

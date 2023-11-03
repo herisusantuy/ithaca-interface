@@ -1,5 +1,5 @@
 // Types
-type PayoffDataProps = {
+export type PayoffDataProps = {
   value: number;
   dashValue: number | undefined;
 };
