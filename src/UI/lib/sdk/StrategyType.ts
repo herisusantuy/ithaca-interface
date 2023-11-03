@@ -3,7 +3,7 @@ export enum StrategyType {
     STRATEGY_OPTIONS = 'Options',
     STRATEGY_FORWARD = 'Forward',
     STRATEGY_DIGITAL = 'Digital Options',
-    STRATEGY_BET = 'Bet',
+    STRATEGY_BET = 'Bet', 
     STRATEGY_EARN = 'Earn',
     STRATEGY_BARRIER = 'Barrier',
     STRATEGY_PAY_LATER = 'Pay Later',
