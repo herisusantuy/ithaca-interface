@@ -1,7 +1,17 @@
+.label {
+  color: var(--white-60);
+  font-family: $lato;
+  @include font-size('text-xs', 'regular');
+  cursor: pointer;
+  padding-bottom: rem(6);
+  display: block;
+}
+
 .dropdownContainer {
   display: flex;
   flex-direction: column;
-  max-width: rem(100);
+  // max-width: rem(100);
+  position: relative;
 }
 
 .dropdownInputBox {
@@ -13,10 +23,13 @@
 }
 
 .displayValue {
-  @include font-size('text-sm', 'regular');
+  @include font-size('text-md', 'regular');
   font-family: $roboto;
   color: var(--white);
   min-width: rem(60);
+  padding-right: rem(10);
+  box-sizing: content-box;
+  cursor: pointer;
 }
 
 .toggleIcon {
@@ -28,23 +41,32 @@
 }
 
 .listContainer {
+  position: absolute;
+  top: rem(30);
+  width: 100%;
   list-style-type: none;
   border-radius: rem(8);
-  background: #10141e;
+  background: rgba(18, 23, 34, 0.7);
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
   padding: rem(10) rem(10);
   margin: 0;
   display: flex;
   flex-direction: column;
   gap: rem(8);
+  z-index: 1;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .listContainer li {
   cursor: pointer;
-  @include font-size('text-sm', 'regular');
+  @include font-size('text-md', 'regular');
   font-family: $roboto;
   color: var(--white);
 }

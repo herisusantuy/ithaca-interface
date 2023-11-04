@@ -195,6 +195,16 @@ const COMPONENT_GROUPS = [
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
               <Input id='iti' label='Input text with icon' type='text' icon={<Dropdown />} />
+              <DropdownComponent
+                label='Dropdown'
+                options={[
+                  { name: 'Option 1', value: '1' },
+                  { name: 'Option 2', value: '2' },
+                ]}
+                onChange={(value: string) => {
+                  console.log(value);
+                }}
+              ></DropdownComponent>
             </Flex>
           </>
         ),
@@ -257,11 +267,6 @@ const COMPONENT_GROUPS = [
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
         status: 'Done',
-      },
-      {
-        name: 'DropDown',
-        component: <DropdownComponent />,
-        status: 'In Progress',
       },
     ],
   },
