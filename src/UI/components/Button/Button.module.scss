@@ -145,11 +145,11 @@
   @include font-size('text-sm', 'regular');
   border-radius: 0;
   background: none;
-  color: var(--gray-300);
+  color: var(--white);
   justify-content: flex-start;
 
   &:hover {
     background: var(--purple-30);
-    color: var(--gray-100);
+    color: var(--white-60);
   }
 }

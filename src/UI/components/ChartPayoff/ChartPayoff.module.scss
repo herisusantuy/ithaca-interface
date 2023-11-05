@@ -65,7 +65,7 @@
   p {
     @include font-size('text-xs', 'regular');
     font-family: $roboto;
-    color: var(--gray-300);
+    color: var(--white);
   }
 
   &.badge p {

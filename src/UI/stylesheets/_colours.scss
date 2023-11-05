@@ -1,5 +1,7 @@
 :root {
-  // White
+  --body-background: #0b0e15;
+
+  // WHITE
   --white: #ffffff;
   --white-60: #9d9daa;
   --white-30: #54565b;
@@ -7,57 +9,41 @@
   --white-10: #35333e;
   --white-5: #212027;
 
-  // Gray
-  --gray-25: #fcfcfd;
-  --gray-50: #f9fafb;
-  --gray-100: #f2f4f7;
-  --gray-200: #eaecf0;
-  --gray-300: #d0d5dd;
-  --gray-400: #98a2b3;
-  --gray-500: #667085;
-  --gray-600: #475467;
-  --gray-650: #999999;
-  --gray-700: #344054;
-  --gray-800: #1d2939;
-  --gray-900: #101828;
-  --gray-950: #0b0e15;
+  // WHITE RGBA
+  --white-rgba-20: rgba(255, 255, 255, 0.2);
+  --white-rgba-10: rgba(255, 255, 255, 0.1);
+  --white-rgba-5: rgba(255, 255, 255, 0.05);
 
-  // Green
-  --green-10: #132422;
-  --green-20: #4bb475;
-  --green-30: #5ee192;
+  // GRAY RGBA
+  --gray-rgba-40: rgba(0, 0, 0, 0.4);
+
+  // GREEN
   --green-40: #68f4a0;
-  --green: #4bb475;
-  --dark-green: #132422;
-  --light-green: #68f4a0;
+  --green-30: #5ee192;
+  --green-20: #4bb475;
+  --green-10: #132422;
 
-  // Green RGBA
-  --green-rgba: rgba(94, 225, 146, 0.2);
+  // GREEN RGBA
+  --green-rgba-70: rgba(94, 225, 146, 0.7);
+  --green-rgba-60: rgba(94, 225, 146, 0.6);
+  --green-rgba-40: rgba(94, 225, 146, 0.4);
+  --green-rgba-20: rgba(94, 225, 146, 0.2);
+  --green-rgba-10: rgba(94, 225, 146, 0.1);
 
-  // Purple
-  --purple: #561198;
-
-  --purple-10: #1a0e2f;
-  --purple-20: #220f3d;
+  // PURPLE
   --purple-30: #561198;
+  --purple-20: #220f3d;
+  --purple-10: #1a0e2f;
 
-  // Purple RGBA
-  --purple-rgba: rgba(86, 17, 152, 0.3);
+  // PURPLE RGBA
+  --purple-rgba-80: rgba(86, 17, 152, 0.8);
+  --purple-rgba-70: rgba(72, 14, 128, 0.7);
+  --purple-rgba-30: rgba(86, 17, 152, 0.3);
 
-  // Gray RGBA
-  --gray-rgba: rgba(28, 30, 38, 0.3);
-
-  // Red
-  --red: #ff3f57;
-  --red-10: #3c181e;
+  // RED
   --red-20: #ff3f57;
+  --red-10: #3c181e;
 
-  // Red RGBA
-  --red-rgba: rgba(255, 68, 5, 0.3);
-
-  // Yellow
-  --yellow: #fec84b;
-
-  // Yellow RGBA
-  --yellow-rgba: rgba(254, 200, 75, 0.3);
+  // RED RGBA
+  --red-rgba-20: rgba(255, 63, 87, 0.2);
 }
