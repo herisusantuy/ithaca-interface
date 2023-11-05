@@ -8,13 +8,13 @@
 }
 
 .isDropdownActive {
-  background: var(--purple);
+  background: var(--purple-30);
 }
 
 .isLinkActive {
   @include font-size('text-sm', 'bold');
-  background: var(--gray-950);
-  color: var(--gray-100);
+  background: var(--purple-10);
+  color: var(--white-60);
   cursor: default;
 }
 

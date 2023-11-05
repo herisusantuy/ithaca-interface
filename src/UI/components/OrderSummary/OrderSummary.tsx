@@ -9,10 +9,10 @@ import LogoUsdc from '../Icons/LogoUsdc';
 import styles from './OrderSummary.module.scss';
 // Types
 type OrderSummaryProps = {
-  limit: string;
-  collatarelETH: string;
-  collatarelUSDC: string;
-  premium: string;
+  limit: string | number;
+  collatarelETH: string | number;
+  collatarelUSDC: string | number;
+  premium: string | number;
   submitAuction: () => void;
 };
 

@@ -12,27 +12,62 @@ import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import { TABLE_STRATEGY_DATA, StrategyType } from '@/UI/constants/tableStrategy';
+import { StrategyType } from '@/UI/constants/tableStrategy';
 import { useCallback, useState } from 'react';
 import PositionBuilderRow, { Strategy } from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs';
-import { estimateLock, Leg } from '@/UI/lib/sdk/estimateOrders';
-import { estimateOrderSingleLeg } from '@/UI/utils/estimate.order';
 import useFromStore from '@/UI/hooks/useFromStore';
-import { ConditionalOrder } from '@/UI/lib/sdk/ConditionalOrder';
+import { calculateNetPrice, createClientOrderId, Leg, toPrecision } from '@ithaca-finance/sdk';
+import readWriteSDK from '@/UI/lib/sdk/readWriteSDK';
+
+type Summary = {
+  underlierAmount: number;
+  numeraireAmount: number;
+  limit: number;
+  premium: number;
+}
 
 const Index = () => {
   const [strategyList, setStrategyList] = useState<StrategyType[]>([]);
   const [previousLegs, setpreviousLegs] = useState<Leg[]>([]);
+  const [summaryDetails, setSummaryDetails] = useState<Summary>();
   const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
-  console.log(currentExpiryDate);
-  const getOrderSummary = useCallback(async (payload: ConditionalOrder) => {
-    const test = await estimateLock(payload);
-    console.log(test);
-  }, []);
+  const getOrderSummary = useCallback(async (strategy: Strategy) => {
+    const legs: Leg[] = [
+      ...previousLegs,
+      {
+        contractId: strategy.contractId,
+        quantity: `${strategy.size}`,
+        side: strategy.side as "BUY" | "SELL",
+      },
+    ];
+    console.log(legs)
+    console.log(previousLegs)
+    setpreviousLegs(legs);
+    const list = [
+      ...strategyList,
+      {
+        ...strategy,
+        side: strategy.side === 'BUY' ? '+' : '-',
+      },
+    ] as StrategyType[];
+    setStrategyList(list as StrategyType[]);
+    const totalNetPrice = calculateNetPrice(legs, list.map((i) => i.enterPrice), 4, list.reduce((n, val) => (val.size + n),0));
+    const orderLock = await readWriteSDK.sdk?.calculation.estimateOrderLock({
+      clientOrderId: createClientOrderId(),
+      totalNetPrice: toPrecision(totalNetPrice, 4),
+      legs
+    });
+    setSummaryDetails({
+      underlierAmount: orderLock.underlierAmount,
+      numeraireAmount: orderLock.numeraireAmount,
+      limit: totalNetPrice,
+      premium: totalNetPrice
+    })
+  }, [previousLegs, strategyList]);
 
   return (
     <>
@@ -68,28 +103,7 @@ const Index = () => {
                 isForwards={false}
                 options={['Call', 'Put']}
                 valueOptions={['Call', 'Put']}
-                addStrategy={(value: Strategy) => {
-                  const legs = [
-                    ...previousLegs,
-                    {
-                      contractId: value.contractId,
-                      quantity: value.size,
-                      side: value.side,
-                    },
-                  ];
-                  setpreviousLegs(legs);
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
-                  if (payload) {
-                    getOrderSummary(payload);
-                  }
-                  setStrategyList([
-                    ...strategyList,
-                    {
-                      ...value,
-                      side: value.side === 'BUY' ? '+' : '-',
-                    },
-                  ] as StrategyType[]);
-                }}
+                addStrategy={(value: Strategy) => getOrderSummary(value)}
                 // submitAuction={() => { }}
                 id='options-row'
               />
@@ -98,28 +112,7 @@ const Index = () => {
                 isForwards={false}
                 options={['Call', 'Put']}
                 valueOptions={['BinaryCall', 'BinaryPut']}
-                addStrategy={(value: Strategy) => {
-                  const legs = [
-                    ...previousLegs,
-                    {
-                      contractId: value.contractId,
-                      quantity: value.size,
-                      side: value.side,
-                    },
-                  ];
-                  setpreviousLegs(legs);
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
-                  if (payload) {
-                    getOrderSummary(payload);
-                  }
-                  setStrategyList([
-                    ...strategyList,
-                    {
-                      ...value,
-                      side: value.side === 'BUY' ? '+' : '-',
-                    },
-                  ] as StrategyType[]);
-                }}
+                addStrategy={(value: Strategy) => getOrderSummary(value)}
                 // submitAuction={(value: StrategyType) => console.log(value)}
                 id='digital-options-row'
               />
@@ -128,37 +121,16 @@ const Index = () => {
                 isForwards={true}
                 options={['10Nov23', 'Next Auction']}
                 valueOptions={['Forward (10 Nov 23)', 'Forward (Next Auction)']}
-                addStrategy={(value: Strategy) => {
-                  const legs = [
-                    ...previousLegs,
-                    {
-                      contractId: value.contractId,
-                      quantity: value.size,
-                      side: value.side,
-                    },
-                  ];
-                  setpreviousLegs(legs);
-                  const payload = estimateOrderSingleLeg(value.type, legs, value.enterPrice, 20231110);
-                  if (payload) {
-                    getOrderSummary(payload);
-                  }
-                  setStrategyList([
-                    ...strategyList,
-                    {
-                      ...value,
-                      side: value.side === 'BUY' ? '+' : '-',
-                    },
-                  ] as StrategyType[]);
-                }}
+                addStrategy={(value: Strategy) => getOrderSummary(value)}
                 // submitAuction={() => { }}
                 id='forwards-row'
               />
               <div className={styles.summaryWrapper}>
                 <OrderSummary
-                  limit='100'
-                  collatarelETH='120.2k'
-                  collatarelUSDC='200.1k'
-                  premium='1500'
+                  limit={summaryDetails?.limit || '-'}
+                  collatarelETH={summaryDetails?.numeraireAmount || '-'}
+                  collatarelUSDC={summaryDetails?.underlierAmount || '-'}
+                  premium={summaryDetails?.premium || '-'}
                   submitAuction={() => {}}
                 />
               </div>

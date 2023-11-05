@@ -36,6 +36,7 @@ import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
+import Color from '@/UI/components/Color/Color';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -49,6 +50,7 @@ import { TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA } from './tableOrder';
+import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -462,6 +464,26 @@ const COMPONENT_GROUPS = [
       {
         name: 'Typography',
         component: <Typography />,
+        status: 'Done',
+      },
+      {
+        name: 'Color',
+        component: (
+          <>
+            <h3 className='mb-14'>Solid Colors</h3>
+            <Flex direction='row-space-between' margin='mb-32'>
+              {SOLID_COLORS.map((color, index) => (
+                <Color key={index} name={color.name} hex={color.hex} />
+              ))}
+            </Flex>
+            <h3 className='mb-14'>Transparent Colors</h3>
+            <Flex direction='row-space-between'>
+              {TRANSPARENT_COLORS.map((color, index) => (
+                <Color key={index} name={color.name} hex={color.hex} opacity={color.opacity} />
+              ))}
+            </Flex>
+          </>
+        ),
         status: 'Done',
       },
     ],
