@@ -31,6 +31,7 @@ import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
@@ -265,6 +266,59 @@ const COMPONENT_GROUPS = [
           </Flex>
         ),
         status: 'Done',
+      },
+      {
+        name: 'Slider',
+        component: (
+          <>
+            <Flex direction='row-center' gap='gap-12'>
+              <Slider
+                title='Range with default Label'
+                value={{ min: 20, max: 30 }}
+                min={0}
+                max={100}
+                onChange={({ min, max }) => {
+                  console.log(min, max);
+                }}
+                range={true}
+              />
+            </Flex>
+            <Flex direction='row-center' gap='gap-12'>
+              <Slider
+                title='Range without Label'
+                value={{ min: 20, max: 80 }}
+                min={0}
+                max={100}
+                onChange={({ min, max }) => {
+                  console.log(min, max);
+                }}
+                showLabel={false}
+                range={true}
+              />
+            </Flex>
+            <Flex direction='row-center' gap='gap-12'>
+              <Slider
+                title='Continuous with Label Count'
+                value={{ min: 20, max: 50 }}
+                min={0}
+                max={100}
+                onChange={({ min, max }) => {
+                  console.log(min, max);
+                }}
+                showLabel={true}
+                label={5}
+                range={false}
+              />
+            </Flex>
+            <Flex direction='row-center' gap='gap-12'>
+              <Slider title='default' min={0} max={100} />
+            </Flex>
+            <Flex direction='row-center' gap='gap-12'>
+              <Slider title='Custom Step' min={0} max={100} step={10} label={11}/>
+            </Flex>
+          </>
+        ),
+        status: 'In Progress',
       },
       {
         name: 'Tabs',
