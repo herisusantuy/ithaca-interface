@@ -74,6 +74,14 @@ const Slider = (props: SliderProps) => {
     }
   };
 
+  const getValuePosition = (event: React.MouseEvent) => {
+    const offsetX = event.nativeEvent.offsetX;
+    const width = event.currentTarget.clientWidth;
+    if (!range) {
+      setMaxValue(Math.round((offsetX * 100) / width));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div>{title && <label className={styles.label}>{title}</label>}</div>
@@ -99,7 +107,7 @@ const Slider = (props: SliderProps) => {
           />
         </div>
 
-        <div className={styles.controlWrapper}>
+        <div className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
           <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
           <div className={styles.rail}>
             <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
