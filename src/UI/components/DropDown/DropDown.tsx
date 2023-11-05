@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import DropdownArrowIcon from '../Icons/Dropdown';
+// Packages
+import { useState } from 'react';
+
+// Components
+import DropdownArrowIcon from '@/UI/components/Icons/Dropdown';
+
+// Styles
 import styles from '@/UI/components/DropDown/DropDown.module.scss';
 
+// Types
 type Option = {
   name: string;
   value: string;
 };
+
 type DropDownProps = {
   label?: string;
   id?: string;
@@ -14,19 +21,21 @@ type DropDownProps = {
   options: Option[];
   value: string;
 };
-const DropDown = (props: DropDownProps) => {
-  const { onChange, options, value, disabled, label, id } = props;
-  const [isListOpen, setIsListOpen] = useState(false);
+
+const DropDown = ({ onChange, options, value, disabled, label, id }: DropDownProps) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   const setOpen = () => {
-    setIsListOpen(!isListOpen);
+    setIsDropdownOpen(!isDropdownOpen);
   };
+
   const changeItem = (item: Option) => {
     setSelectedOption(item);
-    setIsListOpen(false);
+    setIsDropdownOpen(false);
     if (onChange) onChange(item.value, item);
   };
+
   return (
     <div className={styles.dropdownInput}>
       {label && (
@@ -39,11 +48,11 @@ const DropDown = (props: DropDownProps) => {
           <div className={styles.displayValue} onClick={setOpen}>
             {selectedOption?.name ?? ''}
           </div>
-          <div className={`${styles.displayIcon} ${isListOpen ? styles.toggleIcon : ''}`} onClick={setOpen}>
+          <div className={`${styles.displayIcon} ${isDropdownOpen ? styles.toggleIcon : ''}`} onClick={setOpen}>
             <DropdownArrowIcon />
           </div>
         </div>
-        <ul className={`${styles.listContainer} ${!isListOpen ? styles.hide : ''}`}>
+        <ul className={`${styles.listContainer} ${!isDropdownOpen ? styles.hide : ''}`}>
           {options &&
             options.map((item: Option, idx: number) => {
               return (
