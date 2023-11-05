@@ -2,27 +2,26 @@
 import { useState } from 'react';
 
 // Components
-import DropdownArrowIcon from '@/UI/components/Icons/Dropdown';
+import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Styles
-import styles from '@/UI/components/DropDown/DropDown.module.scss';
+import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
 
-// Types
 type Option = {
   name: string;
   value: string;
 };
 
-type DropDownProps = {
+type DropdownMenuProps = {
   label?: string;
   id?: string;
   onChange?: (value: string, selectedOption: Option) => void;
   disabled?: boolean;
   options: Option[];
-  value: string;
+  value?: string;
 };
 
-const DropDown = ({ onChange, options, value, disabled, label, id }: DropDownProps) => {
+const DropdownMenu = ({ onChange, options, value, disabled, label, id }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -49,7 +48,7 @@ const DropDown = ({ onChange, options, value, disabled, label, id }: DropDownPro
             {selectedOption?.name ?? ''}
           </div>
           <div className={`${styles.displayIcon} ${isDropdownOpen ? styles.toggleIcon : ''}`} onClick={setOpen}>
-            <DropdownArrowIcon />
+            <Dropdown />
           </div>
         </div>
         <ul className={`${styles.listContainer} ${!isDropdownOpen ? styles.hide : ''}`}>
@@ -67,4 +66,4 @@ const DropDown = ({ onChange, options, value, disabled, label, id }: DropDownPro
   );
 };
 
-export default DropDown;
+export default DropdownMenu;
