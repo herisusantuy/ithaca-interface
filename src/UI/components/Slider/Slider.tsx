@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 
 //Utility import
 import { generateLabelList } from '@/UI/utils/SliderUtil';
@@ -25,15 +25,22 @@ type SliderProps = {
 
 const Slider = (props: SliderProps) => {
   const { title, value, min, max, step = 1, onChange, range = false, label = 2, showLabel = true } = props;
-  const [minValue, setMinValue] = useState(range ? (value ? value.min : min) : min);
-  const [maxValue, setMaxValue] = useState(value ? value.max : min);
-  const [minPos, setMinPos] = useState(((minValue - min) / (max - min)) * 100);
-  const [maxPos, setMaxPos] = useState(((maxValue - min) / (max - min)) * 100);
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(0);
+  const [minPos, setMinPos] = useState<number>(0);
+  const [maxPos, setMaxPos] = useState<number>(0);
   const [labelList, setLabelList] = useState<number[]>([]);
 
   useEffect(() => {
     setLabelList(generateLabelList(min, max, label));
+    setMinValue(range ? (value ? value.min : min) : min);
+    setMaxValue(value ? value.max : min);
   }, []);
+
+  useEffect(() => {
+    setMinPos(((minValue - min) / (max - min)) * 100);
+    setMaxPos(((maxValue - min) / (max - min)) * 100);
+  }, [max, maxValue, min, minValue]);
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
@@ -55,12 +62,9 @@ const Slider = (props: SliderProps) => {
       if (item >= minValue && item <= maxValue) {
         classList.push(styles.highlight);
       }
-    } else {
-      if (item == maxValue) {
-        classList.push(styles.highlight);
-      }
+    } else if (item == maxValue) {
+      classList.push(styles.highlight);
     }
-
     return classList.join(' ');
   };
 
