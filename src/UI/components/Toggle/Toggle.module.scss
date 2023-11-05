@@ -16,11 +16,24 @@
   .switch {
     width: rem(53);
     height: rem(26);
-    background-color: var(--white-10);
     border-radius: rem(25);
     position: relative;
+    background: var(--gradient-toggle-purple);
 
-    div {
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: rem(25);
+      top: -(rem(1));
+      bottom: -(rem(1));
+      right: -(rem(1));
+      left: -(rem(1));
+      z-index: -1;
+      background: linear-gradient(rgba(79, 79, 79, 0) 0%, #4f4f4f 100%);
+    }
+
+    .slider {
       width: rem(18);
       height: rem(18);
       background-color: var(--white);
@@ -30,10 +43,14 @@
       transform: translate(0%, -50%);
       left: rem(5);
       transition: $transition_all;
+    }
 
-      &.slide {
-        left: calc(100% - rem(18 + 5));
-      }
+    &.isActive {
+      background: var(--gradient-toggle-green);
+    }
+
+    &.isActive .slider {
+      left: calc(100% - rem(18 + 5));
     }
   }
 }
