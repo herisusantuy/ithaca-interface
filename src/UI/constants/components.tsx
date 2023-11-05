@@ -16,6 +16,7 @@ import Navigation from '@/UI/components/Navigation/Navigation';
 import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Tabs from '@/UI/components/Tabs/Tabs';
 import Toggle from '@/UI/components/Toggle/Toggle';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import ChevronDown from '@/UI/components/Icons/ChevronDown';
 import ChevronUp from '@/UI/components/Icons/ChevronUp';
 import LogoEth from '@/UI/components/Icons/LogoEth';
@@ -30,7 +31,7 @@ import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import Dropdown from '@/UI/components/Icons/Dropdown';
+import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
 import Filter from '@/UI/components/Icons/Filter';
@@ -196,6 +197,16 @@ const COMPONENT_GROUPS = [
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
               <Input id='iti' label='Input text with icon' type='text' icon={<Dropdown />} />
+              <DropdownMenu
+                label='Dropdown'
+                options={[
+                  { name: 'Option 1', value: '1' },
+                  { name: 'Option 2', value: '2' },
+                ]}
+                onChange={(value: string) => {
+                  console.log(value);
+                }}
+              ></DropdownMenu>
             </Flex>
           </>
         ),

@@ -10,7 +10,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
+import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
@@ -27,7 +27,7 @@ const ChartPayoff = () => {
     setDataMax(max);
     setDataMin(min);
     setIsClient(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const baseValue = 200;
@@ -62,72 +62,74 @@ const ChartPayoff = () => {
             <p>{'+' + '' + changeVal}</p>
             <LogoUsdc />
           </div>
-          <div className={styles.unlimited}>
+          {/* <div className={styles.unlimited}>
             <h2>Unlimited Upside</h2>
             <LogoUsdc />
-          </div>
-          <ResponsiveContainer width={400} height={300}>
-            <AreaChart data={modifiedData}>
-              <defs>
-                <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
-                  <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
-                </linearGradient>
+          </div> */}
+          <AreaChart data={modifiedData} width={400} height={300}>
+            <defs>
+              <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
+                <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+                <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
+              </linearGradient>
 
-                <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='2%' stopColor='#5ee192' stopOpacity={0.1} />
-                  <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
-                  <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
-                  <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
-                  <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
-                </linearGradient>
+              <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='2%' stopColor='#5ee192' stopOpacity={0.1} />
+                <stop offset='40%' stopColor='#5ee192' stopOpacity={0.3} />
+                <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+                <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.3} />
+                <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
+              </linearGradient>
 
-                <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='90%' stopColor='#B5B5F8' stopOpacity={0.4} />
-                  <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.3} />
-                  <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.1} />
-                </linearGradient>
+              <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='90%' stopColor='#B5B5F8' stopOpacity={0.4} />
+                <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.3} />
+                <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.1} />
+              </linearGradient>
 
-                <linearGradient id='referenceLine' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
-                  <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
-                </linearGradient>
-              </defs>
-              <Area
-                type='linear'
-                stroke='url(#lineGradient)'
-                strokeWidth='1'
-                dataKey='value'
-                fill='url(#fillGradient)'
-                label={<CustomLabel base={baseValue} max={dataMax} min={dataMin} />}
-                dot={<CustomDot />}
+              <linearGradient id='referenceLine' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
+                <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
+              </linearGradient>
+            </defs>
+            <Area
+              type='linear'
+              stroke='url(#lineGradient)'
+              strokeWidth='2'
+              dataKey='value'
+              fill='url(#fillGradient)'
+              label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
+              dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
+            />
+            <Area
+              type='linear'
+              stroke='url(#dashGradient)'
+              dataKey='dashValue'
+              strokeDasharray='3 3'
+              fill='transparent'
+            />
+            <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
+            <Tooltip
+              isAnimationActive={false}
+              animationDuration={1}
+              content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />}
+            />
+
+            <XAxis tick={false} axisLine={false}>
+              <Label
+                content={
+                  <>
+                    <text x={10} y={220} fill='#FF3F57' fontSize={10} textAnchor='left'>
+                      -{2354}
+                    </text>
+                    <LogoUsdc x={40} y={207} />
+                  </>
+                }
+                position='insideBottom'
               />
-              <Area
-                type='linear'
-                stroke='url(#dashGradient)'
-                dataKey='dashValue'
-                strokeDasharray='3 3'
-                fill='transparent'
-              />
-              <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
-              <Tooltip content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />} />
-
-              <XAxis tick={false} axisLine={false}>
-                <Label
-                  content={
-                    <>
-                      <text x={10} y={220} fill='#FF3F57' fontSize={10} textAnchor='left'>
-                        -{2354}
-                      </text>
-                      <LogoUsdc x={40} y={207} />
-                    </>
-                  }
-                  position='insideBottom'
-                />
-              </XAxis>
-            </AreaChart>
-          </ResponsiveContainer>
+            </XAxis>
+          </AreaChart>
           <Key />
         </div>
       )}

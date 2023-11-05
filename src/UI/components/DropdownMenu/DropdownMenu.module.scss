@@ -1,0 +1,71 @@
+.label {
+  color: var(--white-60);
+  font-family: $lato;
+  @include font-size('text-xs', 'regular');
+  cursor: pointer;
+  padding-bottom: rem(6);
+  display: block;
+}
+
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dropdownInputBox {
+  display: flex;
+  justify-content: space-between;
+  padding: rem(7) rem(8);
+  background: var(--gray-900);
+  border-radius: rem(12);
+}
+
+.displayValue {
+  @include font-size('text-md', 'regular');
+  font-family: $roboto;
+  color: var(--white);
+  min-width: rem(60);
+  padding-right: rem(10);
+  box-sizing: content-box;
+  cursor: pointer;
+}
+
+.toggleIcon {
+  transform: rotate(180);
+}
+
+.displayIcon {
+  cursor: pointer;
+}
+
+.listContainer {
+  position: absolute;
+  top: rem(30);
+  width: 100%;
+  list-style-type: none;
+  border-radius: rem(8);
+  background: rgba(18, 23, 34, 0.7);
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+  padding: rem(10) rem(10);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: rem(8);
+  z-index: 1;
+}
+
+.hide {
+  display: none;
+}
+
+.listContainer li {
+  cursor: pointer;
+  @include font-size('text-md', 'regular');
+  font-family: $roboto;
+  color: var(--white);
+}

@@ -1,9 +1,19 @@
 // Types
-type PayoffDataProps = {
+export type PayoffDataProps = {
   value: number;
   dashValue: number | undefined;
 };
 
+export type SpecialDotLabel = {
+  value: number;
+};
+
+export const SPECIAL_DUMMY_DATA: SpecialDotLabel[] = [
+  {
+    value: 100,
+  },
+  { value: 200 },
+];
 // Payoff chart dummy data
 export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [
   {
