@@ -51,6 +51,7 @@ import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
+import { DROPDOWN_OPTIONS } from './dropdown';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -189,28 +190,38 @@ const COMPONENT_GROUPS = [
         status: 'Waiting on Figma',
       },
       {
+        name: 'DropdownMenu',
+        component: (
+          <Flex direction='row-space-between'>
+            <DropdownMenu label='Dropdown' options={DROPDOWN_OPTIONS} onChange={() => {}} />
+            <DropdownMenu
+              label='Dropdown Icon Start'
+              options={DROPDOWN_OPTIONS}
+              onChange={() => {}}
+              iconStart={<LogoUsdc />}
+            />
+            <DropdownMenu
+              label='Dropdown Icon End'
+              options={DROPDOWN_OPTIONS}
+              onChange={() => {}}
+              iconEnd={<LogoUsdc />}
+            />
+          </Flex>
+        ),
+        status: 'Done',
+      },
+      {
         name: 'Input',
         component: (
           <>
-            <Flex direction='row-space-around'>
+            <Flex direction='row-space-between'>
               <Input id='in' label='Input number' type='number' />
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
-              <Input id='iti' label='Input text with icon' type='text' icon={<Dropdown />} />
-              <DropdownMenu
-                label='Dropdown'
-                options={[
-                  { name: 'Option 1', value: '1' },
-                  { name: 'Option 2', value: '2' },
-                ]}
-                onChange={(value: string) => {
-                  console.log(value);
-                }}
-              ></DropdownMenu>
             </Flex>
           </>
         ),
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'LabelValue',
