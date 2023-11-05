@@ -22,6 +22,7 @@
   border-radius: rem(12);
   gap: rem(8);
   height: rem(35);
+
 }
 
 .displayValue {
@@ -39,9 +40,9 @@
 }
 
 .displayIcon {
+  cursor: pointer;
   display: flex;
   align-items: center;
-  cursor: pointer;
 }
 
 .listContainer {
