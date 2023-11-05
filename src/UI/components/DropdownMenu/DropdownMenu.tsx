@@ -4,9 +4,13 @@ import { useState, useRef, useEffect, ReactNode } from 'react';
 // Components
 import Dropdown from '@/UI/components/Icons/Dropdown';
 
+// Hooks
+import { useEscKey } from '@/UI/hooks/useEscKey';
+
 // Styles
 import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
 
+// Types
 type Option = {
   name: string;
   value: string;
@@ -19,67 +23,70 @@ type DropdownMenuProps = {
   disabled?: boolean;
   options: Option[];
   value?: string;
+  iconStart?: ReactNode;
+  iconEnd?: ReactNode;
 };
 
-const DropdownMenu = ({ onChange, options, value, disabled, label, id }: DropdownMenuProps) => {
+const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconEnd }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (wrapperRef.current && !wrapperRef?.current?.contains(event.target as Node)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  const handleHideDropdown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      setIsDropdownOpen(false);
-    }
-  };
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleHideDropdown, true);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
     document.addEventListener('click', handleClickOutside, true);
     return () => {
-      document.removeEventListener('keydown', handleHideDropdown, true);
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [wrapperRef]);
+  }, []);
 
-  const setOpen = () => {
-    if(!disabled)
-      setIsDropdownOpen(!isDropdownOpen);
+  useEscKey(() => {
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+    }
+  });
+
+  const handleDropdownClick = () => {
+    if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const changeItem = (item: Option) => {
+  const handleOptionClick = (item: Option) => {
     setSelectedOption(item);
     setIsDropdownOpen(false);
     if (onChange) onChange(item.value, item);
   };
 
   return (
-    <div className={styles.dropdownInput} ref={wrapperRef}>
+    <div className={styles.container} ref={containerRef}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}
         </label>
       )}
-      <div className={`${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}>
-        <div className={styles.dropdownInputBox}>
-          <div className={styles.displayValue} onClick={setOpen}>
-            {selectedOption?.name ?? ''}
-          </div>
-          <div className={`${styles.displayIcon} ${isDropdownOpen ? styles.toggleIcon : ''}`} onClick={setOpen}>
+      <div
+        className={`${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}
+        onClick={handleDropdownClick}
+        role='button'
+      >
+        <div className={styles.input}>
+          {iconStart && iconStart}
+          <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
+          <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
             <Dropdown />
           </div>
+          {iconEnd && iconEnd}
         </div>
-        <ul className={`${styles.listContainer} ${!isDropdownOpen ? styles.hide : ''}`}>
+        <ul className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`}>
           {options &&
             options.map((item: Option, idx: number) => {
               return (
-                <li key={idx} onClick={() => changeItem(item)} className={item.value === value ? 'selected' : ''}>
+                <li key={idx} onClick={() => handleOptionClick(item)}>
                   {item.name}
                 </li>
               );
