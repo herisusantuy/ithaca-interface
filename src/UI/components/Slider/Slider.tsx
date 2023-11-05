@@ -49,6 +49,21 @@ const Slider = (props: SliderProps) => {
     if (onChange) onChange({ min: minValue, max: newMaxVal });
   };
 
+  const getLabelClassName = (item: number) => {
+    const classList = [styles.labelItem];
+    if (range) {
+      if (item >= minValue && item <= maxValue) {
+        classList.push(styles.highlight);
+      }
+    } else {
+      if (item == maxValue) {
+        classList.push(styles.highlight);
+      }
+    }
+
+    return classList.join(' ');
+  };
+
   return (
     <div className={styles.container}>
       <div>{title && <label className={styles.label}>{title}</label>}</div>
@@ -85,7 +100,7 @@ const Slider = (props: SliderProps) => {
         <div className={`${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
           {labelList.map((item: number, idx: number) => {
             return (
-              <div key={idx} className={styles.labelItem} style={{ left: idx * (100 / (label - 1)) + '%' }}>
+              <div key={idx} className={getLabelClassName(item)} style={{ left: idx * (100 / (label - 1)) + '%' }}>
                 {item}
               </div>
             );

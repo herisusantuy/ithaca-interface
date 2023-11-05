@@ -130,7 +130,7 @@ $thumb-size: 16px;
   display: flex;
   top: rem(37);
   width: 100%;
-  right: rem(10);
+  right: rem(6);
 }
 
 .labelItem {
@@ -138,4 +138,8 @@ $thumb-size: 16px;
   font-family: $lato;
   @include font-size('text-xxs', 'regular');
   color: var(--white-60);
+}
+
+.highlight {
+  color: var(--white);
 }

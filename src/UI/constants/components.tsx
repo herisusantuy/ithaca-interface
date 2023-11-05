@@ -273,13 +273,14 @@ const COMPONENT_GROUPS = [
           <>
             <Flex direction='row-center' gap='gap-12'>
               <Slider
-                title='Range with default Label'
+                title='Range with Label'
                 value={{ min: 20, max: 30 }}
                 min={0}
                 max={100}
                 onChange={({ min, max }) => {
                   console.log(min, max);
                 }}
+                label={11}
                 range={true}
               />
             </Flex>
@@ -314,7 +315,7 @@ const COMPONENT_GROUPS = [
               <Slider title='default' min={0} max={100} />
             </Flex>
             <Flex direction='row-center' gap='gap-12'>
-              <Slider title='Custom Step' min={0} max={100} step={10} label={11}/>
+              <Slider title='Custom Step' min={0} max={100} step={10} label={11} />
             </Flex>
           </>
         ),
