@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  background: var(--gray-950);
+  background: var(--body-background);
   text-rendering: optimizeLegibility;
   font-family: 'Lato', sans-serif;
 }
@@ -45,7 +45,7 @@ a {
 
 .appWrapper::before {
   animation: beforeMove 5s infinite alternate;
-  background: var(--purple-rgba);
+  background: var(--purple-rgba-30);
   filter: blur(rem(100));
   top: 0;
   left: -50%;
@@ -55,7 +55,7 @@ a {
 
 .appWrapper::after {
   animation: afterMove 5s infinite alternate;
-  background: var(--green-rgba);
+  background: var(--green-rgba-20);
   filter: blur(rem(100));
   top: 50%;
   right: -50%;
