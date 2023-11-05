@@ -56,6 +56,10 @@ const Slider = (props: SliderProps) => {
     if (onChange) onChange({ min: minValue, max: newMaxVal });
   };
 
+  const test = (e: React.MouseEvent) => {
+    console.log('-------------', e);
+  };
+
   const getLabelClassName = (item: number) => {
     const classList = [styles.labelItem];
     if (range) {
@@ -71,21 +75,33 @@ const Slider = (props: SliderProps) => {
   const setMinMaxValue = (item: number) => {
     if (!range) {
       setMaxValue(item);
+    } else {
+      const betweenVal = minValue + (maxValue - minValue) / 2;
+      if (item > maxValue) {
+        setMaxValue(item);
+      } else if (item < minValue) {
+        setMinValue(item);
+      } else if (betweenVal < item) {
+        setMaxValue(item);
+      } else if (betweenVal >= item) {
+        setMinValue(item);
+      }
     }
   };
 
   const getValuePosition = (event: React.MouseEvent) => {
     const offsetX = event.nativeEvent.offsetX;
-    const width = event.currentTarget.clientWidth;
+    const width = event.currentTarget.parentElement ? event.currentTarget.parentElement.clientWidth : 0;
+    const value = Math.round((offsetX * 100) / width);
     if (!range) {
-      setMaxValue(Math.round((offsetX * 100) / width));
-    }
+      setMaxValue(value);
+    } 
   };
 
   return (
     <div className={styles.container}>
       <div>{title && <label className={styles.label}>{title}</label>}</div>
-      <div className={styles.wrapper}>
+      <div id='wraperContainer' className={styles.wrapper}>
         <div className={styles.inputWrapper}>
           <input
             className={`${styles.input} ${!range ? styles.hide : ''}`}
@@ -104,10 +120,11 @@ const Slider = (props: SliderProps) => {
             max={max}
             step={step}
             onChange={handleMaxChange}
+            onClick={test}
           />
         </div>
 
-        <div className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
+        <div id='controlWrapper' className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
           <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
           <div className={styles.rail}>
             <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
