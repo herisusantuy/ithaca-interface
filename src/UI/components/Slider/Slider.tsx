@@ -68,6 +68,12 @@ const Slider = (props: SliderProps) => {
     return classList.join(' ');
   };
 
+  const setMinMaxValue = (item: number) => {
+    if (!range) {
+      setMaxValue(item);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div>{title && <label className={styles.label}>{title}</label>}</div>
@@ -104,7 +110,12 @@ const Slider = (props: SliderProps) => {
         <div className={`${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
           {labelList.map((item: number, idx: number) => {
             return (
-              <div key={idx} className={getLabelClassName(item)} style={{ left: idx * (100 / (label - 1)) + '%' }}>
+              <div
+                key={idx}
+                className={getLabelClassName(item)}
+                style={{ left: idx * (100 / (label - 1)) + '%' }}
+                onClick={() => setMinMaxValue(item)}
+              >
                 {item}
               </div>
             );

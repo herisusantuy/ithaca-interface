@@ -138,6 +138,7 @@ $thumb-size: 16px;
   font-family: $lato;
   @include font-size('text-xxs', 'regular');
   color: var(--white-60);
+  cursor: pointer;
 }
 
 .highlight {
