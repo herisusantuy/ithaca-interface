@@ -22,9 +22,10 @@
   @include spacing(padding, 8, 'all');
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background: #07080d;
   border-radius: rem(12);
-  gap: rem(8);
+  gap: rem(4);
   height: rem(34);
   cursor: pointer;
 
@@ -48,6 +49,10 @@
     min-width: rem(100);
     box-sizing: content-box;
   }
+}
+
+.placeholder {
+  color: var(--white-60) !important;
 }
 
 .icon {

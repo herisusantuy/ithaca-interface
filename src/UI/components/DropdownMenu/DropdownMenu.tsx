@@ -1,5 +1,5 @@
 // Packages
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 
 // Components
 import Dropdown from '@/UI/components/Icons/Dropdown';
@@ -23,9 +23,11 @@ type DropdownMenuProps = {
   disabled?: boolean;
   options: Option[];
   value?: string;
+  iconStart?: ReactNode;
+  iconEnd?: ReactNode;
 };
 
-const DropdownMenu = ({ onChange, options, disabled, label, id }: DropdownMenuProps) => {
+const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconEnd }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -73,10 +75,12 @@ const DropdownMenu = ({ onChange, options, disabled, label, id }: DropdownMenuPr
         role='button'
       >
         <div className={styles.input}>
-          <span>{selectedOption?.name ?? ''}</span>
+          {iconStart && iconStart}
+          <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
             <Dropdown />
           </div>
+          {iconEnd && iconEnd}
         </div>
         <ul className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`}>
           {options &&

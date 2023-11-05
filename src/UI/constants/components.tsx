@@ -191,21 +191,37 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'DropdownMenu',
-        component: <DropdownMenu label='Dropdown' options={DROPDOWN_OPTIONS} onChange={() => {}}></DropdownMenu>,
+        component: (
+          <Flex direction='row-space-between'>
+            <DropdownMenu label='Dropdown' options={DROPDOWN_OPTIONS} onChange={() => {}} />
+            <DropdownMenu
+              label='Dropdown Icon Start'
+              options={DROPDOWN_OPTIONS}
+              onChange={() => {}}
+              iconStart={<LogoUsdc />}
+            />
+            <DropdownMenu
+              label='Dropdown Icon End'
+              options={DROPDOWN_OPTIONS}
+              onChange={() => {}}
+              iconEnd={<LogoUsdc />}
+            />
+          </Flex>
+        ),
         status: 'Done',
       },
       {
         name: 'Input',
         component: (
           <>
-            <Flex direction='row-space-between' margin='mb-32'>
+            <Flex direction='row-space-between'>
               <Input id='in' label='Input number' type='number' />
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
             </Flex>
           </>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
       {
         name: 'LabelValue',

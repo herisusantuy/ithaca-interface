@@ -20,6 +20,7 @@
   border-radius: rem(12);
   transition: $transition_all;
   position: relative;
+  height: rem(34);
 
   &:before {
     content: '';
