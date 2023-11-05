@@ -16,7 +16,7 @@
 
     &.header {
       @include font-size('text-xs', 'regular');
-      color: var(--gray-400);
+      color: var( --white-rgba-20);
       background: none;
       box-shadow: none;
       backdrop-filter: none;

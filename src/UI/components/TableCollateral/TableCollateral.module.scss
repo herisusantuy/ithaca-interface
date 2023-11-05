@@ -35,26 +35,9 @@
 
       display: flex;
       flex: 1;
-      .strategy {
-      width: 150px;
-      }
-
-      .dot {
-        display: flex;
-        align-items: center;
-        gap: rem(8);
-      }
-
-      button {
-        @include spacing(padding, 6, 'all');
-        border-radius: 50%;
-        background: #35333e;
-
-        svg {
-          height: rem(12);
-          width: rem(12);
-        }
-      }
+      // .strategy {
+      // width: 150px;
+      // }
 
       &:last-child {
         justify-content: flex-end;
