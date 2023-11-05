@@ -1,9 +1,10 @@
 // Packages
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
+import CustomCursor from '@/UI/components/ChartPayoff/CustomCursor';
 import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
 import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
@@ -20,6 +21,7 @@ const ChartPayoff = () => {
   const [dataMax, setDataMax] = useState(0);
   const [dataMin, setDataMin] = useState(0);
   const [changeVal, setChangeVal] = useState(0);
+  const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
     const max = Math.max(...modifiedData.map(i => i.value));
@@ -30,6 +32,12 @@ const ChartPayoff = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleMouseMove = e => {
+    if (e.activePayload) {
+      const xValue = e.chartX;
+      setCursorX(xValue);
+    }
+  };
   const baseValue = 200;
 
   const modifiedData = PAYOFF_DUMMY_DATA.map(item => ({
@@ -66,7 +74,7 @@ const ChartPayoff = () => {
             <h2>Unlimited Upside</h2>
             <LogoUsdc />
           </div> */}
-          <AreaChart data={modifiedData} width={400} height={300}>
+          <AreaChart data={modifiedData} width={400} height={300} onMouseMove={handleMouseMove}>
             <defs>
               <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
                 <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
@@ -101,6 +109,7 @@ const ChartPayoff = () => {
               fill='url(#fillGradient)'
               label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
               dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
+              activeDot={false}
             />
             <Area
               type='linear'
@@ -108,11 +117,15 @@ const ChartPayoff = () => {
               dataKey='dashValue'
               strokeDasharray='3 3'
               fill='transparent'
+              activeDot={false}
             />
             <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
             <Tooltip
               isAnimationActive={false}
               animationDuration={1}
+              position={{ x: cursorX - 50, y: 0 }}
+              wrapperStyle={{ width: 100 }}
+              cursor={<CustomCursor x={cursorX} />}
               content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />}
             />
 
