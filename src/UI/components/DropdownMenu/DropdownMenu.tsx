@@ -49,7 +49,8 @@ const DropdownMenu = ({ onChange, options, value, disabled, label, id }: Dropdow
   }, [wrapperRef]);
 
   const setOpen = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    if(!disabled)
+      setIsDropdownOpen(!isDropdownOpen);
   };
 
   const changeItem = (item: Option) => {
