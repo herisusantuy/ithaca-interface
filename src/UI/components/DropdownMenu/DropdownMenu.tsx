@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 
 // Components
 import Dropdown from '@/UI/components/Icons/Dropdown';
@@ -25,8 +25,32 @@ const DropdownMenu = ({ onChange, options, value, disabled, label, id }: Dropdow
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (wrapperRef.current && !wrapperRef?.current?.contains(event.target as Node)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  const handleHideDropdown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleHideDropdown, true);
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('keydown', handleHideDropdown, true);
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, [wrapperRef]);
+
   const setOpen = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    if(!disabled)
+      setIsDropdownOpen(!isDropdownOpen);
   };
 
   const changeItem = (item: Option) => {
@@ -36,7 +60,7 @@ const DropdownMenu = ({ onChange, options, value, disabled, label, id }: Dropdow
   };
 
   return (
-    <div className={styles.dropdownInput}>
+    <div className={styles.dropdownInput} ref={wrapperRef}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}

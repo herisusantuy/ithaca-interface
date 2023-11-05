@@ -16,9 +16,13 @@
 .dropdownInputBox {
   display: flex;
   justify-content: space-between;
-  padding: rem(7) rem(8);
+  padding: rem(7.5) rem(8);
   background: var(--gray-900);
+  border: rem(1) solid var(--white-10);
   border-radius: rem(12);
+  gap: rem(8);
+  height: rem(35);
+
 }
 
 .displayValue {
@@ -32,17 +36,19 @@
 }
 
 .toggleIcon {
-  transform: rotate(180);
+  transform: rotate(180deg);
 }
 
 .displayIcon {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .listContainer {
   position: absolute;
-  top: rem(30);
-  width: 100%;
+  top: rem(37);
+  min-width: 100%;
   list-style-type: none;
   border-radius: rem(8);
   background: rgba(18, 23, 34, 0.7);
