@@ -1,7 +1,8 @@
 import { createPublicClient, http, createWalletClient, custom, WalletClient } from 'viem'
-import { arbitrumGoerli, polygonMumbai } from 'viem/chains'
-import { IthacaSDK, IthacaNetwork, Order } from '@ithaca-finance/sdk';
+import { arbitrumGoerli } from 'viem/chains'
+import { IthacaSDK, IthacaNetwork } from '@ithaca-finance/sdk';
 import { erc20Abi } from '@/UI/constants/erc20Abi';
+import { fundLockAbi } from '@/UI/constants/fundLockAbi';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any
@@ -9,14 +10,15 @@ declare const window: any
 export interface MetaMaskError {
     message: string;
     code: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any;
 }
 
 class ReadWriteSDK {
     private walletClient!: WalletClient
     private publicClient = createPublicClient({
-        chain: polygonMumbai,
-        transport: http('https://polygon-mumbai.infura.io/v3/c351135c3bb54a779bf258ea5f1077d6'),
+        chain: arbitrumGoerli,
+        transport: http(),
     })
 
     private isBrowser = typeof window !== 'undefined'
@@ -24,28 +26,24 @@ class ReadWriteSDK {
 
     public sdk: IthacaSDK | undefined
     private wsCallbacks = {
-        onClose: (ev: CloseEvent) => {
-            console.log('close', ev)
+        onClose: () => {
         },
-        onError: (ev: Event) => {
-            console.log('error', ev)
+        onError: () => {
         },
-        onMessage: (payload: Omit<Order, "collateral">) => {
-            console.log('message', payload)
+        onMessage: () => {
         },
-        onOpen: (ev: Event) => {
-            console.log('open', ev)
+        onOpen: () => {
         },
     }
 
     constructor() {
         if (this.isMetaMaskSupported()) {
             this.walletClient = createWalletClient({
-                chain: polygonMumbai,
+                chain: arbitrumGoerli,
                 transport: custom(window.ethereum),
             })
             this.sdk = IthacaSDK.init({
-                network: IthacaNetwork.MUMBAI,
+                network: IthacaNetwork.ARBITRUM_GOERLI,
                 publicClient: this.publicClient, // Refer: https://viem.sh/docs/clients/public.html
                 walletClient: this.walletClient,
                 wsCallbacks: this.wsCallbacks
@@ -63,6 +61,7 @@ class ReadWriteSDK {
         try {
             const accounts = await this.walletClient.requestAddresses()
             return Promise.resolve(accounts[0].toLowerCase() as `0x${string}`)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any    
         } catch (error: any) {
             console.log('Failed to get accounts')
             this.dispatchMetaMaskError(error)
@@ -88,8 +87,66 @@ class ReadWriteSDK {
         }
     }
 
+
+    async fundLockDeposit(tokenAddress: `0x${string}`, account: `0x${string}`, amount: bigint, fundlockAddress: `0x${string}`, tokenManagerAddress: `0x${string}`) {
+        try {
+            const chain = this.walletClient.chain
+
+            const allowance = await this.erc20Allowance(tokenAddress, account, tokenManagerAddress as `0x${string}`)
+            if (amount > allowance) {
+                const hash = await this.erc20Approve(tokenAddress, account, tokenManagerAddress as `0x${string}`, amount)
+                if (hash) await this.publicClient.waitForTransactionReceipt({ hash })
+            }
+
+            return this.walletClient.writeContract({
+                account,
+                address: fundlockAddress as `0x${string}`,
+                abi: fundLockAbi,
+                chain,
+                functionName: 'deposit',
+                args: [tokenAddress, amount],
+            })
+        }
+        catch (error) {
+            console.error('failed to deposit tokens => ', error)
+
+        }
+    }
+
+    async erc20Allowance(tokenAddress: `0x${string}`, owner: `0x${string}`, spender: `0x${string}`) {
+        let allowance = BigInt(0)
+        try {
+            allowance = await this.publicClient.readContract({
+                address: tokenAddress,
+                abi: erc20Abi,
+                functionName: 'allowance',
+                args: [owner, spender],
+            })
+        } catch (error) {
+            console.error('failed to fetch erc20 allowance => ', error)
+        }
+        return allowance
+    }
+
+    async erc20Approve(tokenAddress: `0x${string}`, owner: `0x${string}`, spender: `0x${string}`, amount: bigint) {
+        try {
+            const chain = this.walletClient.chain
+            return this.walletClient.writeContract({
+                account: owner,
+                address: tokenAddress,
+                abi: erc20Abi,
+                chain,
+                functionName: 'approve',
+                args: [spender, amount],
+            })
+        } catch (error) {
+            console.error('failed to approve tokens => ', error)
+        }
+    }
+
     getFundLockState = async () => {
         try {
+            await this.sdk?.auth.login()
             return await this.sdk?.client.fundLockState()
         } catch (error) {
             console.error('Failed to get fund lock state ', error)

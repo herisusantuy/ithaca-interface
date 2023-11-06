@@ -1,4 +1,4 @@
-export enum StrategyType {
+export enum ENUM_STRATEGY_TYPES {
     STRATEGY_BUILDER = 'Strategy Builder',
     STRATEGY_OPTIONS = 'Options',
     STRATEGY_FORWARD = 'Forward',

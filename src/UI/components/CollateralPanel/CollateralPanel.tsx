@@ -14,7 +14,7 @@ const CollateralPanel = () => {
     const [data, setData] = useState(TABLE_COLLATERAL_DATA);
     useEffect(() => {
         readWriteSDK.getFundLockState().then((res) => {
-            setData(data.map((row) => {
+            setData(d => d.map((row) => {
                 const assetData = res?.find((a) => a.currency === row.asset)
                 if (assetData) {
                     return {
@@ -33,11 +33,18 @@ const CollateralPanel = () => {
     const getFaucet = useCallback(async (asset: string) => {
         const account = await readWriteSDK.getAccount();
         await readWriteSDK.faucet(systemInfo.tokenAddress[asset] as `0x${string}`, account, parseUnits('5000', 6));
-    }, []);
+    }, [systemInfo.tokenAddress]);
 
     const fundLock = useCallback(async (asset: string) => {
-
-    }, [])
+        const account = await readWriteSDK.getAccount();
+        await readWriteSDK.fundLockDeposit(
+            systemInfo.tokenAddress[asset] as `0x${string}`,
+            account,
+            parseUnits('10', 6),
+            systemInfo.fundlockAddress as `0x${string}`,
+            systemInfo.tokenManagerAddress  as `0x${string}`
+            )
+    }, [systemInfo])
 
     return (<Panel>
         <div className={styles.collateralWrapper}>
@@ -45,7 +52,7 @@ const CollateralPanel = () => {
             <TableCollateral data={data}
                 deposit={(asset) => fundLock(asset)}
                 withdraw={(asset) => {
-
+                    console.log(asset)
                 }}
                 faucet={(asset) => getFaucet(asset)} />
         </div>

@@ -11,7 +11,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
@@ -22,7 +22,7 @@ type ChartDataProps = {
 };
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData, specialDot } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, specialDot = SPECIAL_DUMMY_DATA } = props;
   const [isClient, setIsClient] = useState(false);
   // const [dataMax, setDataMax] = useState(0);
   // const [dataMin, setDataMin] = useState(0);

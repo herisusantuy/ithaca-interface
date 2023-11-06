@@ -5,7 +5,7 @@ import Meta from '@/UI/components/Meta/Meta';
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
-import OrderPanel from '@/UI/components/CollateralPanel copy/OrderPanel';
+// import OrderPanel from '@/UI/components/OrderPanel/OrderPanel';
 
 const Dashboard = () => {
   return (
@@ -14,7 +14,7 @@ const Dashboard = () => {
       <Main>
         <Container>
           <CollateralPanel/>
-          <OrderPanel />
+          {/* <OrderPanel /> */}
         </Container>
       </Main>
     </>

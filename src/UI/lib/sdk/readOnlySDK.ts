@@ -1,29 +1,25 @@
 import { createPublicClient, http } from 'viem'
-import { polygonMumbai } from 'viem/chains'
-import { IthacaSDK, IthacaNetwork, Order } from '@ithaca-finance/sdk';
+import { arbitrumGoerli } from 'viem/chains'
+import { IthacaSDK, IthacaNetwork } from '@ithaca-finance/sdk';
 
-const publicClient = createPublicClient({ 
-    chain: polygonMumbai,
+const publicClient = createPublicClient({
+    chain: arbitrumGoerli,
     transport: http()
 });
 
 const wsCallbacks = {
-    onClose: (ev: CloseEvent) => { 
-        console.log('close', ev) 
+    onClose: () => {
     },
-    onError: (ev: Event) => {
-        console.log('error', ev) 
+    onError: () => {
     },
-    onMessage: (payload: Omit<Order, "collateral">) => {
-        console.log('message', payload) 
+    onMessage: () => {
     },
-    onOpen: (ev: Event) => {
-        console.log('open', ev) 
+    onOpen: () => {
     },
-  }
+}
 
 export const readOnlySDK = IthacaSDK.init({
-    network: IthacaNetwork.MUMBAI,
+    network: IthacaNetwork.ARBITRUM_GOERLI,
     publicClient, // Refer: https://viem.sh/docs/clients/public.html
     wsCallbacks
 });

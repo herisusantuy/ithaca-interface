@@ -1,5 +1,5 @@
 // Packages
-import { polygonMumbai } from 'wagmi/chains';
+import { arbitrumGoerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { getDefaultWallets, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { ledgerWallet } from '@rainbow-me/rainbowkit/wallets';
@@ -13,7 +13,7 @@ if (!projectId) {
 }
 
 // Chains
-const { chains, publicClient, webSocketPublicClient } = configureChains([polygonMumbai], [publicProvider()]);
+const { chains, publicClient, webSocketPublicClient } = configureChains([arbitrumGoerli], [publicProvider()]);
 
 // Info
 const appInfo = {

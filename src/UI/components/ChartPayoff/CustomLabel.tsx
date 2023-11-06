@@ -1,4 +1,4 @@
-import { SpecialDotLabel, PayoffDataProps } from '@/UI/constants/charts';
+import { SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
 type LabelProps = {
