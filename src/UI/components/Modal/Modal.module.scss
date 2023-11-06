@@ -1,16 +1,21 @@
 .modal {
-  @include spacing(padding, 24, 'all');
+  @include spacing(padding, 30, 'all');
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background: var(--gray-900);
-  border: rem(2) solid var(--green-300);
-  width: rem(480);
+  background: #1c2028;
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+  width: rem(500);
   color: var(--white);
-  border-radius: rem(8);
+  border-radius: rem(30);
   cursor: default;
+  position: relative;
 }
 
 .modalBackdrop {
@@ -20,8 +25,8 @@
   z-index: 6;
   height: 100%;
   width: 100%;
-  background: rgba(12, 17, 29, 0.7);
-  backdrop-filter: blur(rem(12));
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(rem(5));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,7 +41,7 @@
 }
 
 .modalHeader {
-  @include spacing(margin, 24, 'bottom');
+  @include spacing(margin, 34, 'bottom');
 }
 
 .modalContent {
@@ -44,15 +49,14 @@
 }
 
 .modalHeader {
-  @include spacing(padding, 16, 'bottom');
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-bottom: rem(1) solid var(--gray-800);
 
   h4 {
-    @include font-size('text-xl', 'semibold');
+    font-family: $lato;
+    @include font-size('text-lg', 'semibold');
   }
 }
 
@@ -66,7 +70,17 @@
   display: flex;
   background: none;
   padding: 0;
-  width: auto;
+  width: rem(24);
+  height: rem(24);
+
+  &:before {
+    display: none;
+  }
+
+  svg {
+    height: rem(24);
+    width: rem(24);
+  }
 }
 
 .buttonClose:hover {
@@ -75,47 +89,7 @@
 }
 
 .confirmButton {
-  @include font-size('text-md', 'semibold');
-  @include spacing(padding, 12, 'top+bottom');
-  @include spacing(padding, 24, 'left+right');
-  transition: $transition_all;
-  background: var(--green-300);
-  color: var(--purple-10);
-  border-radius: rem(8);
-  display: inline-flex;
-  appearance: none;
-  align-items: center;
-  justify-content: center;
-  gap: rem(16);
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: none;
-  border: 0;
-  cursor: pointer;
   width: 100%;
-
-  &:hover {
-    background: var(--green-600);
-    color: var(--white);
-
-    svg {
-      transform: translateX(rem(2));
-    }
-
-    svg path {
-      stroke: var(--white);
-    }
-  }
-
-  svg {
-    transition: $transition_all;
-
-    path {
-      transition: $transition_all;
-    }
-  }
 }
 
 .buttonLoading {
