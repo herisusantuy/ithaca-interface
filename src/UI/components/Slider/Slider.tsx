@@ -93,23 +93,30 @@ const Slider = ({
     const offsetX = event.nativeEvent.offsetX;
     const width = event.currentTarget.clientWidth;
     const value = min + Math.round(((max - min) / width) * offsetX);
-    console.log(value, min, max, offsetX, width, event);
     if (!range) {
       setMaxValue(value);
     } else {
       if (controlWrapperRef.current) {
-        console.log(event.currentTarget.clientWidth, controlWrapperRef);
+        const rect = controlWrapperRef.current.getBoundingClientRect();
+        const distanceFromXAxis = rect.left;
+        const cursorPoint = event.clientX - distanceFromXAxis;
         const offestPosition = (width / 100) * minPos + offsetX;
-        const rangeItemValue = min + Math.round(((max - min) / width) * offestPosition);
-        const betweenVal = minValue + (maxValue - minValue) / 2;
-        if (rangeItemValue > maxValue) {
-          setMaxValue(rangeItemValue);
-        } else if (rangeItemValue < minValue) {
-          setMinValue(rangeItemValue);
-        } else if (betweenVal < rangeItemValue) {
-          setMaxValue(rangeItemValue);
-        } else if (betweenVal >= rangeItemValue) {
-          setMinValue(rangeItemValue);
+        if (cursorPoint < (width / 100) * minPos) {
+          setMinValue(value);
+        } else if (cursorPoint > (width / 100) * maxPos) {
+          setMaxValue(value);
+        } else {
+          const rangeItemValue = min + Math.round(((max - min) / width) * offestPosition);
+          const betweenVal = minValue + (maxValue - minValue) / 2;
+          if (rangeItemValue > maxValue) {
+            setMaxValue(rangeItemValue);
+          } else if (rangeItemValue < minValue) {
+            setMinValue(rangeItemValue);
+          } else if (betweenVal < rangeItemValue) {
+            setMaxValue(rangeItemValue);
+          } else if (betweenVal >= rangeItemValue) {
+            setMinValue(rangeItemValue);
+          }
         }
       }
     }
