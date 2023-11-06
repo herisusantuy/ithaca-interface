@@ -425,7 +425,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Modal title='Manage Funds' isOpen={true} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
+          <Modal title='Manage Funds' isOpen={true} onCloseModal={() => {}}>
             <Tabs tabs={MODAL_TABS} />
           </Modal>
         ),

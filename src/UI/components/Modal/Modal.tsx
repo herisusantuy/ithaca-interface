@@ -35,7 +35,7 @@ const animatedModal = {
 // Types
 type ModalProps = {
   children: React.ReactNode;
-  footer: React.ReactNode;
+  footer?: React.ReactNode;
   title: string;
   onCloseModal: () => void;
   isOpen: boolean;
