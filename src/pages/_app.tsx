@@ -11,6 +11,9 @@ import { TOAST_STYLES } from '@/UI/constants/toast';
 // Utils
 import { chains, appInfo, wagmiConfig } from '@/UI/utils/RainbowKit';
 
+// Lib
+import { useAppStore } from '@/UI/lib/zustand/store';
+
 // Layouts
 import Header from '@/UI/layouts/Header/Header';
 
@@ -18,12 +21,20 @@ import Header from '@/UI/layouts/Header/Header';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
-import { useAppStore } from '@/UI/lib/zustand/store';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider appInfo={appInfo} chains={chains} theme={darkTheme()}>
+      <RainbowKitProvider
+        appInfo={appInfo}
+        chains={chains}
+        theme={darkTheme({
+          accentColor: 'rgba(94, 225, 146, 0.60)',
+          accentColorForeground: 'white',
+          borderRadius: 'large',
+          overlayBlur: 'small',
+        })}
+      >
         <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
           <Header />
           <Component {...pageProps} />
@@ -52,7 +63,13 @@ function App({ Component, pageProps, router }: AppProps) {
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
-const getTimeNextAuction = async (timeUntilNexAuction: number, fetchNextAuction: () => void,  fetchContractList: () => void, fetchReferencePrices: () => void, fetchSystemInfo: () => void) => {
+const getTimeNextAuction = async (
+  timeUntilNexAuction: number,
+  fetchNextAuction: () => void,
+  fetchContractList: () => void,
+  fetchReferencePrices: () => void,
+  fetchSystemInfo: () => void
+) => {
   setTimeout(() => {
     fetchNextAuction();
     fetchContractList();

@@ -22,6 +22,11 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     displayText: 'Dashboard',
   },
   {
+    path: '/leaderboard',
+    titleKey: 'Click to visit leaderboard',
+    displayText: 'Leaderboard',
+  },
+  {
     path: '#',
     titleKey: 'Click to view more',
     displayText: 'More',
