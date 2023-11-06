@@ -1,5 +1,5 @@
 // Packages
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 
 // Components
@@ -13,9 +13,11 @@ import Key from '@/UI/components/ChartPayoff/Key';
 // Constants
 import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
 
+//Event Props
+import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
+
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
-import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 type ChartDataProps = {
   chartData: PayoffDataProps[];
@@ -25,20 +27,14 @@ type ChartDataProps = {
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, specialDot = SPECIAL_DUMMY_DATA } = props;
   const [isClient, setIsClient] = useState(false);
-  // const [dataMax, setDataMax] = useState(0);
-  // const [dataMin, setDataMin] = useState(0);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
-    // const max = Math.max(...modifiedData.map(i => i.value));
-    // const min = Math.min(...modifiedData.map(i => i.value));
-    // setDataMax(max);
-    // setDataMin(min);
     setIsClient(true);
   }, []);
 
-  const handleMouseMove = (e: CategoricalChartState ) => {
+  const handleMouseMove = (e: CategoricalChartState) => {
     if (e.activePayload) {
       const xValue = e.chartX;
       setCursorX(xValue ?? 0);
@@ -73,13 +69,11 @@ const ChartPayoff = (props: ChartDataProps) => {
         <div style={{ width: '400px', height: '400px' }}>
           <div className={styles.unlimited}>
             <h3>Potential P&L:</h3>
-            <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>{changeVal >= 0 ? '+' + '' + changeVal : changeVal}</p>
+            <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
+              {changeVal >= 0 ? '+' + '' + changeVal : changeVal}
+            </p>
             <LogoUsdc />
           </div>
-          {/* <div className={styles.unlimited}>
-            <h2>Unlimited Upside</h2>
-            <LogoUsdc />
-          </div> */}
           <AreaChart data={modifiedData} width={400} height={300} onMouseMove={handleMouseMove}>
             <defs>
               <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -95,7 +89,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.3} />
                 <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
               </linearGradient>
-              
+
               <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
                 <stop offset='90%' stopColor='#B5B5F8' stopOpacity={0.4} />
                 <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.3} />

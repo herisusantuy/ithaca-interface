@@ -1,5 +1,4 @@
 // Styles
-import React from 'react';
 import styles from './ChartPayoff.module.scss';
 
 // Types

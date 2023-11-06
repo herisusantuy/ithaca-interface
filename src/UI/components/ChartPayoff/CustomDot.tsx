@@ -1,4 +1,4 @@
-import React from 'react';
+// Components
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
