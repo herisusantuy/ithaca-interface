@@ -1,4 +1,5 @@
-import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
+// Package import
+import { useEffect, useState, ChangeEvent, useRef } from 'react';
 
 //Utility import
 import { generateLabelList } from '@/UI/utils/SliderUtil';
@@ -17,11 +18,11 @@ type SliderProps = {
   min: number;
   max: number;
   step?: number;
-  onChange?: (value: ValueProps) => void;
   range?: boolean;
   label?: number;
   showLabel?: boolean;
   title?: string;
+  onChange?: (value: ValueProps) => void;
 };
 
 const Slider = ({
@@ -30,10 +31,10 @@ const Slider = ({
   min,
   max,
   step = 1,
-  onChange,
   range = false,
   label = 2,
   showLabel = true,
+  onChange,
 }: SliderProps) => {
   const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
   const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
@@ -93,9 +94,7 @@ const Slider = ({
     const offsetX = event.nativeEvent.offsetX;
     const width = event.currentTarget.clientWidth;
     const value = min + Math.round(((max - min) / width) * offsetX);
-    if (!range) {
-      setMaxValue(value);
-    } else {
+    if (range) {
       if (controlWrapperRef.current) {
         const rect = controlWrapperRef.current.getBoundingClientRect();
         const distanceFromXAxis = rect.left;
@@ -119,6 +118,8 @@ const Slider = ({
           }
         }
       }
+    } else {
+      setMaxValue(value);
     }
   };
 
