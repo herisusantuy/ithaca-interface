@@ -274,21 +274,30 @@ const COMPONENT_GROUPS = [
         component: (
           <>
             <Flex direction='row-center' margin='mb-32'>
-              <Slider title='Range' min={1300} max={2000} onChange={() => {}} label={10} range={true} />
+              <Slider
+                title='Range'
+                value={{ min: 1500, max: 1800 }}
+                min={1300}
+                max={2000}
+                onChange={() => {}}
+                label={8}
+                range={true}
+              />
             </Flex>
             <Flex direction='row-center' margin='mb-32'>
               <Slider
                 title='Continuous'
+                value={{ min: 1500, max: 1900 }}
                 min={1600}
                 max={2300}
                 onChange={() => {}}
                 showLabel={true}
-                label={10}
+                label={8}
                 range={false}
               />
             </Flex>
             <Flex direction='row-center'>
-              <Slider title='default' min={1600} max={2300} label={10} />
+              <Slider title='default' min={1600} max={2300} label={8} />
             </Flex>
           </>
         ),

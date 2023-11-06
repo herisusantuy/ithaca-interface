@@ -35,43 +35,32 @@ const Slider = ({
   label = 2,
   showLabel = true,
 }: SliderProps) => {
-  const [minValue, setMinValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(0);
+  const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
+  const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
   const [minPos, setMinPos] = useState<number>(0);
   const [maxPos, setMaxPos] = useState<number>(0);
-  const [labelList, setLabelList] = useState<number[]>([]);
-
-  useEffect(() => {
-    setLabelList(generateLabelList(min, max, label));
-    setMinValue(range ? (value ? value.min : min) : min);
-    setMaxValue(value ? value.max : min);
-  }, []);
+  const labelList = generateLabelList(min, max, label);
 
   useEffect(() => {
     setMinPos(((minValue - min) / (max - min)) * 100);
     setMaxPos(((maxValue - min) / (max - min)) * 100);
-  }, [max, maxValue, min, minValue]);
+  }, [maxValue, minValue, min, max]);
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
-    setMinPos(((newMinVal - min) / (max - min)) * 100);
     setMinValue(newMinVal);
     if (onChange) onChange({ min: newMinVal, max: maxValue });
   };
 
   const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMaxVal = Math.max(+e.target.value, minValue);
-    setMaxPos(((newMaxVal - min) / (max - min)) * 100);
     setMaxValue(newMaxVal);
     if (onChange) onChange({ min: minValue, max: newMaxVal });
   };
 
-  const test = (e: React.MouseEvent) => {
-    console.log('-------------', e);
-  };
-
   const getLabelClassName = (item: number) => {
     const classList = [styles.labelItem];
+
     if (range) {
       if (item >= minValue && item <= maxValue) {
         classList.push(styles.highlight);
@@ -104,7 +93,6 @@ const Slider = ({
     const width = event.currentTarget.parentElement ? event.currentTarget.parentElement.clientWidth : 0;
     const value = Math.round((offsetX * 100) / width);
     const controlWrapper = document.querySelector(`[data-id="${title}"]`);
-    console.log(controlWrapper, event.target);
     if (!range) {
       setMaxValue(value);
     } else {
@@ -143,7 +131,6 @@ const Slider = ({
           max={max}
           step={step}
           onChange={handleMaxChange}
-          onClick={test}
         />
       </div>
 
