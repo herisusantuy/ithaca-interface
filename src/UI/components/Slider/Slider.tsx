@@ -90,24 +90,25 @@ const Slider = ({
 
   const getValuePosition = (event: React.MouseEvent) => {
     const offsetX = event.nativeEvent.offsetX;
-    const width = event.currentTarget.parentElement ? event.currentTarget.parentElement.clientWidth : 0;
-    const value = Math.round((offsetX * 100) / width);
-    const controlWrapper = document.querySelector(`[data-id="${title}"]`);
+    const width = event.nativeEvent.clientX;
+    const value = min + Math.round(((max- min) / width) * offsetX);
+    console.log(value, min, max, offsetX, width, event);
     if (!range) {
       setMaxValue(value);
     } else {
-      if (event.target == controlWrapper) {
-        const betweenVal = minValue + (maxValue - minValue) / 2;
-        if (value > maxValue) {
-          setMaxValue(value);
-        } else if (value < minValue) {
-          setMinValue(value);
-        } else if (betweenVal < value) {
-          setMaxValue(value);
-        } else if (betweenVal >= value) {
-          setMinValue(value);
-        }
-      }
+      // const controlWrapper = document.querySelector(`[data-id="${title}"]`);
+      // if (event.target == controlWrapper) {
+      //   const betweenVal = minValue + (maxValue - minValue) / 2;
+      //   if (value > maxValue) {
+      //     setMaxValue(value);
+      //   } else if (value < minValue) {
+      //     setMinValue(value);
+      //   } else if (betweenVal < value) {
+      //     setMaxValue(value);
+      //   } else if (betweenVal >= value) {
+      //     setMinValue(value);
+      //   }
+      // }
     }
   };
 
