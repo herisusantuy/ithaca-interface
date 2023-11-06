@@ -18,6 +18,10 @@
       color 0.3s,
       border-color 0.3s;
 
+    &:before {
+      display: none;
+    }
+
     &:hover {
       background: none;
       color: var(--white);
