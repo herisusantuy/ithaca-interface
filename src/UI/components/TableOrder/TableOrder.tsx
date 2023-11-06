@@ -5,6 +5,9 @@ import { Fragment, useState } from 'react';
 // Components
 import Pagination from '@/UI/components/Pagination/Pagination';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
+import Delete from '@/UI/components/Icons/Delete';
+import Button from '@/UI/components/Button/Button';
+import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -14,6 +17,9 @@ import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
 
 // Styles
 import styles from './TableOrder.module.scss';
+import LogoEth from '../Icons/LogoEth';
+import LogoUsdc from '../Icons/LogoUsdc';
+import CollateralAmount from '../CollateralAmount/CollateralAmount';
 
 // Types
 type TableOrderProps = {
@@ -65,33 +71,58 @@ const TableOrder = ({ data }: TableOrderProps) => {
             </div>
           ))}
         </div>
-        {slicedData.map((row, rowIndex) => (
-          <Fragment key={rowIndex}>
-            <div className={styles.row}>
-              <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                {expandedRow.includes(rowIndex) ? '▼' : '►'} {row.details}
+        {slicedData.map((row, rowIndex) => {
+          return (
+            <Fragment key={rowIndex}>
+              <div className={styles.row}>
+                <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
+                  {expandedRow.includes(rowIndex) ? <Dropdown /> : <Dropdown />} {row.details}
+                </div>
+                <div className={styles.cell}>{row.orderDate}</div>
+                <div className={styles.cell}>
+                  <div className={styles.currency}>
+                    {row.currencyPair.split(' / ').map(currency => (
+                      <Fragment key={currency}>
+                        {currency === 'WETH' ? (
+                          <>
+                            <LogoEth />
+                            {currency} /{' '}
+                          </>
+                        ) : null}
+                        {currency === 'USDC' ? (
+                          <>
+                            <LogoUsdc />
+                            {currency}
+                          </>
+                        ) : null}
+                      </Fragment>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.cell}>{row.product}</div>
+                <div className={styles.cell}>{row.side}</div>
+                <div className={styles.cell}>{row.tenor}</div>
+                <div className={styles.cell}>
+                  <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
+                </div>
+                <div className={styles.cell}>{row.orderLimit}</div>
+                <div className={styles.cell}>
+                  <Button title='Click to delete' className={styles.delete}>
+                    <Delete />
+                  </Button>
+                </div>
               </div>
-              <div className={styles.cell}>{row.orderDate}</div>
-              <div className={styles.cell}>{row.currencyPair}</div>
-              <div className={styles.cell}>{row.product}</div>
-              <div className={styles.cell}>{row.side}</div>
-              <div className={styles.cell}>{row.tenor}</div>
-              <div className={styles.cell}>{row.collateralAmount}</div>
-              <div className={styles.cell}>{row.orderLimit}</div>
-              <div className={styles.cell}>
-                <button onClick={() => alert('Delete row')}>Delete</button>
-              </div>
-            </div>
-            <motion.div
-              className='table-row-expanded'
-              initial='closed'
-              animate={expandedRow.includes(rowIndex) ? 'open' : 'closed'}
-              variants={variants}
-            >
-              Expanded content for {row.details}
-            </motion.div>
-          </Fragment>
-        ))}
+              <motion.div
+                className='table-row-expanded'
+                initial='closed'
+                animate={expandedRow.includes(rowIndex) ? 'open' : 'closed'}
+                variants={variants}
+              >
+                Expanded content for {row.details}
+              </motion.div>
+            </Fragment>
+          );
+        })}
       </div>
       <Flex direction='row-space-between' margin='mt-35'>
         <TableDescription
