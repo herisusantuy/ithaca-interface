@@ -51,7 +51,7 @@ function getRandomData(): TableRowData {
     tenor: getRandomDate(),
     wethAmount: `${getRandomInt(1, 20)}`,
     usdcAmount: `${getRandomInt(400, 500)}`,
-    orderLimit: `${getRandomInt(400, 450)} USDC`,
+    orderLimit: `${getRandomInt(400, 450)}`,
   };
 }
 
