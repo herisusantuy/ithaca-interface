@@ -56,6 +56,8 @@ import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
+import { useState } from 'react';
+import ModalWithButton from '../components/Modal/ModalButton';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -425,26 +427,9 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Flex>
-            <Button
-              title='showModal'
-              onClick={() => {
-                localStorage.setItem('myKey', 'true');
-              }}
-            >
-              Show Modal
-            </Button>
-            <Modal
-              title='Manage Funds'
-              isOpen={false}
-              isLoading={false}
-              onCloseModal={() => {}}
-              onSubmitOrder={() => {}}
-            >
-              <Tabs tabs={MODAL_TABS} />
-            </Modal>
-          </Flex>
-        ),
+          <ModalWithButton title='Manage Funds' isLoading={false} onSubmitOrder={() => {}} btnText='Manage Funds'>
+            <Tabs tabs={MODAL_TABS} />
+          </ModalWithButton>),
         status: 'Waiting on Figma',
       },
     ],
