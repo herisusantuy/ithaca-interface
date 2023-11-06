@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 
 // Components
 import Button from '@/UI/components/Button/Button';
-import Loader from '@/UI/components/Loader/Loader';
 import ModalClose from '@/UI/components/Icons/ModalClose';
 
 // Styles
@@ -39,11 +38,10 @@ type ModalProps = {
   footer: React.ReactNode;
   title: string;
   onCloseModal: () => void;
-  isLoading: boolean;
   isOpen: boolean;
 };
 
-const Modal = ({ children, title, onCloseModal, footer, isLoading, isOpen }: ModalProps) => {
+const Modal = ({ children, title, onCloseModal, footer, isOpen }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');

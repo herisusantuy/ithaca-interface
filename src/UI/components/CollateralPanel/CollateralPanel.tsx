@@ -8,9 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
-import Loader from '../Loader/Loader';
 import TableCollateral from '../TableCollateral/TableCollateral';
-import Tabs from '../Tabs/Tabs';
 import styles from './CollateralPanel.module.scss';
 // Styles
 const currencies = [
