@@ -56,8 +56,7 @@ import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
-import { useState } from 'react';
-import ModalWithButton from '../components/Modal/ModalButton';
+import ModalWithButton from '../components/Modal/ModalWithButton';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
