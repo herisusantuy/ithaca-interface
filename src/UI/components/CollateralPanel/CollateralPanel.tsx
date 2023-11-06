@@ -34,7 +34,7 @@ const CollateralPanel = () => {
                 if (assetData) {
                     return {
                         asset: assetData.currency,
-                        balance: 0,
+                        balance: assetData.fundLockValue - assetData.settleValue - assetData.orderValue,
                         fundLock: assetData.fundLockValue,
                         netOrders: assetData.settleValue,
                         liveOrderValue: assetData.orderValue
@@ -80,7 +80,7 @@ const CollateralPanel = () => {
                 }}
                 faucet={(asset) => getFaucet(asset)} />
         </div>
-        <Modal title='Manage Funds' isOpen={modalOpen} isLoading={false} onCloseModal={() => setModalOpen(false)} 
+        <Modal title='Manage Funds' isOpen={modalOpen} onCloseModal={() => setModalOpen(false)} 
             footer={<Button
             onClick={() => fundLock()}
             title='Click to confirm'
