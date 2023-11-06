@@ -1,6 +1,6 @@
 // Packages
 import { useEffect, useState } from 'react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
@@ -14,6 +14,7 @@ import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+import CustomCursor from './CustomCursor';
 
 const ChartPayoff = () => {
   const [isClient, setIsClient] = useState(false);
@@ -113,6 +114,7 @@ const ChartPayoff = () => {
             <Tooltip
               isAnimationActive={false}
               animationDuration={1}
+              cursor={<CustomCursor />}
               content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />}
             />
 
