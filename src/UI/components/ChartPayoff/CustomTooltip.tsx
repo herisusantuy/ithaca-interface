@@ -7,12 +7,11 @@ type CustomTooltipProps = {
   base: number | string;
   active?: boolean;
   payload?: Array<{ name: string; value: number }>;
-  setChangeVal: React.Dispatch<React.SetStateAction<number>>;
+  setChangeVal: (state: number) => void;
 };
 
 const CustomTooltip = (props: CustomTooltipProps) => {
   const { base, active, payload, setChangeVal } = props;
-  console.log(props);
 
   if (active) {
     setChangeVal(payload && Math.abs(payload[0].value) >= 0 ? payload[0].value + Number(base) : 0);
