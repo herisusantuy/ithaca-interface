@@ -146,7 +146,7 @@ class ReadWriteSDK {
 
     getFundLockState = async () => {
         try {
-            await this.sdk?.auth.login()
+            // await this.sdk?.auth.login()
             return await this.sdk?.client.fundLockState()
         } catch (error) {
             console.error('Failed to get fund lock state ', error)
