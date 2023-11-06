@@ -20,6 +20,7 @@ import styles from './TableOrder.module.scss';
 import LogoEth from '../Icons/LogoEth';
 import LogoUsdc from '../Icons/LogoUsdc';
 import CollateralAmount from '../CollateralAmount/CollateralAmount';
+import { orderDateSort } from '@/UI/utils/TableOrderFilter';
 
 // Types
 type TableOrderProps = {
@@ -61,12 +62,26 @@ const TableOrder = ({ data }: TableOrderProps) => {
     }
   };
 
+  // Handle Filter for Testing
+  const tableFilter = (header: string) => {
+    if (header === 'Order Date') {
+      data = orderDateSort(data, 'asc');
+      console.log(data);
+    }
+  };
+
   return (
     <>
       <div className={styles.table}>
         <div className={`${styles.row} ${styles.header}`}>
           {TABLE_ORDER_HEADERS.map((header, idx) => (
-            <div className={styles.cell} key={idx}>
+            <div
+              className={styles.cell}
+              key={idx}
+              onClick={() => {
+                tableFilter(header);
+              }}
+            >
               {header}
             </div>
           ))}
