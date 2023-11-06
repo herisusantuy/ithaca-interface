@@ -4,6 +4,9 @@ import { ChangeEvent, ReactNode } from 'react';
 // Utils
 import { preventScrollOnNumberInput } from '@/UI/utils/Input';
 
+// Components
+import Error from '@/UI/components/Icons/Error';
+
 // Types
 type InputProps = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -14,14 +17,29 @@ type InputProps = {
   label?: string;
   type?: 'text' | 'number';
   id?: string;
+  hasError?: boolean;
+  errorMessage?: string;
 };
 
 // Styles
 import styles from './Input.module.scss';
 
-const Input = ({ onChange, value, icon, disabled, placeholder = '-', label, type = 'number', id }: InputProps) => {
+const Input = ({
+  onChange,
+  value,
+  icon,
+  disabled,
+  placeholder = '-',
+  label,
+  type = 'number',
+  id,
+  hasError = false,
+  errorMessage,
+}: InputProps) => {
+  const inputClass = hasError ? `${styles.input} ${styles.error}` : styles.input;
+
   return (
-    <div className={styles.input}>
+    <div className={inputClass}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}
@@ -40,6 +58,12 @@ const Input = ({ onChange, value, icon, disabled, placeholder = '-', label, type
         />
         {icon && icon}
       </div>
+      {hasError && errorMessage && (
+        <div className={styles.errorMessage}>
+          <Error />
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 // Packages
 import React, { useEffect, useState } from 'react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
@@ -11,24 +11,30 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
+import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
-const ChartPayoff = () => {
+type ChartDataProps = {
+  chartData: PayoffDataProps[];
+  specialDot: SpecialDotLabel[];
+};
+
+const ChartPayoff = (props: ChartDataProps) => {
+  const { chartData, specialDot } = props;
   const [isClient, setIsClient] = useState(false);
-  const [dataMax, setDataMax] = useState(0);
-  const [dataMin, setDataMin] = useState(0);
+  // const [dataMax, setDataMax] = useState(0);
+  // const [dataMin, setDataMin] = useState(0);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
     const max = Math.max(...modifiedData.map(i => i.value));
     const min = Math.min(...modifiedData.map(i => i.value));
-    setDataMax(max);
-    setDataMin(min);
+    // setDataMax(max);
+    // setDataMin(min);
     setIsClient(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -39,9 +45,9 @@ const ChartPayoff = () => {
       setCursorX(xValue ?? 0);
     }
   };
-  const baseValue = 200;
+  const baseValue = 0;
 
-  const modifiedData = PAYOFF_DUMMY_DATA.map(item => ({
+  const modifiedData = chartData.map(item => ({
     ...item,
     value: item.value - baseValue,
     dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,
@@ -108,8 +114,8 @@ const ChartPayoff = () => {
               strokeWidth='2'
               dataKey='value'
               fill='url(#fillGradient)'
-              label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
-              dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
+              label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={specialDot} />}
+              dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={specialDot} />}
               activeDot={false}
             />
             <Area
@@ -120,7 +126,7 @@ const ChartPayoff = () => {
               fill='transparent'
               activeDot={false}
             />
-            <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
+            <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5} />
             <Tooltip
               isAnimationActive={false}
               animationDuration={1}

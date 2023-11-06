@@ -1,6 +1,5 @@
 // Packages
 import { useState } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
@@ -8,6 +7,7 @@ import Logo from '@/UI/components/Logo/Logo';
 import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
+import Wallet from '@/UI/components/Wallet/Wallet';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
@@ -41,7 +41,7 @@ const Header = ({ className }: HeaderProps) => {
         </div>
         <div className={styles.right}>
           <Bell />
-          <ConnectButton />
+          <Wallet />
           {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
         </div>
       </div>

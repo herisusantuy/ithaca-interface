@@ -1,12 +1,31 @@
 .radioButton {
+  @include spacing(padding, 4, 'all');
   display: flex;
+  background: #07080d;
   gap: rem(5);
+  position: relative;
+  border-radius: rem(12);
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: rem(12);
+    top: -(rem(1));
+    bottom: -(rem(1));
+    right: -(rem(1));
+    left: -(rem(1));
+    z-index: -1;
+    background: var(--gradient-dark-border);
+  }
 
   &.vertical {
     flex-direction: column;
+    gap: 0;
 
     label {
       @include spacing(padding, 2, 'top+bottom');
+      @include spacing(padding, 10, 'left+right');
       height: rem(15);
       min-width: rem(38);
 
@@ -54,28 +73,25 @@
 
   label {
     @include font-size('text-xs', 'bold');
-    @include spacing(padding, 10, 'top+bottom');
-    @include spacing(padding, 16, 'left+right');
+    @include spacing(padding, 8, 'top+bottom');
+    @include spacing(padding, 34, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: transparent;
-    border: rem(1) solid var(--white-10);
-    border-radius: rem(24);
+    border-radius: rem(10);
     color: var(--white-60);
     cursor: pointer;
-    min-width: rem(65);
+    min-width: rem(90);
 
     &:hover {
       color: var(--white);
-      background: var(--white-10);
     }
   }
 
   input[type='radio']:checked + label {
-    background: var(--white-10);
+    background: #383a3d;
     border-color: var(--white);
     color: var(--white);
     cursor: default;

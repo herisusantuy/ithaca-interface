@@ -31,12 +31,15 @@ import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
+import Error from '@/UI/components/Icons/Error';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -46,12 +49,13 @@ import Main from '@/UI/layouts/Main/Main';
 import Panel from '@/UI/layouts/Panel/Panel';
 
 // Constants
-import { TABS } from './tabs';
+import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
+import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -185,6 +189,11 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'CollateralAmount',
+        component: <CollateralAmount wethAmount='10' usdcAmount='20' />,
+        status: 'In Progress',
+      },
+      {
         name: 'Dot',
         component: <Dot type='Call' />,
         status: 'Waiting on Figma',
@@ -218,6 +227,7 @@ const COMPONENT_GROUPS = [
               <Input id='in' label='Input number' type='number' />
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
+              <Input id='ite' label='Has error' type='text' hasError={true} errorMessage='Error' />
             </Flex>
           </>
         ),
@@ -265,6 +275,31 @@ const COMPONENT_GROUPS = [
           </Flex>
         ),
         status: 'Done',
+      },
+      {
+        name: 'Slider',
+        component: (
+          <>
+            <Flex direction='row-center' margin='mb-32'>
+              <Slider title='Range' min={1300} max={2000} onChange={() => {}} label={10} range={true} />
+            </Flex>
+            <Flex direction='row-center' margin='mb-32'>
+              <Slider
+                title='Continuous'
+                min={1600}
+                max={2300}
+                onChange={() => {}}
+                showLabel={true}
+                label={10}
+                range={false}
+              />
+            </Flex>
+            <Flex direction='row-center'>
+              <Slider title='default' min={1600} max={2300} label={10} />
+            </Flex>
+          </>
+        ),
+        status: 'In Progress',
       },
       {
         name: 'Tabs',
@@ -323,7 +358,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel>
-            <ChartPayoff />
+            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} specialDot={SPECIAL_DUMMY_DATA} />
           </Panel>
         ),
         status: 'In Progress',
@@ -381,8 +416,8 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Modal title='Modal' isOpen={false} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
-            Test
+          <Modal title='Manage Funds' isOpen={true} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
+            <Tabs tabs={MODAL_TABS} />
           </Modal>
         ),
         status: 'Waiting on Figma',
@@ -440,6 +475,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'Dropdown',
         component: <Dropdown />,
+        status: 'Done',
+      },
+      {
+        name: 'Error',
+        component: <Error />,
         status: 'Done',
       },
       {
