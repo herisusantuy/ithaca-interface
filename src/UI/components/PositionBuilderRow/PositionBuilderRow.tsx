@@ -22,7 +22,7 @@ type PositionBuilderRowProps = {
   options: (string | ReactNode)[];
   valueOptions: DotTypes[];
   addStrategy: (value: Strategy) => void;
-  // submitAuction: (value: StrategyType) => void;
+  submitAuction: (value: Strategy) => void;
   id: string;
   isForwards: boolean;
 };
@@ -36,7 +36,7 @@ export type Strategy = {
   enterPrice: number;
 }
 
-const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards }: PositionBuilderRowProps) => {
+const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction, id, isForwards }: PositionBuilderRowProps) => {
   const { contractList, currentExpiryDate, referencePrices } = useAppStore();
   const [product, setProduct] = useState<DotTypes>();
   const [side, setSide] = useState<string>('BUY');
@@ -49,7 +49,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
     <Panel>
       <div className={styles.wrapper}>
         <Flex>
-          <div className={`${styles.productWrapper} mr-10`}>
+          <div className={`mr-10`}>
             <RadioButton options={options}
               valueProps={valueOptions}
               name={`${id}-type`}
@@ -202,15 +202,21 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, id, isForwards
             </Button>
           </div>
           <div className='mr-10'>
-            <Button size='sm' title='Click to add to Submit to Auction' onClick={() => {
+            <Button size='sm' title='Click to add to submit to auction' variant='primary' onClick={() => {
               if (product) {
-                // submitAuction({
-                //   type: product,
-                //   side: side === 'BUY' ? '+' : '-',
-                //   size,
-                //   strike: strike,
-                //   enterPrice: unitPrice,
-                // })
+                const contractId = getContractId(isForwards ? 'Forward' : product,
+                  1500,
+                  currentExpiryDate,
+                  contractList
+                );
+                submitAuction({
+                  type: product,
+                  side: side || 'BUY',
+                  size,
+                  contractId,
+                  strike: strike,
+                  enterPrice: unitPrice as number,
+                })
               }
             }}>
               Submit to Auction

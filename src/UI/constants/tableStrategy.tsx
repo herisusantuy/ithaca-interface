@@ -13,6 +13,8 @@ export type StrategyType = {
 // Table strategy headers
 export const TABLE_STRATEGY_HEADERS: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price', ''];
 
+export const TABLE_COLLATERAL_HEADERS: string[] = ['Asset', 'Balance', 'Fundlock Value', 'Net of Current Orders', 'Live Order Collateral Net Value', ''];
+
 // Table strategy data
 export const TABLE_STRATEGY_DATA: StrategyType[] = [
   {

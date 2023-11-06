@@ -1,4 +1,4 @@
 // Packages
-import { polygonMumbai } from 'wagmi/chains';
+import { arbitrumGoerli } from 'wagmi/chains';
 
-export const CHAINS = [polygonMumbai];
+export const CHAINS = [arbitrumGoerli];
