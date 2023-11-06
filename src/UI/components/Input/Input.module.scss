@@ -58,3 +58,17 @@
   @include font-size('text-xs', 'regular');
   cursor: pointer;
 }
+
+.error {
+  .container {
+    border: rem(1) solid var(--red-20);
+  }
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+  @include font-size('text-xxs', 'regular');
+  color: var(--red-20);
+}
