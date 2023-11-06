@@ -148,7 +148,14 @@ const Slider = ({
             <div
               key={idx}
               className={getLabelClassName(item)}
-              style={{ left: idx * (100 / (label - 1)) + '%' }}
+              style={{
+                left:
+                  idx != 0
+                    ? idx != labelList.length - 1
+                      ? `calc(${idx * (100 / (label - 1)) + '%'} - 10px)`
+                      : `calc(${idx * (100 / (label - 1)) + '%'} - 30px)`
+                    : `calc(${idx * (100 / (label - 1)) + '%'})`,
+              }}
               onClick={() => setMinMaxValue(item)}
             >
               {item}
