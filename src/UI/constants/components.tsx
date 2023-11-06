@@ -425,9 +425,25 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Modal title='Manage Funds' isOpen={true} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
-            <Tabs tabs={MODAL_TABS} />
-          </Modal>
+          <Flex>
+            <Button
+              title='showModal'
+              onClick={() => {
+                localStorage.setItem('myKey', 'true');
+              }}
+            >
+              Show Modal
+            </Button>
+            <Modal
+              title='Manage Funds'
+              isOpen={false}
+              isLoading={false}
+              onCloseModal={() => {}}
+              onSubmitOrder={() => {}}
+            >
+              <Tabs tabs={MODAL_TABS} />
+            </Modal>
+          </Flex>
         ),
         status: 'Waiting on Figma',
       },

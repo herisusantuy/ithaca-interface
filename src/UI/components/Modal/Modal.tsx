@@ -1,5 +1,5 @@
 // Packages
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactDOM from 'react-dom';
 
@@ -44,6 +44,21 @@ type ModalProps = {
 };
 
 const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen }: ModalProps) => {
+  const [myValue, setMyValue] = useState(localStorage.getItem('myKey'));
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'myKey') {
+        console.log(event.newValue, '----------');
+        setMyValue(event.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
