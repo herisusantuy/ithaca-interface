@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 
 //Utility import
 import { generateLabelList } from '@/UI/utils/SliderUtil';
@@ -35,43 +35,33 @@ const Slider = ({
   label = 2,
   showLabel = true,
 }: SliderProps) => {
-  const [minValue, setMinValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(0);
+  const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
+  const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
   const [minPos, setMinPos] = useState<number>(0);
   const [maxPos, setMaxPos] = useState<number>(0);
-  const [labelList, setLabelList] = useState<number[]>([]);
-
-  useEffect(() => {
-    setLabelList(generateLabelList(min, max, label));
-    setMinValue(range ? (value ? value.min : min) : min);
-    setMaxValue(value ? value.max : min);
-  }, []);
+  const labelList = generateLabelList(min, max, label);
+  const controlWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMinPos(((minValue - min) / (max - min)) * 100);
     setMaxPos(((maxValue - min) / (max - min)) * 100);
-  }, [max, maxValue, min, minValue]);
+  }, [maxValue, minValue, min, max]);
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
-    setMinPos(((newMinVal - min) / (max - min)) * 100);
     setMinValue(newMinVal);
     if (onChange) onChange({ min: newMinVal, max: maxValue });
   };
 
   const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMaxVal = Math.max(+e.target.value, minValue);
-    setMaxPos(((newMaxVal - min) / (max - min)) * 100);
     setMaxValue(newMaxVal);
     if (onChange) onChange({ min: minValue, max: newMaxVal });
   };
 
-  const test = (e: React.MouseEvent) => {
-    console.log('-------------', e);
-  };
-
   const getLabelClassName = (item: number) => {
     const classList = [styles.labelItem];
+
     if (range) {
       if (item >= minValue && item <= maxValue) {
         classList.push(styles.highlight);
@@ -101,23 +91,25 @@ const Slider = ({
 
   const getValuePosition = (event: React.MouseEvent) => {
     const offsetX = event.nativeEvent.offsetX;
-    const width = event.currentTarget.parentElement ? event.currentTarget.parentElement.clientWidth : 0;
-    const value = Math.round((offsetX * 100) / width);
-    const controlWrapper = document.querySelector(`[data-id="${title}"]`);
-    console.log(controlWrapper, event.target);
+    const width = event.currentTarget.clientWidth;
+    const value = min + Math.round(((max - min) / width) * offsetX);
+    console.log(value, min, max, offsetX, width, event);
     if (!range) {
       setMaxValue(value);
     } else {
-      if (event.target == controlWrapper) {
+      if (controlWrapperRef.current) {
+        console.log(event.currentTarget.clientWidth, controlWrapperRef);
+        const offestPosition = (width / 100) * minPos + offsetX;
+        const rangeItemValue = min + Math.round(((max - min) / width) * offestPosition);
         const betweenVal = minValue + (maxValue - minValue) / 2;
-        if (value > maxValue) {
-          setMaxValue(value);
-        } else if (value < minValue) {
-          setMinValue(value);
-        } else if (betweenVal < value) {
-          setMaxValue(value);
-        } else if (betweenVal >= value) {
-          setMinValue(value);
+        if (rangeItemValue > maxValue) {
+          setMaxValue(rangeItemValue);
+        } else if (rangeItemValue < minValue) {
+          setMinValue(rangeItemValue);
+        } else if (betweenVal < rangeItemValue) {
+          setMaxValue(rangeItemValue);
+        } else if (betweenVal >= rangeItemValue) {
+          setMinValue(rangeItemValue);
         }
       }
     }
@@ -143,11 +135,15 @@ const Slider = ({
           max={max}
           step={step}
           onChange={handleMaxChange}
-          onClick={test}
         />
       </div>
 
-      <div data-id={title} className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
+      <div
+        data-id={title}
+        className={styles.controlWrapper}
+        onClick={event => getValuePosition(event)}
+        ref={controlWrapperRef}
+      >
         <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
         <div className={styles.rail}>
           <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
@@ -161,7 +157,14 @@ const Slider = ({
             <div
               key={idx}
               className={getLabelClassName(item)}
-              style={{ left: idx * (100 / (label - 1)) + '%' }}
+              style={{
+                left:
+                  idx != 0
+                    ? idx != labelList.length - 1
+                      ? `calc(${idx * (100 / (label - 1)) + '%'} - 10px)`
+                      : `calc(${idx * (100 / (label - 1)) + '%'} - 30px)`
+                    : `calc(${idx * (100 / (label - 1)) + '%'})`,
+              }}
               onClick={() => setMinMaxValue(item)}
             >
               {item}

@@ -1,6 +1,9 @@
 import React from 'react';
 
-const CustomCursor = ({ x }) => (
+type CursorProperty = {
+  x: number;
+};
+const CustomCursor = ({ x }: CursorProperty) => (
   <svg xmlns='http://www.w3.org/2000/svg' width='2' height='91' viewBox='0 0 2 91' fill='none' x={x - 2} y={40}>
     <path d='M0.875 0.742188L0.875004 90.7422' stroke='url(#paint0_linear_1826_73533)' />
     <defs>

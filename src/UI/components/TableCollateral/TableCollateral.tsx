@@ -1,5 +1,5 @@
 // Constants
-import { CollateralType, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/TableCollateral';
+import { CollateralType, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
 
 // Utils
 import { formatWithCommas } from '@/UI/utils/Numbers';
