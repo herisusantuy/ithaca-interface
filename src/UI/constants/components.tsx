@@ -39,6 +39,7 @@ import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
 import Error from '@/UI/components/Icons/Error';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -185,6 +186,11 @@ const COMPONENT_GROUPS = [
           </>
         ),
         status: 'Done',
+      },
+      {
+        name: 'CollateralAmount',
+        component: <CollateralAmount wethAmount='10' usdcAmount='20' />,
+        status: 'In Progress',
       },
       {
         name: 'Dot',
