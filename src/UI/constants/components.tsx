@@ -31,6 +31,7 @@ import TableOrder from '@/UI/components/TableOrder/TableOrder';
 import Dot from '@/UI/components/Dot/Dot';
 import Typography from '@/UI/components/Typography/Typography';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
@@ -267,6 +268,31 @@ const COMPONENT_GROUPS = [
           </Flex>
         ),
         status: 'Done',
+      },
+      {
+        name: 'Slider',
+        component: (
+          <>
+            <Flex direction='row-center' margin='mb-32'>
+              <Slider title='Range' min={1300} max={2000} onChange={() => {}} label={10} range={true} />
+            </Flex>
+            <Flex direction='row-center' margin='mb-32'>
+              <Slider
+                title='Continuous'
+                min={1600}
+                max={2300}
+                onChange={() => {}}
+                showLabel={true}
+                label={10}
+                range={false}
+              />
+            </Flex>
+            <Flex direction='row-center'>
+              <Slider title='default' min={1600} max={2300} label={10} />
+            </Flex>
+          </>
+        ),
+        status: 'In Progress',
       },
       {
         name: 'Tabs',
