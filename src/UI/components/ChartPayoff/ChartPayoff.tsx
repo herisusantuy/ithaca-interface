@@ -36,7 +36,6 @@ const ChartPayoff = (props: ChartDataProps) => {
     // setDataMax(max);
     // setDataMin(min);
     setIsClient(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMouseMove = (e: CategoricalChartState ) => {
@@ -74,7 +73,7 @@ const ChartPayoff = (props: ChartDataProps) => {
         <div style={{ width: '400px', height: '400px' }}>
           <div className={styles.unlimited}>
             <h3>Potential P&L:</h3>
-            <p>{'+' + '' + changeVal}</p>
+            <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>{changeVal >= 0 ? '+' + '' + changeVal : changeVal}</p>
             <LogoUsdc />
           </div>
           {/* <div className={styles.unlimited}>
