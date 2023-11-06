@@ -6,7 +6,8 @@ export type TableRowData = {
   product: string;
   side: string;
   tenor: string;
-  collateralAmount: string;
+  wethAmount: string;
+  usdcAmount: string;
   orderLimit: string;
 };
 
@@ -20,7 +21,7 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Tenor',
   'Collateral Amount',
   'Order Limit',
-  'Actions',
+  '',
 ];
 
 // Table order data
@@ -39,7 +40,7 @@ function getRandomDate(): string {
 function getRandomData(): TableRowData {
   const products = ['Call', 'Put', 'Binary', 'Forward'];
   const sides = ['+', '-'];
-  const currencyPairs = ['WETH / USDC', 'BTC / USDC', 'LTC / USDC'];
+  const currencyPairs = ['WETH / USDC'];
 
   return {
     details: '',
@@ -48,8 +49,9 @@ function getRandomData(): TableRowData {
     product: products[getRandomInt(0, products.length - 1)],
     side: sides[getRandomInt(0, sides.length - 1)],
     tenor: getRandomDate(),
-    collateralAmount: `${getRandomInt(1, 20)} WETH`,
-    orderLimit: `${getRandomInt(400, 450)} USDC`,
+    wethAmount: `${getRandomInt(1, 20)}`,
+    usdcAmount: `${getRandomInt(400, 500)}`,
+    orderLimit: `${getRandomInt(400, 450)}`,
   };
 }
 

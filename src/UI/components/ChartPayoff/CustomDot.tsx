@@ -1,3 +1,4 @@
+import React from 'react';
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
@@ -17,14 +18,14 @@ const CustomDot = (props: CustomDotProps) => {
 
   const renderCircle = () => {
     if (Number(payload?.value) == 0) {
-      return <circle cx={cx} cy={cy} r={1} fill='#fff' stroke='#fff' strokeWidth={1} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} />;
     }
 
     if (Number(payload?.value) > 0) {
-      return <circle cx={cx} cy={cy} r={1} fill='#5ee192' stroke='#5ee192' strokeWidth={1} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#5ee192' stroke='#5ee192' strokeWidth={1} />;
     }
     if (Number(payload?.value) < 0) {
-      return <circle cx={cx} cy={cy} r={1} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} />;
     }
   };
 
@@ -41,8 +42,6 @@ const CustomDot = (props: CustomDotProps) => {
       }
     });
   }
-
-  return <>{renderCircle()}</>;
 };
 
 export default CustomDot;

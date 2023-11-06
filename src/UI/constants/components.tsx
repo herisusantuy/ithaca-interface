@@ -39,6 +39,7 @@ import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
 import Error from '@/UI/components/Icons/Error';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -54,6 +55,7 @@ import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
+import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -185,6 +187,11 @@ const COMPONENT_GROUPS = [
           </>
         ),
         status: 'Done',
+      },
+      {
+        name: 'CollateralAmount',
+        component: <CollateralAmount wethAmount='10' usdcAmount='20' />,
+        status: 'In Progress',
       },
       {
         name: 'Dot',
@@ -351,7 +358,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel>
-            <ChartPayoff />
+            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} specialDot={SPECIAL_DUMMY_DATA} />
           </Panel>
         ),
         status: 'In Progress',
