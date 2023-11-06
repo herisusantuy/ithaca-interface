@@ -1,38 +1,52 @@
 // Packages
-import { useEffect, useState } from 'react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
+import CustomCursor from '@/UI/components/ChartPayoff/CustomCursor';
 import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
 import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
+import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
-const ChartPayoff = () => {
+type ChartDataProps = {
+  chartData: PayoffDataProps[];
+  specialDot: SpecialDotLabel[];
+};
+
+const ChartPayoff = (props: ChartDataProps) => {
+  const { chartData, specialDot } = props;
   const [isClient, setIsClient] = useState(false);
-  const [dataMax, setDataMax] = useState(0);
-  const [dataMin, setDataMin] = useState(0);
+  // const [dataMax, setDataMax] = useState(0);
+  // const [dataMin, setDataMin] = useState(0);
   const [changeVal, setChangeVal] = useState(0);
+  const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
     const max = Math.max(...modifiedData.map(i => i.value));
     const min = Math.min(...modifiedData.map(i => i.value));
-    setDataMax(max);
-    setDataMin(min);
+    // setDataMax(max);
+    // setDataMin(min);
     setIsClient(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const baseValue = 200;
+  const handleMouseMove = e => {
+    if (e.activePayload) {
+      const xValue = e.chartX;
+      setCursorX(xValue);
+    }
+  };
+  const baseValue = 0;
 
-  const modifiedData = PAYOFF_DUMMY_DATA.map(item => ({
+  const modifiedData = chartData.map(item => ({
     ...item,
     value: item.value - baseValue,
     dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,
@@ -66,7 +80,7 @@ const ChartPayoff = () => {
             <h2>Unlimited Upside</h2>
             <LogoUsdc />
           </div> */}
-          <AreaChart data={modifiedData} width={400} height={300}>
+          <AreaChart data={modifiedData} width={400} height={300} onMouseMove={handleMouseMove}>
             <defs>
               <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
                 <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
@@ -99,8 +113,9 @@ const ChartPayoff = () => {
               strokeWidth='2'
               dataKey='value'
               fill='url(#fillGradient)'
-              label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
-              dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={SPECIAL_DUMMY_DATA} />}
+              label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={specialDot} />}
+              dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={specialDot} />}
+              activeDot={false}
             />
             <Area
               type='linear'
@@ -108,11 +123,15 @@ const ChartPayoff = () => {
               dataKey='dashValue'
               strokeDasharray='3 3'
               fill='transparent'
+              activeDot={false}
             />
-            <ReferenceLine y={0} stroke='#ffffff4d' strokeWidth={0.5} />
+            <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5} />
             <Tooltip
               isAnimationActive={false}
               animationDuration={1}
+              position={{ x: cursorX - 50, y: 0 }}
+              wrapperStyle={{ width: 100 }}
+              cursor={<CustomCursor x={cursorX} />}
               content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />}
             />
 
