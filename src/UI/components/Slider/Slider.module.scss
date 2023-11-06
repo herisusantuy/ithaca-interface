@@ -1,11 +1,3 @@
-$thumb-size: 16px;
-
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
 @mixin track-styles {
   appearance: none;
   background: transparent;
@@ -15,9 +7,9 @@ $thumb-size: 16px;
 @mixin thumb-styles {
   appearance: none;
   pointer-events: all;
-  width: $thumb-size;
-  height: $thumb-size;
-  border-radius: 0px;
+  width: rem(8);
+  height: rem(8);
+  border-radius: rem(0);
   border: 0 none;
   cursor: grab;
   background-color: var(--white);
@@ -27,11 +19,11 @@ $thumb-size: 16px;
   }
 }
 
-.label {
-  font-family: $lato;
-  @include font-size('text-xs', 'regular');
-  color: var(--white-60);
-  cursor: pointer;
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: rem(30);
 }
 
 .wrapper {
@@ -44,16 +36,14 @@ $thumb-size: 16px;
 }
 
 .inputWrapper {
-  width: calc(100% + #{$thumb-size});
-  margin: 0 calc(#{$thumb-size} / -2);
+  width: calc(100% + #{rem(8)});
+  margin: 0 calc(#{rem(8)} / -2);
   position: absolute;
-  height: $thumb-size;
 }
 
 .controlWrapper {
   width: 100%;
   position: absolute;
-  height: $thumb-size;
   cursor: pointer;
 }
 
@@ -97,7 +87,7 @@ $thumb-size: 16px;
   width: 100%;
   top: 50%;
   transform: translateY(-50%);
-  height: rem(4);
+  height: rem(1.5);
   border-radius: rem(4);
   background-color: var(--white-30);
 }
@@ -111,13 +101,13 @@ $thumb-size: 16px;
 }
 
 .control {
-  width: $thumb-size;
-  height: $thumb-size;
+  width: rem(8);
+  height: rem(8);
   border-radius: 50%;
   position: absolute;
   background: var(--white);
   top: 50%;
-  margin-left: calc(#{$thumb-size} / -2);
+  margin-left: calc(#{rem(8)} / -2);
   transform: translate3d(0, -50%, 0);
   z-index: 2;
 }
@@ -129,9 +119,8 @@ $thumb-size: 16px;
 .labelContainer {
   position: absolute;
   display: flex;
-  top: rem(37);
+  top: rem(10);
   width: 100%;
-  right: rem(6);
 }
 
 .labelItem {

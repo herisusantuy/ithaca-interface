@@ -271,51 +271,22 @@ const COMPONENT_GROUPS = [
         name: 'Slider',
         component: (
           <>
-            <Flex direction='row-center' gap='gap-12'>
-              <Slider
-                title='Range with Label'
-                value={{ min: 20, max: 30 }}
-                min={0}
-                max={100}
-                onChange={({ min, max }) => {
-                  console.log(min, max);
-                }}
-                label={11}
-                range={true}
-              />
+            <Flex direction='row-center' margin='mb-32'>
+              <Slider title='Range' min={1300} max={2000} onChange={() => {}} label={10} range={true} />
             </Flex>
-            <Flex direction='row-center' gap='gap-12'>
+            <Flex direction='row-center' margin='mb-32'>
               <Slider
-                title='Range without Label'
-                value={{ min: 20, max: 80 }}
-                min={0}
-                max={100}
-                onChange={({ min, max }) => {
-                  console.log(min, max);
-                }}
-                showLabel={false}
-                range={true}
-              />
-            </Flex>
-            <Flex direction='row-center' gap='gap-12'>
-              <Slider
-                title='Continuous with Label Count'
-                value={{ min: 20, max: 50 }}
-                min={0}
-                max={100}
-                onChange={({ min, max }) => {
-                  console.log(min, max);
-                }}
+                title='Continuous'
+                min={1600}
+                max={2300}
+                onChange={() => {}}
                 showLabel={true}
-                label={5}
+                label={10}
                 range={false}
               />
             </Flex>
-            <Flex direction='row-center' gap='gap-12'>
-              <Slider title='default' min={0} max={100} />
-            </Flex>
-            <Flex direction='row-center' gap='gap-12'>
-              <Slider title='Custom Step' min={0} max={100} step={10} label={11} />
+            <Flex direction='row-center'>
+              <Slider title='default' min={1600} max={2300} label={10} />
             </Flex>
           </>
         ),

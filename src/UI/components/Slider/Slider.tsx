@@ -6,6 +6,7 @@ import { generateLabelList } from '@/UI/utils/SliderUtil';
 //Style
 import styles from './Slider.module.scss';
 
+// Types
 type ValueProps = {
   min: number;
   max: number;
@@ -23,8 +24,17 @@ type SliderProps = {
   title?: string;
 };
 
-const Slider = (props: SliderProps) => {
-  const { title, value, min, max, step = 1, onChange, range = false, label = 2, showLabel = true } = props;
+const Slider = ({
+  title,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  range = false,
+  label = 2,
+  showLabel = true,
+}: SliderProps) => {
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
   const [minPos, setMinPos] = useState<number>(0);
@@ -115,52 +125,49 @@ const Slider = (props: SliderProps) => {
 
   return (
     <div className={styles.container}>
-      <div>{title && <label className={styles.label}>{title}</label>}</div>
-      <div id='wraperContainer' className={styles.wrapper}>
-        <div className={styles.inputWrapper}>
-          <input
-            className={`${styles.input} ${!range ? styles.hide : ''}`}
-            type='range'
-            value={minValue}
-            min={min}
-            max={max}
-            step={step}
-            onChange={handleMinChange}
-          />
-          <input
-            className={styles.input}
-            type='range'
-            value={maxValue}
-            min={min}
-            max={max}
-            step={step}
-            onChange={handleMaxChange}
-            onClick={test}
-          />
-        </div>
+      <div className={styles.inputWrapper}>
+        <input
+          className={`${styles.input} ${!range ? styles.hide : ''}`}
+          type='range'
+          value={minValue}
+          min={min}
+          max={max}
+          step={step}
+          onChange={handleMinChange}
+        />
+        <input
+          className={styles.input}
+          type='range'
+          value={maxValue}
+          min={min}
+          max={max}
+          step={step}
+          onChange={handleMaxChange}
+          onClick={test}
+        />
+      </div>
 
-        <div data-id={title} className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
-          <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
-          <div className={styles.rail}>
-            <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
-          </div>
-          <div className={styles.control} style={{ left: `${maxPos}%` }} />
+      <div data-id={title} className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
+        <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
+        <div className={styles.rail}>
+          <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
         </div>
+        <div className={styles.control} style={{ left: `${maxPos}%` }} />
+      </div>
 
-        <div className={`${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
-          {labelList.map((item: number, idx: number) => {
-            return (
-              <div
-                key={idx}
-                className={getLabelClassName(item)}
-                style={{ left: idx * (100 / (label - 1)) + '%' }}
-                onClick={() => setMinMaxValue(item)}
-              >
-                {item}
-              </div>
-            );
-          })}
-        </div>
+      <div className={`${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
+        {labelList.map((item: number, idx: number) => {
+          return (
+            <div
+              key={idx}
+              className={getLabelClassName(item)}
+              style={{ left: idx * (100 / (label - 1)) + '%' }}
+              onClick={() => setMinMaxValue(item)}
+            >
+              {item}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
