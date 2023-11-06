@@ -15,6 +15,7 @@ import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, SPECIAL_DUMMY_DATA
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 type ChartDataProps = {
   chartData: PayoffDataProps[];
@@ -30,18 +31,18 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
-    const max = Math.max(...modifiedData.map(i => i.value));
-    const min = Math.min(...modifiedData.map(i => i.value));
+    // const max = Math.max(...modifiedData.map(i => i.value));
+    // const min = Math.min(...modifiedData.map(i => i.value));
     // setDataMax(max);
     // setDataMin(min);
     setIsClient(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMouseMove = e => {
+  const handleMouseMove = (e: CategoricalChartState ) => {
     if (e.activePayload) {
       const xValue = e.chartX;
-      setCursorX(xValue);
+      setCursorX(xValue ?? 0);
     }
   };
   const baseValue = 0;
@@ -95,7 +96,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.3} />
                 <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
               </linearGradient>
-
+              
               <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
                 <stop offset='90%' stopColor='#B5B5F8' stopOpacity={0.4} />
                 <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.3} />

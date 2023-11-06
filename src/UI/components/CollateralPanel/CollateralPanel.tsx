@@ -1,5 +1,5 @@
 // Packages
-import { TABLE_COLLATERAL_DATA } from '@/UI/constants/TableCollateral';
+import { TABLE_COLLATERAL_DATA } from '@/UI/constants/tableCollateral';
 import Panel from '@/UI/layouts/Panel/Panel';
 import readWriteSDK from '@/UI/lib/sdk/readWriteSDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
