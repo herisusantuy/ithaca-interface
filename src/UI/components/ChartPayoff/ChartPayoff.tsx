@@ -30,8 +30,8 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [cursorX, setCursorX] = useState(0);
 
   useEffect(() => {
-    const max = Math.max(...modifiedData.map(i => i.value));
-    const min = Math.min(...modifiedData.map(i => i.value));
+    // const max = Math.max(...modifiedData.map(i => i.value));
+    // const min = Math.min(...modifiedData.map(i => i.value));
     // setDataMax(max);
     // setDataMin(min);
     setIsClient(true);
