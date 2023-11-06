@@ -1,5 +1,5 @@
 // Packages
-import { TABLE_ORDER_DATA } from '@/UI/constants/TableOrder';
+import { TABLE_ORDER_DATA } from '@/UI/constants/tableOrder';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableOrder from '../TableOrder/TableOrder';
 import styles from './OrderPanel.module.scss';
