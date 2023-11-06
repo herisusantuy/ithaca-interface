@@ -37,6 +37,7 @@ import Bell from '@/UI/components/Icons/Bell';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
+import Error from '@/UI/components/Icons/Error';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -218,6 +219,7 @@ const COMPONENT_GROUPS = [
               <Input id='in' label='Input number' type='number' />
               <Input id='ini' label='Input number with icon' type='number' icon={<LogoEth />} />
               <Input id='it' label='Input text' type='text' />
+              <Input id='ite' label='Has error' type='text' hasError={true} errorMessage='Error' />
             </Flex>
           </>
         ),
@@ -440,6 +442,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'Dropdown',
         component: <Dropdown />,
+        status: 'Done',
+      },
+      {
+        name: 'Error',
+        component: <Error />,
         status: 'Done',
       },
       {
