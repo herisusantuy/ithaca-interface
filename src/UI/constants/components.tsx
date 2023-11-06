@@ -47,7 +47,7 @@ import Main from '@/UI/layouts/Main/Main';
 import Panel from '@/UI/layouts/Panel/Panel';
 
 // Constants
-import { TABS } from './tabs';
+import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA } from './tableOrder';
@@ -383,8 +383,8 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Modal title='Modal' isOpen={false} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
-            Test
+          <Modal title='Manage Funds' isOpen={true} isLoading={false} onCloseModal={() => {}} onSubmitOrder={() => {}}>
+            <Tabs tabs={MODAL_TABS} />
           </Modal>
         ),
         status: 'Waiting on Figma',
