@@ -93,9 +93,24 @@ const Slider = (props: SliderProps) => {
     const offsetX = event.nativeEvent.offsetX;
     const width = event.currentTarget.parentElement ? event.currentTarget.parentElement.clientWidth : 0;
     const value = Math.round((offsetX * 100) / width);
+    const controlWrapper = document.querySelector(`[data-id="${title}"]`);
+    console.log(controlWrapper, event.target);
     if (!range) {
       setMaxValue(value);
-    } 
+    } else {
+      if (event.target == controlWrapper) {
+        const betweenVal = minValue + (maxValue - minValue) / 2;
+        if (value > maxValue) {
+          setMaxValue(value);
+        } else if (value < minValue) {
+          setMinValue(value);
+        } else if (betweenVal < value) {
+          setMaxValue(value);
+        } else if (betweenVal >= value) {
+          setMinValue(value);
+        }
+      }
+    }
   };
 
   return (
@@ -124,7 +139,7 @@ const Slider = (props: SliderProps) => {
           />
         </div>
 
-        <div id='controlWrapper' className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
+        <div data-id={title} className={styles.controlWrapper} onClick={event => getValuePosition(event)}>
           <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
           <div className={styles.rail}>
             <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
