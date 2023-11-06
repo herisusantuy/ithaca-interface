@@ -5,6 +5,8 @@ import { Fragment, useState } from 'react';
 // Components
 import Pagination from '@/UI/components/Pagination/Pagination';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
+import Delete from '@/UI/components/Icons/Delete';
+import Button from '@/UI/components/Button/Button';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -14,6 +16,7 @@ import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
 
 // Styles
 import styles from './TableOrder.module.scss';
+import Dropdown from '../Icons/Dropdown';
 
 // Types
 type TableOrderProps = {
@@ -69,7 +72,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
           <Fragment key={rowIndex}>
             <div className={styles.row}>
               <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                {expandedRow.includes(rowIndex) ? '▼' : '►'} {row.details}
+                {expandedRow.includes(rowIndex) ? <Dropdown /> : <Dropdown />} {row.details}
               </div>
               <div className={styles.cell}>{row.orderDate}</div>
               <div className={styles.cell}>{row.currencyPair}</div>
@@ -79,7 +82,9 @@ const TableOrder = ({ data }: TableOrderProps) => {
               <div className={styles.cell}>{row.collateralAmount}</div>
               <div className={styles.cell}>{row.orderLimit}</div>
               <div className={styles.cell}>
-                <button onClick={() => alert('Delete row')}>Delete</button>
+                <Button title='Click to delete' className={styles.delete}>
+                  <Delete />
+                </Button>
               </div>
             </div>
             <motion.div

@@ -20,7 +20,7 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Tenor',
   'Collateral Amount',
   'Order Limit',
-  'Actions',
+  '',
 ];
 
 // Table order data
