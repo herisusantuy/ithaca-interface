@@ -27,7 +27,6 @@ export const TABS: Tab[] = [
   },
 ];
 
-
 export const TRADING_LITE_TABS_ITEMS: Tab[] = [
   {
     id: 'market',
@@ -40,7 +39,6 @@ export const TRADING_LITE_TABS_ITEMS: Tab[] = [
     label: 'Stories',
   },
 ];
-
 
 export const TRADING_PRO_TABS_ITEMS: Tab[] = [
   {
@@ -57,5 +55,18 @@ export const TRADING_PRO_TABS_ITEMS: Tab[] = [
     id: 'riskless-lending',
     path: '/trading/pro/riskless-lending',
     label: 'Riskless Lending',
+  },
+];
+
+export const MODAL_TABS: Tab[] = [
+  {
+    id: 'deposit',
+    label: 'Deposit',
+    content: <p>Content deposit</p>,
+  },
+  {
+    id: 'withdraw',
+    label: 'Withdraw',
+    content: <p>Content for withdraw</p>,
   },
 ];

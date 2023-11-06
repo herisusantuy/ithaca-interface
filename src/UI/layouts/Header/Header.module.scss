@@ -1,14 +1,14 @@
 .header {
   @include spacing(padding, 16, 'top+bottom');
-  background: rgba(28, 30, 38, 0.3);
-  backdrop-filter: blur(rem(12));
-  border-radius: rem(30);
+  background: #1c2028;
+  backdrop-filter: blur(rem(10));
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 2;
+  border-radius: rem(22);
 }
 
 .container {
@@ -32,4 +32,46 @@
 
 .right {
   gap: rem(25);
+
+  button {
+    font-family: $roboto !important;
+    font-size: rem(12) !important;
+    padding: rem(10) rem(16) !important;
+    border-radius: rem(16) !important;
+    position: relative !important;
+    background: #3c8d60 !important;
+
+    &:hover,
+    &:active {
+      transform: none !important;
+    }
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: rem(16);
+      top: -(rem(1));
+      bottom: -(rem(1));
+      right: -(rem(1));
+      left: -(rem(1));
+      z-index: -1;
+      background: linear-gradient(var(--green-30) 0%, rgba(94, 225, 146, 0) 100%);
+    }
+
+    div:nth-child(2) {
+      background: none !important;
+      border: 0 !important;
+      padding: 0 !important;
+
+      div {
+        font-family: $roboto !important;
+        font-size: rem(14) !important;
+
+        svg {
+          animation: none !important;
+        }
+      }
+    }
+  }
 }

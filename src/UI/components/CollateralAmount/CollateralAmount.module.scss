@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(1);
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  gap: rem(7);
+  @include font-size('text-sm', 'regular');
+
+  svg {
+    width: rem(16);
+    height: rem(16);
+  }
+
+  span {
+    &:first-child {
+      text-align: right;
+    }
+
+    &:last-child {
+      color: var(--white-60);
+      text-align: left;
+    }
+  }
+}

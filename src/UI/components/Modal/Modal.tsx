@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 // Components
 import Button from '@/UI/components/Button/Button';
 import Loader from '@/UI/components/Loader/Loader';
-import Close from '@/UI/components/Icons/Close';
+import ModalClose from '@/UI/components/Icons/ModalClose';
 
 // Styles
 import styles from './Modal.module.scss';
@@ -84,7 +84,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
         <div className={styles.modalHeader}>
           <h4 className={styles.modalTitle}>{title}</h4>
           <Button onClick={onCloseModal} className={styles.buttonClose} title='Click to close modal'>
-            <Close />
+            <ModalClose />
           </Button>
         </div>
         <div className={styles.modalContent}>{children}</div>
