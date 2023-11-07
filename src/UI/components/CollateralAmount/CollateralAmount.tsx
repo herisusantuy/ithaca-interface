@@ -7,8 +7,8 @@ import styles from './CollateralAmount.module.scss';
 
 // Types
 type CollateralAmountProps = {
-  wethAmount: string;
-  usdcAmount: string;
+  wethAmount: number;
+  usdcAmount: number;
 };
 
 const CollateralAmount = ({ wethAmount, usdcAmount }: CollateralAmountProps) => {

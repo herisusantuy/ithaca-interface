@@ -38,6 +38,7 @@ import Color from '@/UI/components/Color/Color';
 import Error from '@/UI/components/Icons/Error';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 import ModalWithButton from '@/UI/components/Modal/ModalWithButton';
+import Sort from '@/UI/components/Icons/Sort';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -184,7 +185,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'CollateralAmount',
-        component: <CollateralAmount wethAmount='10' usdcAmount='20' />,
+        component: <CollateralAmount wethAmount={10} usdcAmount={20} />,
         status: 'In Progress',
       },
       {
@@ -508,6 +509,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'Filter',
         component: <Filter />,
+        status: 'Done',
+      },
+      {
+        name: 'Sort',
+        component: <Sort />,
         status: 'Done',
       },
     ],

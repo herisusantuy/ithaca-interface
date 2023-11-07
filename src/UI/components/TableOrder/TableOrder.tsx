@@ -8,6 +8,9 @@ import TableDescription from '@/UI/components/TableDescription/TableDescription'
 import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
 import Dropdown from '@/UI/components/Icons/Dropdown';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
+import Modal from '@/UI/components/Modal/Modal';
+import Summary from '@/UI/components/Summary/Summary';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -15,19 +18,56 @@ import Flex from '@/UI/layouts/Flex/Flex';
 // Constants
 import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
 
+// Utils
+import {
+  formatCurrencyPair,
+  getHeaderIcon,
+  getSideIcon,
+  // orderDateSort,
+  renderDate,
+  variants,
+} from '@/UI/utils/TableOrder';
+
 // Styles
 import styles from './TableOrder.module.scss';
-import LogoEth from '../Icons/LogoEth';
-import LogoUsdc from '../Icons/LogoUsdc';
-import CollateralAmount from '../CollateralAmount/CollateralAmount';
-import { orderDateSort } from '@/UI/utils/TableOrderFilter';
 
 // Types
 type TableOrderProps = {
   data: TableRowData[];
 };
 
-const TableOrder = ({ data }: TableOrderProps) => {
+const TableOrder = ({ data: initialData }: TableOrderProps) => {
+  // Cancel order state
+  const [data, setData] = useState(initialData);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
+
+  // Handle cancel order
+  const handleCancelOrderClick = (rowIndex: number) => {
+    setRowToCancelOrder(data[rowIndex]);
+    setIsModalOpen(true);
+  };
+
+  // Handle close modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setRowToCancelOrder(null);
+  };
+
+  // Function to handle the actual delete operation
+  const handleCancelOrderRemoveRow = () => {
+    setIsDeleting(true);
+
+    setTimeout(() => {
+      const newData = data.filter(row => row !== rowToCancelOrder);
+      setData(newData);
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setRowToCancelOrder(null);
+    }, 3000);
+  };
+
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -47,12 +87,6 @@ const TableOrder = ({ data }: TableOrderProps) => {
   // Slice the data to only show 9 results
   const slicedData = data.slice(pageStart, pageEnd);
 
-  // Animation for row expand and collapse
-  const variants = {
-    open: { opacity: 1, height: 'auto' },
-    closed: { opacity: 0, height: 0 },
-  };
-
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
     if (expandedRow.includes(rowIndex)) {
@@ -63,12 +97,12 @@ const TableOrder = ({ data }: TableOrderProps) => {
   };
 
   // Handle Filter for Testing
-  const tableFilter = (header: string) => {
-    if (header === 'Order Date') {
-      data = orderDateSort(data, 'asc');
-      console.log(data);
-    }
-  };
+  // const tableFilter = (header: string) => {
+  //   if (header === 'Order Date') {
+  //     data = orderDateSort(data, 'asc');
+  //     console.log(data);
+  //   }
+  // };
 
   return (
     <>
@@ -78,11 +112,11 @@ const TableOrder = ({ data }: TableOrderProps) => {
             <div
               className={styles.cell}
               key={idx}
-              onClick={() => {
-                tableFilter(header);
-              }}
+              // onClick={() => {
+              //   tableFilter(header);
+              // }}
             >
-              {header}
+              {header} {getHeaderIcon(header)}
             </div>
           ))}
         </div>
@@ -93,36 +127,23 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
                   {expandedRow.includes(rowIndex) ? <Dropdown /> : <Dropdown />} {row.details}
                 </div>
-                <div className={styles.cell}>{row.orderDate}</div>
+                <div className={styles.cell}>{renderDate(row.orderDate)}</div>
                 <div className={styles.cell}>
-                  <div className={styles.currency}>
-                    {row.currencyPair.split(' / ').map(currency => (
-                      <Fragment key={currency}>
-                        {currency === 'WETH' ? (
-                          <>
-                            <LogoEth />
-                            {currency} /{' '}
-                          </>
-                        ) : null}
-                        {currency === 'USDC' ? (
-                          <>
-                            <LogoUsdc />
-                            {currency}
-                          </>
-                        ) : null}
-                      </Fragment>
-                    ))}
-                  </div>
+                  <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
                 </div>
                 <div className={styles.cell}>{row.product}</div>
-                <div className={styles.cell}>{row.side}</div>
-                <div className={styles.cell}>{row.tenor}</div>
+                <div className={styles.cell}>{getSideIcon(row.side)}</div>
+                <div className={styles.cell}>{renderDate(row.tenor)}</div>
                 <div className={styles.cell}>
                   <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
                 </div>
                 <div className={styles.cell}>{row.orderLimit}</div>
                 <div className={styles.cell}>
-                  <Button title='Click to delete' className={styles.delete}>
+                  <Button
+                    title='Click to cancel order'
+                    className={styles.delete}
+                    onClick={() => handleCancelOrderClick(rowIndex)}
+                  >
                     <Delete />
                   </Button>
                 </div>
@@ -135,6 +156,18 @@ const TableOrder = ({ data }: TableOrderProps) => {
               >
                 Expanded content for {row.details}
               </motion.div>
+              {isModalOpen && rowToCancelOrder && (
+                <Modal
+                  title='Cancel Order'
+                  onCloseModal={handleCloseModal}
+                  onSubmitOrder={handleCancelOrderRemoveRow}
+                  isLoading={isDeleting}
+                  isOpen={isModalOpen}
+                >
+                  <p>Please confirm if you&apos;d like to cancel your order.</p>
+                  <Summary detail={rowToCancelOrder} />
+                </Modal>
+              )}
             </Fragment>
           );
         })}

@@ -5,9 +5,9 @@ const Bookmark = () => {
         <path
           d='M12 17L6 21V7C6 5.93913 6.42143 4.92172 7.17157 4.17157C7.92172 3.42143 8.93913 3 10 3H14C15.0609 3 16.0783 3.42143 16.8284 4.17157C17.5786 4.92172 18 5.93913 18 7V12'
           stroke='#5EE192'
-          stroke-width='1.5'
-          stroke-linecap='round'
-          stroke-linejoin='round'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
         />
         <path d='M16 19H22' stroke='#5EE192' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
         <path d='M19 16V22' stroke='#5EE192' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
