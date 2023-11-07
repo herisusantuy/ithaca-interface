@@ -39,7 +39,7 @@ type ModalProps = {
   title: string;
   onCloseModal: () => void;
   onSubmitOrder: () => void;
-  isLoading: boolean;
+  isLoading?: boolean;
   isOpen: boolean;
 };
 
