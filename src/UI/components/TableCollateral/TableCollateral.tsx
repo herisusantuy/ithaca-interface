@@ -24,7 +24,7 @@ type CollateralTableProps = {
 const TableCollateral = ({ data, deposit, withdraw, faucet }: CollateralTableProps) => {
   return (
     <div className={styles.table}>
-      <div className={`${styles.row} ${styles.header}`}>
+      <div className={styles.header}>
         {TABLE_COLLATERAL_HEADERS.map((header, idx) => {
           return (
             <div className={styles.cell} key={idx}>
@@ -34,7 +34,7 @@ const TableCollateral = ({ data, deposit, withdraw, faucet }: CollateralTablePro
         })}
       </div>
       {data.map((collateral, idx) => (
-        <div className={`${styles.row} ${styles.data}`} key={idx}>
+        <div className={styles.row} key={idx}>
           <div className={styles.cell}>
             <Asset icon={collateral.asset === 'WETH' ? <LogoEth /> : <LogoUsdc />} label={collateral.asset} />
           </div>
