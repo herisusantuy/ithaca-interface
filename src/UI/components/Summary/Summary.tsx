@@ -26,7 +26,10 @@ type SummaryProps = {
 const Summary = ({ detail }: SummaryProps) => {
   const summaryConfig = [
     { label: 'Order Date', render: () => renderDate(detail.orderDate) },
-    { label: 'Currency Pair', render: () => formatCurrencyPair(detail.currencyPair) },
+    {
+      label: 'Currency Pair',
+      render: () => <div className={styles.currency}>{formatCurrencyPair(detail.currencyPair)}</div>,
+    },
     { label: 'Product', render: () => detail.product },
     { label: 'Side', render: () => getSideIcon(detail.side) },
     { label: 'Tenor', render: () => renderDate(detail.tenor) },
@@ -38,10 +41,10 @@ const Summary = ({ detail }: SummaryProps) => {
   ];
 
   return (
-    <div className={styles.transactionSummary}>
+    <div className={styles.summary}>
       {summaryConfig.map((item, index) => (
         <div className={styles.row} key={index}>
-          <div className={styles.label}>{item.label}:</div>
+          <div className={styles.label}>{item.label}</div>
           <div className={styles.value}>{item.render()}</div>
         </div>
       ))}

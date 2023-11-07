@@ -44,10 +44,6 @@
   @include spacing(margin, 34, 'bottom');
 }
 
-.modalContent {
-  @include spacing(margin, 32, 'bottom');
-}
-
 .modalHeader {
   display: flex;
   flex-direction: row;
