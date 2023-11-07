@@ -13,9 +13,9 @@ type ModalButtonProps = {
   onSubmitOrder: () => void;
 };
 
-const ModalWithButton = (props: ModalButtonProps) => {
-  const { isLoading, onSubmitOrder } = props;
+const ModalWithButton = ({ title, btnText, children, isLoading, onSubmitOrder }: ModalButtonProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+
   const handleOnClick = () => {
     setShowModal(!showModal);
   };
@@ -25,8 +25,8 @@ const ModalWithButton = (props: ModalButtonProps) => {
   };
   return (
     <>
-      <Button title={props.title} onClick={handleOnClick}>
-        {props.btnText}
+      <Button title={title} onClick={handleOnClick}>
+        {btnText}
       </Button>
       <Modal
         title='Manage Funds'
@@ -35,7 +35,7 @@ const ModalWithButton = (props: ModalButtonProps) => {
         onCloseModal={() => setShowModal(false)}
         onSubmitOrder={handleSubmit}
       >
-        {props.children}
+        {children}
       </Modal>
     </>
   );
