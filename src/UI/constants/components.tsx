@@ -367,7 +367,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChartPayoff',
         component: (
-          <Panel>
+          <Panel margin='p-30'>
             <ChartPayoff chartData={PAYOFF_DUMMY_DATA} specialDot={SPECIAL_DUMMY_DATA} />
           </Panel>
         ),
@@ -400,7 +400,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Panel',
-        component: <Panel>Panel</Panel>,
+        component: <Panel margin='p-30'>Panel</Panel>,
         status: 'Done',
       },
     ],
