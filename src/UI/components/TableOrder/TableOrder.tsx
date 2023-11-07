@@ -1,5 +1,5 @@
 // Packages
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useState } from 'react';
 
 // Components
@@ -11,12 +11,13 @@ import Dropdown from '@/UI/components/Icons/Dropdown';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 import Modal from '@/UI/components/Modal/Modal';
 import Summary from '@/UI/components/Summary/Summary';
+import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
-import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
+import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
 
 // Utils
 import {
@@ -33,7 +34,7 @@ import styles from './TableOrder.module.scss';
 
 // Types
 type TableOrderProps = {
-  data: TableRowData[];
+  data: TableRowDataWithExpanded[];
 };
 
 const TableOrder = ({ data: initialData }: TableOrderProps) => {
@@ -121,9 +122,11 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
           ))}
         </div>
         {slicedData.map((row, rowIndex) => {
+          const isRowExpanded = expandedRow.includes(rowIndex);
+
           return (
             <Fragment key={rowIndex}>
-              <div className={styles.row}>
+              <div className={`${styles.row} ${isRowExpanded ? styles.isExpanded : ''}`}>
                 <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
                   <Button
                     title='Click to expand dropdown'
@@ -153,14 +156,19 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
                   </Button>
                 </div>
               </div>
-              <motion.div
-                className='table-row-expanded'
-                initial='closed'
-                animate={expandedRow.includes(rowIndex) ? 'open' : 'closed'}
-                variants={variants}
-              >
-                Expanded content for {row.details}
-              </motion.div>
+              <AnimatePresence>
+                {isRowExpanded && (
+                  <motion.div
+                    className={styles.tableRowExpanded}
+                    initial='closed'
+                    animate='open'
+                    exit='closed'
+                    variants={variants}
+                  >
+                    {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               {isModalOpen && rowToCancelOrder && (
                 <Modal
                   title='Cancel Order'

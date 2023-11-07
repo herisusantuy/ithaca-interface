@@ -10,6 +10,11 @@
     gap: rem(38);
     border-bottom: rem(1) solid var(--white-rgba-10);
 
+    &.isExpanded {
+      @include spacing(padding, 8, 'bottom');
+      border-bottom: rem(1) solid transparent;
+    }
+
     &.header {
       @include spacing(padding, 8, 'bottom');
       color: var(--gray-400);
