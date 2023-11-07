@@ -356,7 +356,11 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TableOrder',
-        component: <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />,
+        component: (
+          <Panel margin='p-30'>
+            <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />
+          </Panel>
+        ),
         status: 'In Progress',
       },
     ],
