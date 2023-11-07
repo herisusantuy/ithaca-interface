@@ -42,6 +42,10 @@
         justify-content: center;
       }
 
+      &:nth-child(8) {
+        justify-content: flex-end;
+      }
+
       &:nth-child(9) {
         width: 5%;
       }
