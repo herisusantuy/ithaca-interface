@@ -3,6 +3,8 @@
   display: flex;
   align-items: center;
   gap: rem(24);
+  position: relative;
+  z-index: 1;
 
   button {
     @include font-size('text-md', 'regular');

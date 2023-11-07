@@ -1,6 +1,9 @@
 .table {
   display: flex;
   flex-direction: column;
+  z-index: 1;
+  position: relative;
+  color: var(--white);
 
   .row {
     @include spacing(padding, 16, 'top+bottom');
