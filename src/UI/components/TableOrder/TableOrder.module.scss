@@ -35,7 +35,7 @@
       display: flex;
 
       &:nth-child(1) {
-        width: 4%;
+        width: 2%;
       }
 
       &:nth-child(2) {
@@ -70,10 +70,30 @@
   }
 }
 
+.dropdown {
+  background: none;
+  padding: 0;
+  height: auto;
+  border-radius: 0;
+
+  &:hover {
+    background: none;
+  }
+
+  &:before {
+    display: none;
+  }
+
+  &.isActive {
+    transform: rotate(180deg);
+  }
+}
+
 .delete {
   background: none;
   padding: 0;
   height: auto;
+  border-radius: 0;
 
   &:hover {
     background: none;

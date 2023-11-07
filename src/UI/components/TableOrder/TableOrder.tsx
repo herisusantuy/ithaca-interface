@@ -125,7 +125,12 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
             <Fragment key={rowIndex}>
               <div className={styles.row}>
                 <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                  {expandedRow.includes(rowIndex) ? <Dropdown /> : <Dropdown />} {row.details}
+                  <Button
+                    title='Click to expand dropdown'
+                    className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
+                  >
+                    <Dropdown />
+                  </Button>
                 </div>
                 <div className={styles.cell}>{renderDate(row.orderDate)}</div>
                 <div className={styles.cell}>
