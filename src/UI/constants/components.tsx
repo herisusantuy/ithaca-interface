@@ -1,6 +1,3 @@
-// Packages
-import dynamic from 'next/dynamic';
-
 // Components
 import Asset from '@/UI/components/Asset/Asset';
 import Button from '@/UI/components/Button/Button';
@@ -40,6 +37,7 @@ import TableDescription from '@/UI/components/TableDescription/TableDescription'
 import Color from '@/UI/components/Color/Color';
 import Error from '@/UI/components/Icons/Error';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
+import ModalWithButton from '@/UI/components/Modal/ModalWithButton';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -56,10 +54,6 @@ import { TABLE_ORDER_DATA } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
-
-const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
-  ssr: false,
-});
 
 const COMPONENT_GROUPS = [
   {
@@ -425,9 +419,9 @@ const COMPONENT_GROUPS = [
       {
         name: 'Modal',
         component: (
-          <Modal title='Manage Funds' isOpen={true} onCloseModal={() => {}}>
+          <ModalWithButton title='Manage Funds' isLoading={false} onSubmitOrder={() => {}} btnText='Manage Funds'>
             <Tabs tabs={MODAL_TABS} />
-          </Modal>
+          </ModalWithButton>
         ),
         status: 'Waiting on Figma',
       },
