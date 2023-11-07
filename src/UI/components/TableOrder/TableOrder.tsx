@@ -8,13 +8,9 @@ import TableDescription from '@/UI/components/TableDescription/TableDescription'
 import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
 import Dropdown from '@/UI/components/Icons/Dropdown';
-import Sort from '@/UI/components/Icons/Sort';
-import Filter from '@/UI/components/Icons/Filter';
-import LogoEth from '@/UI/components/Icons/LogoEth';
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
-import Plus from '@/UI/components/Icons/Plus';
-import Minus from '@/UI/components/Icons/Minus';
+import Modal from '@/UI/components/Modal/Modal';
+import Summary from '@/UI/components/Summary/Summary';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -23,7 +19,14 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
 
 // Utils
-import { orderDateSort } from '@/UI/utils/TableOrderFilter';
+import {
+  formatCurrencyPair,
+  getHeaderIcon,
+  getSideIcon,
+  // orderDateSort,
+  renderDate,
+  variants,
+} from '@/UI/utils/TableOrder';
 
 // Styles
 import styles from './TableOrder.module.scss';
@@ -33,7 +36,38 @@ type TableOrderProps = {
   data: TableRowData[];
 };
 
-const TableOrder = ({ data }: TableOrderProps) => {
+const TableOrder = ({ data: initialData }: TableOrderProps) => {
+  // Cancel order state
+  const [data, setData] = useState(initialData);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
+
+  // Handle cancel order
+  const handleCancelOrderClick = (rowIndex: number) => {
+    setRowToCancelOrder(data[rowIndex]);
+    setIsModalOpen(true);
+  };
+
+  // Handle close modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setRowToCancelOrder(null);
+  };
+
+  // Function to handle the actual delete operation
+  const handleCancelOrderRemoveRow = () => {
+    setIsDeleting(true);
+
+    setTimeout(() => {
+      const newData = data.filter(row => row !== rowToCancelOrder);
+      setData(newData);
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setRowToCancelOrder(null);
+    }, 3000);
+  };
+
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -53,12 +87,6 @@ const TableOrder = ({ data }: TableOrderProps) => {
   // Slice the data to only show 9 results
   const slicedData = data.slice(pageStart, pageEnd);
 
-  // Animation for row expand and collapse
-  const variants = {
-    open: { opacity: 1, height: 'auto' },
-    closed: { opacity: 0, height: 0 },
-  };
-
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
     if (expandedRow.includes(rowIndex)) {
@@ -69,59 +97,12 @@ const TableOrder = ({ data }: TableOrderProps) => {
   };
 
   // Handle Filter for Testing
-  const tableFilter = (header: string) => {
-    if (header === 'Order Date') {
-      data = orderDateSort(data, 'asc');
-      console.log(data);
-    }
-  };
-
-  // Get table header icons
-  const getHeaderIcon = (header: string) => {
-    switch (header) {
-      case 'Order Date':
-      case 'Tenor':
-      case 'Collateral Amount':
-      case 'Order Limit':
-        return (
-          <Button title='Click to sort column' className={styles.sort}>
-            <Sort />
-          </Button>
-        );
-      case 'Currency Pair':
-      case 'Product':
-      case 'Side':
-        return (
-          <Button title='Click to view filter options' className={styles.filter}>
-            <Filter />
-          </Button>
-        );
-      default:
-        return null;
-    }
-  };
-
-  // Get the side icon
-  const getSideIcon = (side: string) => {
-    return side === '+' ? <Plus /> : <Minus />;
-  };
-
-  // Split the dates and render as spans
-  const renderDate = (dateStr: string) => {
-    const parts = dateStr.split(' ');
-    const day = parts[0];
-    const month = parts[1];
-    const year = parts[2];
-    const time = parts.length > 3 ? parts[3] : '';
-    return (
-      <div className={styles.date}>
-        <span>{day}</span>
-        <span>{month}</span>
-        <span>{year}</span>
-        {time && <span className={styles.time}>{time}</span>}
-      </div>
-    );
-  };
+  // const tableFilter = (header: string) => {
+  //   if (header === 'Order Date') {
+  //     data = orderDateSort(data, 'asc');
+  //     console.log(data);
+  //   }
+  // };
 
   return (
     <>
@@ -131,9 +112,9 @@ const TableOrder = ({ data }: TableOrderProps) => {
             <div
               className={styles.cell}
               key={idx}
-              onClick={() => {
-                tableFilter(header);
-              }}
+              // onClick={() => {
+              //   tableFilter(header);
+              // }}
             >
               {header} {getHeaderIcon(header)}
             </div>
@@ -148,24 +129,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 </div>
                 <div className={styles.cell}>{renderDate(row.orderDate)}</div>
                 <div className={styles.cell}>
-                  <div className={styles.currency}>
-                    {row.currencyPair.split(' / ').map(currency => (
-                      <Fragment key={currency}>
-                        {currency === 'WETH' ? (
-                          <>
-                            <LogoEth />
-                            {currency} /{' '}
-                          </>
-                        ) : null}
-                        {currency === 'USDC' ? (
-                          <>
-                            <LogoUsdc />
-                            {currency}
-                          </>
-                        ) : null}
-                      </Fragment>
-                    ))}
-                  </div>
+                  <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
                 </div>
                 <div className={styles.cell}>{row.product}</div>
                 <div className={styles.cell}>{getSideIcon(row.side)}</div>
@@ -175,7 +139,11 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 </div>
                 <div className={styles.cell}>{row.orderLimit}</div>
                 <div className={styles.cell}>
-                  <Button title='Click to delete' className={styles.delete}>
+                  <Button
+                    title='Click to cancel order'
+                    className={styles.delete}
+                    onClick={() => handleCancelOrderClick(rowIndex)}
+                  >
                     <Delete />
                   </Button>
                 </div>
@@ -188,6 +156,18 @@ const TableOrder = ({ data }: TableOrderProps) => {
               >
                 Expanded content for {row.details}
               </motion.div>
+              {isModalOpen && rowToCancelOrder && (
+                <Modal
+                  title='Cancel Order'
+                  onCloseModal={handleCloseModal}
+                  onSubmitOrder={handleCancelOrderRemoveRow}
+                  isLoading={isDeleting}
+                  isOpen={isModalOpen}
+                >
+                  <p>Please confirm if you&apos;d like to cancel your order.</p>
+                  <Summary detail={rowToCancelOrder} />
+                </Modal>
+              )}
             </Fragment>
           );
         })}

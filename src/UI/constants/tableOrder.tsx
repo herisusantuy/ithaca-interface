@@ -6,9 +6,9 @@ export type TableRowData = {
   product: string;
   side: string;
   tenor: string;
-  wethAmount: string;
-  usdcAmount: string;
-  orderLimit: string;
+  wethAmount: number;
+  usdcAmount: number;
+  orderLimit: number;
 };
 
 // Table order headers
@@ -65,9 +65,9 @@ function getRandomData(): TableRowData {
     product: products[getRandomInt(0, products.length - 1)],
     side: sides[getRandomInt(0, sides.length - 1)],
     tenor,
-    wethAmount: `${getRandomInt(1, 20)}`,
-    usdcAmount: `${getRandomInt(400, 500)}`,
-    orderLimit: `${getRandomInt(400, 450)}`,
+    wethAmount: getRandomInt(1, 20),
+    usdcAmount: getRandomInt(400, 500),
+    orderLimit: getRandomInt(400, 450),
   };
 }
 

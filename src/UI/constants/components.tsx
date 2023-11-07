@@ -185,7 +185,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'CollateralAmount',
-        component: <CollateralAmount wethAmount='10' usdcAmount='20' />,
+        component: <CollateralAmount wethAmount={10} usdcAmount={20} />,
         status: 'In Progress',
       },
       {
