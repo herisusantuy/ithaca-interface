@@ -1,4 +1,4 @@
-// Components
+// Constants
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
