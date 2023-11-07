@@ -13,6 +13,8 @@ import Filter from '@/UI/components/Icons/Filter';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
+import Plus from '@/UI/components/Icons/Plus';
+import Minus from '@/UI/components/Icons/Minus';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -99,6 +101,11 @@ const TableOrder = ({ data }: TableOrderProps) => {
     }
   };
 
+  // Get the side icon
+  const getSideIcon = (side: string) => {
+    return side === '+' ? <Plus /> : <Minus />;
+  };
+
   return (
     <>
       <div className={styles.table}>
@@ -144,7 +151,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
                   </div>
                 </div>
                 <div className={styles.cell}>{row.product}</div>
-                <div className={styles.cell}>{row.side}</div>
+                <div className={styles.cell}>{getSideIcon(row.side)}</div>
                 <div className={styles.cell}>{row.tenor}</div>
                 <div className={styles.cell}>
                   <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
