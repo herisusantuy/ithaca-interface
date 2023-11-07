@@ -1,7 +1,7 @@
-// Package import
+// Packages
 import { useEffect, useState, ChangeEvent, useRef } from 'react';
 
-//Utility import
+// Utils
 import { generateLabelList } from '@/UI/utils/SliderUtil';
 
 //Style
@@ -170,7 +170,7 @@ const Slider = ({
                   idx != 0
                     ? idx != labelList.length - 1
                       ? `calc(${idx * (100 / (label - 1)) + '%'} - 10px)`
-                      : `calc(${idx * (100 / (label - 1)) + '%'} - 30px)`
+                      : `calc(${idx * (100 / (label - 1)) + '%'} - 22px)`
                     : `calc(${idx * (100 / (label - 1)) + '%'})`,
               }}
               onClick={() => setMinMaxValue(item)}
