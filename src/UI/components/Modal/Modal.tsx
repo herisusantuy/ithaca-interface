@@ -1,5 +1,5 @@
 // Packages
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactDOM from 'react-dom';
 
@@ -44,7 +44,6 @@ type ModalProps = {
 };
 
 const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen }: ModalProps) => {
-
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
