@@ -8,6 +8,11 @@ import TableDescription from '@/UI/components/TableDescription/TableDescription'
 import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
 import Dropdown from '@/UI/components/Icons/Dropdown';
+import Sort from '@/UI/components/Icons/Sort';
+import Filter from '@/UI/components/Icons/Filter';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -15,12 +20,11 @@ import Flex from '@/UI/layouts/Flex/Flex';
 // Constants
 import { TABLE_ORDER_HEADERS, TableRowData } from '@/UI/constants/tableOrder';
 
+// Utils
+import { orderDateSort } from '@/UI/utils/TableOrderFilter';
+
 // Styles
 import styles from './TableOrder.module.scss';
-import LogoEth from '../Icons/LogoEth';
-import LogoUsdc from '../Icons/LogoUsdc';
-import CollateralAmount from '../CollateralAmount/CollateralAmount';
-import { orderDateSort } from '@/UI/utils/TableOrderFilter';
 
 // Types
 type TableOrderProps = {
@@ -70,6 +74,31 @@ const TableOrder = ({ data }: TableOrderProps) => {
     }
   };
 
+  // Get table header icons
+  const getHeaderIcon = (header: string) => {
+    switch (header) {
+      case 'Order Date':
+      case 'Tenor':
+      case 'Collateral Amount':
+      case 'Order Limit':
+        return (
+          <Button title='Click to sort column' className={styles.sort}>
+            <Sort />
+          </Button>
+        );
+      case 'Currency Pair':
+      case 'Product':
+      case 'Side':
+        return (
+          <Button title='Click to view filter options' className={styles.filter}>
+            <Filter />
+          </Button>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <div className={styles.table}>
@@ -82,7 +111,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 tableFilter(header);
               }}
             >
-              {header}
+              {header} {getHeaderIcon(header)}
             </div>
           ))}
         </div>

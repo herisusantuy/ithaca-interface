@@ -19,6 +19,8 @@
 
       .cell {
         @include font-size('text-xs', 'regular');
+        align-items: center;
+        gap: rem(2);
         color: var(--white-60);
       }
     }
@@ -95,5 +97,33 @@
   svg {
     height: rem(16);
     width: rem(16);
+  }
+}
+
+.filter,
+.sort {
+  @include spacing(padding, 4, 'all');
+  background: none;
+  height: auto;
+  border-radius: rem(4);
+
+  &:before {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--white-5);
+  }
+}
+
+.sort {
+  svg path {
+    stroke: inherit;
+  }
+}
+
+.filter {
+  svg path {
+    stroke: var(--white-60);
   }
 }
