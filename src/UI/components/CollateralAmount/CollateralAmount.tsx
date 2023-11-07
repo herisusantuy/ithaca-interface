@@ -12,22 +12,22 @@ type CollateralAmountProps = {
 };
 
 const CollateralAmount = ({ wethAmount, usdcAmount }: CollateralAmountProps) => {
+  const amounts = [
+    { amount: wethAmount, Logo: LogoEth, currency: 'WETH' },
+    { amount: usdcAmount, Logo: LogoUsdc, currency: 'USDC' },
+  ];
+
   return (
     <div className={styles.container}>
-      <div className={styles.amount}>
-        <span>{wethAmount}</span>
-        <span>
-          <LogoEth />
-        </span>
-        <span>WETH</span>
-      </div>
-      <div className={styles.amount}>
-        <span>{usdcAmount}</span>
-        <span>
-          <LogoUsdc />
-        </span>
-        <span>USDC</span>
-      </div>
+      {amounts.map(({ amount, Logo, currency }) => (
+        <div key={currency} className={styles.amount}>
+          <span>{amount}</span>
+          <div className={styles.logo}>
+            <Logo />
+          </div>
+          <span>{currency}</span>
+        </div>
+      ))}
     </div>
   );
 };

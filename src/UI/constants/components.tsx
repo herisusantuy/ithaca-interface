@@ -39,6 +39,7 @@ import Error from '@/UI/components/Icons/Error';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 import ModalWithButton from '@/UI/components/Modal/ModalWithButton';
 import Sort from '@/UI/components/Icons/Sort';
+import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -51,7 +52,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
-import { TABLE_ORDER_DATA } from './tableOrder';
+import { TABLE_ORDER_DATA_WITH_EXPANDED } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
@@ -186,7 +187,12 @@ const COMPONENT_GROUPS = [
       {
         name: 'CollateralAmount',
         component: <CollateralAmount wethAmount={10} usdcAmount={20} />,
-        status: 'In Progress',
+        status: 'Done',
+      },
+      {
+        name: 'CurrencyDisplay',
+        component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
+        status: 'Done',
       },
       {
         name: 'Dot',
@@ -350,7 +356,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TableOrder',
-        component: <TableOrder data={TABLE_ORDER_DATA} />,
+        component: <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />,
         status: 'In Progress',
       },
     ],

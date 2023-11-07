@@ -1,29 +1,39 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: rem(1);
+  align-items: center;
+  gap: rem(1.7);
+  width: 100%;
 }
 
 .amount {
-  display: flex;
-  align-items: center;
-  gap: rem(7);
   @include font-size('text-sm', 'regular');
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 
-  svg {
-    width: rem(16);
-    height: rem(16);
+  > span:first-child {
+    flex: 1;
+    text-align: right;
+    margin-right: rem(7);
   }
 
-  span {
-    &:first-child {
-      text-align: right;
-    }
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
 
-    &:last-child {
-      color: var(--white-60);
-      text-align: left;
+    svg {
+      width: rem(16);
+      height: rem(16);
     }
+  }
+
+  > span:last-child {
+    flex: 1;
+    text-align: left;
+    margin-left: rem(7);
+    color: var(--white-60);
   }
 }

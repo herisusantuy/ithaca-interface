@@ -1,0 +1,72 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4);
+  @include spacing(padding, 8, 'bottom');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+
+  .row {
+    @include spacing(margin, 8, 'top');
+    @include spacing(margin, 12, 'bottom');
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    &.header {
+      @include spacing(margin, 12, 'bottom');
+      color: var(--gray-400);
+      background: none;
+      box-shadow: none;
+
+      .cell {
+        @include font-size('text-xs', 'regular');
+        align-items: center;
+        gap: rem(2);
+        color: var(--white-60);
+      }
+    }
+  }
+
+  .rowBody {
+    @include spacing(padding, 10, 'top+bottom');
+    @include spacing(padding, 12, 'left+right');
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: rem(14);
+    position: relative;
+    background: #07080d;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: rem(14);
+      top: -(rem(1));
+      bottom: -(rem(1));
+      right: -(rem(1));
+      left: -(rem(1));
+      z-index: -1;
+      background: var(--gradient-dark-border);
+    }
+
+    .cell {
+      @include font-size('text-sm', 'semibold');
+      font-family: $roboto;
+      display: flex;
+    }
+  }
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+
+  svg {
+    height: rem(16);
+    width: rem(16);
+  }
+}

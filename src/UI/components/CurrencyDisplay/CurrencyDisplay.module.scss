@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+  font-family: $roboto;
+  @include font-size('text-sm', 'regular');
+
+  span {
+    color: var(--white-60);
+  }
+}

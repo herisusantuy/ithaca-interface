@@ -11,6 +11,18 @@ export type TableRowData = {
   orderLimit: number;
 };
 
+export type TableExpandedRowData = {
+  type: string;
+  side: string;
+  size: number;
+  strike: number;
+  enterPrice: number;
+};
+
+export type TableRowDataWithExpanded = TableRowData & {
+  expandedInfo?: TableExpandedRowData[];
+};
+
 // Table order headers
 export const TABLE_ORDER_HEADERS: string[] = [
   'Details',
@@ -24,6 +36,9 @@ export const TABLE_ORDER_HEADERS: string[] = [
   '',
 ];
 
+// Table order expanded headers
+export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price'];
+
 // Table order data
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,10 +51,11 @@ function getRandomDateParts(): { day: number; month: string; year: number } {
   return {
     day,
     month: months[month - 1],
-    year: 23, // Assuming the year is always '23'
+    year: 23,
   };
 }
 
+// Table order data
 function getRandomData(): TableRowData {
   const { day, month, year } = getRandomDateParts();
   const orderDate = `${day} ${month} ${year} 17:46`;
@@ -71,4 +87,31 @@ function getRandomData(): TableRowData {
   };
 }
 
-export const TABLE_ORDER_DATA: TableRowData[] = new Array(20).fill({}).map(() => getRandomData());
+// Table order expanded data
+function getRandomExpandedData(): TableExpandedRowData {
+  const types = ['Call', 'Put'];
+  const size = getRandomInt(1, 20);
+  const strike = getRandomInt(400, 500);
+  const enterPrice = getRandomInt(400, 450);
+
+  return {
+    type: types[getRandomInt(0, types.length - 1)],
+    side: getRandomInt(0, 1) > 0 ? 'Buy' : 'Sell',
+    size,
+    strike,
+    enterPrice,
+  };
+}
+
+function getRandomDataWithExpanded(): TableRowDataWithExpanded {
+  const expandedData = Array.from({ length: 4 }, () => getRandomExpandedData());
+
+  return {
+    ...getRandomData(),
+    expandedInfo: expandedData,
+  };
+}
+
+export const TABLE_ORDER_DATA_WITH_EXPANDED: TableRowDataWithExpanded[] = Array.from({ length: 20 }, () =>
+  getRandomDataWithExpanded()
+);

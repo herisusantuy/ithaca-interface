@@ -10,6 +10,11 @@
     gap: rem(38);
     border-bottom: rem(1) solid var(--white-rgba-10);
 
+    &.isExpanded {
+      @include spacing(padding, 8, 'bottom');
+      border-bottom: rem(1) solid transparent;
+    }
+
     &.header {
       @include spacing(padding, 8, 'bottom');
       color: var(--gray-400);
@@ -35,11 +40,15 @@
       display: flex;
 
       &:nth-child(1) {
-        width: 4%;
+        width: 2%;
       }
 
       &:nth-child(2) {
         justify-content: center;
+      }
+
+      &:nth-child(8) {
+        justify-content: flex-end;
       }
 
       &:nth-child(9) {
@@ -66,10 +75,30 @@
   }
 }
 
+.dropdown {
+  background: none;
+  padding: 0;
+  height: auto;
+  border-radius: 0;
+
+  &:hover {
+    background: none;
+  }
+
+  &:before {
+    display: none;
+  }
+
+  &.isActive {
+    transform: rotate(180deg);
+  }
+}
+
 .delete {
   background: none;
   padding: 0;
   height: auto;
+  border-radius: 0;
 
   &:hover {
     background: none;
