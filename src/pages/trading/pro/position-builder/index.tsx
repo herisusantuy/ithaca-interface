@@ -118,12 +118,12 @@ const Index = () => {
               <div className={styles.positionTitle}>
                 <Flex>
                   <h4>Options</h4>
-                  {/* <p>Side</p>
+                  <p>Side</p>
                   <p>Size</p>
                   <p>Strike</p>
                   <p>Unit Price</p>
                   <p>Collateral</p>
-                  <p>Premium</p> */}
+                  <p>Premium</p>
                 </Flex>
               </div>
               <PositionBuilderRow

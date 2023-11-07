@@ -48,21 +48,21 @@ const TableCollateral = ({ data, deposit, withdraw, faucet }: CollateralTablePro
             <Button 
             title={`Click to deposit ${collateral.asset}`} 
             variant='secondary' 
-            size = 'lg'
+            size = 'sm'
             role='button'
             onClick={() => deposit(collateral.asset)}>
               Deposit
             </Button>
             <Button 
               title={`Click to withdraw ${collateral.asset}`} 
-              size = 'lg'
+              size = 'sm'
               variant='primary' 
               onClick={() => withdraw(collateral.asset)}>
               Withdraw
             </Button>
             <Button 
               title={`Click to faucet ${collateral.asset}`} 
-              size = 'lg'
+              size = 'sm'
               variant='primary' 
               onClick={() => faucet(collateral.asset)}>
               Faucet

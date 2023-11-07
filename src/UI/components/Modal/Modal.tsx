@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 
 // Components
 import Button from '@/UI/components/Button/Button';
-import Loader from '@/UI/components/Loader/Loader';
 import ModalClose from '@/UI/components/Icons/ModalClose';
 
 // Styles
@@ -36,14 +35,13 @@ const animatedModal = {
 // Types
 type ModalProps = {
   children: React.ReactNode;
+  footer?: React.ReactNode;
   title: string;
   onCloseModal: () => void;
-  onSubmitOrder: () => void;
-  isLoading: boolean;
   isOpen: boolean;
 };
 
-const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen }: ModalProps) => {
+const Modal = ({ children, title, onCloseModal, footer, isOpen }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
@@ -89,13 +87,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
         </div>
         <div className={styles.modalContent}>{children}</div>
         <div className={styles.modalFooter}>
-          <Button
-            className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
-            onClick={onSubmitOrder}
-            title='Click to confirm'
-          >
-            {isLoading ? <Loader /> : 'Confirm'}
-          </Button>
+          {footer}
         </div>
       </motion.div>
     </motion.div>
