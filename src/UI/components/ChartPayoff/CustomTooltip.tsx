@@ -1,5 +1,4 @@
 // Styles
-import React from 'react';
 import styles from './ChartPayoff.module.scss';
 
 // Types
@@ -7,7 +6,7 @@ type CustomTooltipProps = {
   base: number | string;
   active?: boolean;
   payload?: Array<{ name: string; value: number }>;
-  setChangeVal: React.Dispatch<React.SetStateAction<number>>;
+  setChangeVal: (state: number) => void;
 };
 
 const CustomTooltip = (props: CustomTooltipProps) => {

@@ -1,3 +1,4 @@
+// Props
 import { SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
