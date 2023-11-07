@@ -127,3 +127,13 @@
     stroke: var(--white-60);
   }
 }
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: rem(1);
+
+  .time {
+    @include spacing(margin, 8, 'left');
+  }
+}

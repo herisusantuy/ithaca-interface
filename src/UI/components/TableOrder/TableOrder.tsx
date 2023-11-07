@@ -106,6 +106,23 @@ const TableOrder = ({ data }: TableOrderProps) => {
     return side === '+' ? <Plus /> : <Minus />;
   };
 
+  // Split the dates and render as spans
+  const renderDate = (dateStr: string) => {
+    const parts = dateStr.split(' ');
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+    const time = parts.length > 3 ? parts[3] : '';
+    return (
+      <div className={styles.date}>
+        <span>{day}</span>
+        <span>{month}</span>
+        <span>{year}</span>
+        {time && <span className={styles.time}>{time}</span>}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className={styles.table}>
@@ -129,7 +146,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
                   {expandedRow.includes(rowIndex) ? <Dropdown /> : <Dropdown />} {row.details}
                 </div>
-                <div className={styles.cell}>{row.orderDate}</div>
+                <div className={styles.cell}>{renderDate(row.orderDate)}</div>
                 <div className={styles.cell}>
                   <div className={styles.currency}>
                     {row.currencyPair.split(' / ').map(currency => (
@@ -152,7 +169,7 @@ const TableOrder = ({ data }: TableOrderProps) => {
                 </div>
                 <div className={styles.cell}>{row.product}</div>
                 <div className={styles.cell}>{getSideIcon(row.side)}</div>
-                <div className={styles.cell}>{row.tenor}</div>
+                <div className={styles.cell}>{renderDate(row.tenor)}</div>
                 <div className={styles.cell}>
                   <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
                 </div>
