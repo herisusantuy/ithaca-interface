@@ -6,11 +6,9 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
-import Button from '../Button/Button';
 import Input from '../Input/Input';
 import TableCollateral from '../TableCollateral/TableCollateral';
-import styles from './CollateralPanel.module.scss';
-// Styles
+
 const currencies = [
   { currency: 'WETH', amountToMint: parseUnits('10', 18) },
   { currency: 'USDC', amountToMint: parseUnits('5000', 6) },
@@ -26,6 +24,7 @@ const CollateralPanel = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState('');
   const [depositAmount, setDepositAmount] = useState('');
+
   useEffect(() => {
     readWriteSDK.getFundLockState().then(res => {
       setData(d =>
@@ -73,9 +72,9 @@ const CollateralPanel = () => {
   }, [systemInfo, selectedAsset, depositAmount]);
 
   return (
-    <Panel>
-      <div className={styles.collateralWrapper}>
-        <h3 className='color-white mb-10'>Collateral</h3>
+    <>
+      <Panel margin='p-30 mt-15'>
+        <h3>Collateral</h3>
         <TableCollateral
           data={data}
           deposit={(asset: string) => {
@@ -88,7 +87,7 @@ const CollateralPanel = () => {
           }}
           faucet={asset => getFaucet(asset)}
         />
-      </div>
+      </Panel>
       <Modal
         title='Manage Funds'
         isOpen={modalOpen}
@@ -104,7 +103,7 @@ const CollateralPanel = () => {
         />
         {/* <Tabs tabs={} /> */}
       </Modal>
-    </Panel>
+    </>
   );
 };
 

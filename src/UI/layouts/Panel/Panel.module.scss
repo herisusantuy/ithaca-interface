@@ -36,4 +36,12 @@
     left: 0;
     border-radius: rem(30);
   }
+
+  h3 {
+    @include spacing(margin, 24, 'bottom');
+    color: var(--white);
+    font-family: $lato;
+    z-index: 1;
+    position: relative;
+  }
 }

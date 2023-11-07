@@ -7,7 +7,14 @@ export type CollateralType = {
   liveOrderValue: number;
 };
 
-export const TABLE_COLLATERAL_HEADERS: string[] = ['Asset', 'Balance', 'Fundlock Value', 'Net of Current Orders', 'Live Order Collateral Net Value', ''];
+export const TABLE_COLLATERAL_HEADERS: string[] = [
+  'Asset',
+  'Balance',
+  'Fundlock Value',
+  'Net of Current Orders',
+  'Live Order Collateral Net Value',
+  '',
+];
 
 // Table strategy data
 export const TABLE_COLLATERAL_DATA: CollateralType[] = [
