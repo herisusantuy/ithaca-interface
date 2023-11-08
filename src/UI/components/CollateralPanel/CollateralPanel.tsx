@@ -19,6 +19,7 @@ import Button from '../Button/Button';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import LogoUsdc from '../Icons/LogoUsdc';
 import LogoEth from '../Icons/LogoEth';
+import { getNumber } from '@/UI/utils/Numbers';
 
 const currencies = [
   { currency: 'WETH', amountToMint: parseUnits('10', 18) },
@@ -60,7 +61,7 @@ const CollateralPanel = () => {
             if (assetData) {
               return {
                 asset: assetData.currency,
-                balance: formatUnits(rowBalance[assetData.currency], systemInfo.tokenDecimals[assetData.currency]),
+                balance: getNumber(formatUnits(rowBalance[assetData.currency], systemInfo.tokenDecimals[assetData.currency])),
                 fundLock: assetData.fundLockValue,
                 netOrders: assetData.settleValue,
                 liveOrderValue: assetData.orderValue,
