@@ -24,7 +24,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #07080d;
+  background: var(--gray-rgba-40);
   border-radius: rem(12);
   gap: rem(4);
   height: rem(34);
@@ -40,7 +40,14 @@
     right: -(rem(1));
     left: -(rem(1));
     z-index: -1;
-    background: var(--gradient-dark-border);
+    border: rem(1) solid transparent;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
   }
 
   span {
@@ -85,10 +92,15 @@
   z-index: 2;
 
   li {
+    transition: $transition_all;
     cursor: pointer;
     @include font-size('text-md', 'regular');
     font-family: $roboto;
     color: var(--white);
+
+    &:hover {
+      color: var(--green-30);
+    }
   }
 
   &.isHidden {
