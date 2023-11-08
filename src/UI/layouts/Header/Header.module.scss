@@ -6,7 +6,7 @@
   border-radius: rem(22);
   max-width: map-get($container-sizes, xl);
   margin: rem(12) auto rem(16);
-  width: 100%;
+  width: calc(100% - rem(24));
   z-index: 2;
 
   &:before {

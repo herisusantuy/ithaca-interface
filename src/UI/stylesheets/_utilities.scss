@@ -74,6 +74,10 @@
   margin-bottom: rem(0) !important;
 }
 
+.mb-13 {
+  margin-bottom: rem(13) !important;
+}
+
 .mb-12 {
   margin-bottom: rem(12) !important;
 }
@@ -219,4 +223,9 @@
 
 .u-full-width {
   width: 100% !important;
+}
+
+.width-50 {
+  flex-grow: 0;
+  flex-basis: 55%;
 }

@@ -197,7 +197,7 @@ const Index = () => {
             }
             rightPanel={
               <>
-                <h3>Strategy</h3>
+                <h3 className='mb-13'>Strategy</h3>
                 <TableStrategy
                   data={strategyList}
                   removeRow={(index: number) => {
