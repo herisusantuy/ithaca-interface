@@ -60,30 +60,30 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  useEffect(() => {
-    fetchContractList();
-    fetchReferencePrices();
-    fetchSystemInfo();
-    getNextAuctionTime(0, setNextAuction, publicSDK);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const { setNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo, publicSDK } = useAppStore();
+  const { nextAuction, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo } = useAppStore();
+  getTimeNextAuction(
+    nextAuction.milliseconds,
+    fetchNextAuction,
+    fetchContractList,
+    fetchReferencePrices,
+    fetchSystemInfo
+  );
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
-const getNextAuctionTime = async (
+const getTimeNextAuction = async (
   timeUntilNexAuction: number,
-  setNextAuction: (time: number) => number,
-  publicSDK: IthacaSDK
+  fetchNextAuction: () => void,
+  fetchContractList: () => void,
+  fetchReferencePrices: () => void,
+  fetchSystemInfo: () => void
 ) => {
   setTimeout(() => {
-    publicSDK.protocol.nextAuction().then((res) => {
-      const time = setNextAuction(res);
-      getNextAuctionTime(time, setNextAuction, publicSDK);
-    }).catch((err) => {
-      console.error(err)
-    })
-  }, timeUntilNexAuction)
-}
+    fetchNextAuction();
+    fetchContractList();
+    fetchReferencePrices();
+    fetchSystemInfo();
+  }, timeUntilNexAuction);
+};
 
 export default App;

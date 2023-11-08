@@ -2,7 +2,6 @@
 import { ReactNode, useState } from 'react';
 
 // SDK
-import { readOnlySDK } from '@/UI/lib/sdk/readOnlySDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
@@ -66,7 +65,7 @@ const PositionBuilderRow = ({
   isForwards,
 }: PositionBuilderRowProps) => {
   // Store
-  const { contractList, currentExpiryDate, referencePrices } = useAppStore();
+  const { ithacaSDK, contractList, currentExpiryDate, referencePrices } = useAppStore();
 
   // State
   const [product, setProduct] = useState<DotTypes>();
@@ -121,10 +120,10 @@ const PositionBuilderRow = ({
                   side,
                   quantity: size,
                 };
-                setCollateral(readOnlySDK.calculation.calcCollateralRequirement(leg, value, strike, 4));
+                setCollateral(ithacaSDK.calculation.calcCollateralRequirement(leg, value, strike, 4));
                 const unit = getUnitPrice(contractId, referencePrices);
                 setUnitPrice(unit);
-                setPremium(readOnlySDK.calculation.calcPremium(leg, unit || 0, 4));
+                setPremium(ithacaSDK.calculation.calcPremium(leg, unit || 0, 4));
               }}
             />
           </div>
@@ -145,7 +144,7 @@ const PositionBuilderRow = ({
                     contractList
                   );
                   setCollateral(
-                    readOnlySDK.calculation.calcCollateralRequirement(
+                    ithacaSDK.calculation.calcCollateralRequirement(
                       {
                         contractId,
                         side: value,
@@ -174,7 +173,7 @@ const PositionBuilderRow = ({
                     contractList
                   );
                   setCollateral(
-                    readOnlySDK.calculation.calcCollateralRequirement(
+                    ithacaSDK.calculation.calcCollateralRequirement(
                       {
                         contractId,
                         side,
@@ -212,7 +211,7 @@ const PositionBuilderRow = ({
                   side,
                   quantity: size,
                 };
-                setPremium(readOnlySDK.calculation.calcPremium(leg, unitPrice || 0, 4));
+                setPremium(ithacaSDK.calculation.calcPremium(leg, unitPrice || 0, 4));
               }}
               icon={<LogoUsdc />}
             />

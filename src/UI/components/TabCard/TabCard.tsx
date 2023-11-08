@@ -1,14 +1,9 @@
 // Packages
 import React, { ReactNode, useState } from 'react';
 
-// Components
-import Tabs from '@/UI/components/Tabs/Tabs';
-
-// Utils
-import { getChartMapper } from '@/UI/utils/ChartMapper';
-
 // Styles
 import styles from './TabCard.module.scss';
+import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
 
 // Types
 type SubTab = {
@@ -30,16 +25,7 @@ type TabCardProps = {
 };
 
 const TabCard = ({ tabs }: TabCardProps) => {
-  // Tab card state
-  const [selectedMainTab, setSelectedMainTab] = useState<string>(tabs[0]?.title || '');
-
-  // Find the active tab
-  const activeTab = tabs.find(tab => tab.title === selectedMainTab);
-
-  // Get main tab class from tab card state
-  const getMainTabClass = (tabName: string) => {
-    return `${styles.tab} ${selectedMainTab === tabName ? styles.isActive : ''}`;
-  };
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
     <div className={styles.container}>
@@ -47,30 +33,26 @@ const TabCard = ({ tabs }: TabCardProps) => {
         {tabs.map((tab: MainTab) => (
           <div
             key={tab.id}
-            className={getMainTabClass(tab.title)}
-            onClick={() => setSelectedMainTab(tab.title)}
+            className={`${styles.tab} ${activeTab.id === tab.id ? styles.isActive : ''}`}
+            onClick={() => setActiveTab(tab)}
             role='button'
           >
             <div className={styles.tabInfo}>
               <h3>{tab.title}</h3>
               <p>{tab.description}</p>
             </div>
-            <div className={styles.subTabs}>
-              {tab.subTabs && (
-                <Tabs
-                  className='gap-0 mb-10'
-                  tabs={tab.subTabs.map(subTab => ({
-                    ...subTab,
-                    content: getChartMapper(subTab.contentId),
-                  }))}
-                />
-              )}
-            </div>
+            <div>{getTradingStoryMapper(tab.contentId, true)}</div>
           </div>
         ))}
       </div>
 
-      <div className={styles.rightPanel}>{activeTab && getChartMapper(activeTab.contentId)}</div>
+      <div className={styles.rightPanel}>
+        <div className={styles.rightPanelHeader}>
+          <h2>{activeTab.title}</h2>
+          <p>Show Instructions</p>
+        </div>
+        <div>{getTradingStoryMapper(activeTab.contentId)}</div>
+      </div>
     </div>
   );
 };

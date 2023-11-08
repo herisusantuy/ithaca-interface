@@ -8,7 +8,7 @@ import { formatWithCommas } from '@/UI/utils/Numbers';
 // Components
 import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
 import Button from '@/UI/components/Button/Button';
-import Close from '@/UI/components/Icons/Close';
+import Remove from '@/UI/components/Icons/Remove';
 
 // Styles
 import styles from './TableStrategy.module.scss';
@@ -30,17 +30,17 @@ type StrategyTableProps = {
 const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
   return (
     <div className={styles.table}>
-      <div className={`${styles.row} ${styles.header}`}>
+      <div className={styles.header}>
         {TABLE_STRATEGY_HEADERS.map((header, idx) => {
           return (
             <div className={styles.cell} key={idx}>
-              {header === 'Type' ? <div className={`${styles.strategy} ml-24 mr-20`}>{header}</div> : <>{header}</>}
+              {header}
             </div>
           );
         })}
       </div>
       {data.map((strategy, idx) => (
-        <div className={`${styles.row} ${styles.data}`} key={idx}>
+        <div className={styles.row} key={idx}>
           <div className={styles.cell}>
             <div className={styles.dot}>
               <Dot type={strategy.type} />
@@ -53,7 +53,7 @@ const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
           <div className={styles.cell}>{formatWithCommas(strategy.enterPrice)}</div>
           <div className={styles.cell}>
             <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
-              <Close />
+              <Remove />
             </Button>
           </div>
         </div>

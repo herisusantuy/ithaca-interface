@@ -74,6 +74,8 @@
   width: 55%;
 
   h3 {
+    color: var(--white);
+    font-family: $lato;
     @include spacing(margin, 10, 'bottom');
     @include font-size('text-md', 'semibold');
   }
@@ -107,4 +109,22 @@
   @include spacing(padding, 42, 'left+right');
   @include spacing(padding, 32, 'top+bottom');
   flex: 1;
+}
+
+.rightPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @include spacing(margin, 12, 'bottom');
+
+  h2 {
+    color: var(--white);
+    font-family: $lato;
+    @include font-size('text-xl', 'semibold');
+  }
+
+  p {
+    font-family: $roboto;
+    @include font-size('text-xs', 'regular');
+  }
 }

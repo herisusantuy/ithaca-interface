@@ -1,18 +1,10 @@
 // store.ts
 
 import { create } from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
-import { AppDataSlice, createAppDataSlice } from './slices/app-data';
-import { createSdkSlice, SdkSlice} from './slices/sdk-slice';
+import { createIthacaSDKSlice, IthacaSDKSlice } from './slices/ithacaSDKSlice';
 
-export const useAppStore = create<AppDataSlice>()((...a) => ({
-    ...createAppDataSlice(...a)
+type StoreState = IthacaSDKSlice;
+
+export const useAppStore = create<StoreState>()((...a) => ({
+  ...createIthacaSDKSlice(...a),
 }));
-
-export const useSDKStore = create<SdkSlice>()(
-  devtools(
-    persist(createSdkSlice,
-      { name: 'sdkStore' }
-    )
-  )
-)
