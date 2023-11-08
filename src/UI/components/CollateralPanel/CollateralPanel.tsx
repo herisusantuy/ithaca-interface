@@ -47,6 +47,7 @@ const CollateralPanel = () => {
           address: address as `0x${string}`,
           token: systemInfo.tokenAddress[c.currency] as `0x${string}`
         }))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]).then((res: any) => {
         const lockData = res.shift();
         setData(d =>
