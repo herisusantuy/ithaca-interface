@@ -1,31 +1,19 @@
 const LogoEth = () => {
   return (
-    <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <g clipPath='url(#clip0_1631_3284)'>
-        <circle cx='10' cy='10' r='10' fill='#35333E' />
-        <g clipPath='url(#clip1_1631_3284)'>
-          <path
-            d='M9.99854 3.81934L9.91113 4.0928V12.0274L9.99854 12.1077L13.9973 9.93061L9.99854 3.81934Z'
-            fill='#D1D1D1'
-          />
-          <path d='M9.99883 3.81934L6 9.93061L9.99883 12.1077V8.25648V3.81934Z' fill='white' />
-          <path
-            d='M9.99848 12.8049L9.94922 12.8602V15.6866L9.99848 15.8191L13.9997 10.6289L9.99848 12.8049Z'
-            fill='#D1D1D1'
-          />
-          <path d='M9.99883 15.8191V12.8049L6 10.6289L9.99883 15.8191Z' fill='white' />
-          <path d='M9.99902 12.1081L13.9977 9.93097L9.99902 8.25684V12.1081Z' fill='#8F8E8E' />
-          <path d='M6 9.93097L9.99883 12.1081V8.25684L6 9.93097Z' fill='#AFA8A8' />
-        </g>
-      </g>
-      <defs>
-        <clipPath id='clip0_1631_3284'>
-          <rect width='20' height='20' fill='white' />
-        </clipPath>
-        <clipPath id='clip1_1631_3284'>
-          <rect width='8' height='12' fill='white' transform='translate(6 3.81934)' />
-        </clipPath>
-      </defs>
+    <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <circle cx='8' cy='8' r='8' fill='#35333E' />
+      <path
+        d='M7.99961 3.05518L7.92969 3.27395V9.62161L7.99961 9.68587L11.1986 7.94419L7.99961 3.05518Z'
+        fill='#D1D1D1'
+      />
+      <path d='M7.99984 3.05518L4.80078 7.94419L7.99984 9.68587V6.60489V3.05518Z' fill='white' />
+      <path
+        d='M8.00035 10.2437L7.96094 10.288V12.5491L8.00035 12.6551L11.2013 8.50293L8.00035 10.2437Z'
+        fill='#D1D1D1'
+      />
+      <path d='M7.99984 12.6551V10.2437L4.80078 8.50293L7.99984 12.6551Z' fill='white' />
+      <path d='M8 9.68596L11.199 7.94429L8 6.60498V9.68596Z' fill='#8F8E8E' />
+      <path d='M4.80078 7.94429L7.99984 9.68596V6.60498L4.80078 7.94429Z' fill='#AFA8A8' />
     </svg>
   );
 };
