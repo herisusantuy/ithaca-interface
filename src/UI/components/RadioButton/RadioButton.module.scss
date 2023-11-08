@@ -1,10 +1,11 @@
 .radioButton {
-  @include spacing(padding, 4, 'all');
+  @include spacing(padding, 3, 'all');
   display: flex;
-  background: #07080d;
+  background: var(--gray-rgba-40);
   gap: rem(5);
   position: relative;
   border-radius: rem(12);
+  height: rem(34);
 
   &:before {
     content: '';
@@ -16,18 +17,27 @@
     right: -(rem(1));
     left: -(rem(1));
     z-index: -1;
-    background: var(--gradient-dark-border);
+    border: rem(1) solid transparent;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
   }
 
   &.vertical {
     flex-direction: column;
     gap: 0;
+    width: rem(53);
 
     label {
       @include spacing(padding, 2, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
       height: rem(15);
-      min-width: rem(38);
+      width: rem(53);
+      min-width: 0;
 
       svg {
         height: rem(16);
@@ -62,7 +72,7 @@
 }
 
 .option {
-  position: relative;
+  display: flex;
 
   input[type='radio'] {
     position: absolute;
@@ -74,7 +84,6 @@
   label {
     @include font-size('text-xs', 'bold');
     @include spacing(padding, 8, 'top+bottom');
-    @include spacing(padding, 34, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;
@@ -91,7 +100,7 @@
   }
 
   input[type='radio']:checked + label {
-    background: #383a3d;
+    background: var(--white-white-20, rgba(255, 255, 255, 0.2));
     border-color: var(--white);
     color: var(--white);
     cursor: default;

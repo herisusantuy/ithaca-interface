@@ -1,24 +1,39 @@
 // Packages
-import Flex from '@/UI/layouts/Flex/Flex';
-import Panel from '@/UI/layouts/Panel/Panel';
+import { ReactNode, useState } from 'react';
+
+// SDK
+import { readOnlySDK } from '@/UI/lib/sdk/readOnlySDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
+
+// Utils
 import { getContractId, getUnitPrice } from '@/UI/utils/Cakculations';
 import { getNumber } from '@/UI/utils/Numbers';
-import { ReactNode, useState } from 'react';
-import Button from '../Button/Button';
-import { DotTypes } from '../Dot/Dot';
-import DropdownMenu, { DropDownOption } from '../DropdownMenu/DropdownMenu';
-import LogoEth from '../Icons/LogoEth';
-import LogoUsdc from '../Icons/LogoUsdc';
-import Minus from '../Icons/Minus';
-import Plus from '../Icons/Plus';
-import Input from '../Input/Input';
-import RadioButton from '../RadioButton/RadioButton';
+
+// Constants
+import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
+
+// Components
+import Button from '@/UI/components/Button/Button';
+import { DotTypes } from '@/UI/components/Dot/Dot';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Minus from '@/UI/components/Icons/Minus';
+import Plus from '@/UI/components/Icons/Plus';
+import Input from '@/UI/components/Input/Input';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+
+// Layouts
+import Flex from '@/UI/layouts/Flex/Flex';
+import Panel from '@/UI/layouts/Panel/Panel';
 
 // Styles
 import styles from './PositionBuilderRow.module.scss';
+
 // Types
 type PositionBuilderRowProps = {
+  title: string;
   options: (string | ReactNode)[];
   valueOptions: DotTypes[];
   addStrategy: (value: Strategy) => void;
@@ -34,10 +49,26 @@ export type Strategy = {
   contractId: number;
   strike: number;
   enterPrice: number;
-}
+};
 
-const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction, id, isForwards }: PositionBuilderRowProps) => {
-  const { contractList, currentExpiryDate, referencePrices, publicSDK } = useAppStore();
+type SectionType = {
+  name: string;
+  style: string;
+};
+
+const PositionBuilderRow = ({
+  title,
+  options,
+  valueOptions,
+  addStrategy,
+  submitAuction,
+  id,
+  isForwards,
+}: PositionBuilderRowProps) => {
+  // Store
+  const { contractList, currentExpiryDate, referencePrices } = useAppStore();
+
+  // State
   const [product, setProduct] = useState<DotTypes>();
   const [side, setSide] = useState<string>('BUY');
   const [size, setSize] = useState<number>(100);
@@ -46,53 +77,58 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
   const [strikeList, setStrikeList] = useState<DropDownOption[]>([]);
   const [collateral, setCollateral] = useState<number>();
   const [premium, setPremium] = useState<number>();
+
+  // Sections
+  const sections: SectionType[] = [
+    { name: 'Side', style: styles.side },
+    { name: 'Size', style: styles.size },
+    { name: 'Strike', style: styles.strike },
+    { name: 'Unit Price', style: styles.unitPrice },
+    { name: 'Collateral', style: styles.collateral },
+    { name: 'Premium', style: styles.premium },
+    { name: '', style: styles.action },
+  ];
+
   return (
-    <Panel>
-      <div className={styles.wrapper}>
-        <Flex>
-          <div className={`mr-10`}>
-            <RadioButton options={options}
+    <>
+      <div className={styles.parent}>
+        <div className={styles.title}>
+          <h4>{title}</h4>
+        </div>
+        {title === 'Options' && (
+          <>
+            {sections.map((section, index) => (
+              <div key={index} className={section.style}>
+                <p>{section.name}</p>
+              </div>
+            ))}
+            <div className={styles.action}></div>
+          </>
+        )}
+      </div>
+      <Panel margin='ptb-8 plr-8 br-20 mb-14 mt-10'>
+        <div className={styles.parent}>
+          <div className={styles.title}>
+            <RadioButton
+              options={options}
               valueProps={valueOptions}
               name={`${id}-type`}
               onChange={(value: string) => {
-                setProduct(value as DotTypes)
-                if (isForwards) {
-                  const contractId = getContractId('Forward',
-                    0,
-                    currentExpiryDate,
-                    contractList
-                  );
-                  const leg = {
-                    contractId,
-                    side,
-                    quantity: size
-                  };
-                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
-                    leg,
-                    value,
-                    0, 4))
-                  const unit = getUnitPrice(contractId, referencePrices)
-                  setUnitPrice(unit)
-                  setPremium(publicSDK.calculation.calcPremium(leg, unit || 0, 4))
-                } else {
-                  const list = contractList[currentExpiryDate].reduce((arr, val) => {
-                    if (val.payoff === value) {
-                      arr.push({
-                        name: val.economics.strike.toString(),
-                        value: val.economics.strike.toString()
-                      });
-                    }
-                    return arr;
-                  }, []);
-                  setStrike(undefined)
-                  setUnitPrice(undefined)
-                  setPremium(undefined)
-                  setCollateral(undefined)
-                  setStrikeList(list)
-                }
-              }} />
+                const contractId = getContractId(isForwards ? 'Forward' : value, 1500, currentExpiryDate, contractList);
+                setProduct(value as DotTypes);
+                const leg = {
+                  contractId,
+                  side,
+                  quantity: size,
+                };
+                setCollateral(readOnlySDK.calculation.calcCollateralRequirement(leg, value, strike, 4));
+                const unit = getUnitPrice(contractId, referencePrices);
+                setUnitPrice(unit);
+                setPremium(readOnlySDK.calculation.calcPremium(leg, unit || 0, 4));
+              }}
+            />
           </div>
-          <div className='mr-10'>
+          <div className={styles.side}>
             <RadioButton
               options={[<Plus key={`${id}-buy`} />, <Minus key={`${id}-sell`} />]}
               valueProps={['BUY', 'SELL']}
@@ -100,172 +136,151 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               defaultOption='BUY'
               orientation='vertical'
               onChange={(value: string) => {
-                setSide(value)
-                if (product && (isForwards || strike)) {
-                  const contractId = getContractId(isForwards ? 'Forward' : product,
-                    getNumber(strike || ''),
+                setSide(value);
+                if (product) {
+                  const contractId = getContractId(
+                    isForwards ? 'Forward' : product,
+                    1500,
                     currentExpiryDate,
                     contractList
                   );
-                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
-                    {
-                      contractId,
-                      side: value,
-                      quantity: size
-                    },
-                    product,
-                    isForwards ? 0 : getNumber(strike || ''),
-                    4
-                  ))
-                }
-              }} />
-          </div>
-          <div className={`${styles.inputWrapper} mr-10`}>
-            <Input
-              value={size}
-              onChange={(value) => {
-                const val = value.target.value && getNumber(value.target.value)
-                setSize(val || 0)
-                if (val && product && (isForwards || strike)) {
-                  const contractId = getContractId(!isForwards ? 'Forward' : product,
-                    getNumber(strike || ''),
-                    currentExpiryDate,
-                    contractList
+                  setCollateral(
+                    readOnlySDK.calculation.calcCollateralRequirement(
+                      {
+                        contractId,
+                        side: value,
+                        quantity: size,
+                      },
+                      product,
+                      strike,
+                      4
+                    )
                   );
-                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
-                    {
-                      contractId,
-                      side,
-                      quantity: value
-                    },
-                    product,
-                    isForwards ? 0 : getNumber(strike || ''),
-                    4
-                  ))
-                }
-                else {
-                  setCollateral(0)
                 }
               }}
-              icon={<LogoEth />} />
+            />
           </div>
-          <div className={`${styles.inputWrapper} mr-10`}>
-            <DropdownMenu
-              options={strikeList}
-              value={strike}
-              onChange={(value) => {
-                const contractId = getContractId(product || '',
-                  getNumber(value),
+          <div className={styles.size}>
+            <Input
+              value={size}
+              onChange={value => {
+                const val = value.target.value && getNumber(value.target.value);
+                setSize(val || 0);
+                if (val && product) {
+                  const contractId = getContractId(
+                    !isForwards ? 'Forward' : product,
+                    1500,
+                    currentExpiryDate,
+                    contractList
+                  );
+                  setCollateral(
+                    readOnlySDK.calculation.calcCollateralRequirement(
+                      {
+                        contractId,
+                        side,
+                        quantity: value,
+                      },
+                      product,
+                      strike,
+                      4
+                    )
+                  );
+                } else {
+                  setCollateral(0);
+                }
+              }}
+              icon={<LogoEth />}
+            />
+          </div>
+          <div className={styles.strike}>
+            <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} iconEnd={<LogoUsdc />} />
+          </div>
+          <div className={styles.unitPrice}>
+            <Input
+              value={unitPrice}
+              onChange={value => {
+                const val = value.target.value && getNumber(value.target.value);
+                setUnitPrice(val || 0);
+                const contractId = getContractId(
+                  isForwards ? 'Forward' : product || '',
+                  1500,
                   currentExpiryDate,
                   contractList
                 );
                 const leg = {
                   contractId,
                   side,
-                  quantity: size
+                  quantity: size,
                 };
-                setCollateral(publicSDK.calculation.calcCollateralRequirement(
-                  leg,
-                  product,
-                  getNumber(value),
-                  4
-                ))
-                setStrike('')
-                const unit = getUnitPrice(contractId, referencePrices)
-                setUnitPrice(unit)
-                setPremium(publicSDK.calculation.calcPremium(leg, unit || 0, 4))
+                setPremium(readOnlySDK.calculation.calcPremium(leg, unitPrice || 0, 4));
               }}
-              iconEnd={<LogoUsdc />}
+              icon={<LogoUsdc />}
             />
           </div>
-          <div className={`${styles.inputWrapper} mr-10`}>
-            <Input
-              value={unitPrice}
-              onChange={(value) => {
-                const val = value.target.value && getNumber(value.target.value);
-                setUnitPrice(val || 0)
-                if (strike) {
-                  const contractId = getContractId(isForwards ? 'Forward' : (product || ''),
-                    getNumber(strike),
-                    currentExpiryDate,
-                    contractList
-                  );
-                  const leg = {
-                    contractId,
-                    side,
-                    quantity: size
-                  };
-                  setPremium(publicSDK.calculation.calcPremium(leg, unitPrice || 0, 4))
-                }
-              }}
-              icon={<LogoUsdc />} />
+          <div className={styles.collateral}>
+            <PriceLabel label={collateral || '-'} icon={<LogoEth />} />
           </div>
-          <div className='mr-10 nowrap'>
-            <Flex>
-              <div className={styles.priceLabel}>
-                {collateral || '0'}
-              </div>
-              <div className={styles.logo}>
-                <LogoEth />
-              </div>
+          <div className={styles.premium}>
+            <PriceLabel label={premium || '-'} icon={<LogoUsdc />} />
+          </div>
+          <div className={styles.action}>
+            <Flex gap='gap-5'>
+              <Button
+                size='sm'
+                title='Click to add to Strategy'
+                variant='secondary'
+                onClick={() => {
+                  if (product) {
+                    const contractId = getContractId(
+                      isForwards ? 'Forward' : product,
+                      1500,
+                      currentExpiryDate,
+                      contractList
+                    );
+                    addStrategy({
+                      type: product,
+                      side: side || 'BUY',
+                      size,
+                      contractId,
+                      strike: strike,
+                      enterPrice: unitPrice as number,
+                    });
+                  }
+                }}
+              >
+                <Plus />
+                Strategy
+              </Button>
+              <Button
+                size='sm'
+                title='Click to add to submit to auction'
+                variant='primary'
+                onClick={() => {
+                  if (product) {
+                    const contractId = getContractId(
+                      isForwards ? 'Forward' : product,
+                      1500,
+                      currentExpiryDate,
+                      contractList
+                    );
+                    submitAuction({
+                      type: product,
+                      side: side || 'BUY',
+                      size,
+                      contractId,
+                      strike: strike,
+                      enterPrice: unitPrice as number,
+                    });
+                  }
+                }}
+              >
+                Submit to Auction
+              </Button>
             </Flex>
           </div>
-          <div className='mr-10 nowrap'>
-            <Flex>
-              <div className={styles.priceLabel}>
-                {premium || '0'}
-              </div>
-              <div className={styles.logo}>
-                <LogoUsdc />
-              </div>
-            </Flex>
-          </div>
-          <div className='mr-10'>
-            <Button size='sm' title='Click to add to Strategy' variant='secondary' onClick={() => {
-              if (product) {
-                const contractId = getContractId(isForwards ? 'Forward' : product,
-                  getNumber(strike || ''),
-                  currentExpiryDate,
-                  contractList
-                );
-                addStrategy({
-                  type: product,
-                  side: side || 'BUY',
-                  size,
-                  contractId,
-                  strike: getNumber(strike || ''),
-                  enterPrice: unitPrice as number,
-                })
-              }
-            }}>
-              <Plus />
-              Strategy
-            </Button>
-          </div>
-          <div className='mr-10'>
-            <Button size='sm' title='Click to add to submit to auction' variant='primary' onClick={() => {
-              if (product) {
-                const contractId = getContractId(isForwards ? 'Forward' : product,
-                  getNumber(strike || ''),
-                  currentExpiryDate,
-                  contractList
-                );
-                submitAuction({
-                  type: product,
-                  side: side || 'BUY',
-                  size,
-                  contractId,
-                  strike: getNumber(strike || ''),
-                  enterPrice: unitPrice as number,
-                })
-              }
-            }}>
-              Submit to Auction
-            </Button>
-          </div>
-        </Flex>
-      </div>
-    </Panel>
+        </div>
+      </Panel>
+    </>
   );
 };
 

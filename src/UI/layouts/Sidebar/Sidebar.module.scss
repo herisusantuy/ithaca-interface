@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  gap: rem(15);
+}
+
+.leftPanel {
+  flex-grow: 1;
+  width: 50%;
+}
+
+.orderSummary {
+  margin-top: auto;
+}
