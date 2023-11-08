@@ -147,7 +147,6 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const handleCancelOrderRemoveRow = () => {
     setIsDeleting(true);
     ithacaSDK.orders.orderCancel(rowToCancelOrder?.clientOrderId || 0).then(() => {
-      console.log('test')
       const newData = data.filter(row => row !== rowToCancelOrder);
       setData(newData);
       setIsDeleting(false);

@@ -47,8 +47,7 @@ const CollateralPanel = () => {
           address: address as `0x${string}`,
           token: systemInfo.tokenAddress[c.currency] as `0x${string}`
         }))
-      ]).then(res => {
-        console.log(res)
+      ]).then((res: any) => {
         const lockData = res.shift();
         setData(d =>
           d.map(row => {
@@ -78,7 +77,6 @@ const CollateralPanel = () => {
       const account = await walletClient?.account.address;
       const amountToMint = currencies.find(c => c.currency === asset);
       const chain = walletClient?.chain
-      console.log(account)
       await walletClient?.writeContract({
         account,
         address: systemInfo.tokenAddress[asset],

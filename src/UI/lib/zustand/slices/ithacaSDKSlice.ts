@@ -61,7 +61,6 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     });
     set({ ithacaSDK });
     await ithacaSDK.auth.login();
-    console.log('test')
   },
   fetchSystemInfo: async () => {
     const systemInfo = await get().ithacaSDK.protocol.systemInfo();

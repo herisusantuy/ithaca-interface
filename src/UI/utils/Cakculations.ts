@@ -34,7 +34,6 @@ export const getContractId = (
   currentExpiryDate: number,
   contractList: Contract[]
 ) => {
-  console.log(Payoff.FORWARD)
   const contract = contractList.find(
     c => c.payoff.toUpperCase() === product.toUpperCase() && c.economics.expiry === currentExpiryDate && (product === Payoff.FORWARD || c.economics.strike === strike)
   );

@@ -62,7 +62,6 @@ const Index = () => {
   const getOrderSummary = useCallback(
     async (legs: Leg[], list: StrategyType[]) => {
       const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
-      console.log(totalNetPrice)
       try {
         const orderLock = await ithacaSDK.calculation.estimateOrderLock({
           clientOrderId: createClientOrderId(),
@@ -144,7 +143,6 @@ const Index = () => {
                     const legs: Leg[] = [...previousLegs, getLeg(strategy)];
                     setpreviousLegs(legs);
                     const list = [...strategyList, getStrategy(strategy)] as StrategyType[];
-                    console.log(list)
                     setStrategyList(list as StrategyType[]);
                     getOrderSummary(legs, list);
                   }}
