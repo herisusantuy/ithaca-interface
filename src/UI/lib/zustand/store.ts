@@ -1,10 +1,18 @@
 // store.ts
 
 import { create } from 'zustand';
-import { createReadSdkSlice, ReadSdkSlice } from './slices/read-sdk';
+import { persist, devtools } from 'zustand/middleware';
+import { AppDataSlice, createAppDataSlice } from './slices/app-data';
+import { createSdkSlice, SdkSlice} from './slices/sdk-slice';
 
-type StoreState = ReadSdkSlice
-
-export const useAppStore = create<StoreState>()((...a) => ({
-    ...createReadSdkSlice(...a),
+export const useAppStore = create<AppDataSlice>()((...a) => ({
+    ...createAppDataSlice(...a)
 }));
+
+export const useSDKStore = create<SdkSlice>()(
+  devtools(
+    persist(createSdkSlice,
+      { name: 'sdkStore' }
+    )
+  )
+)

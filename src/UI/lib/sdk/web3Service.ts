@@ -1,11 +1,8 @@
 import { createPublicClient, http, createWalletClient, custom, WalletClient } from 'viem'
 import { arbitrumGoerli } from 'viem/chains'
-import { IthacaSDK, IthacaNetwork } from '@ithaca-finance/sdk';
 import { erc20Abi } from '@/UI/constants/erc20Abi';
 import { fundLockAbi } from '@/UI/constants/fundLockAbi';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const window: any
 
 export interface MetaMaskError {
     message: string;
@@ -14,7 +11,10 @@ export interface MetaMaskError {
     data?: any;
 }
 
-class ReadWriteSDK {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const window: any
+
+class Web3Service {
     private walletClient!: WalletClient
     private publicClient = createPublicClient({
         chain: arbitrumGoerli,
@@ -24,7 +24,6 @@ class ReadWriteSDK {
     private isBrowser = typeof window !== 'undefined'
     private isMetaMaskSupported = () => this.isBrowser && typeof window.ethereum !== 'undefined'
 
-    public sdk: IthacaSDK | undefined
     private wsCallbacks = {
         onClose: () => {
         },
@@ -41,12 +40,6 @@ class ReadWriteSDK {
             this.walletClient = createWalletClient({
                 chain: arbitrumGoerli,
                 transport: custom(window.ethereum),
-            })
-            this.sdk = IthacaSDK.init({
-                network: IthacaNetwork.ARBITRUM_GOERLI,
-                publicClient: this.publicClient, // Refer: https://viem.sh/docs/clients/public.html
-                walletClient: this.walletClient,
-                wsCallbacks: this.wsCallbacks
             });
         } else {
             console.log('Please install metamask')
@@ -67,6 +60,21 @@ class ReadWriteSDK {
             this.dispatchMetaMaskError(error)
             return Promise.reject(error)
         }
+    }
+
+    async erc20BalanceOf(tokenAddress: `0x${string}`, account: `0x${string}`) {
+        let balance = BigInt(0)
+        try {
+            balance = await this.publicClient.readContract({
+                address: tokenAddress,
+                abi: erc20Abi,
+                functionName: 'balanceOf',
+                args: [account],
+            })
+        } catch (error) {
+            console.error('failed to fetch erc20 balance => ', error)
+        }
+        return balance
     }
 
     async faucet(tokenAddress: `0x${string}`, account: `0x${string}`, amount: bigint) {
@@ -143,16 +151,7 @@ class ReadWriteSDK {
             console.error('failed to approve tokens => ', error)
         }
     }
-
-    getFundLockState = async () => {
-        try {
-            // await this.sdk?.auth.login()
-            return await this.sdk?.client.fundLockState()
-        } catch (error) {
-            console.error('Failed to get fund lock state ', error)
-        }
-    }
-
+    
     dispatchMetaMaskError(error: MetaMaskError) {
         if (typeof error === 'string') {
             console.error({ cause: error })
@@ -168,5 +167,5 @@ class ReadWriteSDK {
         })
     }
 }
-const readWriteSDK = new ReadWriteSDK()
-export default readWriteSDK
+const web3Service = new Web3Service()
+export default web3Service

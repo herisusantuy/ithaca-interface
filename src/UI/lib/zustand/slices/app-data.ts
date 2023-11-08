@@ -1,11 +1,14 @@
 import { StateCreator } from "zustand";
 import { getNumber } from '../../../utils/Numbers';
 import dayjs from 'dayjs'
-import { readOnlySDK } from "../../sdk/readOnlySDK";
-import { SystemInfo } from "@ithaca-finance/sdk";
+import { IthacaNetwork, IthacaSDK, SystemInfo } from "@ithaca-finance/sdk";
+import { createPublicClient, http } from "viem";
+import { arbitrumGoerli } from "viem/chains";
 
-
-
+const publicClient = createPublicClient({
+    chain: arbitrumGoerli,
+    transport: http()
+});
 export interface AuctionTimes {
     hour: number,
     minute: number,
@@ -38,19 +41,20 @@ export interface Economics {
 }
 
 
-export interface ReadSdkSlice {
+export interface AppDataSlice {
     nextAuction: AuctionTimes;
     systemInfo: SystemInfo;
     contractList: Record<string, Contract[]>;
     referencePrices: ReferencePrices[];
+    publicSDK: IthacaSDK,
     currentExpiryDate: number;
-    fetchNextAuction: () => void;
+    setNextAuction: (time: number) => number;
     fetchContractList: () => void;
     fetchReferencePrices: () => void;
     fetchSystemInfo: () => void;
 }
 
-export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
+export const createAppDataSlice: StateCreator<AppDataSlice> = (set, get) => ({
     nextAuction: {
         hour: 0,
         minute: 0,
@@ -78,18 +82,27 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
     contractList: {},
     currentExpiryDate: 0,
     referencePrices: [],
-    fetchNextAuction: async () => {
-        const nextAuction = dayjs(await readOnlySDK.protocol.nextAuction());
+    publicSDK: IthacaSDK.init({
+        network: IthacaNetwork.ARBITRUM_GOERLI,
+        publicClient,
+    }),
+    setNextAuction: (time: number) => {
+        const nextAuction = dayjs(time);
         const currentTime = dayjs();
-        set({ nextAuction: {
-            hour: nextAuction.diff(currentTime, 'hour'),
-            minute: nextAuction.diff(currentTime, 'minute')%60,
-            second: nextAuction.diff(currentTime, 'second')%60,
-            milliseconds: nextAuction.diff(currentTime)
-        } })
+        const milliseconds = nextAuction.diff(currentTime);
+        set({
+            nextAuction: {
+                hour: nextAuction.diff(currentTime, 'hour'),
+                minute: nextAuction.diff(currentTime, 'minute') % 60,
+                second: nextAuction.diff(currentTime, 'second') % 60,
+                milliseconds
+            }
+        })
+        return milliseconds;
     },
     fetchContractList: async () => {
-        const contractList = await readOnlySDK.protocol.contractList();
+        const { publicSDK } = get();
+        const contractList = await publicSDK.protocol.contractList();
         const filteredList = contractList.reduce((obj, val) => {
             if (obj[val.economics.expiry]) {
                 obj[val.economics.expiry].push(val)
@@ -99,14 +112,16 @@ export const createReadSdkSlice: StateCreator<ReadSdkSlice> = (set) => ({
             }
             return obj;
         }, {});
-        set({contractList: filteredList, currentExpiryDate: getNumber(Object.keys(filteredList)[1])});
+        set({ contractList: filteredList, currentExpiryDate: getNumber(Object.keys(filteredList)[1]) });
     },
     fetchReferencePrices: async () => {
-        const referencePrices = await readOnlySDK.market.referencePrices(0, 'WETH/USDC');
-        set({referencePrices: referencePrices})
+        const { publicSDK } = get();
+        const referencePrices = await publicSDK.market.referencePrices(0, 'WETH/USDC');
+        set({ referencePrices: referencePrices })
     },
     fetchSystemInfo: async () => {
-        const systemInfo = await readOnlySDK.protocol.systemInfo()
-        set({systemInfo: systemInfo})
+        const { publicSDK } = get();
+        const systemInfo = await publicSDK.protocol.systemInfo()
+        set({ systemInfo: systemInfo })
     },
 })

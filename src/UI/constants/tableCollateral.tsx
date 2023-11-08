@@ -1,7 +1,7 @@
 // Types
 export type CollateralType = {
   asset: string;
-  balance: number;
+  balance: string | number;
   fundLock: number;
   netOrders: number;
   liveOrderValue: number;

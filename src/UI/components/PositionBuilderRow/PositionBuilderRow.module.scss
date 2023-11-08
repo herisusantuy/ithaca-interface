@@ -1,6 +1,8 @@
 .wrapper {
   @include spacing(padding, 6, 'left+right');
   @include spacing(padding, 8, 'top+bottom');
+  z-index: 10;
+  position: relative;
 }
 
 .inputWrapper {

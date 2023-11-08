@@ -1,6 +1,6 @@
 import { Strategy } from "../components/PositionBuilderRow/PositionBuilderRow";
 import { StrategyType } from "../constants/tableStrategy";
-import { Contract, ReferencePrices } from "../lib/zustand/slices/read-sdk";
+import { Contract, ReferencePrices } from "../lib/zustand/slices/sdk-slice";
 
 const toPrecision = (value: number, precision: number): number => {
 	return parseFloat(value.toFixed(precision));

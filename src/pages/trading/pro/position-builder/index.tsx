@@ -17,11 +17,10 @@ import { useCallback, useState } from 'react';
 import PositionBuilderRow, { Strategy } from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import { useAppStore } from '@/UI/lib/zustand/store';
+import { useAppStore, useSDKStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs';
 import useFromStore from '@/UI/hooks/useFromStore';
 import { calculateNetPrice, createClientOrderId, Leg, toPrecision } from '@ithaca-finance/sdk';
-import readWriteSDK from '@/UI/lib/sdk/readWriteSDK';
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
 import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 import { PayoffDataProps, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
@@ -38,16 +37,18 @@ const Index = () => {
   const [previousLegs, setpreviousLegs] = useState<Leg[]>([]);
   const [chartData, setChartData] = useState<PayoffDataProps[]>([])
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
+  const {walletSDK} = useSDKStore();
+  const { publicSDK} = useAppStore()
   const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
   const getOrderSummary = useCallback(async (legs: Leg[], list: StrategyType[]) => {
     const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
     try {
-      const orderLock = await readWriteSDK.sdk?.calculation.estimateOrderLock({
+      const orderLock = await publicSDK?.calculation.estimateOrderLock({
         clientOrderId: createClientOrderId(),
         totalNetPrice: toPrecision(totalNetPrice, 4),
         legs
       });
-      const orderPayoff = await readWriteSDK.sdk?.calculation.estimateOrderPayoff({
+      const orderPayoff = await publicSDK?.calculation.estimateOrderPayoff({
         clientOrderId: createClientOrderId(),
         totalNetPrice: toPrecision(totalNetPrice, 4),
         legs
@@ -67,6 +68,7 @@ const Index = () => {
     catch (e) {
       console.log(e)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitToAcution = useCallback(async (type: string, isSingleOrder: boolean, strategy?: Strategy) => {
@@ -78,21 +80,22 @@ const Index = () => {
     ] : strategyList) as StrategyType[];
     const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
     try {
-      await readWriteSDK.sdk?.auth.getSession()
+      await walletSDK?.auth.getSession()
     }
     catch {
       try {
-        await readWriteSDK.sdk?.auth.login()
+        await walletSDK?.auth.login()
       }
       catch (e) {
         console.error(e)
       }
     }
-    await readWriteSDK.sdk?.orders.newOrder({
+    await walletSDK?.orders.newOrder({
       clientOrderId: createClientOrderId(),
       totalNetPrice: toPrecision(totalNetPrice, 4),
       legs
     }, type);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previousLegs, strategyList]);
 
 
@@ -200,7 +203,7 @@ const Index = () => {
             </div>
             <div className={styles.strategyPanel}>
               <Panel>
-                <div className='p-20'>
+                <div className={styles.strategyWrapper}>
                   <h3 className={`color-white mb-5`}>Strategy</h3>
                   <div className={styles.tableWrapper}>
                     <TableStrategy

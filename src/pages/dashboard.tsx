@@ -19,6 +19,8 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
+import useFromStore from '@/UI/hooks/useFromStore';
+import { useSDKStore } from '@/UI/lib/zustand/store';
 
 const Dashboard = () => {
   const DASHBOARD_TABS = [
@@ -43,17 +45,20 @@ const Dashboard = () => {
       content: <p>Coming soon.</p>,
     },
   ];
+  const currentAccount = useFromStore(useSDKStore, state => state.currentAccount);
+  // const { currentAccount} = useFromStory(useSDKStore(;
 
   return (
     <>
       <Meta />
       <Main>
+        { currentAccount ?
         <Container>
           <CollateralPanel />
           <Panel margin='p-30 mt-15'>
             <Tabs tabs={DASHBOARD_TABS} />
           </Panel>
-        </Container>
+        </Container> : <div className='color-white'>Connect Wallet</div>}
       </Main>
     </>
   );

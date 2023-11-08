@@ -21,6 +21,8 @@ import Header from '@/UI/layouts/Header/Header';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
+import { useEffect } from 'react';
+import { IthacaSDK } from '@ithaca-finance/sdk';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
@@ -58,23 +60,29 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { nextAuction, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo } = useAppStore();
-  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo);
-  return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
-}
-
-const getTimeNextAuction = async (
-  timeUntilNexAuction: number,
-  fetchNextAuction: () => void,
-  fetchContractList: () => void,
-  fetchReferencePrices: () => void,
-  fetchSystemInfo: () => void
-) => {
-  setTimeout(() => {
-    fetchNextAuction();
+  useEffect(() => {
     fetchContractList();
     fetchReferencePrices();
     fetchSystemInfo();
+    getNextAuctionTime(0, setNextAuction, publicSDK);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const { setNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo, publicSDK } = useAppStore();
+  return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
+}
+
+const getNextAuctionTime = async (
+  timeUntilNexAuction: number,
+  setNextAuction: (time: number) => number,
+  publicSDK: IthacaSDK
+) => {
+  setTimeout(() => {
+    publicSDK.protocol.nextAuction().then((res) => {
+      const time = setNextAuction(res);
+      getNextAuctionTime(time, setNextAuction, publicSDK);
+    }).catch((err) => {
+      console.error(err)
+    })
   }, timeUntilNexAuction)
 }
 

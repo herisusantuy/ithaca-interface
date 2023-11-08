@@ -1,4 +1,6 @@
 .wrapper {
   @include spacing(padding, 24, 'left+right');
   @include spacing(padding, 20, 'top+bottom');
+  z-index: 10;
+  position: relative;
 }

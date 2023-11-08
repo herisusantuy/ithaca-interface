@@ -1,13 +1,13 @@
 // Packages
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
-import { readOnlySDK } from '@/UI/lib/sdk/readOnlySDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { getContractId, getUnitPrice } from '@/UI/utils/Cakculations';
 import { getNumber } from '@/UI/utils/Numbers';
 import { ReactNode, useState } from 'react';
 import Button from '../Button/Button';
 import { DotTypes } from '../Dot/Dot';
+import DropdownMenu, { DropDownOption } from '../DropdownMenu/DropdownMenu';
 import LogoEth from '../Icons/LogoEth';
 import LogoUsdc from '../Icons/LogoUsdc';
 import Minus from '../Icons/Minus';
@@ -37,12 +37,13 @@ export type Strategy = {
 }
 
 const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction, id, isForwards }: PositionBuilderRowProps) => {
-  const { contractList, currentExpiryDate, referencePrices } = useAppStore();
+  const { contractList, currentExpiryDate, referencePrices, publicSDK } = useAppStore();
   const [product, setProduct] = useState<DotTypes>();
   const [side, setSide] = useState<string>('BUY');
   const [size, setSize] = useState<number>(100);
   const [unitPrice, setUnitPrice] = useState<number>();
-  const [strike] = useState<number>(1500);
+  const [strike, setStrike] = useState<string>();
+  const [strikeList, setStrikeList] = useState<DropDownOption[]>([]);
   const [collateral, setCollateral] = useState<number>();
   const [premium, setPremium] = useState<number>();
   return (
@@ -54,26 +55,41 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               valueProps={valueOptions}
               name={`${id}-type`}
               onChange={(value: string) => {
-                const contractId = getContractId(isForwards ? 'Forward' : value,
-                  1500,
-                  currentExpiryDate,
-                  contractList
-                );
                 setProduct(value as DotTypes)
-                const leg = {
-                  contractId,
-                  side,
-                  quantity: size
-                };
-                setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
-                  leg,
-                  value,
-                  strike,
-                  4
-                ))
-                const unit = getUnitPrice(contractId, referencePrices)
-                setUnitPrice(unit)
-                setPremium(readOnlySDK.calculation.calcPremium(leg, unit || 0, 4))
+                if (isForwards) {
+                  const contractId = getContractId('Forward',
+                    0,
+                    currentExpiryDate,
+                    contractList
+                  );
+                  const leg = {
+                    contractId,
+                    side,
+                    quantity: size
+                  };
+                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
+                    leg,
+                    value,
+                    0, 4))
+                  const unit = getUnitPrice(contractId, referencePrices)
+                  setUnitPrice(unit)
+                  setPremium(publicSDK.calculation.calcPremium(leg, unit || 0, 4))
+                } else {
+                  const list = contractList[currentExpiryDate].reduce((arr, val) => {
+                    if (val.payoff === value) {
+                      arr.push({
+                        name: val.economics.strike.toString(),
+                        value: val.economics.strike.toString()
+                      });
+                    }
+                    return arr;
+                  }, []);
+                  setStrike(undefined)
+                  setUnitPrice(undefined)
+                  setPremium(undefined)
+                  setCollateral(undefined)
+                  setStrikeList(list)
+                }
               }} />
           </div>
           <div className='mr-10'>
@@ -85,20 +101,20 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               orientation='vertical'
               onChange={(value: string) => {
                 setSide(value)
-                if (product) {
+                if (product && (isForwards || strike)) {
                   const contractId = getContractId(isForwards ? 'Forward' : product,
-                    1500,
+                    getNumber(strike || ''),
                     currentExpiryDate,
                     contractList
                   );
-                  setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
+                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
                     {
                       contractId,
                       side: value,
                       quantity: size
                     },
                     product,
-                    strike,
+                    isForwards ? 0 : getNumber(strike || ''),
                     4
                   ))
                 }
@@ -110,20 +126,20 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               onChange={(value) => {
                 const val = value.target.value && getNumber(value.target.value)
                 setSize(val || 0)
-                if (val && product) {
+                if (val && product && (isForwards || strike)) {
                   const contractId = getContractId(!isForwards ? 'Forward' : product,
-                    1500,
+                    getNumber(strike || ''),
                     currentExpiryDate,
                     contractList
                   );
-                  setCollateral(readOnlySDK.calculation.calcCollateralRequirement(
+                  setCollateral(publicSDK.calculation.calcCollateralRequirement(
                     {
                       contractId,
                       side,
                       quantity: value
                     },
                     product,
-                    strike,
+                    isForwards ? 0 : getNumber(strike || ''),
                     4
                   ))
                 }
@@ -134,19 +150,12 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
               icon={<LogoEth />} />
           </div>
           <div className={`${styles.inputWrapper} mr-10`}>
-            <Input
-              value={!isForwards ? 1500 : '-'}
-              onChange={() => { }}
-              icon={<LogoUsdc />} />
-          </div>
-          <div className={`${styles.inputWrapper} mr-10`}>
-            <Input
-              value={unitPrice}
+            <DropdownMenu
+              options={strikeList}
+              value={strike}
               onChange={(value) => {
-                const val = value.target.value && getNumber(value.target.value);
-                setUnitPrice(val || 0)
-                const contractId = getContractId(isForwards ? 'Forward' : (product || ''),
-                  1500,
+                const contractId = getContractId(product || '',
+                  getNumber(value),
                   currentExpiryDate,
                   contractList
                 );
@@ -155,7 +164,39 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
                   side,
                   quantity: size
                 };
-                setPremium(readOnlySDK.calculation.calcPremium(leg, unitPrice || 0, 4))
+                setCollateral(publicSDK.calculation.calcCollateralRequirement(
+                  leg,
+                  product,
+                  getNumber(value),
+                  4
+                ))
+                setStrike('')
+                const unit = getUnitPrice(contractId, referencePrices)
+                setUnitPrice(unit)
+                setPremium(publicSDK.calculation.calcPremium(leg, unit || 0, 4))
+              }}
+              iconEnd={<LogoUsdc />}
+            />
+          </div>
+          <div className={`${styles.inputWrapper} mr-10`}>
+            <Input
+              value={unitPrice}
+              onChange={(value) => {
+                const val = value.target.value && getNumber(value.target.value);
+                setUnitPrice(val || 0)
+                if (strike) {
+                  const contractId = getContractId(isForwards ? 'Forward' : (product || ''),
+                    getNumber(strike),
+                    currentExpiryDate,
+                    contractList
+                  );
+                  const leg = {
+                    contractId,
+                    side,
+                    quantity: size
+                  };
+                  setPremium(publicSDK.calculation.calcPremium(leg, unitPrice || 0, 4))
+                }
               }}
               icon={<LogoUsdc />} />
           </div>
@@ -183,7 +224,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
             <Button size='sm' title='Click to add to Strategy' variant='secondary' onClick={() => {
               if (product) {
                 const contractId = getContractId(isForwards ? 'Forward' : product,
-                  1500,
+                  getNumber(strike || ''),
                   currentExpiryDate,
                   contractList
                 );
@@ -192,7 +233,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
                   side: side || 'BUY',
                   size,
                   contractId,
-                  strike: strike,
+                  strike: getNumber(strike || ''),
                   enterPrice: unitPrice as number,
                 })
               }
@@ -205,7 +246,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
             <Button size='sm' title='Click to add to submit to auction' variant='primary' onClick={() => {
               if (product) {
                 const contractId = getContractId(isForwards ? 'Forward' : product,
-                  1500,
+                  getNumber(strike || ''),
                   currentExpiryDate,
                   contractList
                 );
@@ -214,7 +255,7 @@ const PositionBuilderRow = ({ options, valueOptions, addStrategy, submitAuction,
                   side: side || 'BUY',
                   size,
                   contractId,
-                  strike: strike,
+                  strike: getNumber(strike || ''),
                   enterPrice: unitPrice as number,
                 })
               }
