@@ -290,6 +290,7 @@ const COMPONENT_GROUPS = [
                 onChange={() => {}}
                 label={8}
                 range={true}
+                step={100}
               />
             </Flex>
             <Flex direction='row-center' margin='mb-32'>
@@ -302,10 +303,11 @@ const COMPONENT_GROUPS = [
                 showLabel={true}
                 label={8}
                 range={false}
+                step={100}
               />
             </Flex>
             <Flex direction='row-center'>
-              <Slider title='default' min={1600} max={2300} label={8} />
+              <Slider title='default' min={1600} max={2300} label={8} step={100}/>
             </Flex>
           </>
         ),
