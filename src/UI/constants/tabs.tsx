@@ -62,11 +62,11 @@ export const MODAL_TABS: Tab[] = [
   {
     id: 'deposit',
     label: 'Deposit',
-    content: <p>Content deposit</p>,
+    // content: <p>Content deposit</p>,
   },
   {
     id: 'withdraw',
     label: 'Withdraw',
-    content: <p>Content for withdraw</p>,
+    // content: <p>Content for withdraw</p>,
   },
 ];

@@ -4,9 +4,6 @@ import dynamic from 'next/dynamic';
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 
-// Constants
-import { TABLE_ORDER_DATA_WITH_EXPANDED } from '@/UI/constants/tableOrder';
-
 // Components
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
 import Tabs from '@/UI/components/Tabs/Tabs';
@@ -19,23 +16,24 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
+import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
 
 const Dashboard = () => {
   const DASHBOARD_TABS = [
     {
       id: 'liveOrders',
       label: 'Live Orders',
-      content: <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />,
+      content: <TableOrder type={TABLE_TYPE.LIVE} />,
     },
     {
       id: 'positions',
       label: 'Positions',
-      content: <p>Coming soon.</p>,
+      content: <TableOrder type={TABLE_TYPE.ORDER} />,
     },
     {
       id: 'tradeHistory',
       label: 'Trade History',
-      content: <p>Coming soon.</p>,
+      content: <TableOrder type={TABLE_TYPE.TRADE} />,
     },
     {
       id: 'fundLockHistory',

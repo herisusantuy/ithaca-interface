@@ -23,8 +23,8 @@ export const calculateNetPrice = (
   }, 0);
 };
 
-export const getStrike = (contractId: number, contractList: Record<string, Contract[]>, expiry: number): string => {
-  const contract = contractList[expiry].find(ctr => ctr.contractId === contractId);
+export const getStrike = (contractId: number, contractList: Contract[], expiry: number): string => {
+  const contract = contractList.find(ctr => ctr.contractId === contractId && ctr.economics.expiry === expiry);
   return `${contract?.economics.strike ? contract.economics.strike : '-'}`;
 };
 
@@ -32,11 +32,10 @@ export const getContractId = (
   product: string,
   strike: number,
   currentExpiryDate: number,
-  contractList: Record<string, Contract[]>
+  contractList: Contract[]
 ) => {
-  const contractsByDate = contractList[currentExpiryDate];
-  const contract = contractsByDate.find(
-    c => c.payoff === product && (product === Payoff.FORWARD || c.economics.strike === strike)
+  const contract = contractList.find(
+    c => c.payoff.toUpperCase() === product.toUpperCase() && c.economics.expiry === currentExpiryDate && (product === Payoff.FORWARD || c.economics.strike === strike)
   );
   return contract?.contractId || 0;
 };

@@ -2,16 +2,13 @@
 import { Fragment, ReactElement } from 'react';
 
 // Constants
-import { TableRowData, TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
+import { TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
 
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Plus from '@/UI/components/Icons/Plus';
 import Minus from '@/UI/components/Icons/Minus';
-import Button from '@/UI/components/Button/Button';
-import Sort from '@/UI/components/Icons/Sort';
-import Filter from '@/UI/components/Icons/Filter';
 
 // Styles
 import styles from '../components/TableOrder/TableOrder.module.scss';
