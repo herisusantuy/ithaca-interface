@@ -28,3 +28,9 @@ h4 {
   color: var(--white);
   font-family: $lato;
 }
+
+h5 {
+  @include font-size('text-xs', 'regular');
+  color: var(--white-60);
+  font-family: $lato;
+}

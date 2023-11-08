@@ -191,6 +191,7 @@ const Index = () => {
                 collatarelETH={summaryDetails?.numeraireAmount || '-'}
                 collatarelUSDC={summaryDetails?.underlierAmount || '-'}
                 premium={summaryDetails?.premium || '-'}
+                fee={1.5}
                 submitAuction={() => submitToAcution(ENUM_STRATEGY_TYPES.STRATEGY_BUILDER, true)}
               />
             }

@@ -26,8 +26,16 @@
   gap: rem(5) !important;
 }
 
+.gap-6 {
+  gap: rem(6) !important;
+}
+
 .gap-8 {
   gap: rem(8) !important;
+}
+
+.gap-10 {
+  gap: rem(10) !important;
 }
 
 .gap-12 {
@@ -36,6 +44,10 @@
 
 .gap-15 {
   gap: rem(15) !important;
+}
+
+.gap-24 {
+  gap: rem(24) !important;
 }
 
 .mb-10 {
@@ -64,6 +76,10 @@
 
 .mt-64 {
   margin-top: rem(64) !important;
+}
+
+.mt-116 {
+  margin-top: rem(116) !important;
 }
 
 .font-lato {
@@ -163,4 +179,20 @@
 
 .br-20 {
   border-radius: rem(20) !important;
+}
+
+.br-22 {
+  border-radius: rem(22) !important;
+}
+
+.color-white {
+  color: var(--white) !important;
+}
+
+.fs-xs {
+  @include font-size('text-xxs', 'regular');
+}
+
+.u-full-width {
+  width: 100% !important;
 }
