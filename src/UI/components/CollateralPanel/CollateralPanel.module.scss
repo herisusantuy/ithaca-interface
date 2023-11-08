@@ -12,3 +12,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.modalBalanceText {
+    @include font-size('text-sm', 'regular');
+    color: var(--white-60);
+    @include spacing(margin, 20, 'top+bottom');
+}

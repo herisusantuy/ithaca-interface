@@ -4,9 +4,6 @@ import dynamic from 'next/dynamic';
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 
-// Constants
-import { TABLE_ORDER_DATA_WITH_EXPANDED } from '@/UI/constants/tableOrder';
-
 // Components
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
 import Tabs from '@/UI/components/Tabs/Tabs';

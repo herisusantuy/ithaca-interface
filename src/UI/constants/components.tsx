@@ -52,7 +52,6 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
-import { TABLE_ORDER_DATA_WITH_EXPANDED } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';

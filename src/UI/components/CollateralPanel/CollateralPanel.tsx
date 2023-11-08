@@ -1,5 +1,5 @@
 // Packages
-import { TABLE_COLLATERAL_DATA } from '@/UI/constants/tableCollateral';
+import { CollateralType, TABLE_COLLATERAL_DATA } from '@/UI/constants/tableCollateral';
 import Panel from '@/UI/layouts/Panel/Panel';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dynamic from 'next/dynamic';
@@ -12,6 +12,13 @@ import { fetchBalance } from '@wagmi/core'
 import { FundLockState } from '@ithaca-finance/sdk';
 import styles from './CollateralPanel.module.scss';
 import Wallet from '../Wallet/Wallet';
+import Tabs from '../Tabs/Tabs';
+import { MODAL_TABS } from '@/UI/constants/tabs';
+import Flex from '@/UI/layouts/Flex/Flex';
+import Button from '../Button/Button';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import LogoUsdc from '../Icons/LogoUsdc';
+import LogoEth from '../Icons/LogoEth';
 
 const currencies = [
   { currency: 'WETH', amountToMint: parseUnits('10', 18) },
@@ -26,7 +33,7 @@ const CollateralPanel = () => {
   const { systemInfo, ithacaSDK } = useAppStore();
   const [data, setData] = useState(TABLE_COLLATERAL_DATA);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState('');
+  const [selectedAsset, setSelectedAsset] = useState<CollateralType>();
   const [depositAmount, setDepositAmount] = useState('');
   const { data: walletClient } = useWalletClient();
 
@@ -86,11 +93,13 @@ const CollateralPanel = () => {
   );
 
   const fundLock = useCallback(async () => {
-    const amountToMint = parseUnits(depositAmount, systemInfo.tokenDecimals[selectedAsset]);
-    await ithacaSDK.fundlock.deposit(systemInfo.tokenAddress[selectedAsset], amountToMint);
-    setSelectedAsset('')
-    setDepositAmount('')
-    setModalOpen(false)
+    if (selectedAsset?.asset) {
+      const amountToMint = parseUnits(depositAmount, systemInfo.tokenDecimals[selectedAsset?.asset]);
+      await ithacaSDK.fundlock.deposit(systemInfo.tokenAddress[selectedAsset?.asset], amountToMint);
+      setSelectedAsset(undefined)
+      setDepositAmount('')
+      setModalOpen(false)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [systemInfo, selectedAsset, depositAmount]);
 
@@ -99,12 +108,12 @@ const CollateralPanel = () => {
       <Panel margin='p-30 mt-15'>
         <h3>Collateral</h3>
         <div>
-          <div className={`${walletClient?.account.address ?  '' : styles.hideTable}`}>
+          <div className={`${walletClient?.account.address ? '' : styles.hideTable}`}>
             <TableCollateral
               data={data}
               deposit={(asset: string) => {
-                console.log(asset);
-                setSelectedAsset(asset);
+                const rowData = data.find((d) => d.asset === asset)
+                setSelectedAsset(rowData);
                 setModalOpen(true);
               }}
               withdraw={asset => {
@@ -113,20 +122,50 @@ const CollateralPanel = () => {
               faucet={asset => getFaucet(asset)}
             />
           </div>
-          {!walletClient?.account.address &&<div className={styles.connectOverlay}>
-              <div className='color-white mb-10'>Please connect wallet to check your details.</div>
-              <Wallet/>
-          </div> }
+          {!walletClient?.account.address && <div className={styles.connectOverlay}>
+            <div className='color-white mb-10'>Please connect wallet to check your details.</div>
+            <Wallet />
+          </div>}
         </div>
       </Panel>
       <Modal title='Manage Funds' isOpen={modalOpen} onCloseModal={() => setModalOpen(false)} onSubmitOrder={() => fundLock()}>
-        {selectedAsset}
-        <Input
-          onChange={value => {
-            const val = value.target.value;
-            setDepositAmount(val);
-          }}
-        />
+        <Tabs tabs={MODAL_TABS} />
+        <div>
+        <Flex direction='row-space-between'>
+            <DropdownMenu options={[{
+              name: 'WETH',
+              value: 'WETH'
+            }, {
+              name: 'USDC',
+              value: 'USDC'
+            }]} 
+            value={selectedAsset?.asset}
+              onChange={(val) => {
+              const rowData = data.find((d) => d.asset === val)
+              setSelectedAsset(rowData)
+              setDepositAmount('')
+            }} iconStart={selectedAsset?.asset === 'USDC' ? <LogoUsdc /> : <LogoEth />} />
+            <Input
+              value={depositAmount}
+              onChange={value => {
+                const val = value.target.value;
+                setDepositAmount(val);
+              }}
+            />
+            <Button
+              variant='secondary'
+              size='sm'
+              title='Select All Assets'
+              onClick={() => {
+                setDepositAmount(selectedAsset?.balance.toString() || '')
+              }}
+            >All</Button>
+          </Flex>
+          <Flex direction='row-space-between'>
+            <div className={styles.modalBalanceText}>Fund Lock: {selectedAsset?.fundLock || 0}</div>
+            <div className={styles.modalBalanceText}>Balance: {selectedAsset?.balance || 0}</div>
+          </Flex>
+        </div>
         {/* <Tabs tabs={} /> */}
       </Modal>
     </>

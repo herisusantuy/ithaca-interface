@@ -128,6 +128,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
           break;
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletClient?.account.address]);
 
   // Handle cancel order

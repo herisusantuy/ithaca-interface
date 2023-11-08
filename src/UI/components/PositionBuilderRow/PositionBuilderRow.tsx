@@ -176,7 +176,9 @@ const PositionBuilderRow = ({
             />
           </div>
           <div className={styles.strike}>
-            <DropdownMenu options={strikeList} onChange={(val) => {
+            <DropdownMenu 
+              value={strike}
+              options={strikeList} onChange={(val) => {
                 setStrike(val)
                 if (product) {
                   setData(product, side, size, getNumber(val || ''))
