@@ -15,3 +15,16 @@ p {
 p {
   color: var(--white);
 }
+
+h3 {
+  @include font-size('text-md', 'semibold');
+  @include spacing(margin, 15, 'bottom');
+  font-family: $lato;
+  color: var(--white);
+}
+
+h4 {
+  @include font-size('text-sm', 'semibold');
+  color: var(--white);
+  font-family: $lato;
+}

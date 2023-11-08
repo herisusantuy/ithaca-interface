@@ -22,8 +22,20 @@
   gap: 0 !important;
 }
 
+.gap-5 {
+  gap: rem(5) !important;
+}
+
+.gap-8 {
+  gap: rem(8) !important;
+}
+
 .gap-12 {
   gap: rem(12) !important;
+}
+
+.gap-15 {
+  gap: rem(15) !important;
 }
 
 .mb-10 {
@@ -32,6 +44,14 @@
 
 .mt-10 {
   margin-top: rem(10) !important;
+}
+
+.mt-16 {
+  margin-top: rem(16) !important;
+}
+
+.mb-0 {
+  margin-bottom: rem(0) !important;
 }
 
 .mb-14 {
@@ -106,6 +126,16 @@
   padding: rem(30) !important;
 }
 
+.ptb-8 {
+  padding-top: rem(8) !important;
+  padding-bottom: rem(8) !important;
+}
+
+.plr-8 {
+  padding-left: rem(8) !important;
+  padding-right: rem(8) !important;
+}
+
 .width-90 {
   width: 90px !important;
 }
@@ -129,4 +159,8 @@
 
 .position-relative {
   position: relative !important;
+}
+
+.br-20 {
+  border-radius: rem(20) !important;
 }
