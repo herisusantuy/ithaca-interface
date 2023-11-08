@@ -80,7 +80,7 @@ const CollateralPanel = () => {
       const chain = walletClient?.chain
       await walletClient?.writeContract({
         account,
-        address: systemInfo.tokenAddress[asset],
+        address: systemInfo.tokenAddress[asset] as `0x${string}`,
         abi: parseAbi(['function mint(address to, uint256 amount) external']),
         chain,
         functionName: 'mint',
