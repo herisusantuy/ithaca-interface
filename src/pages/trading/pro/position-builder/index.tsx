@@ -138,16 +138,8 @@ const Index = () => {
                   <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
                 </Flex>
                 <h3>Position Builder</h3>
-                <Flex>
-                  <h4 className='mb-10'>Options</h4>
-                  <p>Side</p>
-                  <p>Size</p>
-                  <p>Strike</p>
-                  <p>Unit Price</p>
-                  <p>Collateral</p>
-                  <p>Premium</p>
-                </Flex>
                 <PositionBuilderRow
+                  title='Options'
                   isForwards={false}
                   options={['Call', 'Put']}
                   valueOptions={['Call', 'Put']}
@@ -161,8 +153,8 @@ const Index = () => {
                   submitAuction={(value: Strategy) => submitToAcution(value.type, true, value)}
                   id='options-row'
                 />
-                <h4 className='mb-10'>Digital Options</h4>
                 <PositionBuilderRow
+                  title='Digital Options'
                   isForwards={false}
                   options={['Call', 'Put']}
                   valueOptions={['BinaryCall', 'BinaryPut']}
@@ -176,8 +168,8 @@ const Index = () => {
                   submitAuction={(value: Strategy) => submitToAcution(value.type, true, value)}
                   id='digital-options-row'
                 />
-                <h4 className='mb-10'>Forwards</h4>
                 <PositionBuilderRow
+                  title='Forwards'
                   isForwards={true}
                   options={['10Nov23', 'Next Auction']}
                   valueOptions={['Forward (10 Nov 23)', 'Forward (Next Auction)']}

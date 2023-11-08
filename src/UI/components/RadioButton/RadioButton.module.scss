@@ -30,12 +30,14 @@
   &.vertical {
     flex-direction: column;
     gap: 0;
+    width: rem(53);
 
     label {
       @include spacing(padding, 2, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
       height: rem(15);
-      min-width: rem(38);
+      width: rem(53);
+      min-width: 0;
 
       svg {
         height: rem(16);
