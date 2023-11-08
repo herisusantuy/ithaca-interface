@@ -138,3 +138,12 @@
 .rightShift {
   right: rem(10);
 }
+
+.sliderEffect {
+  position: absolute;
+  width: 100%;
+  height: rem(20);
+  bottom: rem(20);
+  cursor: pointer !important;
+  z-index: 100;
+}

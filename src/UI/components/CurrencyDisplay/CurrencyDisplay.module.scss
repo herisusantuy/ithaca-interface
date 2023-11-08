@@ -1,11 +1,27 @@
 .container {
   display: flex;
   align-items: center;
-  gap: rem(4);
+  gap: rem(2);
   font-family: $roboto;
-  @include font-size('text-sm', 'regular');
+  @include font-size('text-md', 'regular');
+  color: var(--white);
 
   span {
+    @include font-size('text-xs', 'regular');
+    font-family: $lato;
     color: var(--white-60);
+  }
+}
+
+.sm {
+  @include font-size('text-xxs', 'regular');
+
+  svg {
+    height: rem(10);
+    width: rem(10);
+  }
+
+  span {
+    @include font-size('text-xxs', 'regular');
   }
 }

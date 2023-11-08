@@ -1,27 +1,68 @@
-.wrapper {
-  @include spacing(padding, 6, 'left+right');
-  @include spacing(padding, 8, 'top+bottom');
-}
+.parent {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 12px;
+  align-items: center;
 
-.inputWrapper {
-  width: 90px;
-  div {
-    width: 90px;
-    padding-left: 6px;
-    input {
-      width: 0px;
-    }
+  p {
+    @include font-size('text-xs', 'regular');
+    color: var(--white-60);
+    font-family: $lato;
+    position: relative;
+    // top: 40px;
+    z-index: 9;
+  }
+
+  .side p {
+    left: rem(100);
+  }
+
+  .size p {
+    left: rem(27);
+  }
+
+  .strike p {
+    left: rem(4);
+  }
+
+  .unitPrice p {
+    left: rem(-7);
+  }
+
+  .premium p {
+    left: rem(-50);
   }
 }
 
-.priceLabel {
-  color: var(--white);
-  min-width: 60px;
-  text-align: right;
-  margin-top: 10px;
+.title {
+  grid-area: 1 / 1 / 2 / 2;
 }
 
-.logo {
-  margin-top: 8px;
-  margin-left: 8px;
+.side {
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.size {
+  grid-area: 1 / 3 / 2 / 4;
+}
+
+.strike {
+  grid-area: 1 / 4 / 2 / 5;
+}
+
+.unitPrice {
+  grid-area: 1 / 5 / 2 / 6;
+}
+
+.collateral {
+  grid-area: 1 / 6 / 2 / 7;
+}
+
+.premium {
+  grid-area: 1 / 7 / 2 / 8;
+}
+
+.action {
+  grid-area: 1 / 8 / 2 / 9;
 }

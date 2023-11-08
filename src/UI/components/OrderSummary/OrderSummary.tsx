@@ -1,75 +1,53 @@
-// Packages
+// Components
+import Button from '@/UI/components/Button/Button';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
+
+// Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
-import Button from '../Button/Button';
-import LogoEth from '../Icons/LogoEth';
-import LogoUsdc from '../Icons/LogoUsdc';
 
-// Styles
-import styles from './OrderSummary.module.scss';
 // Types
 type OrderSummaryProps = {
   limit: string | number;
   collatarelETH: string | number;
   collatarelUSDC: string | number;
   premium: string | number;
+  fee: string | number;
   submitAuction: () => void;
 };
 
-const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, submitAuction }: OrderSummaryProps) => (
-  <Panel>
-    <div className={styles.wrapper}>
-      <Flex>
-        <h3 className='nowrap color-white mt-10 mr-50'>Order Summary</h3>
-        <Flex direction='column'>
-          <h5 className='color-grey-400'>Order Limit</h5>
-          <div className='nowrap'>
-            <div className='mt-5'>
-              <Flex>
-                <h3 className='color-white mr-2'>{limit}</h3>
-                <LogoUsdc />
-                <p className='color-grey-400 ml-2'>USDC</p>
-              </Flex>
-            </div>
-          </div>
+const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, fee, submitAuction }: OrderSummaryProps) => {
+  return (
+    <Panel margin='br-22 p-20 mt-116'>
+      <Flex direction='row-space-between' gap='gap-24'>
+        <h3 className='mb-0 u-full-width'>Order Summary</h3>
+        <Flex direction='column' gap='gap-6'>
+          <h5>Order Limit</h5>
+          <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
         </Flex>
-        <Flex direction='column'>
-          <div className='mr-100'>
-            <h5 className='color-grey-400 nowrap'>Collateral Requirement</h5>
-            <div className='nowrap'>
-              <div className='mt-5'>
-                <Flex>
-                  <h3 className='color-white mr-2'>{collatarelETH}</h3>
-                  <LogoEth />
-                  <p className='color-grey-400 ml-2'> WETH</p>
-                </Flex>
-              </div>
-            </div>
-          </div>
-        </Flex>
-        <div className='color-white mt-14 mr-50 nowrap'>
-          <Flex>
-            <h3 className='color-white mr-2'>{collatarelUSDC}</h3>
-            <LogoUsdc />
-            <p className='color-grey-400 ml-2'> USDC</p>
+        <Flex direction='column' gap='gap-6'>
+          <h5>Collateral Requirement</h5>
+          <Flex gap='gap-10'>
+            <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
+            <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
-        </div>
-        <Flex direction='column'>
-          <h5 className='color-white'>Total Premium</h5>
-          <div className='nowrap'>
-            <Flex>
-              <h3 className='color-white mr-2'>{premium}</h3>
-              <LogoUsdc />
-              <p className='color-grey-400 ml-2'> USDC</p>
-            </Flex>
-          </div>
         </Flex>
-        <Button size='sm' title='Click to add to Submit to Auction' onClick={() => submitAuction()}>
+        <Flex direction='column' gap='gap-6'>
+          <h5 className='color-white'>Total Premium</h5>
+          <CurrencyDisplay amount={premium} symbol={<LogoUsdc />} currency='USDC' />
+        </Flex>
+        <Flex direction='column' gap='gap-6'>
+          <h5 className='fs-xs'>Platform Fee</h5>
+          <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' size='sm' />
+        </Flex>
+        <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>
           Submit to Auction
         </Button>
       </Flex>
-    </div>
-  </Panel>
-);
+    </Panel>
+  );
+};
 
 export default OrderSummary;
