@@ -18,7 +18,7 @@ export interface IthacaSDKSlice {
   systemInfo: SystemInfo;
   nextAuction: AuctionTimes;
   currentExpiryDate: number;
-  contractList: Record<string, Contract[]>;
+  contractList: Contract[];
   referencePrices: ReferencePrice[];
   initIthacaSDK: (publicClient: PublicClient, walletClient: WalletClient) => void;
   fetchSystemInfo: () => Promise<void>;
@@ -51,7 +51,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     milliseconds: 0,
   },
   currentExpiryDate: 0,
-  contractList: {},
+  contractList: [],
   referencePrices: [],
   initIthacaSDK: async (publicClient, walletClient) => {
     const ithacaSDK = IthacaSDK.init({
@@ -59,8 +59,9 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       publicClient,
       walletClient,
     });
-    await ithacaSDK.auth.login();
     set({ ithacaSDK });
+    await ithacaSDK.auth.login();
+    console.log('test')
   },
   fetchSystemInfo: async () => {
     const systemInfo = await get().ithacaSDK.protocol.systemInfo();
@@ -88,7 +89,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       }
       return obj;
     }, {});
-    set({ contractList: filteredList, currentExpiryDate: getNumber(Object.keys(filteredList)[1]) });
+    set({ contractList, currentExpiryDate: getNumber(Object.keys(filteredList)[1]) });
   },
   fetchReferencePrices: async () => {
     const referencePrices = await get().ithacaSDK.market.referencePrices(0, 'WETH/USDC');

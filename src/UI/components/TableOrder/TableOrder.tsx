@@ -19,7 +19,7 @@ import Filter from '@/UI/components/Icons/Filter';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
-import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
+import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded, TABLE_ORDER_DATA_WITH_EXPANDED } from '@/UI/constants/tableOrder';
 
 // Utils
 import {
@@ -42,15 +42,26 @@ import {
 import styles from './TableOrder.module.scss';
 import CheckBox from '../CheckBox/CheckBox';
 import { useEscKey } from '@/UI/hooks/useEscKey';
+import { useAppStore } from '@/UI/lib/zustand/store';
+import { useWalletClient } from 'wagmi';
+import dayjs from 'dayjs';
+import { Order } from '@ithaca-finance/sdk';
 
 // Types
 type TableOrderProps = {
-  data: TableRowDataWithExpanded[];
+  // data: TableRowDataWithExpanded[];
+  type?: TABLE_TYPE
 };
 
-const TableOrder = ({ data: initialData }: TableOrderProps) => {
+export enum TABLE_TYPE {
+   LIVE,
+   ORDER,
+   TRADE
+}
+
+const TableOrder = ({ type }: TableOrderProps) => {
   // Cancel order state
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<TableRowDataWithExpanded[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
@@ -63,11 +74,61 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
   const [productChecked, setProductChecked] = useState<boolean>(false);
   const [sideArray, setSideArray] = useState<string[]>([]);
   const [sideChecked, setSideChecked] = useState<boolean>(false);
+  const { ithacaSDK } = useAppStore();
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
+  const { data: walletClient } = useWalletClient();
+  
+  const dataToRows = (res: Order[]) => {
+    setData(res.map((row) => ({
+      clientOrderId: row.orderId,
+      details: "",
+      orderDate: dayjs(1699462800000).format('DD MMM YY HH:mm'),
+      currencyPair: row.collateral?.currencyPair  || 'WETH/USDC',
+      product: row.orderDescr,
+      side: "+",
+      tenor: "14 Jun 23",
+      wethAmount: row.collateral?.numeraireAmount,
+      usdcAmount: row.collateral?.underlierAmount,
+      orderLimit: row.details.reduce((agg, d) =>  d.originalQty + agg ,0),
+      expandedInfo: row.details.map((leg) => ({
+        type: leg.contractDto.payoff,
+        side: leg.side,
+        size: leg.originalQty,
+        strike: leg.contractDto.economics.strike,
+        enterPrice: leg.execPrice
+      }))
+    })) as TableRowDataWithExpanded[])
+  }
+
+  useEffect(() => {
+    const address = walletClient?.account.address;
+    if (address) {
+      switch (type) {
+        case TABLE_TYPE.LIVE:
+          ithacaSDK.orders.clientOpenOrders().then((res) => {
+            dataToRows(res)
+          })
+          break;
+        case TABLE_TYPE.ORDER:
+          ithacaSDK.protocol.matchedOrders().then((res) => {
+            dataToRows(res)
+          })
+          break;
+        case TABLE_TYPE.TRADE:
+          ithacaSDK.client.tradeHistory().then((res) => {
+            dataToRows(res)
+          })
+          break;
+        default:
+          setData(TABLE_ORDER_DATA_WITH_EXPANDED)
+          break;
+      }
+    }
+  }, [walletClient?.account.address]);
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
@@ -84,14 +145,14 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
   // Function to handle the actual delete operation
   const handleCancelOrderRemoveRow = () => {
     setIsDeleting(true);
-
-    setTimeout(() => {
+    ithacaSDK.orders.orderCancel(rowToCancelOrder?.clientOrderId || 0).then(() => {
+      console.log('test')
       const newData = data.filter(row => row !== rowToCancelOrder);
       setData(newData);
       setIsDeleting(false);
       setIsModalOpen(false);
       setRowToCancelOrder(null);
-    }, 3000);
+    })
   };
 
   // Page state
@@ -277,9 +338,8 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
+              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+                }`}
               ref={containerRef}
             >
               {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
@@ -307,9 +367,8 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
+              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+                }`}
               ref={productRef}
             >
               {PRODUCT_LABEL.map((item: string, idx: number) => {
@@ -339,9 +398,8 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
+              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+                }`}
               ref={sideRef}
             >
               {SIDE_LABEL.map((item: FilterItemProps, idx: number) => {

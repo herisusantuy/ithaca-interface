@@ -19,25 +19,24 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
-import useFromStore from '@/UI/hooks/useFromStore';
-import { useSDKStore } from '@/UI/lib/zustand/store';
+import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
 
 const Dashboard = () => {
   const DASHBOARD_TABS = [
     {
       id: 'liveOrders',
       label: 'Live Orders',
-      content: <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />,
+      content: <TableOrder type={TABLE_TYPE.LIVE} />,
     },
     {
       id: 'positions',
       label: 'Positions',
-      content: <p>Coming soon.</p>,
+      content: <TableOrder type={TABLE_TYPE.ORDER} />,
     },
     {
       id: 'tradeHistory',
       label: 'Trade History',
-      content: <p>Coming soon.</p>,
+      content: <TableOrder type={TABLE_TYPE.TRADE} />,
     },
     {
       id: 'fundLockHistory',
@@ -45,20 +44,17 @@ const Dashboard = () => {
       content: <p>Coming soon.</p>,
     },
   ];
-  const currentAccount = useFromStore(useSDKStore, state => state.currentAccount);
-  // const { currentAccount} = useFromStory(useSDKStore(;
 
   return (
     <>
       <Meta />
       <Main>
-        { currentAccount ?
         <Container>
           <CollateralPanel />
           <Panel margin='p-30 mt-15'>
             <Tabs tabs={DASHBOARD_TABS} />
           </Panel>
-        </Container> : <div className='color-white'>Connect Wallet</div>}
+        </Container>
       </Main>
     </>
   );

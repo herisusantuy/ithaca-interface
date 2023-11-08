@@ -1,0 +1,14 @@
+.hideTable {
+    opacity: 0.2;
+}
+
+.connectOverlay {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

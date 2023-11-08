@@ -21,8 +21,6 @@ import Header from '@/UI/layouts/Header/Header';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
-import { useEffect } from 'react';
-import { IthacaSDK } from '@ithaca-finance/sdk';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (

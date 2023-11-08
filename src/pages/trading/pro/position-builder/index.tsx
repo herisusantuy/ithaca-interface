@@ -38,6 +38,7 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
 // Styles
 import styles from './position-builder.module.scss';
+import useFromStore from '@/UI/hooks/useFromStore';
 
 // Types
 type Summary = {
@@ -55,11 +56,13 @@ const Index = () => {
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
 
   // Store
-  const { ithacaSDK, currentExpiryDate } = useAppStore();
+  const { ithacaSDK } = useAppStore();
+  const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate)
 
   const getOrderSummary = useCallback(
     async (legs: Leg[], list: StrategyType[]) => {
       const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
+      console.log(totalNetPrice)
       try {
         const orderLock = await ithacaSDK.calculation.estimateOrderLock({
           clientOrderId: createClientOrderId(),
@@ -97,22 +100,17 @@ const Index = () => {
       const list = (isSingleOrder && strategy ? [getStrategy(strategy)] : strategyList) as StrategyType[];
       const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
       try {
-        await ithacaSDK.auth.getSession();
-      } catch {
-        try {
-          await ithacaSDK.auth.login();
-        } catch (e) {
-          console.error(e);
-        }
+        await ithacaSDK.orders.newOrder(
+          {
+            clientOrderId: createClientOrderId(),
+            totalNetPrice: toPrecision(totalNetPrice, 4),
+            legs,
+          },
+          type
+        );
+      } catch (e) {
+        console.error(e)
       }
-      await ithacaSDK.orders.newOrder(
-        {
-          clientOrderId: createClientOrderId(),
-          totalNetPrice: toPrecision(totalNetPrice, 4),
-          legs,
-        },
-        type
-      );
     },
     [ithacaSDK, previousLegs, strategyList]
   );
@@ -146,6 +144,7 @@ const Index = () => {
                     const legs: Leg[] = [...previousLegs, getLeg(strategy)];
                     setpreviousLegs(legs);
                     const list = [...strategyList, getStrategy(strategy)] as StrategyType[];
+                    console.log(list)
                     setStrategyList(list as StrategyType[]);
                     getOrderSummary(legs, list);
                   }}

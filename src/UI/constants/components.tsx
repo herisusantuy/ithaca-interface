@@ -360,7 +360,7 @@ const COMPONENT_GROUPS = [
         name: 'TableOrder',
         component: (
           <Panel margin='p-30'>
-            <TableOrder data={TABLE_ORDER_DATA_WITH_EXPANDED} />
+            <TableOrder />
           </Panel>
         ),
         status: 'In Progress',
