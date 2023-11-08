@@ -55,7 +55,7 @@ import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { TABLE_ORDER_DATA_WITH_EXPANDED } from './tableOrder';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
-import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from './charts';
+import { PAYOFF_DUMMY_DATA } from './charts';
 
 const COMPONENT_GROUPS = [
   {
@@ -307,7 +307,7 @@ const COMPONENT_GROUPS = [
               />
             </Flex>
             <Flex direction='row-center'>
-              <Slider title='default' min={1600} max={2300} label={8} step={100}/>
+              <Slider title='default' min={1600} max={2300} label={8} step={100} />
             </Flex>
           </>
         ),
@@ -374,7 +374,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel margin='p-30'>
-            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} specialDot={SPECIAL_DUMMY_DATA} />
+            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} width={400} height={300} />
           </Panel>
         ),
         status: 'In Progress',

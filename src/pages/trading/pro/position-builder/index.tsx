@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 // Constants
 import { StrategyType } from '@/UI/constants/tableStrategy';
-import { PayoffDataProps, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
+import { PayoffDataProps } from '@/UI/constants/charts';
 
 // SDK
 import { Leg } from '@ithaca-finance/sdk';
@@ -214,7 +214,7 @@ const Index = () => {
                 />
                 <h3>Payoff Diagram</h3>
                 {chartData.length && previousLegs.length ? (
-                  <ChartPayoff chartData={chartData} specialDot={SPECIAL_DUMMY_DATA} />
+                  <ChartPayoff chartData={chartData} width={400} height={300} />
                 ) : (
                   <div className={styles.tableWrapper}></div>
                 )}

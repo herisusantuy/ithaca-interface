@@ -5,7 +5,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Slider from '../../Slider/Slider';
 import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { PAYOFF_DUMMY_DATA, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
+import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
 import { TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
@@ -79,7 +79,7 @@ const Earn = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={PAYOFF_DUMMY_DATA} specialDot={SPECIAL_DUMMY_DATA} />
+        <ChartPayoff chartData={PAYOFF_DUMMY_DATA} width={400} height={300} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>
