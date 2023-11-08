@@ -9,14 +9,10 @@ import { PayoffDataProps, SPECIAL_DUMMY_DATA } from '@/UI/constants/charts';
 // SDK
 import { Leg } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
-import readWriteSDK from '@/UI/lib/sdk/readWriteSDK';
 import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
-
-// Hooks
-import useFromStore from '@/UI/hooks/useFromStore';
 
 // Utils
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
@@ -59,38 +55,41 @@ const Index = () => {
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
 
   // Store
-  const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
+  const { ithacaSDK, currentExpiryDate } = useAppStore();
 
-  const getOrderSummary = useCallback(async (legs: Leg[], list: StrategyType[]) => {
-    const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
-    try {
-      const orderLock = await readWriteSDK.sdk?.calculation.estimateOrderLock({
-        clientOrderId: createClientOrderId(),
-        totalNetPrice: toPrecision(totalNetPrice, 4),
-        legs,
-      });
-      const orderPayoff = await readWriteSDK.sdk?.calculation.estimateOrderPayoff({
-        clientOrderId: createClientOrderId(),
-        totalNetPrice: toPrecision(totalNetPrice, 4),
-        legs,
-      });
+  const getOrderSummary = useCallback(
+    async (legs: Leg[], list: StrategyType[]) => {
+      const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
+      try {
+        const orderLock = await ithacaSDK.calculation.estimateOrderLock({
+          clientOrderId: createClientOrderId(),
+          totalNetPrice: toPrecision(totalNetPrice, 4),
+          legs,
+        });
+        const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff({
+          clientOrderId: createClientOrderId(),
+          totalNetPrice: toPrecision(totalNetPrice, 4),
+          legs,
+        });
 
-      setChartData(
-        Object.keys(orderPayoff).map(key => ({
-          value: orderPayoff[key],
-          dashValue: undefined,
-        }))
-      );
-      setSummaryDetails({
-        underlierAmount: orderLock.underlierAmount,
-        numeraireAmount: orderLock.numeraireAmount,
-        limit: totalNetPrice,
-        premium: totalNetPrice,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+        setChartData(
+          Object.keys(orderPayoff).map(key => ({
+            value: orderPayoff[key],
+            dashValue: undefined,
+          }))
+        );
+        setSummaryDetails({
+          underlierAmount: orderLock.underlierAmount,
+          numeraireAmount: orderLock.numeraireAmount,
+          limit: totalNetPrice,
+          premium: totalNetPrice,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [ithacaSDK.calculation]
+  );
 
   const submitToAcution = useCallback(
     async (type: string, isSingleOrder: boolean, strategy?: Strategy) => {
@@ -98,15 +97,15 @@ const Index = () => {
       const list = (isSingleOrder && strategy ? [getStrategy(strategy)] : strategyList) as StrategyType[];
       const totalNetPrice = calculateNetPrice(legs, getStrategyPrices(list), 4, getStrategyTotal(list));
       try {
-        await readWriteSDK.sdk?.auth.getSession();
+        await ithacaSDK.auth.getSession();
       } catch {
         try {
-          await readWriteSDK.sdk?.auth.login();
+          await ithacaSDK.auth.login();
         } catch (e) {
           console.error(e);
         }
       }
-      await readWriteSDK.sdk?.orders.newOrder(
+      await ithacaSDK.orders.newOrder(
         {
           clientOrderId: createClientOrderId(),
           totalNetPrice: toPrecision(totalNetPrice, 4),
@@ -115,7 +114,7 @@ const Index = () => {
         type
       );
     },
-    [previousLegs, strategyList]
+    [ithacaSDK, previousLegs, strategyList]
   );
 
   return (

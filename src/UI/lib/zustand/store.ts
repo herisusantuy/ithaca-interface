@@ -1,10 +1,10 @@
 // store.ts
 
 import { create } from 'zustand';
-import { createReadSdkSlice, ReadSdkSlice } from './slices/read-sdk';
+import { createIthacaSDKSlice, IthacaSDKSlice } from './slices/ithacaSDKSlice';
 
-type StoreState = ReadSdkSlice
+type StoreState = IthacaSDKSlice;
 
 export const useAppStore = create<StoreState>()((...a) => ({
-    ...createReadSdkSlice(...a),
+  ...createIthacaSDKSlice(...a),
 }));
