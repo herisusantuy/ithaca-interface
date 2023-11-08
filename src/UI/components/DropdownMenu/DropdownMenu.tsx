@@ -11,7 +11,7 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
 
 // Types
-type Option = {
+export type DropDownOption = {
   name: string;
   value: string;
 };
@@ -19,9 +19,9 @@ type Option = {
 type DropdownMenuProps = {
   label?: string;
   id?: string;
-  onChange?: (value: string, selectedOption: Option) => void;
+  onChange?: (value: string, selectedOption: DropDownOption) => void;
   disabled?: boolean;
-  options: Option[];
+  options: DropDownOption[];
   value?: string;
   iconStart?: ReactNode;
   iconEnd?: ReactNode;
@@ -29,7 +29,7 @@ type DropdownMenuProps = {
 
 const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconEnd }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,7 +56,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
     if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOptionClick = (item: Option) => {
+  const handleOptionClick = (item: DropDownOption) => {
     setSelectedOption(item);
     setIsDropdownOpen(false);
     if (onChange) onChange(item.value, item);
@@ -84,7 +84,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
         </div>
         <ul className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`}>
           {options &&
-            options.map((item: Option, idx: number) => {
+            options.map((item: DropDownOption, idx: number) => {
               return (
                 <li key={idx} onClick={() => handleOptionClick(item)}>
                   {item.name}

@@ -25,7 +25,7 @@ const TradingLayout = ({ isLite }: TradingLayoutProps) => {
       <Toggle
         leftLabel='Lite'
         rightLabel='Pro'
-        defaultState={!isLite ? 'left' : 'right'}
+        defaultState={isLite ? 'left' : 'right'}
         onChange={(side: string) => {
           if (side === 'left') {
             router.push('/trading/lite/market');

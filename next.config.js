@@ -14,17 +14,17 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/trading/lite/market',
+        destination: '/trading/pro/position-builder',
         permanent: true,
       },
       {
         source: '/trading',
-        destination: '/trading/lite/market',
+        destination: '/trading/pro/position-builder',
         permanent: true,
       },
       {
         source: '/trading/lite',
-        destination: '/trading/lite/market',
+        destination: '/trading/pro/position-builder',
         permanent: true,
       },
       {

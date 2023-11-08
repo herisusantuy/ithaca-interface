@@ -1,5 +1,6 @@
 // Types
 export type TableRowData = {
+  clientOrderId: number;
   details: string;
   orderDate: string;
   currencyPair: string;
@@ -75,6 +76,7 @@ function getRandomData(): TableRowData {
   const currencyPairs = ['WETH / USDC'];
 
   return {
+    clientOrderId: Math.random(),
     details: '',
     orderDate,
     currencyPair: currencyPairs[getRandomInt(0, currencyPairs.length - 1)],

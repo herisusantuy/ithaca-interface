@@ -7,7 +7,7 @@ export type NavigationItems = {
 
 export const NAVIGATION_ITEMS: NavigationItems[] = [
   {
-    path: '/trading',
+    path: '/trading/pro/position-builder',
     titleKey: 'Click to visit trading',
     displayText: 'Trading',
   },
