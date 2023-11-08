@@ -1,0 +1,147 @@
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6);
+
+  div {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(6);
+
+    color: var(--white-60);
+    font-family: $roboto;
+    @include font-size('text-sm', 'regular');
+  }
+}
+
+.sliderWrapper {
+  @include spacing(margin, 12, 'top');
+  @include spacing(margin, 14, 'bottom');
+}
+
+.sliderTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(4);
+  @include spacing(margin, 16, 'bottom');
+
+  color: var(--white);
+  font-family: $lato;
+  @include font-size('text-md', 'regular');
+}
+
+.earnInputs {
+  display: flex;
+  gap: rem(36);
+  @include spacing(margin, 16, 'bottom');
+}
+
+.label {
+  color: var(--white-60);
+  font-family: $roboto;
+  @include font-size('text-xs', 'regular');
+}
+
+.gridWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, fit-content(100%));
+  column-gap: rem(15);
+  row-gap: rem(6);
+}
+
+.inputHint {
+  font-family: $lato;
+  font-style: italic;
+}
+
+.earn {
+  color: var(--white);
+  font-family: $roboto;
+  @include font-size('text-md', 'semibold');
+}
+
+.returnsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  height: rem(34);
+  @include spacing(margin, 6, 'bottom');
+}
+
+.earnWrapper {
+  display: flex;
+  align-items: end;
+  gap: rem(4);
+}
+
+.aprWrapper {
+  display: flex;
+  align-items: center;
+  gap: rem(8);
+}
+
+.apr {
+  color: var(--white);
+  font-family: $roboto;
+  @include font-size('text-xs', 'regular');
+}
+
+.payoff {
+  position: relative;
+
+  h4 {
+    position: absolute;
+
+    color: var(--white);
+    font-family: $lato;
+    @include font-size('text-md', 'semibold');
+  }
+}
+
+.orderSummary {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: rem(16);
+}
+
+.summary {
+  h3 {
+    color: var(--white);
+    font-family: $roboto;
+    margin-bottom: 0;
+    @include font-size('text-md', 'regular');
+  }
+
+  h5 {
+    color: var(--white);
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+    @include spacing(margin, 6, 'bottom');
+  }
+
+  h6 {
+    color: var(--white-60);
+    font-family: $lato;
+    @include font-size('text-xxs', 'regular');
+    @include spacing(margin, 4, 'bottom');
+  }
+
+  p {
+    color: var(--white-60);
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+  }
+
+  small {
+    color: var(--white-60);
+    font-family: $roboto;
+    @include font-size('text-xxs', 'regular');
+  }
+}
+
+.summaryInfoWrapper {
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+}
