@@ -268,8 +268,14 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
         );
       case 'Currency Pair': {
         return (
-          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
-            <Filter />
+          <>
+            <Button
+              title='Click to view filter options'
+              className={styles.filter}
+              onClick={() => showFilterBar(header)}
+            >
+              <Filter />
+            </Button>
             <div
               className={`${styles.filterDropdown} ${
                 !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
@@ -287,13 +293,19 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
                 Clear All
               </Button>
             </div>
-          </Button>
+          </>
         );
       }
       case 'Product': {
         return (
-          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
-            <Filter />
+          <>
+            <Button
+              title='Click to view filter options'
+              className={styles.filter}
+              onClick={() => showFilterBar(header)}
+            >
+              <Filter />
+            </Button>
             <div
               className={`${styles.filterDropdown} ${
                 !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
@@ -313,13 +325,19 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
                 Clear All
               </Button>
             </div>
-          </Button>
+          </>
         );
       }
       case 'Side': {
         return (
-          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
-            <Filter />
+          <>
+            <Button
+              title='Click to view filter options'
+              className={styles.filter}
+              onClick={() => showFilterBar(header)}
+            >
+              <Filter />
+            </Button>
             <div
               className={`${styles.filterDropdown} ${
                 !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
@@ -345,7 +363,7 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
                 Clear All
               </Button>
             </div>
-          </Button>
+          </>
         );
       }
       default:

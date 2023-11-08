@@ -26,6 +26,7 @@
       border-bottom: rem(1) solid var(--white-rgba-10);
 
       .cell {
+        position: relative;
         @include font-size('text-xs', 'regular');
         align-items: center;
         gap: rem(2);
@@ -175,7 +176,7 @@
   position: absolute;
   top: rem(20);
   left: 0;
-  min-width: 100%;
+  min-width: rem(125);
   list-style-type: none;
   border-radius: rem(8);
   background: rgba(18, 23, 34);
