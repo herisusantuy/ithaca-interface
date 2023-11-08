@@ -59,7 +59,13 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 
 function App({ Component, pageProps, router }: AppProps) {
   const { nextAuction, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo } = useAppStore();
-  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo);
+  getTimeNextAuction(
+    nextAuction.milliseconds,
+    fetchNextAuction,
+    fetchContractList,
+    fetchReferencePrices,
+    fetchSystemInfo
+  );
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
@@ -75,7 +81,7 @@ const getTimeNextAuction = async (
     fetchContractList();
     fetchReferencePrices();
     fetchSystemInfo();
-  }, timeUntilNexAuction)
-}
+  }, timeUntilNexAuction);
+};
 
 export default App;

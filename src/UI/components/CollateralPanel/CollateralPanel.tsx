@@ -1,7 +1,6 @@
 // Packages
 import { TABLE_COLLATERAL_DATA } from '@/UI/constants/tableCollateral';
 import Panel from '@/UI/layouts/Panel/Panel';
-import readWriteSDK from '@/UI/lib/sdk/readWriteSDK';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
@@ -25,51 +24,51 @@ const CollateralPanel = () => {
   const [selectedAsset, setSelectedAsset] = useState('');
   const [depositAmount, setDepositAmount] = useState('');
 
-  useEffect(() => {
-    readWriteSDK.getFundLockState().then(res => {
-      setData(d =>
-        d.map(row => {
-          const assetData = res?.find(a => a.currency === row.asset);
-          if (assetData) {
-            return {
-              asset: assetData.currency,
-              balance: assetData.fundLockValue - assetData.settleValue - assetData.orderValue,
-              fundLock: assetData.fundLockValue,
-              netOrders: assetData.settleValue,
-              liveOrderValue: assetData.orderValue,
-            };
-          } else return row;
-        })
-      );
-    });
-  }, []);
+  // useEffect(() => {
+  //   readWriteSDK.getFundLockState().then(res => {
+  //     setData(d =>
+  //       d.map(row => {
+  //         const assetData = res?.find(a => a.currency === row.asset);
+  //         if (assetData) {
+  //           return {
+  //             asset: assetData.currency,
+  //             balance: assetData.fundLockValue - assetData.settleValue - assetData.orderValue,
+  //             fundLock: assetData.fundLockValue,
+  //             netOrders: assetData.settleValue,
+  //             liveOrderValue: assetData.orderValue,
+  //           };
+  //         } else return row;
+  //       })
+  //     );
+  //   });
+  // }, []);
 
-  const getFaucet = useCallback(
-    async (asset: string) => {
-      const account = await readWriteSDK.getAccount();
-      const amountToMint = currencies.find(c => c.currency === asset);
-      await readWriteSDK.faucet(
-        systemInfo.tokenAddress[asset] as `0x${string}`,
-        account,
-        amountToMint?.amountToMint || currencies[0].amountToMint
-      );
-    },
-    [systemInfo.tokenAddress]
-  );
+  // const getFaucet = useCallback(
+  //   async (asset: string) => {
+  //     const account = await readWriteSDK.getAccount();
+  //     const amountToMint = currencies.find(c => c.currency === asset);
+  //     await readWriteSDK.faucet(
+  //       systemInfo.tokenAddress[asset] as `0x${string}`,
+  //       account,
+  //       amountToMint?.amountToMint || currencies[0].amountToMint
+  //     );
+  //   },
+  //   [systemInfo.tokenAddress]
+  // );
 
-  const fundLock = useCallback(async () => {
-    const account = await readWriteSDK.getAccount();
-    const amountToMint = parseUnits(depositAmount, systemInfo.tokenDecimals[selectedAsset]);
-    console.log(selectedAsset);
-    console.log(amountToMint);
-    await readWriteSDK.fundLockDeposit(
-      systemInfo.tokenAddress[selectedAsset] as `0x${string}`,
-      account,
-      amountToMint,
-      systemInfo.fundlockAddress as `0x${string}`,
-      systemInfo.tokenManagerAddress as `0x${string}`
-    );
-  }, [systemInfo, selectedAsset, depositAmount]);
+  // const fundLock = useCallback(async () => {
+  //   const account = await readWriteSDK.getAccount();
+  //   const amountToMint = parseUnits(depositAmount, systemInfo.tokenDecimals[selectedAsset]);
+  //   console.log(selectedAsset);
+  //   console.log(amountToMint);
+  //   await readWriteSDK.fundLockDeposit(
+  //     systemInfo.tokenAddress[selectedAsset] as `0x${string}`,
+  //     account,
+  //     amountToMint,
+  //     systemInfo.fundlockAddress as `0x${string}`,
+  //     systemInfo.tokenManagerAddress as `0x${string}`
+  //   );
+  // }, [systemInfo, selectedAsset, depositAmount]);
 
   return (
     <>
@@ -85,15 +84,10 @@ const CollateralPanel = () => {
           withdraw={asset => {
             console.log(asset);
           }}
-          faucet={asset => getFaucet(asset)}
+          faucet={asset => {}}
         />
       </Panel>
-      <Modal
-        title='Manage Funds'
-        isOpen={modalOpen}
-        onCloseModal={() => setModalOpen(false)}
-        onSubmitOrder={() => fundLock()}
-      >
+      <Modal title='Manage Funds' isOpen={modalOpen} onCloseModal={() => setModalOpen(false)} onSubmitOrder={() => {}}>
         {selectedAsset}
         <Input
           onChange={value => {
