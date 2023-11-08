@@ -18,7 +18,9 @@ const Wallet = () => {
     if (account.address !== currentAccount) {
       if (!account.address && !inProgress && currentAccount) {
         setCurrentAccount();
-        walletSDK?.auth.logout()
+        walletSDK?.auth.logout();
+        // rewrite later
+        // needed to stop multiple requests
         setTimeout(() => {
           inProgress = false;
         }, 4000)
@@ -35,6 +37,8 @@ const Wallet = () => {
             setCurrentAccount();
             console.error(err)
           })
+          // rewrite later
+          // needed to stop multiple requests
           setTimeout(() => {
             inProgress = false;
           }, 4000)
