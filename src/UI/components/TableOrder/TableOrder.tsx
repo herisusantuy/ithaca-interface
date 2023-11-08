@@ -1,6 +1,6 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 // Components
 import Pagination from '@/UI/components/Pagination/Pagination';
@@ -12,6 +12,8 @@ import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount'
 import Modal from '@/UI/components/Modal/Modal';
 import Summary from '@/UI/components/Summary/Summary';
 import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
+import Sort from '@/UI/components/Icons/Sort';
+import Filter from '@/UI/components/Icons/Filter';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -22,15 +24,24 @@ import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded } from '@/U
 // Utils
 import {
   formatCurrencyPair,
-  getHeaderIcon,
   getSideIcon,
-  // orderDateSort,
+  orderDateSort,
+  orderLimitSort,
   renderDate,
+  tenorSort,
   variants,
+  CURRENCY_PAIR_LABEL,
+  FilterItemProps,
+  PRODUCT_LABEL,
+  SIDE_LABEL,
+  productFilter,
+  sideFilter,
 } from '@/UI/utils/TableOrder';
 
 // Styles
 import styles from './TableOrder.module.scss';
+import CheckBox from '../CheckBox/CheckBox';
+import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Types
 type TableOrderProps = {
@@ -43,6 +54,20 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
+  const [slicedData, setSlicedData] = useState<TableRowDataWithExpanded[]>([]);
+  const [sortHeader, setSortHeader] = useState<string>('');
+  const [filterHeader, setFilterHeader] = useState<string>('');
+  const [direction, setDirection] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [productArray, setProductArray] = useState<string[]>([]);
+  const [productChecked, setProductChecked] = useState<boolean>(false);
+  const [sideArray, setSideArray] = useState<string[]>([]);
+  const [sideChecked, setSideChecked] = useState<boolean>(false);
+
+  // Define Ref variables for outside clickable
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const sideRef = useRef<HTMLDivElement | null>(null);
+  const productRef = useRef<HTMLDivElement | null>(null);
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
@@ -85,8 +110,33 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
   const pageStart = (currentPage - 1) * pageLimit;
   const pageEnd = pageStart + pageLimit;
 
+  // Outside handle click for hide dialog
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        sideRef.current &&
+        !sideRef.current.contains(event.target as Node) &&
+        productRef.current &&
+        !productRef.current.contains(event.target as Node)
+      ) {
+        setVisible(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
   // Slice the data to only show 9 results
-  const slicedData = data.slice(pageStart, pageEnd);
+  useEffect(() => {
+    let filterData = productFilter(data, productArray);
+    filterData = sideFilter(filterData, sideArray);
+    setSlicedData(filterData.slice(pageStart, pageEnd));
+  }, [data, productArray, pageEnd, pageStart, sideArray]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
@@ -97,26 +147,218 @@ const TableOrder = ({ data: initialData }: TableOrderProps) => {
     }
   };
 
-  // Handle Filter for Testing
-  // const tableFilter = (header: string) => {
-  //   if (header === 'Order Date') {
-  //     data = orderDateSort(data, 'asc');
-  //     console.log(data);
-  //   }
-  // };
+  // Close Esc key for dropdown menu filter
+  useEscKey(() => {
+    if (visible) {
+      setVisible(false);
+    }
+  });
+
+  // Set visible filter bar for show/hide filter box
+  const showFilterBar = (header: string) => {
+    if (header === filterHeader) {
+      setVisible(!visible);
+    } else {
+      setVisible(true);
+      setFilterHeader(header);
+    }
+  };
+
+  // Data sort function
+  const updateSort = (header: string, dir: boolean) => {
+    let sortDirection = true;
+    if (sortHeader != header) {
+      setSortHeader(header);
+      sortDirection = dir;
+      setDirection(dir);
+    } else {
+      sortDirection = !direction;
+      setDirection(!direction);
+    }
+    switch (header) {
+      case 'Order Date': {
+        const sortData = orderDateSort(slicedData, sortDirection);
+        setSlicedData(sortData.slice(pageStart, pageEnd));
+        break;
+      }
+      case 'Tenor': {
+        const sortData = tenorSort(slicedData, sortDirection);
+        setSlicedData(sortData.slice(pageStart, pageEnd));
+        break;
+      }
+      case 'Collateral Amount': {
+        const sortData = tenorSort(slicedData, sortDirection);
+        setSlicedData(sortData.slice(pageStart, pageEnd));
+        break;
+      }
+      case 'Order Limit': {
+        const sortData = orderLimitSort(slicedData, sortDirection);
+        setSlicedData(sortData.slice(pageStart, pageEnd));
+        break;
+      }
+      default:
+        return null;
+    }
+  };
+
+  // checkbox clickable status
+  const selectedLabeStatus = (label: string, status: boolean) => {
+    if (filterHeader == 'Product') {
+      setProductChecked(false);
+      const filter = productArray.slice();
+      if (status) {
+        filter.push(label);
+        setProductArray(filter);
+      } else {
+        const indexToRemove = filter.indexOf(label);
+        if (indexToRemove !== -1) {
+          filter.splice(indexToRemove, 1);
+          setProductArray(filter);
+        }
+      }
+    } else if (filterHeader == 'Side') {
+      setSideChecked(false);
+      const filter = sideArray.slice();
+      if (status) {
+        filter.push(label == 'Buy' ? '+' : '-');
+        setSideArray(filter);
+      } else {
+        const indexToRemove = filter.indexOf(label == 'Buy' ? '+' : '-');
+        if (indexToRemove !== -1) {
+          filter.splice(indexToRemove, 1);
+          setSideArray(filter);
+        }
+      }
+    }
+  };
+
+  const clearFilterArray = (label: string) => {
+    switch (label) {
+      case 'side': {
+        setSideChecked(true);
+        return setSideArray([]);
+      }
+      case 'product': {
+        setProductChecked(true);
+        return setProductArray([]);
+      }
+      case 'currency': {
+        return null;
+      }
+    }
+  };
+
+  // Get table header icons
+  const getHeaderIcon = (header: string) => {
+    switch (header) {
+      case 'Order Date':
+      case 'Tenor':
+      case 'Collateral Amount':
+      case 'Order Limit':
+        return (
+          <Button
+            title='Click to sort column'
+            className={styles.sort}
+            onClick={() => {
+              updateSort(header, true);
+            }}
+          >
+            <Sort />
+          </Button>
+        );
+      case 'Currency Pair': {
+        return (
+          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
+            <Filter />
+            <div
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
+              ref={containerRef}
+            >
+              {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
+                return <CheckBox key={idx} label={item.label} component={item.component} />;
+              })}
+              <Button
+                title='Click to clear filter options'
+                className={`${styles.clearAll} ${sideArray.length > 0 ? styles.selected : ''}`}
+                onClick={() => clearFilterArray('side')}
+              >
+                Clear All
+              </Button>
+            </div>
+          </Button>
+        );
+      }
+      case 'Product': {
+        return (
+          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
+            <Filter />
+            <div
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
+              ref={productRef}
+            >
+              {PRODUCT_LABEL.map((item: string, idx: number) => {
+                return (
+                  <CheckBox key={idx} label={item} onChange={selectedLabeStatus} clearCheckMark={productChecked} />
+                );
+              })}
+              <Button
+                title='Click to clear filter options'
+                className={`${styles.clearAll} ${productArray.length > 0 ? styles.selected : ''}`}
+                onClick={() => clearFilterArray('product')}
+              >
+                Clear All
+              </Button>
+            </div>
+          </Button>
+        );
+      }
+      case 'Side': {
+        return (
+          <Button title='Click to view filter options' className={styles.filter} onClick={() => showFilterBar(header)}>
+            <Filter />
+            <div
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
+              ref={sideRef}
+            >
+              {SIDE_LABEL.map((item: FilterItemProps, idx: number) => {
+                return (
+                  <CheckBox
+                    key={idx}
+                    label={item.label}
+                    component={item.component}
+                    onChange={selectedLabeStatus}
+                    clearCheckMark={sideChecked}
+                  />
+                );
+              })}
+              <Button
+                title='Click to clear filter options'
+                className={`${styles.clearAll} ${sideArray.length > 0 ? styles.selected : ''}`}
+                onClick={() => clearFilterArray('side')}
+              >
+                Clear All
+              </Button>
+            </div>
+          </Button>
+        );
+      }
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
       <div className={styles.table}>
         <div className={`${styles.row} ${styles.header}`}>
           {TABLE_ORDER_HEADERS.map((header, idx) => (
-            <div
-              className={styles.cell}
-              key={idx}
-              // onClick={() => {
-              //   tableFilter(header);
-              // }}
-            >
+            <div className={styles.cell} key={idx}>
               {header} {getHeaderIcon(header)}
             </div>
           ))}
