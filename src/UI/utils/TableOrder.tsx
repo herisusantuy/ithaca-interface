@@ -1,8 +1,8 @@
 // Packages
-import { Fragment } from 'react';
+import { Fragment, ReactElement } from 'react';
 
 // Constants
-import { TableRowData } from '@/UI/constants/tableOrder';
+import { TableRowData, TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
 
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
@@ -17,51 +17,68 @@ import Filter from '@/UI/components/Icons/Filter';
 import styles from '../components/TableOrder/TableOrder.module.scss';
 
 // orderDate Sort
-export const orderDateSort = (data: TableRowData[], dir: string) => {
-  if (dir === 'asc') {
-    data.sort((a: TableRowData, b: TableRowData) => new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime());
+export const orderDateSort = (data: TableRowDataWithExpanded[], dir: boolean) => {
+  if (dir) {
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) =>
+        new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime()
+    );
   } else {
-    data.sort((a: TableRowData, b: TableRowData) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) =>
+        new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+    );
   }
-  console.log(data);
   return data;
 };
 
 // orderLimit Sort
-export const orderLimitSort = (data: TableRowData[], dir: string) => {
-  if (dir === 'asc') {
-    data.sort((a: TableRowData, b: TableRowData) => Number(a.orderLimit) - Number(b.orderLimit));
+export const orderLimitSort = (data: TableRowDataWithExpanded[], dir: boolean) => {
+  if (dir) {
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) => Number(a.orderLimit) - Number(b.orderLimit)
+    );
   } else {
-    data.sort((a: TableRowData, b: TableRowData) => Number(b.orderLimit) - Number(a.orderLimit));
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) => Number(b.orderLimit) - Number(a.orderLimit)
+    );
   }
-  console.log(data);
   return data;
 };
 
 // tenor Sort
-export const tenorSort = (data: TableRowData[], dir: string) => {
-  if (dir === 'asc') {
-    data.sort((a: TableRowData, b: TableRowData) => new Date(a.tenor).getTime() - new Date(b.tenor).getTime());
+export const tenorSort = (data: TableRowDataWithExpanded[], dir: boolean) => {
+  if (dir) {
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) =>
+        new Date(a.tenor).getTime() - new Date(b.tenor).getTime()
+    );
   } else {
-    data.sort((a: TableRowData, b: TableRowData) => new Date(b.tenor).getTime() - new Date(a.tenor).getTime());
+    data.sort(
+      (a: TableRowDataWithExpanded, b: TableRowDataWithExpanded) =>
+        new Date(b.tenor).getTime() - new Date(a.tenor).getTime()
+    );
   }
-  console.log(data);
   return data;
 };
 
 // side filter
-export const sideFilter = (data: TableRowData[], filterItem: string) => {
-  //   const filteredData = data.filter((item: TableRowData) => item.side === '+');
-  const filteredData = data.filter((item: TableRowData) => item.side === filterItem);
-  console.log(filteredData);
+export const sideFilter = (data: TableRowDataWithExpanded[], filterArray: string[]) => {
+  if (filterArray.length == 0) {
+    return data;
+  }
+  //   const filteredData = data.filter((item: TableRowDataWithExpanded) => item.side === '+');
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.side));
   return filteredData;
 };
 
 // Product filter(in this case filter value is Forward, Call)
-export const productFilter = (data: TableRowData[], filterArray: string[]) => {
+export const productFilter = (data: TableRowDataWithExpanded[], filterArray: string[]) => {
   //   const filterArray = ['Forward', 'Call'];
-  const filteredData = data.filter((item: TableRowData) => filterArray.includes(item.product));
-  console.log(filteredData);
+  if (filterArray.length == 0) {
+    return data;
+  }
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.product));
   return filteredData;
 };
 
@@ -82,31 +99,6 @@ export const formatCurrencyPair = (currencyPair: string) => (
 // Get side icon
 export const getSideIcon = (side: string) => {
   return side === '+' ? <Plus /> : <Minus />;
-};
-
-// Get table header icons
-export const getHeaderIcon = (header: string) => {
-  switch (header) {
-    case 'Order Date':
-    case 'Tenor':
-    case 'Collateral Amount':
-    case 'Order Limit':
-      return (
-        <Button title='Click to sort column' className={styles.sort}>
-          <Sort />
-        </Button>
-      );
-    case 'Currency Pair':
-    case 'Product':
-    case 'Side':
-      return (
-        <Button title='Click to view filter options' className={styles.filter}>
-          <Filter />
-        </Button>
-      );
-    default:
-      return null;
-  }
 };
 
 // Split the dates and render as spans
@@ -132,3 +124,32 @@ export const variants = {
   open: { opacity: 1, height: 'auto' },
   closed: { opacity: 0, height: 0 },
 };
+
+export type FilterItemProps = {
+  label: string;
+  component: ReactElement | null;
+};
+
+export const CURRENCY_PAIR_LABEL: FilterItemProps[] = [
+  {
+    label: 'USDC',
+    component: <LogoUsdc />,
+  },
+  {
+    label: 'WETH',
+    component: <LogoEth />,
+  },
+];
+
+export const PRODUCT_LABEL: string[] = ['Call', 'Put', 'Binary Call', 'Binary Put', 'Forward'];
+
+export const SIDE_LABEL: FilterItemProps[] = [
+  {
+    label: 'Buy',
+    component: <Plus />,
+  },
+  {
+    label: 'Sell',
+    component: <Minus />,
+  },
+];
