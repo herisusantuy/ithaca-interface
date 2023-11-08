@@ -84,7 +84,7 @@ const CollateralPanel = () => {
         abi: parseAbi(['function mint(address to, uint256 amount) external']),
         chain,
         functionName: 'mint',
-        args: [account, amountToMint?.amountToMint || currencies[0].amountToMint],
+        args: [account as `0x${string}`, amountToMint?.amountToMint || currencies[0].amountToMint],
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

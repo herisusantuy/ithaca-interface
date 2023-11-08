@@ -113,11 +113,11 @@ const TableOrder = ({ type }: TableOrderProps) => {
             dataToRows(res)
           })
           break;
-        case TABLE_TYPE.ORDER:
-          ithacaSDK.protocol.matchedOrders().then((res) => {
-            dataToRows(res)
-          })
-          break;
+        // case TABLE_TYPE.ORDER:
+        //   ithacaSDK.protocol.matchedOrders().then((res) => {
+        //     dataToRows(res)
+        //   })
+        //   break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then((res) => {
             dataToRows(res)
