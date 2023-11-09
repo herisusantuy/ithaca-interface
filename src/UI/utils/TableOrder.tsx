@@ -80,36 +80,7 @@ export const productFilter = (data: TableRowDataWithExpanded[], filterArray: str
   return filteredData;
 };
 
-// FoundLock table sort and filter
-export const foundLockOrderDateSort = (data: TableFundLockDataProps[], dir: boolean) =>{
-  if (dir) {
-    data.sort(
-      (a: TableFundLockDataProps, b: TableFundLockDataProps) =>
-        new Date(a.orderData).getTime() - new Date(b.orderData).getTime()
-    );
-  } else {
-    data.sort(
-      (a: TableFundLockDataProps, b: TableFundLockDataProps) =>
-        new Date(b.orderData).getTime() - new Date(a.orderData).getTime()
-    );
-  }
-  return data;
-}
 
-export const foundLockAmountDataSort = (data: TableFundLockDataProps[], dir: boolean) => {
-   if (dir) {
-    data.sort(
-      (a: TableFundLockDataProps, b: TableFundLockDataProps) =>
-        new Date(a.amount).getTime() - new Date(b.amount).getTime()
-    );
-  } else {
-    data.sort(
-      (a: TableFundLockDataProps, b: TableFundLockDataProps) =>
-        new Date(b.amount).getTime() - new Date(a.amount).getTime()
-    );
-  }
-  return data;
-}
 // Format currency page
 export const formatCurrencyPair = (currencyPair: string) => (
   <>
