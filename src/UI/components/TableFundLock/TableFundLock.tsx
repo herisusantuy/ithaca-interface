@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/tableFundLock';
 
 // Utils
-import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, orderDateSort, renderDate } from '@/UI/utils/TableOrder';
+import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
 
 // Components
 import Button from '@/UI/components/Button/Button';
