@@ -37,7 +37,7 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {
-    const currentOffset = data[i + 1].value - data[i].value;
+    const currentOffset = Math.abs(data[i + 1].value - data[i].value);
     if (currentOffset > offsetCompareVal) {
       if (increament) {
         offsets.pop();
@@ -84,3 +84,9 @@ export const makingChartData = (data: any[], key: string) => {
   const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined }));
   return result;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getLegs = (data: any[]) => {
+  const keys = Object.keys(data[0]).filter(item => !["x"].includes(item));
+  return keys;
+}

@@ -1,23 +1,48 @@
 // constants
-import { KeyType } from '@/UI/constants/charts';
+import { KeyType, getRandomInt } from '@/UI/constants/charts';
 
 // Components
-import Dot from '@/UI/components/Dot/Dot';
+import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
 
 // Styles
 import styles from './ChartPayoff.module.scss';
+import { useEffect, useState } from 'react';
 
 type KeysProps = {
-  keys: KeyType[];
+  keys: string[];
   onChange: (label: string) => void;
 };
 
 const Key = (props: KeysProps) => {
   const { keys, onChange } = props;
+  const [keyMap, setKeyMap] = useState<KeyType[]>([]);
+
+  useEffect(() => {
+    const keyArray: KeyType[] = [];
+    const dotArray: DotTypes[] = [
+      'Call',
+      'Put',
+      'BinaryCall',
+      'BinaryPut',
+      'Forward (10 Nov 23)',
+      'Forward (Next Auction)',
+    ];
+    keys.map(item => {
+      if (item == 'total') {
+        const keyObj: KeyType = { label: item, type: 'White' };
+        keyArray.push(keyObj);
+      } else {
+        const dotTypeInt = getRandomInt(1, 5);
+        const keyObj: KeyType = { label: item, type: dotArray[dotTypeInt - 1] };
+        keyArray.push(keyObj);
+      }
+    });
+    setKeyMap(keyArray);
+  }, [keys]);
 
   // Add class to total item
   const getBadgeClass = (label: string): string => {
-    return label === 'Total' ? styles.badge : '';
+    return label === 'total' ? styles.badge : '';
   };
 
   // Change Label
@@ -27,7 +52,7 @@ const Key = (props: KeysProps) => {
 
   return (
     <div className={styles.container}>
-      {keys.map((key, index) => (
+      {keyMap.map((key, index) => (
         <div
           key={index}
           className={`${styles.key} ${getBadgeClass(key.label)}`}
