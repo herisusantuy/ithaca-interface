@@ -1,12 +1,14 @@
 // Packages
 import dynamic from 'next/dynamic';
 
-// Components
-import Meta from '@/UI/components/Meta/Meta';
+// Constants
+import { TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
 
 // Components
+import Meta from '@/UI/components/Meta/Meta';
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
 import Tabs from '@/UI/components/Tabs/Tabs';
+import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
 
 const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder'), {
   ssr: false,
@@ -16,7 +18,7 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
-import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
+import TableFundLock from '@/UI/components/TableFundLock/TableFundLock';
 
 const Dashboard = () => {
   const DASHBOARD_TABS = [
@@ -38,7 +40,7 @@ const Dashboard = () => {
     {
       id: 'fundLockHistory',
       label: 'Fund Lock History',
-      content: <p>Coming soon.</p>,
+      content: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
     },
   ];
 

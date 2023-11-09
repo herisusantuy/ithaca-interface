@@ -4,6 +4,7 @@
   flex-direction: column;
   gap: rem(4);
   border-left: rem(1) solid var(--white-10);
+  position: relative;
 }
 
 .label {
@@ -36,4 +37,45 @@
 .subValue {
   @include font-size('text-xxs', 'regular');
   color: var(--white-60);
+}
+
+.dropdown {
+  cursor: pointer;
+
+  &.isActive svg {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdownMenu {
+  @include spacing(padding, 16, 'all');
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  position: absolute;
+  left: 0;
+  top: rem(40);
+  border-radius: rem(8);
+  background: var(--Dropdown-background, rgba(32, 38, 49, 0.8));
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+  list-style: none;
+  z-index: 9999;
+  margin: 0;
+
+  li {
+    @include font-size('text-sm', 'regular');
+    color: var(--white);
+    font-family: $roboto;
+    transition: $transition_all;
+    cursor: pointer;
+    text-align: right;
+
+    &:hover {
+      color: var(--green-30);
+    }
+  }
 }

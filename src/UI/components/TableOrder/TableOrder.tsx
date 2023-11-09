@@ -1,25 +1,22 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useRef, useState } from 'react';
+import { useWalletClient } from 'wagmi';
+import dayjs from 'dayjs';
 
-// Components
-import Pagination from '@/UI/components/Pagination/Pagination';
-import TableDescription from '@/UI/components/TableDescription/TableDescription';
-import Delete from '@/UI/components/Icons/Delete';
-import Button from '@/UI/components/Button/Button';
-import Dropdown from '@/UI/components/Icons/Dropdown';
-import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
-import Modal from '@/UI/components/Modal/Modal';
-import Summary from '@/UI/components/Summary/Summary';
-import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
-import Sort from '@/UI/components/Icons/Sort';
-import Filter from '@/UI/components/Icons/Filter';
+// Lib
+import { useAppStore } from '@/UI/lib/zustand/store';
 
-// Layout
-import Flex from '@/UI/layouts/Flex/Flex';
+// SDK
+import { Order } from '@ithaca-finance/sdk';
 
 // Constants
-import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded, TABLE_ORDER_DATA_WITH_EXPANDED } from '@/UI/constants/tableOrder';
+import {
+  TABLE_ORDER_HEADERS,
+  TableRowData,
+  TableRowDataWithExpanded,
+  TABLE_ORDER_DATA_WITH_EXPANDED,
+} from '@/UI/constants/tableOrder';
 
 // Utils
 import {
@@ -38,25 +35,38 @@ import {
   sideFilter,
 } from '@/UI/utils/TableOrder';
 
+// Hooks
+import { useEscKey } from '@/UI/hooks/useEscKey';
+
+// Components
+import Pagination from '@/UI/components/Pagination/Pagination';
+import TableDescription from '@/UI/components/TableDescription/TableDescription';
+import Delete from '@/UI/components/Icons/Delete';
+import Button from '@/UI/components/Button/Button';
+import Dropdown from '@/UI/components/Icons/Dropdown';
+import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
+import Modal from '@/UI/components/Modal/Modal';
+import Summary from '@/UI/components/Summary/Summary';
+import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
+import Sort from '@/UI/components/Icons/Sort';
+import Filter from '@/UI/components/Icons/Filter';
+import CheckBox from '@/UI/components/CheckBox/CheckBox';
+
+// Layout
+import Flex from '@/UI/layouts/Flex/Flex';
+
 // Styles
 import styles from './TableOrder.module.scss';
-import CheckBox from '../CheckBox/CheckBox';
-import { useEscKey } from '@/UI/hooks/useEscKey';
-import { useAppStore } from '@/UI/lib/zustand/store';
-import { useWalletClient } from 'wagmi';
-import dayjs from 'dayjs';
-import { Order } from '@ithaca-finance/sdk';
 
 // Types
 type TableOrderProps = {
-  // data: TableRowDataWithExpanded[];
-  type?: TABLE_TYPE
+  type?: TABLE_TYPE;
 };
 
 export enum TABLE_TYPE {
-   LIVE,
-   ORDER,
-   TRADE
+  LIVE,
+  ORDER,
+  TRADE,
 }
 
 const TableOrder = ({ type }: TableOrderProps) => {
@@ -81,7 +91,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
   const { data: walletClient } = useWalletClient();
-  
+
   const dataToRows = (res: Order[]) => {
     setData(res.map((row) => ({
       clientOrderId: row.orderId,
@@ -109,9 +119,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
     if (address) {
       switch (type) {
         case TABLE_TYPE.LIVE:
-          ithacaSDK.orders.clientOpenOrders().then((res) => {
-            dataToRows(res)
-          })
+          ithacaSDK.orders.clientOpenOrders().then(res => {
+            dataToRows(res);
+          });
           break;
         // case TABLE_TYPE.ORDER:
         //   ithacaSDK.protocol.matchedOrders().then((res) => {
@@ -119,21 +129,25 @@ const TableOrder = ({ type }: TableOrderProps) => {
         //   })
         //   break;
         case TABLE_TYPE.TRADE:
-          ithacaSDK.client.tradeHistory().then((res) => {
-            dataToRows(res)
-          })
+          ithacaSDK.client.tradeHistory().then(res => {
+            dataToRows(res);
+          });
           break;
         default:
-          setData(TABLE_ORDER_DATA_WITH_EXPANDED)
+          setData(TABLE_ORDER_DATA_WITH_EXPANDED);
           break;
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletClient?.account.address]);
+
+  useEffect(() => {
+    setData(TABLE_ORDER_DATA_WITH_EXPANDED);
+  }, []);
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
-    setRowToCancelOrder(data[rowIndex]);
+    setRowToCancelOrder(slicedData[rowIndex]);
     setIsModalOpen(true);
   };
 
@@ -147,12 +161,12 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const handleCancelOrderRemoveRow = () => {
     setIsDeleting(true);
     ithacaSDK.orders.orderCancel(rowToCancelOrder?.clientOrderId || 0).then(() => {
-      const newData = data.filter(row => row !== rowToCancelOrder);
+      const newData = slicedData.filter(row => row !== rowToCancelOrder);
       setData(newData);
       setIsDeleting(false);
       setIsModalOpen(false);
       setRowToCancelOrder(null);
-    })
+    });
   };
 
   // Page state
@@ -338,8 +352,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={containerRef}
             >
               {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
@@ -367,8 +382,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={productRef}
             >
               {PRODUCT_LABEL.map((item: string, idx: number) => {
@@ -398,8 +414,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={sideRef}
             >
               {SIDE_LABEL.map((item: FilterItemProps, idx: number) => {
@@ -439,85 +456,91 @@ const TableOrder = ({ type }: TableOrderProps) => {
             </div>
           ))}
         </div>
-        {slicedData.map((row, rowIndex) => {
-          const isRowExpanded = expandedRow.includes(rowIndex);
+        {slicedData.length > 0 ? (
+          slicedData.map((row, rowIndex) => {
+            const isRowExpanded = expandedRow.includes(rowIndex);
 
-          return (
-            <Fragment key={rowIndex}>
-              <div className={`${styles.row} ${isRowExpanded ? styles.isExpanded : ''}`}>
-                <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                  <Button
-                    title='Click to expand dropdown'
-                    className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
+            return (
+              <Fragment key={rowIndex}>
+                <div className={`${styles.row} ${isRowExpanded ? styles.isExpanded : ''}`}>
+                  <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
+                    <Button
+                      title='Click to expand dropdown'
+                      className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
+                    >
+                      <Dropdown />
+                    </Button>
+                  </div>
+                  <div className={styles.cell}>{renderDate(row.orderDate)}</div>
+                  <div className={styles.cell}>
+                    <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
+                  </div>
+                  <div className={styles.cell}>{row.product}</div>
+                  <div className={styles.cell}>{getSideIcon(row.side)}</div>
+                  <div className={styles.cell}>{renderDate(row.tenor)}</div>
+                  <div className={styles.cell}>
+                    <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
+                  </div>
+                  <div className={styles.cell}>{row.orderLimit}</div>
+                  <div className={styles.cell}>
+                    <Button
+                      title='Click to cancel order'
+                      className={styles.delete}
+                      onClick={() => handleCancelOrderClick(rowIndex)}
+                    >
+                      <Delete />
+                    </Button>
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {isRowExpanded && (
+                    <motion.div
+                      className={styles.tableRowExpanded}
+                      initial='closed'
+                      animate='open'
+                      exit='closed'
+                      variants={variants}
+                    >
+                      {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {isModalOpen && rowToCancelOrder && (
+                  <Modal
+                    title='Cancel Order'
+                    onCloseModal={handleCloseModal}
+                    onSubmitOrder={handleCancelOrderRemoveRow}
+                    isLoading={isDeleting}
+                    isOpen={isModalOpen}
                   >
-                    <Dropdown />
-                  </Button>
-                </div>
-                <div className={styles.cell}>{renderDate(row.orderDate)}</div>
-                <div className={styles.cell}>
-                  <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
-                </div>
-                <div className={styles.cell}>{row.product}</div>
-                <div className={styles.cell}>{getSideIcon(row.side)}</div>
-                <div className={styles.cell}>{renderDate(row.tenor)}</div>
-                <div className={styles.cell}>
-                  <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
-                </div>
-                <div className={styles.cell}>{row.orderLimit}</div>
-                <div className={styles.cell}>
-                  <Button
-                    title='Click to cancel order'
-                    className={styles.delete}
-                    onClick={() => handleCancelOrderClick(rowIndex)}
-                  >
-                    <Delete />
-                  </Button>
-                </div>
-              </div>
-              <AnimatePresence>
-                {isRowExpanded && (
-                  <motion.div
-                    className={styles.tableRowExpanded}
-                    initial='closed'
-                    animate='open'
-                    exit='closed'
-                    variants={variants}
-                  >
-                    {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
-                  </motion.div>
+                    <p>Please confirm if you&apos;d like to cancel your order.</p>
+                    <Summary detail={rowToCancelOrder} />
+                  </Modal>
                 )}
-              </AnimatePresence>
-              {isModalOpen && rowToCancelOrder && (
-                <Modal
-                  title='Cancel Order'
-                  onCloseModal={handleCloseModal}
-                  onSubmitOrder={handleCancelOrderRemoveRow}
-                  isLoading={isDeleting}
-                  isOpen={isModalOpen}
-                >
-                  <p>Please confirm if you&apos;d like to cancel your order.</p>
-                  <Summary detail={rowToCancelOrder} />
-                </Modal>
-              )}
-            </Fragment>
-          );
-        })}
+              </Fragment>
+            );
+          })
+        ) : (
+          <p className={styles.emptyTable}>No results found</p>
+        )}
       </div>
-      <Flex direction='row-space-between' margin='mt-35'>
-        <TableDescription
-          possibleReleaseX={10}
-          possibleReleaseY={20}
-          postOptimisationX={8}
-          postOptimisationY={18}
-          totalCollateral={30}
-        />
-        <Pagination
-          totalItems={data.length}
-          itemsPerPage={pageLimit}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </Flex>
+      {slicedData.length > 0 ? (
+        <Flex direction='row-space-between' margin='mt-35'>
+          <TableDescription
+            possibleReleaseX={10}
+            possibleReleaseY={20}
+            postOptimisationX={8}
+            postOptimisationY={18}
+            totalCollateral={30}
+          />
+          <Pagination
+            totalItems={data.length}
+            itemsPerPage={pageLimit}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </Flex>
+      ) : null}
     </>
   );
 };

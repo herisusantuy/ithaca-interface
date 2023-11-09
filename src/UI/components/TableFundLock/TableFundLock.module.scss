@@ -1,0 +1,136 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.header {
+  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'bottom');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: $roboto;
+  color: var(--white-60);
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  .cell {
+    position: relative;
+    @include font-size('text-xs', 'regular');
+    width: calc(100% / 4);
+
+    &:last-child {
+      white-space: nowrap;
+    }
+  }
+}
+
+.row {
+  @include spacing(padding, 10, 'all');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .cell {
+    @include font-size('text-md', 'regular');
+    font-family: $roboto;
+    display: flex;
+    flex: 1;
+    width: calc(100% / 4);
+  }
+}
+
+.filter,
+.sort {
+  @include spacing(padding, 4, 'all');
+  background: none;
+  height: auto;
+  border-radius: rem(4);
+
+  &:before {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--white-5);
+  }
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: rem(1);
+
+  .time {
+    @include spacing(margin, 8, 'left');
+  }
+}
+
+.sort {
+  svg path {
+    stroke: inherit;
+  }
+}
+
+.filter {
+  svg path {
+    stroke: revert-layer;
+  }
+}
+
+.filterDropdown {
+  @include spacing(padding, 16, 'all');
+  position: absolute;
+  top: rem(20);
+  left: 0;
+  min-width: rem(125);
+  list-style-type: none;
+  border-radius: rem(8);
+  background: rgba(18, 23, 34);
+  box-shadow:
+    rem(2) rem(2) rem(4) rem(0) rgba(0, 0, 0, 0.15),
+    rem(0) rem(0) rem(4) rem(0) rgba(43, 46, 58, 0.15) inset,
+    rem(0) rem(0) rem(15) rem(0) rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: rem(8);
+  z-index: 2;
+}
+
+.hide {
+  display: none;
+}
+
+.clearAll {
+  @include spacing(padding, 4, 'all');
+  @include font-size('text-xs', 'bold');
+  font-family: $roboto;
+  background: none;
+  height: auto;
+
+  &:before {
+    display: none;
+  }
+
+  &:hover {
+    background: none;
+    color: var(--green-30);
+  }
+
+  &.selected {
+    color: var(--green-30);
+  }
+}
+
+.emptyTable {
+  @include font-size('text-xs', 'regular');
+  @include spacing(padding, 16, 'top');
+  text-align: center;
+}

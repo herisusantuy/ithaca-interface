@@ -16,7 +16,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: rem(100);
+  width: 100%;
+  min-width: rem(100);
 }
 
 .input {
@@ -55,7 +56,6 @@
     font-family: $roboto;
     color: var(--white);
     box-sizing: content-box;
-    width: rem(48);
   }
 }
 
