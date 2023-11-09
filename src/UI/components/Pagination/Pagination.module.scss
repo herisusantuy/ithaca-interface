@@ -30,6 +30,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: $transition_all;
 
   &:hover {
     color: var(--white);
@@ -42,7 +43,9 @@
     border-radius: 50%;
   }
 
-  &.disabled {
+  &.disabled,
+  &.disabled:hover {
+    color: var(--white-60);
     cursor: not-allowed;
     background-color: transparent;
   }

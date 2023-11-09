@@ -1,6 +1,12 @@
+// Packages
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+
+import Flex from '@/UI/layouts/Flex/Flex';
+
+// Styles
 import styles from './CheckBox.module.scss';
 
+// Types
 type CheckBoxType = {
   label: string;
   component?: ReactElement | null;
@@ -28,9 +34,9 @@ const CheckBox = (props: CheckBoxType) => {
 
   return (
     <label className={styles.container}>
-      <div className={styles.componentFlex}>
+      <Flex>
         {component} <p>{label}</p>
-      </div>
+      </Flex>
       <input type='checkbox' onChange={e => updateState(e)} checked={status} />
       <span className={styles.checkmark}></span>
     </label>
