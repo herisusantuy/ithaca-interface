@@ -134,8 +134,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                 strokeWidth='2'
                 dataKey='value'
                 fill='url(#fillGradient)'
-                label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={breakPoints} />}
-                dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={breakPoints} />}
+                label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={breakPoints} dataList={modifiedData}  />}
+                dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={breakPoints} dataList={modifiedData} />}
                 activeDot={false}
               />
               <Area
