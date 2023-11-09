@@ -7,6 +7,7 @@ import Meta from '@/UI/components/Meta/Meta';
 // Components
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
 import Tabs from '@/UI/components/Tabs/Tabs';
+import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
 
 const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder'), {
   ssr: false,
@@ -16,7 +17,6 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
-import { TABLE_TYPE } from '@/UI/components/TableOrder/TableOrder';
 
 const Dashboard = () => {
   const DASHBOARD_TABS = [
