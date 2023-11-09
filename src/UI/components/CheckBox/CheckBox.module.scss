@@ -18,7 +18,6 @@
   }
 }
 
-/* Create a custom checkbox */
 .checkmark {
   position: absolute;
   left: 0;
@@ -26,6 +25,7 @@
   height: rem(16);
   width: rem(16);
   border: 1px solid var(--white-20);
+
   &::after {
     content: '';
     position: absolute;
@@ -33,18 +33,15 @@
   }
 }
 
-/* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
   background-color: var(--green-30);
   border: none;
 }
 
-/* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
   display: block;
 }
 
-/* Style the checkmark/indicator */
 .container .checkmark:after {
   left: rem(5);
   top: rem(2);
@@ -53,10 +50,4 @@
   border: solid var(--white-5);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-}
-
-.componentFlex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
