@@ -78,6 +78,12 @@ const ChartPayoff = (props: ChartDataProps) => {
     }
   };
 
+  const updateChange = (val: number) => {
+    setTimeout(() => {
+      setChangeVal(val);
+    }, 10);
+  };
+
   return (
     <>
       {isClient && (
@@ -141,7 +147,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               position={{ x: cursorX - 50, y: 0 }}
               wrapperStyle={{ width: 100 }}
               cursor={<CustomCursor x={cursorX} />}
-              content={<CustomTooltip base={baseValue} setChangeVal={setChangeVal} />}
+              content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
             />
 
             <XAxis tick={false} axisLine={false}>
