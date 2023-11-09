@@ -13,6 +13,7 @@ import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
+import { estimateOrderPayoff, OptionLeg } from '@/UI/utils/CalcChartPayoff'
 
 // Utils
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
@@ -56,7 +57,7 @@ const Index = () => {
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
 
   // Store
-  const { ithacaSDK } = useAppStore();
+  const { ithacaSDK, contractList } = useAppStore();
   const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate)
 
   const getOrderSummary = useCallback(
@@ -73,6 +74,13 @@ const Index = () => {
           totalNetPrice: toPrecision(totalNetPrice, 4),
           legs,
         });
+
+        const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId)}})
+        const payoffs = estimateOrderPayoff(completeData)
+        console.log(payoffs)
+
+
+
 
         setChartData(
           Object.keys(orderPayoff).map(key => ({
