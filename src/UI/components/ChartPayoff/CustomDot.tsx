@@ -41,7 +41,9 @@ const CustomDot = (props: CustomDotProps) => {
   } else {
     return special.map((item: SpecialDotLabel, idx: number) => {
       if (item.value === Number(payload?.value) + Number(base)) {
-        return renderCircle(idx);
+        if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
+          return renderCircle(idx);
+        }
       }
     });
   }
