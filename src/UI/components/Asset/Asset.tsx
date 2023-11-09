@@ -8,11 +8,14 @@ import styles from './Asset.module.scss';
 type AssetProps = {
   icon: ReactNode;
   label: string;
+  size?: string;
 };
 
-const Asset = ({ icon, label }: AssetProps) => {
+const Asset = ({ icon, label, size }: AssetProps) => {
+  const sizeClass = size ? styles[size] : '';
+
   return (
-    <div className={styles.asset}>
+    <div className={`${styles.asset} ${sizeClass}`.trim()}>
       {icon}
       <p className={styles.label}>{label}</p>
     </div>
