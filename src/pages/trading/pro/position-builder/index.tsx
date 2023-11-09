@@ -69,25 +69,25 @@ const Index = () => {
           totalNetPrice: toPrecision(totalNetPrice, 4),
           legs,
         });
-        const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff({
-          clientOrderId: createClientOrderId(),
-          totalNetPrice: toPrecision(totalNetPrice, 4),
-          legs,
-        });
+        // const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff({
+        //   clientOrderId: createClientOrderId(),
+        //   totalNetPrice: toPrecision(totalNetPrice, 4),
+        //   legs,
+        // });
 
         const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId)}})
         const payoffs = estimateOrderPayoff(completeData)
-        console.log(payoffs)
+        setChartData(payoffs)
 
 
 
 
-        setChartData(
-          Object.keys(orderPayoff).map(key => ({
-            value: orderPayoff[key],
-            dashValue: undefined,
-          }))
-        );
+        // setChartData(
+        //   Object.keys(orderPayoff).map(key => ({
+        //     value: orderPayoff[key],
+        //     dashValue: undefined,
+        //   }))
+        // );
         setSummaryDetails({
           underlierAmount: orderLock.underlierAmount,
           numeraireAmount: orderLock.numeraireAmount,
