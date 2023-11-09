@@ -93,28 +93,26 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const { data: walletClient } = useWalletClient();
 
   const dataToRows = (res: Order[]) => {
-    setData(
-      res.map(row => ({
-        clientOrderId: row.orderId,
-        details: '',
-        orderDate: dayjs(1699462800000).format('DD MMM YY HH:mm'),
-        currencyPair: row.collateral?.currencyPair || 'WETH/USDC',
-        product: row.orderDescr,
-        side: '+',
-        tenor: '14 Jun 23',
-        wethAmount: row.collateral?.numeraireAmount,
-        usdcAmount: row.collateral?.underlierAmount,
-        orderLimit: row.details.reduce((agg, d) => d.originalQty + agg, 0),
-        expandedInfo: row.details.map(leg => ({
-          type: leg.contractDto.payoff,
-          side: leg.side,
-          size: leg.originalQty,
-          strike: leg.contractDto.economics.strike,
-          enterPrice: leg.execPrice,
-        })),
-      })) as TableRowDataWithExpanded[]
-    );
-  };
+    setData(res.map((row) => ({
+      clientOrderId: row.orderId,
+      details: "",
+      orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'),
+      currencyPair: row.collateral?.currencyPair  || row.details[0].currencyPair,
+      product: row.orderDescr,
+      side: row.details.length === 1 ? row.details[0].side : '',
+      tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
+      wethAmount: row.collateral?.numeraireAmount,
+      usdcAmount: row.collateral?.underlierAmount,
+      orderLimit: row.netPrice,
+      expandedInfo: row.details.map((leg) => ({
+        type: leg.contractDto.payoff,
+        side: leg.side,
+        size: leg.originalQty,
+        strike: leg.contractDto.economics.strike,
+        enterPrice: leg.execPrice
+      }))
+    })) as TableRowDataWithExpanded[])
+  }
 
   useEffect(() => {
     const address = walletClient?.account.address;
