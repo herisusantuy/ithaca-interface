@@ -219,7 +219,7 @@ const Index = () => {
                 />
                 <h3>Payoff Diagram</h3>
                 {chartData.length && previousLegs.length ? (
-                  <ChartPayoff chartData={chartData} width={400} height={300} />
+                  <ChartPayoff chartData={chartData} height={300} />
                 ) : (
                   <div className={styles.tableWrapper}></div>
                 )}

@@ -29,7 +29,6 @@ import { breakPointList, getLegs, gradientOffset, isDecrementing, isIncrementing
 
 type ChartDataProps = {
   chartData: PayoffDataProps[];
-  width: number;
   height: number;
 };
 
