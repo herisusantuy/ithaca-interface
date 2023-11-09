@@ -11,14 +11,21 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KEY_DATA, KeyType } from '@/UI/constants/charts';
+import {
+  PayoffDataProps,
+  PAYOFF_DUMMY_DATA,
+  SpecialDotLabel,
+  KEY_DATA,
+  KeyType,
+  CHART_FAKE_DATA,
+} from '@/UI/constants/charts';
 
 //Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
-import { breakPointList, gradientOffset, isDecrementing, isIncrementing } from '@/UI/utils/ChartUtil';
+import { breakPointList, gradientOffset, isDecrementing, isIncrementing, makingChartData } from '@/UI/utils/ChartUtil';
 
 type ChartDataProps = {
   chartData: PayoffDataProps[];
@@ -32,7 +39,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
-  const [bridge, setBridge] = useState<string>('');
+  const [bridge, setBridge] = useState<string>('total');
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
@@ -47,11 +54,12 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    setMinimize(Math.min(...chartData.map(i => i.value)));
-    isIncrementing(chartData) ? setUpSide(true) : setUpSide(false);
-    isDecrementing(chartData) ? setDownSide(true) : setDownSide(false);
-    setBreakPoints(breakPointList(chartData));
-    const modified = chartData.map(item => ({
+    const tempData = makingChartData(CHART_FAKE_DATA, bridge);
+    setMinimize(Math.min(...tempData.map(i => i.value)));
+    isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
+    isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    setBreakPoints(breakPointList(tempData));
+    const modified = tempData.map(item => ({
       ...item,
       value: item.value - baseValue,
       dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,
@@ -60,8 +68,6 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
-
-    console.log(bridge);
   }, [bridge, chartData]);
 
   // mouse move handle events
