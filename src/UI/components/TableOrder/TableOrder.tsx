@@ -144,7 +144,6 @@ const TableOrder = ({ type }: TableOrderProps) => {
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
-    console.log(data, rowIndex);
     setRowToCancelOrder(slicedData[rowIndex]);
     setIsModalOpen(true);
   };
