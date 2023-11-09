@@ -106,3 +106,10 @@
     display: none;
   }
 }
+
+.iconEnd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: rem(2);
+}
