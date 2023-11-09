@@ -76,7 +76,6 @@
   @include spacing(padding, 10, 'all');
   position: absolute;
   top: rem(35);
-  min-width: 100%;
   list-style-type: none;
   border-radius: rem(8);
   background: var(--background-70, rgba(18, 23, 34, 0.7));

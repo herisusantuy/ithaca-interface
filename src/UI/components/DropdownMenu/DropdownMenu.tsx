@@ -9,6 +9,7 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Styles
 import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
+import { createPortal } from 'react-dom';
 
 // Types
 export type DropDownOption = {
@@ -32,14 +33,16 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
   const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-
+  const optionsRef = useRef<HTMLDivElement | null>(null);
+  const [optionsPostion, setOptionsPosition] = useState({width:0, top: 0, left: 0});
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
-
+    setMounted(true);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -53,6 +56,12 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
   });
 
   const handleDropdownClick = () => {
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    setOptionsPosition({
+      width: containerRect?.width ?? 100,
+      left: containerRect?.x ?? 0,
+      top: (containerRect?.y ?? 0) + (containerRect?.height ?? 0),
+    })
     if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
 
@@ -82,16 +91,26 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
           </div>
           {iconEnd && iconEnd}
         </div>
-        <ul className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`}>
-          {options &&
-            options.map((item: DropDownOption, idx: number) => {
-              return (
-                <li key={idx} onClick={() => handleOptionClick(item)}>
-                  {item.name}
-                </li>
-              );
-            })}
-        </ul>
+        { mounted && document.querySelector<HTMLElement>("#portal") && createPortal(
+          <ul 
+            className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`} 
+            style={{
+              width: `${optionsPostion.width}px`,
+              left: `${optionsPostion.left}px`,
+              top: `${optionsPostion.top}px`
+            }}
+            ref={optionsRef}
+          >
+            {options &&
+              options.map((item: DropDownOption, idx: number) => {
+                return (
+                  <li key={idx} onClick={() => handleOptionClick(item)}>
+                    {item.name}
+                  </li>
+                );
+              })}
+          </ul>, document.querySelector<HTMLElement>("#portal") as HTMLElement)
+          }
       </div>
     </div>
   );
