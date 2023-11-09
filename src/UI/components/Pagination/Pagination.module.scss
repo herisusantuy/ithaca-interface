@@ -32,7 +32,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--white-5);
+    color: var(--white);
     border-radius: 50%;
   }
 
@@ -51,4 +51,14 @@
 .nextItem {
   background-color: var(--white-5);
   border-radius: 50%;
+}
+
+.previewItem {
+  transform: rotate(180deg);
+  background-color: var(--white-5);
+  border-radius: 50%;
+}
+
+.hide {
+  display: none;
 }

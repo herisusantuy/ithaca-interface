@@ -67,7 +67,9 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
             5
           </div>
           <div
-            className={`${styles.navigationItem} ${totalPages < currentPage + 1 ? styles.disabled : ''} ${styles.nextItem}`}
+            className={`${styles.navigationItem} ${totalPages < currentPage + 1 ? styles.disabled : ''} ${
+              styles.nextItem
+            }`}
             onClick={() => updatePage(currentPage + 1)}
           >
             <Next />
@@ -80,6 +82,12 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
       if (currentPage <= totalPages - 2) {
         return (
           <>
+            <div
+              className={`${styles.navigationItem} ${styles.previewItem}`}
+              onClick={() => updatePage(currentPage - 1)}
+            >
+              <Next />
+            </div>
             <div className={`${styles.navigationItem}`} onClick={() => updatePage(currentPage - 2)}>
               {currentPage - 2}
             </div>
@@ -103,7 +111,9 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
               {currentPage + 2}
             </div>
             <div
-              className={`${styles.navigationItem} ${currentPage >= totalPages ? styles.disabled : ''} ${styles.nextItem}`}
+              className={`${styles.navigationItem} ${currentPage >= totalPages ? styles.disabled : ''} ${
+                styles.nextItem
+              }`}
               onClick={() => updatePage(currentPage + 1)}
             >
               <Next />
@@ -114,6 +124,12 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
       if (currentPage <= totalPages - 1) {
         return (
           <>
+            <div
+              className={`${styles.navigationItem} ${styles.previewItem}`}
+              onClick={() => updatePage(currentPage - 1)}
+            >
+              <Next />
+            </div>
             <div className={`${styles.navigationItem}`} onClick={() => updatePage(currentPage - 3)}>
               {currentPage - 3}
             </div>
@@ -131,7 +147,7 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
               {currentPage + 1}
             </div>
             <div
-              className={`${styles.navigationItem} ${currentPage >= totalPages ? styles.disabled : ''} ${styles.nextItem}`}
+              className={`${styles.navigationItem} ${currentPage >= totalPages ? styles.hide : ''} ${styles.nextItem}`}
               onClick={() => updatePage(currentPage + 1)}
             >
               <Next />
@@ -142,6 +158,12 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
       if (currentPage == totalPages) {
         return (
           <>
+            <div
+              className={`${styles.navigationItem} ${styles.previewItem}`}
+              onClick={() => updatePage(currentPage - 1)}
+            >
+              <Next />
+            </div>
             <div className={`${styles.navigationItem}`} onClick={() => updatePage(currentPage - 4)}>
               {currentPage - 4}
             </div>
@@ -158,7 +180,10 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: Pag
             <div className={`${styles.navigationItem} ${styles.active}`} onClick={() => updatePage(currentPage)}>
               {currentPage}
             </div>
-            <div className={`${styles.navigationItem} ${styles.disabled} ${styles.nextItem}`} onClick={() => updatePage(currentPage + 1)}>
+            <div
+              className={`${styles.navigationItem} ${currentPage >= totalPages ? styles.hide : ''} ${styles.nextItem}`}
+              onClick={() => updatePage(currentPage + 1)}
+            >
               <Next />
             </div>
           </>
