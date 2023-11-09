@@ -9,3 +9,10 @@
   font-family: $lato;
   color: var(--white);
 }
+
+.sm {
+  .label {
+    font-family: $roboto;
+    @include font-size('text-md', 'regular');
+  }
+}

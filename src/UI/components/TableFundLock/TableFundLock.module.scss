@@ -1,0 +1,55 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.header {
+  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'bottom');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: $roboto;
+  color: var(--white-60);
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  .cell {
+    @include font-size('text-xs', 'regular');
+    width: calc(100% / 4);
+
+    &:last-child {
+      white-space: nowrap;
+    }
+  }
+}
+
+.row {
+  @include spacing(padding, 10, 'all');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .cell {
+    @include font-size('text-md', 'regular');
+    font-family: $roboto;
+    display: flex;
+    flex: 1;
+    width: calc(100% / 4);
+  }
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: rem(1);
+
+  .time {
+    @include spacing(margin, 8, 'left');
+  }
+}
