@@ -114,6 +114,6 @@ function getRandomDataWithExpanded(): TableRowDataWithExpanded {
   };
 }
 
-export const TABLE_ORDER_DATA_WITH_EXPANDED: TableRowDataWithExpanded[] = Array.from({ length: 20 }, () =>
+export const TABLE_ORDER_DATA_WITH_EXPANDED: TableRowDataWithExpanded[] = Array.from({ length: 1000 }, () =>
   getRandomDataWithExpanded()
 );

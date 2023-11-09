@@ -131,6 +131,10 @@ const TableOrder = ({ type }: TableOrderProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletClient?.account.address]);
 
+  useEffect(() => {
+    setData(TABLE_ORDER_DATA_WITH_EXPANDED);
+  }, []);
+
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
     setRowToCancelOrder(data[rowIndex]);
