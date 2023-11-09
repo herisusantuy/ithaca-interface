@@ -49,7 +49,7 @@ const TableStrategy = ({ data, removeRow }: StrategyTableProps) => {
           </div>
           <div className={styles.cell}>{displaySideIcon(strategy.side)}</div>
           <div className={styles.cell}>{formatWithCommas(strategy.size)}</div>
-          <div className={styles.cell}>{formatWithCommas(1500)}</div>
+          <div className={styles.cell}>{formatWithCommas(strategy.strike)}</div>
           <div className={styles.cell}>{formatWithCommas(strategy.enterPrice)}</div>
           <div className={styles.cell}>
             <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
