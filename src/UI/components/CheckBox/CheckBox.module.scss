@@ -21,7 +21,6 @@
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 0;
   left: 0;
   border-radius: rem(4);
   height: rem(16);
@@ -54,4 +53,10 @@
   border: solid var(--white-5);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.componentFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

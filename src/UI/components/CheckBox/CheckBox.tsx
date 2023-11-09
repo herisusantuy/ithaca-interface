@@ -28,7 +28,9 @@ const CheckBox = (props: CheckBoxType) => {
 
   return (
     <label className={styles.container}>
-      {component} {label}
+      <div className={styles.componentFlex}>
+        {component} <p>{label}</p>
+      </div>
       <input type='checkbox' onChange={e => updateState(e)} checked={status} />
       <span className={styles.checkmark}></span>
     </label>
