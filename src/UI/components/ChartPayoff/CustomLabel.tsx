@@ -15,8 +15,8 @@ type LabelProps = {
 const CustomLabel = (props: LabelProps) => {
   const { x, y, value, base, index, dataSize, special } = props;
 
-  const renderLabel = (dx: number = 0, dy: number = 0) => (
-    <text x={x} y={y} dx={dx} dy={dy} fill='#fff' fontSize={12} textAnchor='middle'>
+  const renderLabel = (dx: number = 0, dy: number = 0, idx: number) => (
+    <text x={x} y={y} dx={dx} dy={dy} fill='#9D9DAA' fontSize={12} textAnchor='middle' key={idx}>
       {Number(value) + Number(base)}
     </text>
   );
@@ -28,9 +28,9 @@ const CustomLabel = (props: LabelProps) => {
   } else if (special.length == 0) {
     return null;
   } else {
-    return special.map((item: SpecialDotLabel) => {
+    return special.map((item: SpecialDotLabel, idx: number) => {
       if (item.value === Number(value) + Number(base)) {
-        return renderLabel(0, 20);
+        return renderLabel(0, 20, idx);
       }
     });
   }
