@@ -272,34 +272,40 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
             </div>
           ))}
         </div>
-        {slicedData.map((item, index) => (
-          <div className={styles.row} key={index}>
-            <div className={styles.cell}>{renderDate(item.orderData)}</div>
-            <div className={styles.cell}>
-              <Asset size='sm' icon={<LogoEth />} label={item.asset} />
+        {slicedData.length > 0 ? (
+          slicedData.map((item, index) => (
+            <div className={styles.row} key={index}>
+              <div className={styles.cell}>{renderDate(item.orderData)}</div>
+              <div className={styles.cell}>
+                <Asset size='sm' icon={<LogoEth />} label={item.asset} />
+              </div>
+              <div className={styles.cell}>{item.auction}</div>
+              <div className={styles.cell}>
+                <CurrencyDisplay size='md' amount={item.amount} symbol={<LogoUsdc />} currency={item.currency} />
+              </div>
             </div>
-            <div className={styles.cell}>{item.auction}</div>
-            <div className={styles.cell}>
-              <CurrencyDisplay size='md' amount={item.amount} symbol={<LogoUsdc />} currency={item.currency} />
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className={styles.emptyTable}>No results found</p>
+        )}
       </div>
-      <Flex direction='row-space-between' margin='mt-35'>
-        <TableDescription
-          possibleReleaseX={10}
-          possibleReleaseY={20}
-          postOptimisationX={8}
-          postOptimisationY={18}
-          totalCollateral={30}
-        />
-        <Pagination
-          totalItems={data.length}
-          itemsPerPage={pageLimit}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </Flex>
+      {slicedData.length > 0 ? (
+        <Flex direction='row-space-between' margin='mt-35'>
+          <TableDescription
+            possibleReleaseX={10}
+            possibleReleaseY={20}
+            postOptimisationX={8}
+            postOptimisationY={18}
+            totalCollateral={30}
+          />
+          <Pagination
+            totalItems={data.length}
+            itemsPerPage={pageLimit}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </Flex>
+      ) : null}
     </>
   );
 };

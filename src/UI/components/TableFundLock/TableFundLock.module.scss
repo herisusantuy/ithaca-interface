@@ -128,3 +128,9 @@
     color: var(--green-30);
   }
 }
+
+.emptyTable {
+  @include font-size('text-xs', 'regular');
+  @include spacing(padding, 16, 'top');
+  text-align: center;
+}
