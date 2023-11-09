@@ -19,7 +19,12 @@ import Filter from '@/UI/components/Icons/Filter';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
-import { TABLE_ORDER_HEADERS, TableRowData, TableRowDataWithExpanded, TABLE_ORDER_DATA_WITH_EXPANDED } from '@/UI/constants/tableOrder';
+import {
+  TABLE_ORDER_HEADERS,
+  TableRowData,
+  TableRowDataWithExpanded,
+  TABLE_ORDER_DATA_WITH_EXPANDED,
+} from '@/UI/constants/tableOrder';
 
 // Utils
 import {
@@ -50,13 +55,13 @@ import { Order } from '@ithaca-finance/sdk';
 // Types
 type TableOrderProps = {
   // data: TableRowDataWithExpanded[];
-  type?: TABLE_TYPE
+  type?: TABLE_TYPE;
 };
 
 export enum TABLE_TYPE {
-   LIVE,
-   ORDER,
-   TRADE
+  LIVE,
+  ORDER,
+  TRADE,
 }
 
 const TableOrder = ({ type }: TableOrderProps) => {
@@ -81,37 +86,39 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
   const { data: walletClient } = useWalletClient();
-  
+
   const dataToRows = (res: Order[]) => {
-    setData(res.map((row) => ({
-      clientOrderId: row.orderId,
-      details: "",
-      orderDate: dayjs(1699462800000).format('DD MMM YY HH:mm'),
-      currencyPair: row.collateral?.currencyPair  || 'WETH/USDC',
-      product: row.orderDescr,
-      side: "+",
-      tenor: "14 Jun 23",
-      wethAmount: row.collateral?.numeraireAmount,
-      usdcAmount: row.collateral?.underlierAmount,
-      orderLimit: row.details.reduce((agg, d) =>  d.originalQty + agg ,0),
-      expandedInfo: row.details.map((leg) => ({
-        type: leg.contractDto.payoff,
-        side: leg.side,
-        size: leg.originalQty,
-        strike: leg.contractDto.economics.strike,
-        enterPrice: leg.execPrice
-      }))
-    })) as TableRowDataWithExpanded[])
-  }
+    setData(
+      res.map(row => ({
+        clientOrderId: row.orderId,
+        details: '',
+        orderDate: dayjs(1699462800000).format('DD MMM YY HH:mm'),
+        currencyPair: row.collateral?.currencyPair || 'WETH/USDC',
+        product: row.orderDescr,
+        side: '+',
+        tenor: '14 Jun 23',
+        wethAmount: row.collateral?.numeraireAmount,
+        usdcAmount: row.collateral?.underlierAmount,
+        orderLimit: row.details.reduce((agg, d) => d.originalQty + agg, 0),
+        expandedInfo: row.details.map(leg => ({
+          type: leg.contractDto.payoff,
+          side: leg.side,
+          size: leg.originalQty,
+          strike: leg.contractDto.economics.strike,
+          enterPrice: leg.execPrice,
+        })),
+      })) as TableRowDataWithExpanded[]
+    );
+  };
 
   useEffect(() => {
     const address = walletClient?.account.address;
     if (address) {
       switch (type) {
         case TABLE_TYPE.LIVE:
-          ithacaSDK.orders.clientOpenOrders().then((res) => {
-            dataToRows(res)
-          })
+          ithacaSDK.orders.clientOpenOrders().then(res => {
+            dataToRows(res);
+          });
           break;
         // case TABLE_TYPE.ORDER:
         //   ithacaSDK.protocol.matchedOrders().then((res) => {
@@ -119,16 +126,16 @@ const TableOrder = ({ type }: TableOrderProps) => {
         //   })
         //   break;
         case TABLE_TYPE.TRADE:
-          ithacaSDK.client.tradeHistory().then((res) => {
-            dataToRows(res)
-          })
+          ithacaSDK.client.tradeHistory().then(res => {
+            dataToRows(res);
+          });
           break;
         default:
-          setData(TABLE_ORDER_DATA_WITH_EXPANDED)
+          setData(TABLE_ORDER_DATA_WITH_EXPANDED);
           break;
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletClient?.account.address]);
 
   useEffect(() => {
@@ -137,7 +144,8 @@ const TableOrder = ({ type }: TableOrderProps) => {
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
-    setRowToCancelOrder(data[rowIndex]);
+    console.log(data, rowIndex);
+    setRowToCancelOrder(slicedData[rowIndex]);
     setIsModalOpen(true);
   };
 
@@ -151,12 +159,12 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const handleCancelOrderRemoveRow = () => {
     setIsDeleting(true);
     ithacaSDK.orders.orderCancel(rowToCancelOrder?.clientOrderId || 0).then(() => {
-      const newData = data.filter(row => row !== rowToCancelOrder);
+      const newData = slicedData.filter(row => row !== rowToCancelOrder);
       setData(newData);
       setIsDeleting(false);
       setIsModalOpen(false);
       setRowToCancelOrder(null);
-    })
+    });
   };
 
   // Page state
@@ -342,8 +350,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={containerRef}
             >
               {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
@@ -371,8 +380,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={productRef}
             >
               {PRODUCT_LABEL.map((item: string, idx: number) => {
@@ -402,8 +412,9 @@ const TableOrder = ({ type }: TableOrderProps) => {
               <Filter />
             </Button>
             <div
-              className={`${styles.filterDropdown} ${!visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-                }`}
+              className={`${styles.filterDropdown} ${
+                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
+              }`}
               ref={sideRef}
             >
               {SIDE_LABEL.map((item: FilterItemProps, idx: number) => {
