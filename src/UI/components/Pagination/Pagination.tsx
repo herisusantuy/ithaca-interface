@@ -1,5 +1,4 @@
 // Components
-import Button from '@/UI/components/Button/Button';
 import Next from '@/UI/components/Icons/Next';
 
 // Styles
@@ -15,7 +14,7 @@ type PaginationProps = {
 
 const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: PaginationProps) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const updatePage = (page: number) => {
     if (page > totalPages) {
