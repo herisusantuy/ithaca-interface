@@ -526,21 +526,23 @@ const TableOrder = ({ type }: TableOrderProps) => {
           <p className={styles.emptyTable}>No results found</p>
         )}
       </div>
-      <Flex direction='row-space-between' margin='mt-35'>
-        <TableDescription
-          possibleReleaseX={10}
-          possibleReleaseY={20}
-          postOptimisationX={8}
-          postOptimisationY={18}
-          totalCollateral={30}
-        />
-        <Pagination
-          totalItems={data.length}
-          itemsPerPage={pageLimit}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </Flex>
+      {slicedData.length > 0 ? (
+        <Flex direction='row-space-between' margin='mt-35'>
+          <TableDescription
+            possibleReleaseX={10}
+            possibleReleaseY={20}
+            postOptimisationX={8}
+            postOptimisationY={18}
+            totalCollateral={30}
+          />
+          <Pagination
+            totalItems={data.length}
+            itemsPerPage={pageLimit}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </Flex>
+      ) : null}
     </>
   );
 };
