@@ -34,14 +34,14 @@ const TableStrategy = ({ strategies, removeRow }: StrategyTableProps) => {
         <div className={styles.row} key={idx}>
           <div className={styles.cell}>
             <div className={styles.dot}>
-              <Dot type={strategy.payoff} />
+              <Dot type={`leg${idx + 1}`} />
               <div className={styles.strategy}>{strategy.payoff}</div>
             </div>
           </div>
           <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
           <div className={styles.cell}>{strategy.leg.quantity}</div>
           <div className={styles.cell}>{strategy.strike}</div>
-          <div className={styles.cell}>{strategy.referencePrice}</div>]
+          <div className={styles.cell}>{strategy.referencePrice}</div>
           <div className={styles.cell}>
             <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
               <Remove />

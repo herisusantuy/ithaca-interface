@@ -31,13 +31,14 @@ import styles from './position-builder.module.scss';
 import ReadyState from '@/UI/utils/ReadyState';
 
 // Types
-import { DotTypes } from '@/UI/components/Dot/Dot';
 import { getNumber } from '@/UI/utils/Numbers';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 export interface PositionBuilderStrategy {
   leg: Leg;
   referencePrice: number;
-  payoff: DotTypes;
+  payoff: string;
   strike: string;
 }
 
@@ -51,18 +52,26 @@ const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
+  const [chartData, setChartData] = useState<PayoffMap[]>();
 
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate } = useAppStore();
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff } = useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
-    const { legs, referencePrices } = positionBuilderStrategies.reduce<{ legs: Leg[]; referencePrices: number[] }>(
+    const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
+      legs: Leg[];
+      referencePrices: number[];
+      strikes: string[];
+      payoffs: string[];
+    }>(
       (strategies, currStrategy) => {
         strategies.legs = [...strategies.legs, currStrategy.leg];
         strategies.referencePrices = [...strategies.referencePrices, currStrategy.referencePrice];
+        strategies.strikes = [...strategies.strikes, currStrategy.strike];
+        strategies.payoffs = [...strategies.payoffs, currStrategy.payoff];
         return strategies;
       },
-      { legs: [], referencePrices: [] }
+      { legs: [], referencePrices: [], strikes: [], payoffs: [] }
     );
     const totalNetPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike);
     const order = {
@@ -70,6 +79,14 @@ const Index = () => {
       totalNetPrice,
       legs,
     };
+
+    const chartData = estimateOrderPayoff(
+      strikes.map((strike, idx) => {
+        const contracts = getContractsByPayoff(payoffs[idx]);
+        return { ...contracts[strike], ...legs[idx] };
+      })
+    );
+    setChartData(chartData);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -182,6 +199,7 @@ const Index = () => {
                       if (!newPositionBuilderStrategies.length) {
                         setPositionBuilderStrategies([]);
                         setOrderSummary(undefined);
+                        setChartData(undefined);
                       } else {
                         setPositionBuilderStrategies(newPositionBuilderStrategies);
                         getPositionBuilderSummary(newPositionBuilderStrategies);
@@ -189,11 +207,11 @@ const Index = () => {
                     }}
                   />
                   <h3>Payoff Diagram</h3>
-                  {/* {chartData ? (
-                  <ChartPayoff chartData={chartData} width={400} height={300} />
-                ) : (
-                  <div className={styles.tableWrapper}></div>
-                )} */}
+                  {chartData ? (
+                    <ChartPayoff chartData={chartData} height={300} />
+                  ) : (
+                    <div className={styles.tableWrapper}></div>
+                  )}
                 </>
               }
             />
@@ -205,8 +223,3 @@ const Index = () => {
 };
 
 export default Index;
-
-// Single leg, generate order, login/logout and submit
-
-// Multiple leg, add new leg to other legs then esitmate order
-// Then login/logout submit

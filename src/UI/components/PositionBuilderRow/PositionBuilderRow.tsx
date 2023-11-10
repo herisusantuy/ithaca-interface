@@ -27,12 +27,9 @@ import styles from './PositionBuilderRow.module.scss';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 
-// Types
-import { DotTypes } from '../Dot/Dot';
-
 type PositionBuilderRowProps = {
   title: string;
-  options: { option: string | ReactNode; value: DotTypes }[];
+  options: { option: string | ReactNode; value: string }[];
   addStrategy: (strategy: PositionBuilderStrategy) => void;
   submitAuction: (order: ClientConditionalOrder) => void;
 };
@@ -67,7 +64,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
     { name: '', style: styles.action },
   ];
 
-  const handlePayoffChange = (payoff: DotTypes) => {
+  const handlePayoffChange = (payoff: string) => {
     setPayoff(payoff);
     setStrike(undefined);
     setUnitPrice('');
@@ -146,7 +143,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               options={options}
               selectedOption={payoff}
               name={`${title}-payoff`}
-              onChange={value => handlePayoffChange(value as DotTypes)}
+              onChange={handlePayoffChange}
             />
           </div>
           <div className={styles.side}>
