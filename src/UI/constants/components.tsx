@@ -47,6 +47,7 @@ import Pagination from '@/UI/components/Pagination/Pagination';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Balance from '@/UI/components/Balance/Balance';
+import NumberFormat from '@/UI/components/NumberFormat/NumberFormat';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -494,11 +495,6 @@ const COMPONENT_GROUPS = [
     groupName: 'Utilities',
     components: [
       {
-        name: 'Wallet',
-        component: <Wallet />,
-        status: 'Waiting on Figma',
-      },
-      {
         name: 'CountdownTimer',
         component: <CountdownTimer />,
         status: 'Done',
@@ -515,6 +511,20 @@ const COMPONENT_GROUPS = [
             <Tabs tabs={MODAL_TABS} />
           </ModalWithButton>
         ),
+        status: 'Waiting on Figma',
+      },
+      {
+        name: 'NumberFormat',
+        component: (
+          <Flex>
+            <NumberFormat />
+          </Flex>
+        ),
+        status: 'In Progress',
+      },
+      {
+        name: 'Wallet',
+        component: <Wallet />,
         status: 'Waiting on Figma',
       },
     ],

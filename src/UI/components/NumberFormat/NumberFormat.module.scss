@@ -1,0 +1,10 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.subContainer {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
