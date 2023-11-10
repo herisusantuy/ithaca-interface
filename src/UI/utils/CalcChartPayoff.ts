@@ -15,6 +15,7 @@ export interface OptionLeg {
     payoff?: Payoff;
     economics: Economics;
     tradeable: boolean;
+    premium: number;
   }
 
   
@@ -39,8 +40,7 @@ export function estimateOrderPayoff(legs: OptionLeg[]): PayoffMap[] {
       const payoff: PayoffMap = { x: price, total: 0 };
       legs.forEach((leg, idx) => {
         const side = leg.side == "BUY" ? 1 : -1;
-        // const premium = leg.payoff != 'Forward' ?  -leg.premium * side : 0;
-        const premium = 0;
+        const premium = leg.payoff != 'Forward' ?  -leg.premium * side : 0;
         const intrinsicValue = side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, leg.economics.strike || 0) + premium;
         payoff[`leg${idx+1}`] = intrinsicValue * parseInt(leg.quantity);
         payoff.total += intrinsicValue * parseInt(leg.quantity)
