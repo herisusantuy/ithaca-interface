@@ -511,18 +511,6 @@ const TableOrder = ({ type, isDisconnected }: TableOrderProps) => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                {isModalOpen && rowToCancelOrder && (
-                  <Modal
-                    title='Cancel Order'
-                    onCloseModal={handleCloseModal}
-                    onSubmitOrder={handleCancelOrderRemoveRow}
-                    isLoading={isDeleting}
-                    isOpen={isModalOpen}
-                  >
-                    <p>Please confirm if you&apos;d like to cancel your order.</p>
-                    <Summary detail={rowToCancelOrder} />
-                  </Modal>
-                )}
               </Fragment>
             );
           })
@@ -547,6 +535,19 @@ const TableOrder = ({ type, isDisconnected }: TableOrderProps) => {
           />
         </Flex>
       ) : null}
+
+      {isModalOpen && rowToCancelOrder && (
+        <Modal
+          title='Cancel Order'
+          onCloseModal={handleCloseModal}
+          onSubmitOrder={handleCancelOrderRemoveRow}
+          isLoading={isDeleting}
+          isOpen={isModalOpen}
+        >
+          <p>Please confirm if you&apos;d like to cancel your order.</p>
+          <Summary detail={rowToCancelOrder} />
+        </Modal>
+      )}
     </>
   );
 };
