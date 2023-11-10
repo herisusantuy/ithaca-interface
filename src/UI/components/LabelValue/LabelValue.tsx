@@ -12,7 +12,6 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Styles
 import styles from './LabelValue.module.scss';
-import dayjs from 'dayjs';
 
 // Types
 type LabelValueProps = {
@@ -21,8 +20,8 @@ type LabelValueProps = {
   valueList?: ExpiryDateOptions[]
   subValue?: string;
   hasDropdown?: boolean;
-  defaultValue?: number;
-  onChange?: (newValue: number) => void;
+  defaultValue?: string;
+  onChange?: (newValue: string) => void;
 };
 
 const LabelValue = ({
@@ -70,7 +69,7 @@ const LabelValue = ({
   };
 
   // Handle option click
-  const handleOptionClick = (optionValue: number) => {
+  const handleOptionClick = (optionValue: string) => {
     setValue(optionValue);
     setIsDropdownOpen(false);
     onChange && onChange(optionValue);
@@ -93,7 +92,7 @@ const LabelValue = ({
       <div className={styles.contentWrapper}>
         <span className={styles.label}>{label}</span>
         <span className={styles.value}>
-          {dayjs(`${value}`, 'YYYYMMDD').format('DDMMMYY')}
+          {value}
           {subValue && <span className={styles.subValue}>{subValue}</span>}
         </span>
       </div>

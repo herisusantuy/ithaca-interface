@@ -131,15 +131,15 @@ const Index = () => {
                       label='Expiry Date'
                       valueList={expiryList.map((date) => ({
                         label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: date
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY')
                       }))}
-                      onChange={() => {
+                      onChange={(value) => {
                         setOrderSummary(undefined);
-                        setPositionBuilderStrategies([]);
-                        setChartData(undefined);
-                        setCurrentExpiryDate(currentExpiryDate)
+                        setPositionBuilderStrategies([])
+                        setChartData(undefined)
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')))
                       }}
-                      value={currentExpiryDate}
+                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
@@ -185,7 +185,7 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? toPrecision(
-                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
+                        orderSummary.orderLock.underlierAmount - orderSummary.order.totalNetPrice,
                         currencyPrecision.strike
                       )
                       : '-'
