@@ -46,6 +46,7 @@ import CheckBox from '@/UI/components/CheckBox/CheckBox';
 import Pagination from '@/UI/components/Pagination/Pagination';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
+import Balance from '@/UI/components/Balance/Balance';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -70,6 +71,11 @@ const COMPONENT_GROUPS = [
       {
         name: 'Asset',
         component: <Asset icon={<LogoEth />} label='ETH' />,
+        status: 'Done',
+      },
+      {
+        name: 'Balance',
+        component: <Balance fundLock={0} balance={0} margin='mtb-20' />,
         status: 'Done',
       },
       {
