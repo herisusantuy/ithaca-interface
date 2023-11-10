@@ -24,10 +24,10 @@ import Button from '@/UI/components/Button/Button';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import LogoEth from '@/UI/components/Icons/LogoEth';
-import Wallet from '@/UI/components/Wallet/Wallet';
 import Tabs from '@/UI/components/Tabs/Tabs';
 import Input from '@/UI/components/Input/Input';
 import TableCollateral from '@/UI/components/TableCollateral/TableCollateral';
+import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -37,15 +37,17 @@ const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 
-// Styles
-import styles from './CollateralPanel.module.scss';
-
 const currencies = [
   { currency: 'WETH', amountToMint: parseUnits('10', 18) },
   { currency: 'USDC', amountToMint: parseUnits('5000', 6) },
 ];
 
-const CollateralPanel = () => {
+// Types
+type CollateralPanelProps = {
+  isDisconnected: boolean;
+};
+
+const CollateralPanel = ({ isDisconnected }: CollateralPanelProps) => {
   const { systemInfo, ithacaSDK } = useAppStore();
   const [data, setData] = useState(TABLE_COLLATERAL_DATA);
   const [modalOpen, setModalOpen] = useState(false);
@@ -125,28 +127,20 @@ const CollateralPanel = () => {
     <>
       <Panel margin='p-30'>
         <h3>Collateral</h3>
-        <div>
-          <div className={`${walletClient?.account.address ? '' : styles.hideTable}`}>
-            <TableCollateral
-              data={data}
-              deposit={(asset: string) => {
-                const rowData = data.find(d => d.asset === asset);
-                setSelectedAsset(rowData);
-                setModalOpen(true);
-              }}
-              withdraw={asset => {
-                console.log(asset);
-              }}
-              faucet={asset => getFaucet(asset)}
-            />
-          </div>
-          {!walletClient?.account.address && (
-            <div className={styles.connectOverlay}>
-              <div className='color-white mb-10'>Please connect wallet to check your details.</div>
-              <Wallet />
-            </div>
-          )}
-        </div>
+        <TableCollateral
+          isOpacity={isDisconnected}
+          data={data}
+          deposit={(asset: string) => {
+            const rowData = data.find(d => d.asset === asset);
+            setSelectedAsset(rowData);
+            setModalOpen(true);
+          }}
+          withdraw={asset => {
+            console.log(asset);
+          }}
+          faucet={asset => getFaucet(asset)}
+        />
+        {!walletClient?.account.address && <DisconnectedWallet />}
       </Panel>
       <Modal
         title='Manage Funds'

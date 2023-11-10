@@ -8,22 +8,25 @@ import { formatWithCommas } from '@/UI/utils/Numbers';
 import Button from '@/UI/components/Button/Button';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Asset from '@/UI/components/Asset/Asset';
 
 // Styles
 import styles from './TableCollateral.module.scss';
-import Asset from '../Asset/Asset';
 
 // Types
 type CollateralTableProps = {
+  isOpacity?: boolean;
   data: CollateralType[];
   deposit: (asset: string) => void;
   withdraw: (asset: string) => void;
   faucet: (asset: string) => void;
 };
 
-const TableCollateral = ({ data, deposit, withdraw, faucet }: CollateralTableProps) => {
+const TableCollateral = ({ isOpacity, data, deposit, withdraw, faucet }: CollateralTableProps) => {
+  const tableClass = `${styles.table} ${isOpacity ? styles.isOpacity : ''}`;
+
   return (
-    <div className={styles.table}>
+    <div className={tableClass.trim()}>
       <div className={styles.header}>
         {TABLE_COLLATERAL_HEADERS.map((header, idx) => {
           return (
