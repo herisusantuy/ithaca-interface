@@ -1,4 +1,5 @@
 // Packages
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { AppProps } from 'next/app';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
@@ -16,12 +17,12 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Layouts
 import Header from '@/UI/layouts/Header/Header';
+import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
-import { useEffect } from 'react';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
@@ -38,7 +39,9 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
       >
         <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
           <Header />
-          <Component {...pageProps} />
+          <ReadyState>
+            <Component {...pageProps} />
+          </ReadyState>
           <Toaster
             position='top-right'
             toastOptions={{
