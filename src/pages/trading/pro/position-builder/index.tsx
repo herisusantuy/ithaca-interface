@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 // SDK
@@ -34,6 +34,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 import { getNumber } from '@/UI/utils/Numbers';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import { Value } from 'sass';
 
 export interface PositionBuilderStrategy {
   leg: Leg;
@@ -55,7 +56,7 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
 
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } = useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
@@ -80,12 +81,12 @@ const Index = () => {
       legs,
     };
 
-    const chartData = estimateOrderPayoff(
-      strikes.map((strike, idx) => {
-        const contracts = getContractsByPayoff(payoffs[idx]);
-        return { ...contracts[strike], ...legs[idx] };
-      })
-    );
+    // const chartData = estimateOrderPayoff(
+    //   strikes.map((strike, idx) => {
+    //     const contracts = getContractsByPayoff(payoffs[idx]);
+    //     return { ...contracts[strike], ...legs[idx] };
+    //   })
+    // );
     setChartData(chartData);
 
     try {
@@ -129,7 +130,17 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
+                      valueList={expiryList.map((date) => ({
+                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
+                        value: date
+                      }))}
+                      onChange={() => {
+                        setOrderSummary(undefined);
+                        setPositionBuilderStrategies([]);
+                        setChartData(undefined);
+                        setCurrentExpiryDate(currentExpiryDate)
+                      }}
+                      value={currentExpiryDate}
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
@@ -175,9 +186,9 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? toPrecision(
-                          orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        )
+                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      )
                       : '-'
                   }
                   premium={orderSummary?.order.totalNetPrice || '-'}

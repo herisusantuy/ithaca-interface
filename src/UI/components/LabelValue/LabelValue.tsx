@@ -5,27 +5,30 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Constants
-import { EXPIRY_DATE_OPTIONS } from '@/UI/constants/expiryDate';
+import { ExpiryDateOptions, EXPIRY_DATE_OPTIONS } from '@/UI/constants/expiryDate';
 
 // Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Styles
 import styles from './LabelValue.module.scss';
+import dayjs from 'dayjs';
 
 // Types
 type LabelValueProps = {
   label: string;
   value?: ReactNode;
+  valueList?: ExpiryDateOptions[]
   subValue?: string;
   hasDropdown?: boolean;
-  defaultValue?: string;
-  onChange?: (newValue: string) => void;
+  defaultValue?: number;
+  onChange?: (newValue: number) => void;
 };
 
 const LabelValue = ({
   label,
   value: initialValue,
+  valueList = EXPIRY_DATE_OPTIONS,
   defaultValue = EXPIRY_DATE_OPTIONS[0].value,
   subValue,
   hasDropdown = false,
@@ -67,7 +70,7 @@ const LabelValue = ({
   };
 
   // Handle option click
-  const handleOptionClick = (optionValue: string) => {
+  const handleOptionClick = (optionValue: number) => {
     setValue(optionValue);
     setIsDropdownOpen(false);
     onChange && onChange(optionValue);
@@ -77,7 +80,7 @@ const LabelValue = ({
   const renderDropdownOptions = () => {
     return (
       <ul className={styles.dropdownMenu}>
-        {EXPIRY_DATE_OPTIONS.map(option => (
+        {valueList.map(option => (
           <li key={option.value} className={styles.dropdownItem} onClick={() => handleOptionClick(option.value)}>
             {option.label}
           </li>
@@ -90,7 +93,7 @@ const LabelValue = ({
       <div className={styles.contentWrapper}>
         <span className={styles.label}>{label}</span>
         <span className={styles.value}>
-          {value}
+          {dayjs(`${value}`, 'YYYYMMDD').format('DDMMMYY')}
           {subValue && <span className={styles.subValue}>{subValue}</span>}
         </span>
       </div>
