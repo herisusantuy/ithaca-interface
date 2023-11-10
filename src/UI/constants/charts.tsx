@@ -77,3 +77,8 @@ export const CHART_FAKE_DATA = [
   { x: 1360, total: 28000, leg1: 0, leg2: 14000, leg3: 14000, leg4: 0, leg5: 0 },
   { x: 1370, total: 26000, leg1: 0, leg2: 13000, leg3: 13000, leg4: 0, leg5: 0 },
 ];
+
+// Table order data
+export const getRandomInt = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -1,5 +1,5 @@
 // Props
-import { SpecialDotLabel } from '@/UI/constants/charts';
+import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts';
 
 // Types
 type LabelProps = {
@@ -10,10 +10,11 @@ type LabelProps = {
   dataSize: number;
   index?: number;
   special: SpecialDotLabel[];
+  dataList: PayoffDataProps[];
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, base, index, dataSize, special } = props;
+  const { x, y, value, base, index, dataSize, special, dataList } = props;
 
   const renderLabel = (dx: number = 0, dy: number = 0, idx: number) => (
     <text x={x} y={y} dx={dx} dy={dy} fill='#9D9DAA' fontSize={12} textAnchor='middle' key={idx}>
@@ -30,7 +31,9 @@ const CustomLabel = (props: LabelProps) => {
   } else {
     return special.map((item: SpecialDotLabel, idx: number) => {
       if (item.value === Number(value) + Number(base)) {
-        return renderLabel(0, 20, idx);
+        if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(value)) {
+          return renderLabel(0, 20, idx);
+        }
       }
     });
   }

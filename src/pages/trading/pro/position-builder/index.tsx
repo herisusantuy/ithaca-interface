@@ -13,6 +13,7 @@ import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
+import { estimateOrderPayoff, OptionLeg } from '@/UI/utils/CalcChartPayoff'
 
 // Utils
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
@@ -56,7 +57,7 @@ const Index = () => {
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
 
   // Store
-  const { ithacaSDK } = useAppStore();
+  const { ithacaSDK, contractList } = useAppStore();
   const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate)
 
   const getOrderSummary = useCallback(
@@ -68,18 +69,25 @@ const Index = () => {
           totalNetPrice: toPrecision(totalNetPrice, 4),
           legs,
         });
-        const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff({
-          clientOrderId: createClientOrderId(),
-          totalNetPrice: toPrecision(totalNetPrice, 4),
-          legs,
-        });
+        // const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff({
+        //   clientOrderId: createClientOrderId(),
+        //   totalNetPrice: toPrecision(totalNetPrice, 4),
+        //   legs,
+        // });
 
-        setChartData(
-          Object.keys(orderPayoff).map(key => ({
-            value: orderPayoff[key],
-            dashValue: undefined,
-          }))
-        );
+        const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId)}})
+        const payoffs = estimateOrderPayoff(completeData)
+        setChartData(payoffs)
+
+
+
+
+        // setChartData(
+        //   Object.keys(orderPayoff).map(key => ({
+        //     value: orderPayoff[key],
+        //     dashValue: undefined,
+        //   }))
+        // );
         setSummaryDetails({
           underlierAmount: orderLock.underlierAmount,
           numeraireAmount: orderLock.numeraireAmount,
@@ -211,7 +219,7 @@ const Index = () => {
                 />
                 <h3>Payoff Diagram</h3>
                 {chartData.length && previousLegs.length ? (
-                  <ChartPayoff chartData={chartData} width={400} height={300} />
+                  <ChartPayoff chartData={chartData} height={300} />
                 ) : (
                   <div className={styles.tableWrapper}></div>
                 )}

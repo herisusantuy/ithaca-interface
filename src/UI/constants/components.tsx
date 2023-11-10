@@ -373,7 +373,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel margin='p-30'>
-            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} width={400} height={300} />
+            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} height={300} />
           </Panel>
         ),
         status: 'In Progress',

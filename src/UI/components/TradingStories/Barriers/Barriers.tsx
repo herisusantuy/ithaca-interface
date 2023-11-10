@@ -144,7 +144,7 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={PAYOFF_DUMMY_DATA} width={400} height={300} />
+        <ChartPayoff chartData={PAYOFF_DUMMY_DATA} height={300} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

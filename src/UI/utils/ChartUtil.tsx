@@ -37,26 +37,27 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {
-    const currentOffset = data[i + 1].value - data[i].value;
-    if (currentOffset > offsetCompareVal) {
-      if (increament) {
-        offsets.pop();
-      } else {
-        const obj: SpecialDotLabel = {
-          value: data[i].value,
+    const currentOffset = Math.abs(data[i + 1].value - data[i].value);
+    if (currentOffset != 0) {
+      if (currentOffset > offsetCompareVal) {
+        if (increament) {
+          offsets.pop();
+        } else {
+          const obj: SpecialDotLabel = {
+            value: data[i].value,
+          };
+          offsets.push(obj);
+        }
+        const obj1: SpecialDotLabel = {
+          value: data[i + 1].value,
         };
-        offsets.push(obj);
+        offsets.push(obj1);
+        increament = true;
+      } else {
+        increament = false;
       }
-      const obj1: SpecialDotLabel = {
-        value: data[i + 1].value,
-      };
-      offsets.push(obj1);
-      increament = true;
-    } else {
-      increament = false;
     }
   }
-
   return offsets;
 };
 
@@ -76,11 +77,17 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
     return 100;
   } else if (maxOffset >= 100 && maxOffset < 1000) {
     return 10;
-  } else return 1;
+  } else return 2;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const makingChartData = (data: any[], key: string) => {
   const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined }));
   return result;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getLegs = (data: any[]) => {
+  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item));
+  return keys;
 };
