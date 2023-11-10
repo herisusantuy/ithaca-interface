@@ -42,6 +42,10 @@ import Sort from '@/UI/components/Icons/Sort';
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 import TableFundLock from '@/UI/components/TableFundLock/TableFundLock';
 import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
+import CheckBox from '@/UI/components/CheckBox/CheckBox';
+import Pagination from '@/UI/components/Pagination/Pagination';
+import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
+import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -187,6 +191,11 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
+        name: 'Checkbox',
+        component: <CheckBox label='Checkbox' onChange={() => {}} clearCheckMark={false} />,
+        status: 'Done',
+      },
+      {
         name: 'CollateralAmount',
         component: <CollateralAmount wethAmount={10} usdcAmount={20} />,
         status: 'Done',
@@ -282,6 +291,23 @@ const COMPONENT_GROUPS = [
       {
         name: 'Logo',
         component: <Logo />,
+        status: 'Done',
+      },
+      {
+        name: 'OrderSummary',
+        component: (
+          <OrderSummary limit='-' collatarelETH='-' collatarelUSDC='-' premium='-' fee={1.5} submitAuction={() => {}} />
+        ),
+        status: 'Done',
+      },
+      {
+        name: 'Pagination',
+        component: <Pagination totalItems={50} itemsPerPage={10} currentPage={1} onPageChange={() => {}} />,
+        status: 'Done',
+      },
+      {
+        name: 'PriceLabel',
+        component: <PriceLabel label='-' icon={<LogoEth />} />,
         status: 'Done',
       },
       {
