@@ -32,7 +32,7 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
       )}
       {compact ? (
         <Flex gap='gap-3'>
-          <RadioButton
+          {/* <RadioButton
             options={['+', '-']}
             valueProps={['Plus', 'Minus']}
             name='plusOrMinus'
@@ -53,24 +53,24 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
             defaultOption='IN'
             orientation='vertical'
             onChange={value => console.log(value)}
-          />
+          /> */}
         </Flex>
       ) : (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
           <Flex gap='gap-10'>
             <div>
               <label className={styles.label}>Type</label>
-              <RadioButton
+              {/* <RadioButton
                 options={['Call', 'Put']}
                 name={compact ? 'callOrPutCompact' : 'callOrPut'}
                 defaultOption='Call'
                 onChange={value => console.log(value)}
-              />
+              /> */}
             </div>
             <div>
               <label className={styles.label}>Side</label>
               <Flex gap='gap-10'>
-                <RadioButton
+                {/* <RadioButton
                   options={[<Plus key='plus' />, <Minus key='minus' />]}
                   valueProps={['Plus', 'Minus']}
                   name='plusOrMinus'
@@ -84,7 +84,7 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
                   defaultOption='UP'
                   orientation='vertical'
                   onChange={value => console.log(value)}
-                />
+                /> */}
               </Flex>
             </div>
             <div>
@@ -93,13 +93,13 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
             </div>
             <div className={styles.collateralWrapper}>Knock</div>
             <div className={styles.collateralWrapper}>
-              <RadioButton
+              {/* <RadioButton
                 options={['IN', 'OUT']}
                 name={compact ? 'inOrOutCompact' : 'inOrOut'}
                 defaultOption='IN'
                 orientation='vertical'
                 onChange={value => console.log(value)}
-              />
+              /> */}
             </div>
             <div className={styles.collateralWrapper}>@</div>
             <div>

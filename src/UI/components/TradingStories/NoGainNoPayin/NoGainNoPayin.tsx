@@ -42,12 +42,12 @@ const NoGainNoPayin = ({ compact = false }: TradingStoriesProps) => {
         <Flex gap='gap-15'>
           <div>
             {!compact && <label className={styles.label}>Type</label>}
-            <RadioButton
+            {/* <RadioButton
               options={['Call', 'Put']}
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
               defaultOption='Call'
               onChange={value => console.log(value)}
-            />
+            /> */}
           </div>
           {!compact && (
             <>

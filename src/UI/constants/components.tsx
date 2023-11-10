@@ -321,23 +321,29 @@ const COMPONENT_GROUPS = [
         component: (
           <Flex direction='row-center' gap='gap-12'>
             <RadioButton
-              options={['Call', 'Put']}
+              options={[
+                { option: 'Call', value: 'Call' },
+                { option: 'Put', value: 'Put' },
+              ]}
               name='callOrPut'
-              defaultOption='Call'
               onChange={value => console.log(value)}
             />
             <RadioButton
-              options={[<Plus key='plus' />, <Minus key='minus' />]}
-              valueProps={['Plus', 'Minus']}
+              options={[
+                { option: <Plus key='plus' />, value: 'Plus' },
+                { option: <Minus key='minus' />, value: 'Minus' },
+              ]}
               name='plusOrMinus'
-              defaultOption='Plus'
               orientation='vertical'
               onChange={value => console.log(value)}
             />
             <RadioButton
-              options={['Option', 'Digital Options', 'Dated Forward']}
+              options={[
+                { option: 'Option', value: 'Option' },
+                { option: 'Digital Options', value: 'Digital Options' },
+                { option: 'Dated Forward', value: 'Dated Forward' },
+              ]}
               name='multi'
-              defaultOption='Call'
               onChange={value => console.log(value)}
             />
           </Flex>
@@ -423,7 +429,7 @@ const COMPONENT_GROUPS = [
         component: (
           <>
             <h3 className='mb-14'>Strategy</h3>
-            <TableStrategy data={TABLE_STRATEGY_DATA} />
+            <TableStrategy strategies={[]} removeRow={() => {}} />
           </>
         ),
         status: 'Done',

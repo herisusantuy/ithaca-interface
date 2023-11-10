@@ -17,12 +17,12 @@ const BonusTwinWin = ({ compact = false }: TradingStoriesProps) => {
   return (
     <div>
       <Flex margin='mb-12'>
-        <RadioButton
+        {/* <RadioButton
           options={['Bonus', 'Twin-Win']}
           name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
           defaultOption='Bonus'
           onChange={value => console.log(value)}
-        />
+        /> */}
       </Flex>
       {!compact && (
         <div className={styles.instructions}>

@@ -40,12 +40,12 @@ const Bet = ({ compact = false }: TradingStoriesProps) => {
         </Flex>
       )}
       <Flex margin='mt-10 mb-24'>
-        <RadioButton
+        {/* <RadioButton
           options={['Inside Range', 'Outside Range']}
           name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
           defaultOption='Inside Range'
           onChange={value => console.log(value)}
-        />
+        /> */}
       </Flex>
       {!compact && (
         <Flex margin='mb-10'>

@@ -1,5 +1,4 @@
 import { Contract, Payoff, ReferencePrice } from '@ithaca-finance/sdk';
-import { Strategy } from '../components/PositionBuilderRow/PositionBuilderRow';
 import { StrategyType } from '../constants/tableStrategy';
 
 const toPrecision = (value: number, precision: number): number => {
@@ -28,14 +27,12 @@ export const getStrike = (contractId: number, contractList: Contract[], expiry: 
   return `${contract?.economics.strike ? contract.economics.strike : '-'}`;
 };
 
-export const getContractId = (
-  product: string,
-  strike: number,
-  currentExpiryDate: number,
-  contractList: Contract[]
-) => {
+export const getContractId = (product: string, strike: number, currentExpiryDate: number, contractList: Contract[]) => {
   const contract = contractList.find(
-    c => c.payoff.toUpperCase() === product.toUpperCase() && c.economics.expiry === currentExpiryDate && (product === Payoff.FORWARD || c.economics.strike === strike)
+    c =>
+      c.payoff.toUpperCase() === product.toUpperCase() &&
+      c.economics.expiry === currentExpiryDate &&
+      (product === Payoff.FORWARD || c.economics.strike === strike)
   );
   return contract?.contractId || 0;
 };
@@ -43,21 +40,6 @@ export const getContractId = (
 export const getUnitPrice = (contractId: number, prices: ReferencePrice[]) => {
   const contract = prices.find(price => contractId === price.contractId);
   return contract?.referencePrice;
-};
-
-export const getLeg = (strategy: Strategy) => {
-  return {
-    contractId: strategy.contractId,
-    quantity: `${strategy.size}` as `${number}`,
-    side: strategy.side as 'BUY' | 'SELL',
-  };
-};
-
-export const getStrategy = (strategy: Strategy) => {
-  return {
-    ...strategy,
-    side: strategy.side === 'BUY' ? '+' : '-',
-  };
 };
 
 export const getStrategyPrices = (list: StrategyType[]) => {
