@@ -4,16 +4,15 @@ import dayjs from 'dayjs';
 
 // Constants
 import { StrategyType } from '@/UI/constants/tableStrategy';
-import { PayoffDataProps } from '@/UI/constants/charts';
 
 // SDK
-import { Leg } from '@ithaca-finance/sdk';
+import { Contract, Leg } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { estimateOrderPayoff, OptionLeg } from '@/UI/utils/CalcChartPayoff';
+import { estimateOrderPayoff, OptionLeg, PayoffMap } from '@/UI/utils/CalcChartPayoff'
 
 // Utils
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
@@ -53,7 +52,7 @@ const Index = () => {
   // State
   const [strategyList, setStrategyList] = useState<StrategyType[]>([]);
   const [previousLegs, setpreviousLegs] = useState<Leg[]>([]);
-  const [chartData, setChartData] = useState<PayoffDataProps[]>([]);
+  const [chartData, setChartData] = useState<PayoffMap[]>([]);
   const [summaryDetails, setSummaryDetails] = useState<Summary>();
 
   // Store
@@ -75,11 +74,9 @@ const Index = () => {
         //   legs,
         // });
 
-        const completeData: OptionLeg[] = legs.map(item => {
-          return { ...item, ...contractList.find(c => c.contractId == item.contractId) };
-        });
-        const payoffs = estimateOrderPayoff(completeData);
-        setChartData(payoffs);
+        const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId) as Contract}})
+        const payoffs = estimateOrderPayoff(completeData)
+        setChartData(payoffs)
 
         // setChartData(
         //   Object.keys(orderPayoff).map(key => ({
@@ -97,7 +94,7 @@ const Index = () => {
         console.log(e);
       }
     },
-    [ithacaSDK.calculation]
+    [ithacaSDK.calculation, contractList]
   );
 
   const submitToAcution = useCallback(
