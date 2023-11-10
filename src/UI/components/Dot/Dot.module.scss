@@ -3,32 +3,29 @@
   height: rem(8);
   border-radius: 50%;
   box-shadow: 0px rem(4) rem(4) rgba(0, 0, 0, 0.25);
+  border: rem(0.2) solid rgba(255, 255, 255, 0.2);
 }
 
-.blue {
-  background-color: #07a6c9;
-}
+$colors: (
+  leg1: #4bb475,
+  leg2: #b5b5f8,
+  leg3: #ff772a,
+  leg4: #a855f7,
+  leg5: #7ad136,
+  leg6: #ff3f57,
+  leg7: #6545a4,
+  leg8: #18b5b5,
+  leg9: #4421af,
+  leg10: #d7658b,
+  leg11: #7c1158,
+  leg12: #786028,
+  leg13: #50e991,
+  leg14: #b33dc6,
+  leg15: #00836e,
+);
 
-.red {
-  background-color: #ff3f57;
-}
-
-.orange {
-  background-color: #ff6e1d;
-}
-
-.purple {
-  background-color: #b5b5f8;
-}
-
-.green {
-  background-color: #4bb475;
-}
-
-.gray {
-  background-color: gray;
-}
-
-.white {
-  background-color: var(--white);
+@each $name, $color in $colors {
+  .#{$name} {
+    background-color: $color;
+  }
 }
