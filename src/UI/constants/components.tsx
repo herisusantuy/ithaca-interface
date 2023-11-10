@@ -394,7 +394,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TabCard',
-        component: <TabCard tabs={TRADING_MARKET_TABS} showInstructions setShowInstructions={() => {}} />,
+        component: <TabCard tabs={TRADING_MARKET_TABS} />,
         status: 'Waiting on Figma',
       },
       {
