@@ -15,23 +15,27 @@
   }
 
   .side p {
-    left: rem(100);
+    left: rem(120);
   }
 
   .size p {
-    left: rem(27);
+    left: rem(48);
   }
 
   .strike p {
-    left: rem(4);
+    left: rem(20);
   }
 
   .unitPrice p {
-    left: rem(-7);
+    left: rem(4);
+  }
+
+  .collateral p {
+    left: rem(-20);
   }
 
   .premium p {
-    left: rem(-50);
+    left: rem(-80);
   }
 }
 
