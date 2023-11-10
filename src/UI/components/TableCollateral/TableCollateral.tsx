@@ -1,9 +1,6 @@
 // Constants
 import { CollateralType, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
 
-// Utils
-import { formatWithCommas } from '@/UI/utils/Numbers';
-
 // Components
 import Button from '@/UI/components/Button/Button';
 import LogoEth from '@/UI/components/Icons/LogoEth';
@@ -41,10 +38,10 @@ const TableCollateral = ({ isOpacity, data, deposit, withdraw, faucet }: Collate
           <div className={styles.cell}>
             <Asset icon={collateral.asset === 'WETH' ? <LogoEth /> : <LogoUsdc />} label={collateral.asset} />
           </div>
-          <div className={styles.cell}>{formatWithCommas(collateral.balance)}</div>
-          <div className={styles.cell}>{formatWithCommas(collateral.fundLock)}</div>
-          <div className={styles.cell}>{formatWithCommas(collateral.netOrders)}</div>
-          <div className={styles.cell}>{formatWithCommas(collateral.liveOrderValue)}</div>
+          <div className={styles.cell}>{collateral.balance}</div>
+          <div className={styles.cell}>{collateral.fundLock}</div>
+          <div className={styles.cell}>{collateral.netOrders}</div>
+          <div className={styles.cell}>{collateral.liveOrderValue}</div>
           <div className={styles.cell}>
             <Button
               title={`Click to deposit ${collateral.asset}`}
