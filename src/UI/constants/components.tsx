@@ -40,6 +40,8 @@ import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount'
 import ModalWithButton from '@/UI/components/Modal/ModalWithButton';
 import Sort from '@/UI/components/Icons/Sort';
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
+import TableFundLock from '@/UI/components/TableFundLock/TableFundLock';
+import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -55,6 +57,7 @@ import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { CHART_FAKE_DATA } from './charts';
+import { TABLE_FUND_LOCK_DATA } from './tableFundLock';
 
 const COMPONENT_GROUPS = [
   {
@@ -191,6 +194,15 @@ const COMPONENT_GROUPS = [
       {
         name: 'CurrencyDisplay',
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
+        status: 'Done',
+      },
+      {
+        name: 'DisconnectedWallet',
+        component: (
+          <div style={{ position: 'relative', width: '100%', height: '250px' }}>
+            <DisconnectedWallet />
+          </div>
+        ),
         status: 'Done',
       },
       {
@@ -367,7 +379,12 @@ const COMPONENT_GROUPS = [
             totalCollateral={30}
           />
         ),
-        status: 'In Progress',
+        status: 'Done',
+      },
+      {
+        name: 'TableFundLock',
+        component: <TableFundLock data={TABLE_FUND_LOCK_DATA} isDisconnected={false} />,
+        status: 'Done',
       },
       {
         name: 'TableStrategy',
@@ -377,16 +394,16 @@ const COMPONENT_GROUPS = [
             <TableStrategy data={TABLE_STRATEGY_DATA} />
           </>
         ),
-        status: 'Waiting on Figma',
+        status: 'Done',
       },
       {
         name: 'TableOrder',
         component: (
           <Panel margin='p-30'>
-            <TableOrder />
+            <TableOrder isDisconnected={false} />
           </Panel>
         ),
-        status: 'In Progress',
+        status: 'Done',
       },
     ],
   },

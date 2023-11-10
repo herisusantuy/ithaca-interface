@@ -6,6 +6,10 @@ import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/
 
 // Utils
 import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
+import { auctionFilter, currencyFilter, foundLockAmountDataSort, foundLockOrderDateSort } from '@/UI/utils/TableFund';
+
+// Hooks
+import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -15,24 +19,23 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Pagination from '@/UI/components/Pagination/Pagination';
 import Asset from '@/UI/components/Asset/Asset';
+import Sort from '@/UI/components/Icons/Sort';
+import Filter from '@/UI/components/Icons/Filter';
+import CheckBox from '@/UI/components/CheckBox/CheckBox';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableFundLock.module.scss';
-import Sort from '../Icons/Sort';
-import Filter from '../Icons/Filter';
-import CheckBox from '../CheckBox/CheckBox';
-import { useEscKey } from '@/UI/hooks/useEscKey';
-import { auctionFilter, currencyFilter, foundLockAmountDataSort, foundLockOrderDateSort } from '@/UI/utils/TableFund';
 
 // Types
 type TableFundLockProps = {
   data: TableFundLockDataProps[];
+  isDisconnected: boolean;
 };
 
-const TableFundLock = ({ data }: TableFundLockProps) => {
+const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -46,6 +49,7 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
   const currencyRef = useRef<HTMLDivElement | null>(null);
   const auctionRef = useRef<HTMLDivElement | null>(null);
   const pageLimit = 9;
+
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -262,9 +266,12 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
     }
   };
 
+  // Get table className
+  const tableClass = `${styles.table} ${isDisconnected ? styles.isOpacity : ''}`;
+
   return (
     <>
-      <div className={styles.table}>
+      <div className={tableClass.trim()}>
         <div className={styles.header}>
           {TABLE_FUND_LOCK_HEADERS.map((header, idx) => (
             <div className={styles.cell} key={idx}>
