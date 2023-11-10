@@ -96,13 +96,19 @@
     @include font-size('text-md', 'regular');
     font-family: $roboto;
     color: var(--white);
-    padding: rem(4);
+    border-radius: rem(3);
+    padding: rem(4) rem(5);
 
     &:hover {
-      color: var(--green-30);
+      background-color: var(--white-10);
     }
-  }
 
+  }
+  
+  .selected {
+    color: var(--green-30);
+  }
+  
   &.isHidden {
     display: none;
   }
