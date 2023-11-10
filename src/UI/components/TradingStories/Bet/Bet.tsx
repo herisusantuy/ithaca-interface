@@ -1,7 +1,6 @@
 import React from 'react';
 
 import styles from './Bet.module.scss';
-import RadioButton from '../../RadioButton/RadioButton';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Slider from '../../Slider/Slider';
 import Input from '../../Input/Input';

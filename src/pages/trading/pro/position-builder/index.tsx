@@ -1,5 +1,5 @@
 // Packages
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 
 // SDK
@@ -34,7 +34,6 @@ import ReadyState from '@/UI/utils/ReadyState';
 import { getNumber } from '@/UI/utils/Numbers';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { Value } from 'sass';
 
 export interface PositionBuilderStrategy {
   leg: Leg;
@@ -81,12 +80,12 @@ const Index = () => {
       legs,
     };
 
-    // const chartData = estimateOrderPayoff(
-    //   strikes.map((strike, idx) => {
-    //     const contracts = getContractsByPayoff(payoffs[idx]);
-    //     return { ...contracts[strike], ...legs[idx] };
-    //   })
-    // );
+    const chartData = estimateOrderPayoff(
+      strikes.map((strike, idx) => {
+        const contracts = getContractsByPayoff(payoffs[idx]);
+        return { ...contracts[strike], ...legs[idx] };
+      })
+    );
     setChartData(chartData);
 
     try {

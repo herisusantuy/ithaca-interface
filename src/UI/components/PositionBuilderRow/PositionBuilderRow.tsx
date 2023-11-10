@@ -1,5 +1,5 @@
 // Packages
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -48,9 +48,10 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
   const [payoff, setPayoff] = useState(options[0].value);
   const [side, setSide] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('100');
-  const [strike, setStrike] = useState<string>();
+  const [strike, setStrike] = useState<string | undefined>(title === 'Forwards' ? '-' : undefined);
   const contracts = getContractsByPayoff(title === 'Forwards' ? 'Forward' : payoff);
   const [unitPrice, setUnitPrice] = useState(title === 'Forwards' ? `${contracts['-'].referencePrice}` : '');
+
 
   // Sections
   const sections: SectionType[] = [
@@ -65,11 +66,12 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
 
   const handlePayoffChange = (payoff: string) => {
     setPayoff(payoff);
-    setStrike(undefined);
     if (title === 'Forwards') {
+      setStrike('-');
       setUnitPrice(`${contracts['-'].referencePrice}`)
     }
     else {
+      setStrike(undefined);
       setUnitPrice('');
     }
   };
@@ -89,38 +91,36 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
   };
 
   const calcCollateralRequirement = () => {
-    if ((!strike && title !== 'Forwards') || isInvalidNumber(getNumber(size))) return '-';
-    const contractStrike = strike || '-';
+    if (!strike || isInvalidNumber(getNumber(size))) return '-';
     const leg = {
-      contractId: contracts[contractStrike].contractId,
+      contractId: contracts[strike].contractId,
       quantity: size,
       side,
     };
     if (title === 'Forwards') {
       const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[contractStrike].contractId;
+      leg.contractId = forwardContracts[strike].contractId;
     }
     return ithacaSDK.calculation.calcCollateralRequirement(
       leg,
       title === 'Forwards' ? 'Forward' : payoff,
-      getNumber(contractStrike),
+      getNumber(strike),
       currencyPrecision.strike
     );
   };
 
   const calcPremium = () => {
-    if ((!strike && title !== 'Forwards') || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return '-';
-    const contractStrike = strike || '-';
+    if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return '-';
     const leg = {
-      contractId: contracts[contractStrike].contractId,
+      contractId: contracts[strike].contractId,
       quantity: size,
       side,
     };
     if (title === 'Forwards') {
       const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[contractStrike].contractId;
+      leg.contractId = forwardContracts[strike].contractId;
     }
     return ithacaSDK.calculation.calcPremium(leg, getNumber(unitPrice), currencyPrecision.strike);
   };
@@ -174,17 +174,14 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
           </div>
           <div className={styles.strike}>
             {title !== 'Forwards' ?
-            <DropdownMenu
-              value={strike}
-              options={
-                title === 'Forwards'
-                  ? [{ name: '-', value: '-' }]
-                  : Object.keys(contracts).map(strike => ({ name: strike, value: strike }))
-              }
-              iconEnd={<LogoUsdc />}
-              onChange={handleStrikeChange}
-            /> :
-            <div className={styles.forwardPlaceholder}/>}
+              <DropdownMenu
+                value={strike}
+                options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))
+                }
+                iconEnd={<LogoUsdc />}
+                onChange={handleStrikeChange}
+              /> :
+              <div className={styles.forwardPlaceholder} />}
           </div>
           <div className={styles.unitPrice}>
             <Input
@@ -206,12 +203,11 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
                 size='sm'
                 title='Click to add to Strategy'
                 variant='secondary'
-                disabled={!(unitPrice && size && (strike || title === 'Forwards'))}
+                disabled={!(unitPrice && size && strike)}
                 onClick={() => {
-                  if ((!strike && title !== 'Forwards') || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-                  const contractStrike = strike || '-';
+                  if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
                   const leg = {
-                    contractId: contracts[contractStrike].contractId,
+                    contractId: contracts[strike].contractId,
                     quantity: size,
                     side,
                   } as Leg;
@@ -219,7 +215,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
                     const expiry =
                       payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
                     const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-                    leg.contractId = forwardContracts[contractStrike].contractId;
+                    leg.contractId = forwardContracts[strike].contractId;
                   }
                   addStrategy({
                     leg,
@@ -235,13 +231,12 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               <Button
                 size='sm'
                 title='Click to add to submit to auction'
-                disabled={!(unitPrice && size && (strike || title === 'Forwards'))}
+                disabled={!(unitPrice && size && strike)}
                 variant='primary'
                 onClick={() => {
-                  if ((!strike && title !== 'Forwards') || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-                  const contractStrike = strike || '-';
+                  if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
                   const leg = {
-                    contractId: contracts[contractStrike].contractId,
+                    contractId: contracts[strike].contractId,
                     quantity: size,
                     side,
                   } as Leg;
@@ -249,7 +244,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
                     const expiry =
                       payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
                     const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-                    leg.contractId = forwardContracts[contractStrike].contractId;
+                    leg.contractId = forwardContracts[strike].contractId;
                   }
                   submitAuction({
                     clientOrderId: createClientOrderId(),

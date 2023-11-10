@@ -11,9 +11,6 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
-import RadioButton from '../../RadioButton/RadioButton';
-import Plus from '../../Icons/Plus';
-import Minus from '../../Icons/Minus';
 
 const Barriers = ({ compact = false }: TradingStoriesProps) => {
   return (
