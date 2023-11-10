@@ -30,13 +30,11 @@
   &.vertical {
     flex-direction: column;
     gap: 0;
-    width: rem(53);
 
     label {
       @include spacing(padding, 2, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
       height: rem(15);
-      width: rem(53);
       min-width: 0;
 
       svg {
@@ -84,6 +82,7 @@
   label {
     @include font-size('text-xs', 'bold');
     @include spacing(padding, 8, 'top+bottom');
+    @include spacing(padding, 30, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;
@@ -92,7 +91,6 @@
     border-radius: rem(10);
     color: var(--white-60);
     cursor: pointer;
-    min-width: rem(90);
 
     &:hover {
       color: var(--white);
