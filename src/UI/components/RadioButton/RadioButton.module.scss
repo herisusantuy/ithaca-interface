@@ -12,13 +12,13 @@
     display: block;
     position: absolute;
     border-radius: rem(12);
-    top: -(rem(1));
-    bottom: -(rem(1));
-    right: -(rem(1));
-    left: -(rem(1));
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
     z-index: -1;
-    border: rem(1) solid transparent;
-    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    border: rem(0.5) solid transparent;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0) 80%) border-box;
     opacity: 0.2;
     -webkit-mask:
       linear-gradient(#fff 0 0) padding-box,
@@ -30,13 +30,11 @@
   &.vertical {
     flex-direction: column;
     gap: 0;
-    width: rem(53);
 
     label {
       @include spacing(padding, 2, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
       height: rem(15);
-      width: rem(53);
       min-width: 0;
 
       svg {
@@ -84,6 +82,7 @@
   label {
     @include font-size('text-xs', 'bold');
     @include spacing(padding, 8, 'top+bottom');
+    @include spacing(padding, 30, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;
@@ -92,7 +91,6 @@
     border-radius: rem(10);
     color: var(--white-60);
     cursor: pointer;
-    min-width: rem(90);
 
     &:hover {
       color: var(--white);

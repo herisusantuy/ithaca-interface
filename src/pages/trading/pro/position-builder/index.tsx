@@ -57,7 +57,7 @@ const Index = () => {
 
   // Store
   const { ithacaSDK, contractList } = useAppStore();
-  const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate)
+  const currentExpiryDate = useFromStore(useAppStore, state => state.currentExpiryDate);
 
   const getOrderSummary = useCallback(
     async (legs: Leg[], list: StrategyType[]) => {
@@ -77,9 +77,6 @@ const Index = () => {
         const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId) as Contract}})
         const payoffs = estimateOrderPayoff(completeData)
         setChartData(payoffs)
-
-
-
 
         // setChartData(
         //   Object.keys(orderPayoff).map(key => ({
@@ -115,7 +112,7 @@ const Index = () => {
           type
         );
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     },
     [ithacaSDK, previousLegs, strategyList]

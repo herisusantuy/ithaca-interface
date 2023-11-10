@@ -272,6 +272,12 @@ const COMPONENT_GROUPS = [
               orientation='vertical'
               onChange={value => console.log(value)}
             />
+            <RadioButton
+              options={['Option', 'Digital Options', 'Dated Forward']}
+              name='multi'
+              defaultOption='Call'
+              onChange={value => console.log(value)}
+            />
           </Flex>
         ),
         status: 'Done',
