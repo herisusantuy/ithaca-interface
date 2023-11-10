@@ -96,7 +96,8 @@ export const formatCurrencyPair = (currencyPair: string) => (
 
 // Get side icon
 export const getSideIcon = (side: string) => {
-  return side === '+' ? <Plus /> : <Minus />;
+
+  return side === '+' || side === 'BUY' ? <Plus /> : side === '-' || side === 'SELL'? <Minus /> : '';
 };
 
 // Split the dates and render as spans
