@@ -55,7 +55,7 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
 
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } = useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
@@ -129,6 +129,16 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
+                      valueList={expiryList.map((date) => ({
+                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY')
+                      }))}
+                      onChange={(value) => {
+                        setOrderSummary(undefined);
+                        setPositionBuilderStrategies([])
+                        setChartData(undefined)
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')))
+                      }}
                       value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
                       hasDropdown={true}
                     />
@@ -175,9 +185,9 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? toPrecision(
-                          orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        )
+                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      )
                       : '-'
                   }
                   premium={orderSummary?.order.totalNetPrice || '-'}

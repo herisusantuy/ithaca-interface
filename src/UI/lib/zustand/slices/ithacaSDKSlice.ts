@@ -44,6 +44,7 @@ export interface IthacaSDKSlice {
   fetchSpotPrices: () => Promise<void>;
   getContractsByPayoff: (payoff: string) => ContractDetails;
   getContractsByExpiry: (expiry: string, payoff: string) => ContractDetails;
+  setCurrentExpiryDate: (date: number) => void
 }
 
 export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => ({
@@ -192,4 +193,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     const { contractList, currentCurrencyPair } = get();
     return contractList[currentCurrencyPair][expiry][payoff];
   },
+  setCurrentExpiryDate: (date: number) => {
+    set({currentExpiryDate: date})
+  }
 });

@@ -16,7 +16,6 @@ import Button from '@/UI/components/Button/Button';
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
-import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Pagination from '@/UI/components/Pagination/Pagination';
 import Asset from '@/UI/components/Asset/Asset';
 import Sort from '@/UI/components/Icons/Sort';
@@ -298,13 +297,7 @@ const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
       </div>
       {slicedData.length > 0 ? (
         <Flex direction='row-space-between' margin='mt-35'>
-          <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
-            totalCollateral={30}
-          />
+          <div></div>
           <Pagination
             totalItems={data.length}
             itemsPerPage={pageLimit}

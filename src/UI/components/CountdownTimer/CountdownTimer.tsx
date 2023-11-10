@@ -19,6 +19,8 @@ const CountdownTimer = () => {
     seconds: nextAuction?.second || 0,
   });
 
+  console.log(nextAuction)
+
   useEffect(() => {
     const resetTimer = () => {
       setTime({
