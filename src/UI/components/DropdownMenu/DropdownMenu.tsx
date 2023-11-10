@@ -113,7 +113,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
                 {options &&
                   options.map((item: DropDownOption, idx: number) => {
                     return (
-                      <li key={idx} onClick={() => handleOptionClick(item)}>
+                      <li key={idx} onClick={() => handleOptionClick(item)} className={`${selectedOption?.value == item.value ? styles.selected : ''}`}>
                         {item.name}
                       </li>
                     );
