@@ -14,3 +14,24 @@ export const getNumber = (value: string): number => {
 };
 
 export const isInvalidNumber = (number: number) => !number || isNaN(number) || number <= 0;
+
+export const getNumberFormat = (value: string | number, type: string = 'int') => {
+  let result = '0';
+  const number = getNumber(value.toString());
+  if (isInvalidNumber(number)) {
+    return '0';
+  } else {
+    result = formatNumber(number, type);
+  }
+  return result;
+};
+
+export const formatNumber = (value: number, type: string) => {
+  if (value > 1000000) {
+    return (value / 1000000).toFixed(3) + 'm';
+  } else if (value > 1000) {
+    return (value / 1000).toFixed(1) + 'k';
+  } else {
+    return type == 'int' ? value.toString() : value.toFixed(1).toString();
+  }
+};

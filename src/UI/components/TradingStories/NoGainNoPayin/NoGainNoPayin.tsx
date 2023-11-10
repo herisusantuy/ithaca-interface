@@ -8,7 +8,6 @@ import { TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
 import Flex from '@/UI/layouts/Flex/Flex';
-import RadioButton from '../../RadioButton/RadioButton';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';

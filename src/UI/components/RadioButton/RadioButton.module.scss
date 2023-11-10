@@ -6,6 +6,7 @@
   position: relative;
   border-radius: rem(12);
   height: rem(34);
+  min-width: rem(225);
 
   &:before {
     content: '';
@@ -30,6 +31,7 @@
   &.vertical {
     flex-direction: column;
     gap: 0;
+    min-width: 0;
 
     label {
       @include spacing(padding, 2, 'top+bottom');
@@ -71,6 +73,9 @@
 
 .option {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
   input[type='radio'] {
     position: absolute;
@@ -82,7 +87,7 @@
   label {
     @include font-size('text-xs', 'bold');
     @include spacing(padding, 8, 'top+bottom');
-    @include spacing(padding, 30, 'left+right');
+    @include spacing(padding, 10, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;
@@ -91,7 +96,7 @@
     border-radius: rem(10);
     color: var(--white-60);
     cursor: pointer;
-
+    width: 100%;
     &:hover {
       color: var(--white);
     }

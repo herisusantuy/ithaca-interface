@@ -1,26 +1,25 @@
 // Constants
-import { CollateralType, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
+import { CollateralSummary, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
 
 // Components
 import Button from '@/UI/components/Button/Button';
-import LogoEth from '@/UI/components/Icons/LogoEth';
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Asset from '@/UI/components/Asset/Asset';
 
 // Styles
 import styles from './TableCollateral.module.scss';
+import { useAccount } from 'wagmi';
 
 // Types
 type CollateralTableProps = {
-  isOpacity?: boolean;
-  data: CollateralType[];
+  collateralSummary: { [currency: string]: CollateralSummary };
   deposit: (asset: string) => void;
   withdraw: (asset: string) => void;
   faucet: (asset: string) => void;
 };
 
-const TableCollateral = ({ isOpacity, data, deposit, withdraw, faucet }: CollateralTableProps) => {
-  const tableClass = `${styles.table} ${isOpacity ? styles.isOpacity : ''}`;
+const TableCollateral = ({ collateralSummary, deposit, withdraw, faucet }: CollateralTableProps) => {
+  const { isDisconnected } = useAccount();
+  const tableClass = `${styles.table} ${isDisconnected ? styles.isOpacity : ''}`;
 
   return (
     <div className={tableClass.trim()}>
@@ -33,39 +32,34 @@ const TableCollateral = ({ isOpacity, data, deposit, withdraw, faucet }: Collate
           );
         })}
       </div>
-      {data.map((collateral, idx) => (
+      {Object.keys(collateralSummary).map((currency, idx) => (
         <div className={styles.row} key={idx}>
           <div className={styles.cell}>
-            <Asset icon={collateral.asset === 'WETH' ? <LogoEth /> : <LogoUsdc />} label={collateral.asset} />
+            <Asset icon={collateralSummary[currency].currencyLogo} label={currency} />
           </div>
-          <div className={styles.cell}>{collateral.balance}</div>
-          <div className={styles.cell}>{collateral.fundLock}</div>
-          <div className={styles.cell}>{collateral.netOrders}</div>
-          <div className={styles.cell}>{collateral.liveOrderValue}</div>
+          <div className={styles.cell}>{collateralSummary[currency].walletBalance}</div>
+          <div className={styles.cell}>{collateralSummary[currency].fundLockValue}</div>
+          <div className={styles.cell}>{collateralSummary[currency].settleValue}</div>
+          <div className={styles.cell}>{collateralSummary[currency].orderValue}</div>
           <div className={styles.cell}>
             <Button
-              title={`Click to deposit ${collateral.asset}`}
+              title={`Click to deposit ${currency}`}
               variant='secondary'
               size='sm'
               role='button'
-              onClick={() => deposit(collateral.asset)}
+              onClick={() => deposit(currency)}
             >
               Deposit
             </Button>
             <Button
-              title={`Click to withdraw ${collateral.asset}`}
+              title={`Click to withdraw ${currency}`}
               size='sm'
               variant='primary'
-              onClick={() => withdraw(collateral.asset)}
+              onClick={() => withdraw(currency)}
             >
               Withdraw
             </Button>
-            <Button
-              title={`Click to faucet ${collateral.asset}`}
-              size='sm'
-              variant='primary'
-              onClick={() => faucet(collateral.asset)}
-            >
+            <Button title={`Click to faucet ${currency}`} size='sm' variant='primary' onClick={() => faucet(currency)}>
               Faucet
             </Button>
           </div>

@@ -7,7 +7,6 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts';
 import { TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
-import RadioButton from '../../RadioButton/RadioButton';
 import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';

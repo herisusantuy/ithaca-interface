@@ -4,7 +4,7 @@ import styles from './Balance.module.scss';
 // Types
 type BalanceProps = {
   fundLock: number;
-  balance: number;
+  balance: string;
   margin?: string;
 };
 

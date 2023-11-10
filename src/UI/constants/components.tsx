@@ -47,6 +47,7 @@ import Pagination from '@/UI/components/Pagination/Pagination';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Balance from '@/UI/components/Balance/Balance';
+import NumberFormat from '@/UI/components/NumberFormat/NumberFormat';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -58,7 +59,6 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Constants
 import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
-import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { CHART_FAKE_DATA } from './charts';
@@ -75,7 +75,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Balance',
-        component: <Balance fundLock={0} balance={0} margin='mtb-20' />,
+        component: <Balance fundLock={0} balance={'0'} margin='mtb-20' />,
         status: 'Done',
       },
       {
@@ -319,34 +319,36 @@ const COMPONENT_GROUPS = [
       {
         name: 'RadioButton',
         component: (
-          <Flex direction='row-center' gap='gap-12'>
-            <RadioButton
-              options={[
-                { option: 'Call', value: 'Call' },
-                { option: 'Put', value: 'Put' },
-              ]}
-              name='callOrPut'
-              onChange={value => console.log(value)}
-            />
-            <RadioButton
-              options={[
-                { option: <Plus key='plus' />, value: 'Plus' },
-                { option: <Minus key='minus' />, value: 'Minus' },
-              ]}
-              name='plusOrMinus'
-              orientation='vertical'
-              onChange={value => console.log(value)}
-            />
-            <RadioButton
-              options={[
-                { option: 'Option', value: 'Option' },
-                { option: 'Digital Options', value: 'Digital Options' },
-                { option: 'Dated Forward', value: 'Dated Forward' },
-              ]}
-              name='multi'
-              onChange={value => console.log(value)}
-            />
-          </Flex>
+          <Panel>
+            <Flex direction='row-center' gap='gap-12'>
+              <RadioButton
+                options={[
+                  { option: 'Call', value: 'Call' },
+                  { option: 'Put', value: 'Put' },
+                ]}
+                name='callOrPut'
+                onChange={value => console.log(value)}
+              />
+              <RadioButton
+                options={[
+                  { option: <Plus key='plus' />, value: 'Plus' },
+                  { option: <Minus key='minus' />, value: 'Minus' },
+                ]}
+                name='plusOrMinus'
+                orientation='vertical'
+                onChange={value => console.log(value)}
+              />
+              <RadioButton
+                options={[
+                  { option: 'Option', value: 'Option' },
+                  { option: 'Digital Options', value: 'Digital Options' },
+                  { option: 'Dated Forward', value: 'Dated Forward' },
+                ]}
+                name='multi'
+                onChange={value => console.log(value)}
+              />
+            </Flex>
+          </Panel>
         ),
         status: 'Done',
       },
@@ -388,7 +390,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Tabs',
-        component: <Tabs tabs={TABS} />,
+        component: <Tabs tabs={TABS} activeTab={TABS[0].id} />,
         status: 'Done',
       },
       {
@@ -421,7 +423,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TableFundLock',
-        component: <TableFundLock data={TABLE_FUND_LOCK_DATA} isDisconnected={false} />,
+        component: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
         status: 'Done',
       },
       {
@@ -438,7 +440,7 @@ const COMPONENT_GROUPS = [
         name: 'TableOrder',
         component: (
           <Panel margin='p-30'>
-            <TableOrder isDisconnected={false} />
+            <TableOrder />
           </Panel>
         ),
         status: 'Done',
@@ -493,11 +495,6 @@ const COMPONENT_GROUPS = [
     groupName: 'Utilities',
     components: [
       {
-        name: 'Wallet',
-        component: <Wallet />,
-        status: 'Waiting on Figma',
-      },
-      {
         name: 'CountdownTimer',
         component: <CountdownTimer />,
         status: 'Done',
@@ -511,9 +508,23 @@ const COMPONENT_GROUPS = [
         name: 'Modal',
         component: (
           <ModalWithButton title='Manage Funds' isLoading={false} onSubmitOrder={() => {}} btnText='Manage Funds'>
-            <Tabs tabs={MODAL_TABS} />
+            <Tabs tabs={MODAL_TABS} activeTab={MODAL_TABS[0].id} />
           </ModalWithButton>
         ),
+        status: 'Waiting on Figma',
+      },
+      {
+        name: 'NumberFormat',
+        component: (
+          <Flex>
+            <NumberFormat />
+          </Flex>
+        ),
+        status: 'In Progress',
+      },
+      {
+        name: 'Wallet',
+        component: <Wallet />,
         status: 'Waiting on Figma',
       },
     ],

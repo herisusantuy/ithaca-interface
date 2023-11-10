@@ -1,11 +1,12 @@
+import { FundLockState } from '@ithaca-finance/sdk';
+import LogoEth from '../components/Icons/LogoEth';
+import LogoUsdc from '../components/Icons/LogoUsdc';
+
 // Types
-export type CollateralType = {
-  asset: string;
-  balance: number;
-  fundLock: number;
-  netOrders: number;
-  liveOrderValue: number;
-};
+export interface CollateralSummary extends FundLockState {
+  currencyLogo: JSX.Element;
+  walletBalance: string;
+}
 
 export const TABLE_COLLATERAL_HEADERS: string[] = [
   'Asset',
@@ -17,19 +18,21 @@ export const TABLE_COLLATERAL_HEADERS: string[] = [
 ];
 
 // Table strategy data
-export const TABLE_COLLATERAL_DATA: CollateralType[] = [
-  {
-    asset: 'USDC',
-    balance: 0,
-    fundLock: 0,
-    netOrders: 0,
-    liveOrderValue: 0,
+export const TABLE_COLLATERAL_SUMMARY: { [token: string]: CollateralSummary } = {
+  WETH: {
+    currency: 'WETH',
+    currencyLogo: <LogoEth />,
+    walletBalance: '0',
+    fundLockValue: 0,
+    orderValue: 0,
+    settleValue: 0,
   },
-  {
-    asset: 'WETH',
-    balance: 0,
-    fundLock: 0,
-    netOrders: 0,
-    liveOrderValue: 0,
+  USDC: {
+    currency: 'USDC',
+    currencyLogo: <LogoUsdc />,
+    walletBalance: '0',
+    fundLockValue: 0,
+    orderValue: 0,
+    settleValue: 0,
   },
-];
+};
