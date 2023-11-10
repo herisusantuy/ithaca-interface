@@ -20,7 +20,7 @@ export type DropDownOption = {
 type DropdownMenuProps = {
   label?: string;
   id?: string;
-  onChange?: (selectedOption: DropDownOption) => void;
+  onChange?: (value: string, selectedOption: DropDownOption) => void;
   disabled?: boolean;
   options: DropDownOption[];
   value?: DropDownOption;
@@ -30,6 +30,7 @@ type DropdownMenuProps = {
 
 const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart, iconEnd }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const optionsRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +71,11 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
     if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleOptionClick = (item: DropDownOption) => {
+    setSelectedOption(item);
+    if (onChange) onChange(item.value, item);
+  };
+
   return (
     <div className={styles.container} ref={containerRef}>
       {label && (
@@ -84,7 +90,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
       >
         <div className={styles.input}>
           {iconStart && iconStart}
-          <span>{value?.name ?? <span className={styles.placeholder}>-</span>}</span>
+          <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           <div className={styles.iconEnd}>
             <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
               <Dropdown />
