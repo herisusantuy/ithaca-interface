@@ -32,7 +32,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 
 const CollateralPanel = () => {
-  const { systemInfo, ithacaSDK } = useAppStore();
+  const { systemInfo, ithacaSDK, isAuthenticated } = useAppStore();
   const { address } = useAccount();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -93,9 +93,9 @@ const CollateralPanel = () => {
   };
 
   useEffect(() => {
-    if (!address) return;
+    if (!isAuthenticated) return;
     fetchFundlockState();
-  }, [address, fetchFundlockState]);
+  }, [isAuthenticated, fetchFundlockState]);
 
   return (
     <>

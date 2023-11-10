@@ -85,8 +85,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const [productChecked, setProductChecked] = useState<boolean>(false);
   const [sideArray, setSideArray] = useState<string[]>([]);
   const [sideChecked, setSideChecked] = useState<boolean>(false);
-  const { ithacaSDK } = useAppStore();
-  const { address, isDisconnected } = useAccount();
+  const { ithacaSDK, isAuthenticated } = useAppStore();
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -119,8 +118,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
   };
 
   useEffect(() => {
-    const address = walletClient?.account.address;
-    if (address) {
+    if (isAuthenticated) {
       switch (type) {
         case TABLE_TYPE.LIVE:
           ithacaSDK.orders.clientOpenOrders().then(res => {
@@ -143,7 +141,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletClient?.account.address]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     setData(TABLE_ORDER_DATA_WITH_EXPANDED);
@@ -451,7 +449,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
   };
 
   // Get table className
-  const tableClass = `${styles.table} ${isDisconnected ? styles.isOpacity : ''}`;
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''}`;
 
   return (
     <>
@@ -549,7 +547,7 @@ const TableOrder = ({ type }: TableOrderProps) => {
           <Summary detail={rowToCancelOrder} />
         </Modal>
       )}
-      {!address && <DisconnectedWallet showButton={false} />}
+      {!isAuthenticated && <DisconnectedWallet showButton={false} />}
     </>
   );
 };
