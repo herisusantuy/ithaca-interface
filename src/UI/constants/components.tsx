@@ -58,7 +58,6 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Constants
 import { MODAL_TABS, TABS } from './tabs';
 import { TRADING_MARKET_TABS } from './tabCard';
-import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { CHART_FAKE_DATA } from './charts';

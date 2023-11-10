@@ -30,7 +30,7 @@ const TableStrategy = ({ strategies, removeRow }: StrategyTableProps) => {
           );
         })}
       </div>
-      {strategies.map((strategy, idx) => (
+      {strategies.length ? strategies.map((strategy, idx) => (
         <div className={styles.row} key={idx}>
           <div className={styles.cell}>
             <div className={styles.dot}>
@@ -48,7 +48,12 @@ const TableStrategy = ({ strategies, removeRow }: StrategyTableProps) => {
             </Button>
           </div>
         </div>
-      ))}
+      )) :
+        <div className={styles.emptyContainer}>
+          <div className={styles.row}>
+            Please select a strategy
+          </div>
+        </div>}
     </div>
   );
 };
