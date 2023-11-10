@@ -54,7 +54,7 @@ import { TRADING_MARKET_TABS } from './tabCard';
 import { TABLE_STRATEGY_DATA } from './tableStrategy';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
-import { PAYOFF_DUMMY_DATA } from './charts';
+import { CHART_FAKE_DATA } from './charts';
 
 const COMPONENT_GROUPS = [
   {
@@ -373,7 +373,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel margin='p-30'>
-            <ChartPayoff chartData={PAYOFF_DUMMY_DATA} height={300} />
+            <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
           </Panel>
         ),
         status: 'In Progress',

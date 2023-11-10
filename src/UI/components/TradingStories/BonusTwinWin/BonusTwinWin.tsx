@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './BonusTwinWin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { PAYOFF_DUMMY_DATA } from '@/UI/constants/charts';
+import { CHART_FAKE_DATA } from '@/UI/constants/charts';
 import { TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
@@ -83,7 +83,7 @@ const BonusTwinWin = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={PAYOFF_DUMMY_DATA} height={300} />
+        <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

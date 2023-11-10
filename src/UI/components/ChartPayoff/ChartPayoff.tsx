@@ -14,10 +14,7 @@ import Key from '@/UI/components/ChartPayoff/Key';
 import {
   PayoffDataProps,
   PAYOFF_DUMMY_DATA,
-  SpecialDotLabel,
-  KEY_DATA,
-  KeyType,
-  CHART_FAKE_DATA,
+  SpecialDotLabel
 } from '@/UI/constants/charts';
 
 //Event Props
@@ -26,9 +23,10 @@ import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalC
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import { breakPointList, getLegs, gradientOffset, isDecrementing, isIncrementing, makingChartData } from '@/UI/utils/ChartUtil';
+import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
 
 type ChartDataProps = {
-  chartData: PayoffDataProps[];
+  chartData: PayoffMap[];
   height: number;
 };
 
