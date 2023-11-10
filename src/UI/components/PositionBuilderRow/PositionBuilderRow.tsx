@@ -75,8 +75,19 @@ const PositionBuilderRow = ({
   const [collateral, setCollateral] = useState<number>();
   const [premium, setPremium] = useState<number>();
 
-  const setData = (dataProduct: string, dataSide: string, dataSize: number, dataStrike: number, dataUnitPrice?: number) => {
-    const contractId = getContractId(isForwards ? Payoff.FORWARD : dataProduct, dataStrike, currentExpiryDate, contractList);
+  const setData = (
+    dataProduct: string,
+    dataSide: string,
+    dataSize: number,
+    dataStrike: number,
+    dataUnitPrice?: number
+  ) => {
+    const contractId = getContractId(
+      isForwards ? Payoff.FORWARD : dataProduct,
+      dataStrike,
+      currentExpiryDate,
+      contractList
+    );
     const leg = {
       contractId,
       side: dataSide,
@@ -129,18 +140,21 @@ const PositionBuilderRow = ({
                   setCollateral(undefined);
                   setPremium(undefined);
                   setStrike(undefined);
-                  setStrikeList(contractList.reduce((arr: DropDownOption[], v) => {
-                    if (v.payoff === value && v.economics.expiry === currentExpiryDate) {
-                      arr.push({
-                        name: v.economics.strike?.toString() || '',
-                        value: v.economics.strike?.toString() || ''
-                      })
-                    }
-                    return arr
-                  },[]).sort((a:DropDownOption, b: DropDownOption) => getNumber(a.name) - getNumber(b.name)))
-                }
-                else {
-                    setData(value, side, size, getNumber(strike || ''))
+                  setStrikeList(
+                    contractList
+                      .reduce((arr: DropDownOption[], v) => {
+                        if (v.payoff === value && v.economics.expiry === currentExpiryDate) {
+                          arr.push({
+                            name: v.economics.strike?.toString() || '',
+                            value: v.economics.strike?.toString() || '',
+                          });
+                        }
+                        return arr;
+                      }, [])
+                      .sort((a: DropDownOption, b: DropDownOption) => getNumber(a.name) - getNumber(b.name))
+                  );
+                } else {
+                  setData(value, side, size, getNumber(strike || ''));
                 }
               }}
             />
@@ -155,7 +169,7 @@ const PositionBuilderRow = ({
               onChange={(value: string) => {
                 setSide(value);
                 if (product && (isForwards || strike)) {
-                  setData(product, value, size, getNumber(strike || ''))
+                  setData(product, value, size, getNumber(strike || ''));
                 }
               }}
             />
@@ -167,7 +181,7 @@ const PositionBuilderRow = ({
                 const val = value.target.value && getNumber(value.target.value);
                 setSize(val || 0);
                 if (val && product) {
-                  setData(product, side, val, getNumber(strike || ''))
+                  setData(product, side, val, getNumber(strike || ''));
                 } else {
                   setCollateral(0);
                 }
@@ -176,14 +190,17 @@ const PositionBuilderRow = ({
             />
           </div>
           <div className={styles.strike}>
-            <DropdownMenu 
+            <DropdownMenu
               value={strike}
-              options={strikeList} onChange={(val) => {
-                setStrike(val)
+              options={strikeList}
+              onChange={val => {
+                setStrike(val);
                 if (product) {
-                  setData(product, side, size, getNumber(val || ''))
-                } 
-            }} iconEnd={<LogoUsdc />} />
+                  setData(product, side, size, getNumber(val || ''));
+                }
+              }}
+              iconEnd={<LogoUsdc />}
+            />
           </div>
           <div className={styles.unitPrice}>
             <Input
@@ -191,7 +208,7 @@ const PositionBuilderRow = ({
               onChange={value => {
                 const val = value.target.value && getNumber(value.target.value);
                 if (product && (isForwards || strike)) {
-                  setData(product, side, size, getNumber(strike || ''), val || 0)
+                  setData(product, side, size, getNumber(strike || ''), val || 0);
                 }
               }}
               icon={<LogoUsdc />}
