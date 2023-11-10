@@ -25,35 +25,35 @@ export const TABLE_COLLATERAL_HEADERS: string[] = [
 // Table strategy data
 export const TABLE_STRATEGY_DATA: StrategyType[] = [
   {
-    type: 'Call',
+    type: 'leg1',
     side: '+',
     size: 120,
     strike: 6500,
     enterPrice: 800,
   },
   {
-    type: 'Put',
+    type: 'leg2',
     side: '-',
     size: 90,
     strike: 7200,
     enterPrice: 950,
   },
   {
-    type: 'Forward (10 Nov 23)',
+    type: 'leg3',
     side: '+',
     size: 80,
     strike: 6800,
     enterPrice: 900,
   },
   {
-    type: 'Call',
+    type: 'leg4',
     side: '-',
     size: 150,
     strike: 7100,
     enterPrice: 1100,
   },
   {
-    type: 'Put',
+    type: 'leg5',
     side: '+',
     size: 110,
     strike: 6900,

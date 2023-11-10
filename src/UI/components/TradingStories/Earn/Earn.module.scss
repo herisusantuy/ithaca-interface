@@ -63,14 +63,14 @@
 .returnsWrapper {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   height: rem(34);
   @include spacing(margin, 6, 'bottom');
 }
 
 .earnWrapper {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: rem(4);
 }
 
@@ -100,7 +100,7 @@
 
 .orderSummary {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   gap: rem(16);
 }
