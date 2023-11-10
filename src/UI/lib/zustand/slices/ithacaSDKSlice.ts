@@ -1,5 +1,4 @@
 import { StateCreator } from 'zustand';
-import { getNumber } from '../../../utils/Numbers';
 import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { createPublicClient, http } from 'viem';
@@ -13,21 +12,41 @@ export interface AuctionTimes {
   milliseconds: number;
 }
 
+interface ContractDetails {
+  [strike: string]: Contract & ReferencePrice;
+}
+
+interface ContractList {
+  [currencyPair: string]: {
+    [expiry: string]: {
+      [payoff: string]: ContractDetails;
+    };
+  };
+}
+
 export interface IthacaSDKSlice {
+  isLoading: boolean;
   ithacaSDK: IthacaSDK;
   systemInfo: SystemInfo;
   nextAuction: AuctionTimes;
   currentExpiryDate: number;
-  contractList: Contract[];
+  currentCurrencyPair: string;
+  currentSpotPrice: number;
+  currencyPrecision: { underlying: number; strike: number };
+  contractList: ContractList;
+  expiryList: number[];
   referencePrices: ReferencePrice[];
+  spotPrices: { [currencyPair: string]: number };
   initIthacaSDK: (publicClient: PublicClient, walletClient: WalletClient) => void;
-  fetchSystemInfo: () => Promise<void>;
+  initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
-  fetchContractList: () => Promise<void>;
-  fetchReferencePrices: () => Promise<void>;
+  fetchSpotPrices: () => Promise<void>;
+  getContractsByPayoff: (payoff: string) => ContractDetails;
+  getContractsByExpiry: (expiry: string, payoff: string) => ContractDetails;
 }
 
 export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => ({
+  isLoading: true,
   ithacaSDK: IthacaSDK.init({
     network: IthacaNetwork.ARBITRUM_GOERLI,
     publicClient: createPublicClient({
@@ -51,8 +70,13 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     milliseconds: 0,
   },
   currentExpiryDate: 0,
-  contractList: [],
+  currentCurrencyPair: 'WETH/USDC',
+  currentSpotPrice: 0,
+  currencyPrecision: { underlying: 0, strike: 0 },
+  contractList: {},
+  expiryList: [],
   referencePrices: [],
+  spotPrices: {},
   initIthacaSDK: async (publicClient, walletClient) => {
     const ithacaSDK = IthacaSDK.init({
       network: IthacaNetwork.ARBITRUM_GOERLI,
@@ -62,9 +86,62 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     set({ ithacaSDK });
     await ithacaSDK.auth.login();
   },
-  fetchSystemInfo: async () => {
-    const systemInfo = await get().ithacaSDK.protocol.systemInfo();
-    set({ systemInfo: systemInfo });
+  initIthacaProtocol: async () => {
+    const { ithacaSDK, currentCurrencyPair } = get();
+
+    const systemInfo = await ithacaSDK.protocol.systemInfo();
+    const contractList = await ithacaSDK.protocol.contractList();
+    const referencePrices = await ithacaSDK.market.referencePrices(0, currentCurrencyPair);
+    const spotPrices = await ithacaSDK.market.spotPrices();
+
+    const [underlyingCurrency, strikeCurrency] = currentCurrencyPair.split('/');
+    const currencyPrecision = {
+      underlying: systemInfo.currencyPrecision[underlyingCurrency],
+      strike: systemInfo.currencyPrecision[strikeCurrency],
+    };
+
+    const contractsWithReferencePrices: { [key: string]: Contract & ReferencePrice } = {};
+    contractList.forEach(contract => {
+      contractsWithReferencePrices[contract.contractId] = {
+        ...contractsWithReferencePrices[contract.contractId],
+        ...contract,
+      };
+    });
+    referencePrices.forEach(ref => {
+      contractsWithReferencePrices[ref.contractId] = { ...contractsWithReferencePrices[ref.contractId], ...ref };
+    });
+    const filteredContractList = Object.values(contractsWithReferencePrices).reduce<ContractList>(
+      (result, contract) => {
+        const {
+          economics: { currencyPair, expiry, strike },
+          payoff,
+        } = contract;
+
+        if (!result[currencyPair]) result[currencyPair] = {};
+        if (!result[currencyPair][expiry]) result[currencyPair][expiry] = {};
+        if (!result[currencyPair][expiry][payoff]) result[currencyPair][expiry][payoff] = {};
+
+        result[currencyPair][expiry][payoff][strike ?? '-'] = contract;
+
+        return result;
+      },
+      {}
+    );
+    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).map(expiry => parseInt(expiry));
+    const currentExpiryDate = expiryList[1];
+    const currentSpotPrice = spotPrices[currentCurrencyPair];
+
+    set({
+      isLoading: false,
+      systemInfo,
+      currencyPrecision,
+      contractList: filteredContractList,
+      expiryList,
+      currentExpiryDate,
+      referencePrices,
+      spotPrices,
+      currentSpotPrice,
+    });
   },
   fetchNextAuction: async () => {
     const nextAuction = dayjs(await get().ithacaSDK.protocol.nextAuction());
@@ -78,20 +155,17 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       },
     });
   },
-  fetchContractList: async () => {
-    const contractList = await get().ithacaSDK.protocol.contractList();
-    const filteredList = contractList.reduce((obj, val) => {
-      if (obj[val.economics.expiry]) {
-        obj[val.economics.expiry].push(val);
-      } else {
-        obj[val.economics.expiry] = [val];
-      }
-      return obj;
-    }, {});
-    set({ contractList, currentExpiryDate: getNumber(Object.keys(filteredList)[1]) });
+  fetchSpotPrices: async () => {
+    const spotPrices = await get().ithacaSDK.market.spotPrices();
+    const currentCurrencyPair = get().currentCurrencyPair;
+    set({ spotPrices, currentSpotPrice: spotPrices[currentCurrencyPair] });
   },
-  fetchReferencePrices: async () => {
-    const referencePrices = await get().ithacaSDK.market.referencePrices(0, 'WETH/USDC');
-    set({ referencePrices: referencePrices });
+  getContractsByPayoff: (payoff: string) => {
+    const { contractList, currentCurrencyPair, currentExpiryDate } = get();
+    return contractList[currentCurrencyPair][currentExpiryDate][payoff];
+  },
+  getContractsByExpiry: (expiry: string, payoff: string) => {
+    const { contractList, currentCurrencyPair } = get();
+    return contractList[currentCurrencyPair][expiry][payoff];
   },
 });

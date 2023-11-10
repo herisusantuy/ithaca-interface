@@ -3,7 +3,7 @@ import Minus from '@/UI/components/Icons/Minus';
 import Plus from '@/UI/components/Icons/Plus';
 
 // Types
-type SideType = '+' | '-';
+type SideType = 'BUY' | 'SELL';
 
 /**
  * Display the corresponding icon based on the side value.
@@ -12,6 +12,5 @@ type SideType = '+' | '-';
  */
 
 export const displaySideIcon = (side: SideType): JSX.Element => {
-  if (side === '+') return <Plus />;
-  return <Minus />;
+  return side === 'BUY' ? <Plus /> : <Minus />;
 };

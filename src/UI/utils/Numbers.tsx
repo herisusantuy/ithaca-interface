@@ -1,24 +1,16 @@
-/**
- * Format a number with commas.
- * @param num - The number to format.
- * @returns - The number formatted with commas.
- */
-
-export const formatWithCommas = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
-
 export const getNumberValue = (value: string): string => {
-  if (!value) return ''
+  if (!value) return '';
 
   // remove spaces from string
-  value = value.replace(/\s/g, '')
+  value = value.replace(/\s/g, '');
   // remove aphats from string
-  value = value.replace(/[^.\d]/g, '')
+  value = value.replace(/[^.\d]/g, '');
 
-  return value
-}
+  return value;
+};
 
 export const getNumber = (value: string): number => {
-  return Number(getNumberValue(value))
-}
+  return Number(getNumberValue(value));
+};
+
+export const isInvalidNumber = (number: number) => !number || isNaN(number) || number <= 0;

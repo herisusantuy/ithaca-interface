@@ -11,27 +11,31 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import {
-  PayoffDataProps,
-  PAYOFF_DUMMY_DATA,
-  SpecialDotLabel
-} from '@/UI/constants/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts';
 
 //Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
-import { breakPointList, getLegs, gradientOffset, isDecrementing, isIncrementing, makingChartData } from '@/UI/utils/ChartUtil';
+import {
+  breakPointList,
+  getLegs,
+  gradientOffset,
+  isDecrementing,
+  isIncrementing,
+  makingChartData,
+} from '@/UI/utils/ChartUtil';
 import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
 
 type ChartDataProps = {
   chartData: PayoffMap[];
   height: number;
+  showKeys?: boolean;
 };
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -132,8 +136,22 @@ const ChartPayoff = (props: ChartDataProps) => {
                 strokeWidth='2'
                 dataKey='value'
                 fill='url(#fillGradient)'
-                label={<CustomLabel base={baseValue} dataSize={modifiedData.length} special={breakPoints} dataList={modifiedData}  />}
-                dot={<CustomDot base={baseValue} dataSize={modifiedData.length} special={breakPoints} dataList={modifiedData} />}
+                label={
+                  <CustomLabel
+                    base={baseValue}
+                    dataSize={modifiedData.length}
+                    special={breakPoints}
+                    dataList={modifiedData}
+                  />
+                }
+                dot={
+                  <CustomDot
+                    base={baseValue}
+                    dataSize={modifiedData.length}
+                    special={breakPoints}
+                    dataList={modifiedData}
+                  />
+                }
                 activeDot={false}
               />
               <Area
@@ -185,7 +203,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </XAxis>
             </AreaChart>
           </ResponsiveContainer>
-          <Key keys={key} onChange={setBridge} />
+          {showKeys && <Key keys={key} onChange={setBridge} />}
         </>
       )}
     </>

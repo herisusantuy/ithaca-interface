@@ -1,14 +1,13 @@
 // Packages
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 
 // Styles
 import styles from './RadioButton.module.scss';
 
 type RadioButtonProps = {
-  options: (string | ReactNode)[];
-  valueProps?: string[];
+  options: { option: string | ReactNode; value: string }[];
+  selectedOption?: string;
   name: string;
-  defaultOption?: string | ReactNode;
   disabled?: boolean;
   orientation?: 'horizontal' | 'vertical';
   onChange?: (value: string) => void;
@@ -16,40 +15,27 @@ type RadioButtonProps = {
 
 const RadioButton = ({
   options,
-  valueProps,
+  selectedOption,
   name,
-  defaultOption,
   disabled = false,
   orientation = 'horizontal',
   onChange,
 }: RadioButtonProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | ReactNode | undefined>(defaultOption);
-
-  const handleRadioChange = (value: string | ReactNode, logValue?: string) => {
-    setSelectedOption(value);
-    if (onChange) {
-      onChange(logValue || (value as string));
-    }
-  };
-
-  const renderOptions = (optionList: (string | ReactNode)[]) => {
-    return optionList.map((option, index) => {
-      const keyIdentifier = typeof option === 'string' ? `${option}-${name}` : `option-${index}-${name}`;
-      const logValue = valueProps && valueProps[index];
-
+  const renderOptions = (optionList: { option: string | ReactNode; value: string }[]) => {
+    return optionList.map(option => {
       return (
-        <div key={keyIdentifier} className={styles.option}>
+        <div key={`${name}${option.value}`} className={styles.option}>
           <input
             type='radio'
-            id={keyIdentifier}
+            id={`${name}${option.value}`}
             name={name}
-            value={keyIdentifier}
+            value={option.value}
             disabled={disabled}
-            checked={option === selectedOption}
-            onChange={() => handleRadioChange(option, logValue)}
+            checked={option.value === selectedOption}
+            onChange={() => onChange?.(option.value)}
           />
-          <label htmlFor={keyIdentifier} className={styles.label}>
-            {typeof option === 'string' ? option : option}
+          <label htmlFor={`${name}${option.value}`} className={styles.label}>
+            {option.option}
           </label>
         </div>
       );

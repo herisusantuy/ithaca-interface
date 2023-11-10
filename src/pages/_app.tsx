@@ -21,6 +21,7 @@ import Header from '@/UI/layouts/Header/Header';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
+import { useEffect } from 'react';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
@@ -58,29 +59,24 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { nextAuction, fetchNextAuction, fetchContractList, fetchReferencePrices, fetchSystemInfo } = useAppStore();
-  getTimeNextAuction(
-    nextAuction.milliseconds,
-    fetchNextAuction,
-    fetchContractList,
-    fetchReferencePrices,
-    fetchSystemInfo
-  );
+  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol } = useAppStore();
+  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction, fetchSpotPrices);
+
+  useEffect(() => {
+    initIthacaProtocol();
+  }, [initIthacaProtocol]);
+
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
 const getTimeNextAuction = async (
   timeUntilNexAuction: number,
   fetchNextAuction: () => void,
-  fetchContractList: () => void,
-  fetchReferencePrices: () => void,
-  fetchSystemInfo: () => void
+  fetchSpotPrices: () => void
 ) => {
   setTimeout(() => {
     fetchNextAuction();
-    fetchContractList();
-    fetchReferencePrices();
-    fetchSystemInfo();
+    fetchSpotPrices();
   }, timeUntilNexAuction);
 };
 
