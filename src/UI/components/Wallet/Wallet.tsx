@@ -2,16 +2,21 @@
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect } from 'react';
-import { usePublicClient, useWalletClient } from 'wagmi';
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 
 const Wallet = () => {
+  const { ithacaSDK, initIthacaSDK } = useAppStore();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
-  const { initIthacaSDK } = useAppStore();
+  useAccount({
+    onDisconnect: async () => {
+      await ithacaSDK.auth.logout();
+      localStorage.removeItem('ithaca.session');
+    },
+  });
 
   useEffect(() => {
-    if (!walletClient) return;
-    initIthacaSDK(publicClient, walletClient);
+    initIthacaSDK(publicClient, walletClient ?? undefined);
   }, [initIthacaSDK, publicClient, walletClient]);
 
   return <ConnectButton showBalance={false} />;

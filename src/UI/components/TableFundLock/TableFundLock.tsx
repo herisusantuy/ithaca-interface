@@ -16,7 +16,6 @@ import Button from '@/UI/components/Button/Button';
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
-import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Pagination from '@/UI/components/Pagination/Pagination';
 import Asset from '@/UI/components/Asset/Asset';
 import Sort from '@/UI/components/Icons/Sort';
@@ -28,14 +27,16 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableFundLock.module.scss';
+import { useAccount } from 'wagmi';
+import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 
 // Types
 type TableFundLockProps = {
   data: TableFundLockDataProps[];
-  isDisconnected: boolean;
 };
 
-const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
+const TableFundLock = ({ data }: TableFundLockProps) => {
+  const { address, isDisconnected } = useAccount();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -298,13 +299,7 @@ const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
       </div>
       {slicedData.length > 0 ? (
         <Flex direction='row-space-between' margin='mt-35'>
-          <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
-            totalCollateral={30}
-          />
+          <div></div>
           <Pagination
             totalItems={data.length}
             itemsPerPage={pageLimit}
@@ -313,6 +308,7 @@ const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
           />
         </Flex>
       ) : null}
+      {!address && <DisconnectedWallet showButton={false} />}
     </>
   );
 };

@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import Dropdown from '@/UI/components/Icons/Dropdown';
 
 // Constants
-import { EXPIRY_DATE_OPTIONS } from '@/UI/constants/expiryDate';
+import { ExpiryDateOptions, EXPIRY_DATE_OPTIONS } from '@/UI/constants/expiryDate';
 
 // Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
@@ -17,6 +17,7 @@ import styles from './LabelValue.module.scss';
 type LabelValueProps = {
   label: string;
   value?: ReactNode;
+  valueList?: ExpiryDateOptions[]
   subValue?: string;
   hasDropdown?: boolean;
   defaultValue?: string;
@@ -26,6 +27,7 @@ type LabelValueProps = {
 const LabelValue = ({
   label,
   value: initialValue,
+  valueList = EXPIRY_DATE_OPTIONS,
   defaultValue = EXPIRY_DATE_OPTIONS[0].value,
   subValue,
   hasDropdown = false,
@@ -77,7 +79,7 @@ const LabelValue = ({
   const renderDropdownOptions = () => {
     return (
       <ul className={styles.dropdownMenu}>
-        {EXPIRY_DATE_OPTIONS.map(option => (
+        {valueList.map(option => (
           <li key={option.value} className={styles.dropdownItem} onClick={() => handleOptionClick(option.value)}>
             {option.label}
           </li>

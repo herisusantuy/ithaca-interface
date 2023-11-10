@@ -26,6 +26,7 @@ interface ContractList {
 
 export interface IthacaSDKSlice {
   isLoading: boolean;
+  isAuthenticated: boolean;
   ithacaSDK: IthacaSDK;
   systemInfo: SystemInfo;
   nextAuction: AuctionTimes;
@@ -37,16 +38,18 @@ export interface IthacaSDKSlice {
   expiryList: number[];
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
-  initIthacaSDK: (publicClient: PublicClient, walletClient: WalletClient) => void;
+  initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
   fetchSpotPrices: () => Promise<void>;
   getContractsByPayoff: (payoff: string) => ContractDetails;
   getContractsByExpiry: (expiry: string, payoff: string) => ContractDetails;
+  setCurrentExpiryDate: (date: number) => void
 }
 
 export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => ({
   isLoading: true,
+  isAuthenticated: false,
   ithacaSDK: IthacaSDK.init({
     network: IthacaNetwork.ARBITRUM_GOERLI,
     publicClient: createPublicClient({
@@ -56,11 +59,11 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   }),
   systemInfo: {
     chainId: 0,
-    fundlockAddress: '',
+    fundlockAddress: '' as `0x${string}`,
     tokenAddress: {},
     tokenDecimals: {},
     currencyPrecision: {},
-    tokenManagerAddress: '',
+    tokenManagerAddress: '' as `0x${string}`,
     networks: [],
   },
   nextAuction: {
@@ -83,8 +86,30 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       publicClient,
       walletClient,
     });
-    set({ ithacaSDK });
-    await ithacaSDK.auth.login();
+    if (walletClient) {
+      const ithacaSession = localStorage.getItem('ithaca.session');
+      if (ithacaSession) {
+        try {
+          const currentSession = await ithacaSDK.auth.getSession();
+          if (ithacaSession === JSON.stringify(currentSession)) {
+            set({ ithacaSDK, isAuthenticated: true });
+            return;
+          }
+        } catch (error) {
+          console.error('Session has timed out');
+        }
+      }
+
+      try {
+        const newSession = await ithacaSDK.auth.login();
+        localStorage.setItem('ithaca.session', JSON.stringify(newSession));
+        set({ ithacaSDK, isAuthenticated: true });
+        return;
+      } catch (error) {
+        console.error('Failed to log in');
+      }
+    }
+    set({ ithacaSDK, isAuthenticated: false });
   },
   initIthacaProtocol: async () => {
     const { ithacaSDK, currentCurrencyPair } = get();
@@ -168,4 +193,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     const { contractList, currentCurrencyPair } = get();
     return contractList[currentCurrencyPair][expiry][payoff];
   },
+  setCurrentExpiryDate: (date: number) => {
+    set({currentExpiryDate: date})
+  }
 });
