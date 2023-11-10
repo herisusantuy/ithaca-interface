@@ -83,7 +83,7 @@ const Index = () => {
     const chartData = estimateOrderPayoff(
       strikes.map((strike, idx) => {
         const contracts = getContractsByPayoff(payoffs[idx]);
-        return { ...contracts[strike], ...legs[idx] };
+        return { ...contracts[strike], ...legs[idx], premium: referencePrices[idx] };
       })
     );
     setChartData(chartData);
