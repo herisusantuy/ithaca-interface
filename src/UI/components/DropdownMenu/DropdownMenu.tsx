@@ -36,9 +36,15 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
   const optionsRef = useRef<HTMLDivElement | null>(null);
   const [optionsPostion, setOptionsPosition] = useState({ width: 0, top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -67,7 +73,6 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
 
   const handleOptionClick = (item: DropDownOption) => {
     setSelectedOption(item);
-    setIsDropdownOpen(false);
     if (onChange) onChange(item.value, item);
   };
 
@@ -87,10 +92,10 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, iconStart, iconE
           {iconStart && iconStart}
           <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           <div className={styles.iconEnd}>
-          <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
-            <Dropdown />
-          </div>
-          {iconEnd && iconEnd}
+            <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
+              <Dropdown />
+            </div>
+            {iconEnd && iconEnd}
           </div>
         </div>
         {mounted &&
