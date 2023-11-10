@@ -1,3 +1,6 @@
+// Packages
+import { useEffect, useState } from 'react';
+
 // constants
 import { KeyType, getRandomInt } from '@/UI/constants/charts';
 
@@ -6,7 +9,6 @@ import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
 
 // Styles
 import styles from './ChartPayoff.module.scss';
-import { useEffect, useState } from 'react';
 
 type KeysProps = {
   keys: string[];
@@ -19,17 +21,11 @@ const Key = (props: KeysProps) => {
 
   useEffect(() => {
     const keyArray: KeyType[] = [];
-    const dotArray: DotTypes[] = [
-      'Call',
-      'Put',
-      'BinaryCall',
-      'BinaryPut',
-      'Forward (10 Nov 23)',
-      'Forward (Next Auction)',
-    ];
+    const dotArray: DotTypes[] = ['leg1', 'leg2', 'leg3', 'leg4', 'leg5', 'leg6'];
+
     keys.map(item => {
       if (item == 'total') {
-        const keyObj: KeyType = { label: item, type: 'White' };
+        const keyObj: KeyType = { label: item, type: 'leg1' };
         keyArray.push(keyObj);
       } else {
         const dotTypeInt = getRandomInt(1, 5);
@@ -37,6 +33,7 @@ const Key = (props: KeysProps) => {
         keyArray.push(keyObj);
       }
     });
+
     setKeyMap(keyArray);
   }, [keys]);
 

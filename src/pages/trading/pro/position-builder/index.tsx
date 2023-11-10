@@ -12,7 +12,7 @@ import { ENUM_STRATEGY_TYPES } from '@/UI/lib/sdk/StrategyType';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { estimateOrderPayoff, OptionLeg, PayoffMap } from '@/UI/utils/CalcChartPayoff'
+import { estimateOrderPayoff, OptionLeg, PayoffMap } from '@/UI/utils/CalcChartPayoff';
 
 // Utils
 import { getLeg, getStrategy, getStrategyPrices, getStrategyTotal } from '@/UI/utils/Cakculations';
@@ -74,9 +74,11 @@ const Index = () => {
         //   legs,
         // });
 
-        const completeData: OptionLeg[] = legs.map(item => { return {...item, ...contractList.find(c => c.contractId == item.contractId) as Contract}})
-        const payoffs = estimateOrderPayoff(completeData)
-        setChartData(payoffs)
+        const completeData: OptionLeg[] = legs.map(item => {
+          return { ...item, ...(contractList.find(c => c.contractId == item.contractId) as Contract) };
+        });
+        const payoffs = estimateOrderPayoff(completeData);
+        setChartData(payoffs);
 
         // setChartData(
         //   Object.keys(orderPayoff).map(key => ({
@@ -142,7 +144,7 @@ const Index = () => {
                   title='Options'
                   isForwards={false}
                   options={['Call', 'Put']}
-                  valueOptions={['Call', 'Put']}
+                  valueOptions={['leg1', 'leg2']}
                   addStrategy={(strategy: Strategy) => {
                     const legs: Leg[] = [...previousLegs, getLeg(strategy)];
                     setpreviousLegs(legs);
@@ -157,7 +159,7 @@ const Index = () => {
                   title='Digital Options'
                   isForwards={false}
                   options={['Call', 'Put']}
-                  valueOptions={['BinaryCall', 'BinaryPut']}
+                  valueOptions={['leg1', 'leg2']}
                   addStrategy={(strategy: Strategy) => {
                     const legs: Leg[] = [...previousLegs, getLeg(strategy)];
                     setpreviousLegs(legs);
@@ -172,7 +174,7 @@ const Index = () => {
                   title='Forwards'
                   isForwards={true}
                   options={['10Nov23', 'Next Auction']}
-                  valueOptions={['Forward (10 Nov 23)', 'Forward (Next Auction)']}
+                  valueOptions={['leg1', 'leg2']}
                   addStrategy={(strategy: Strategy) => {
                     const legs: Leg[] = [...previousLegs, getLeg(strategy)];
                     setpreviousLegs(legs);

@@ -195,8 +195,26 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Dot',
-        component: <Dot type='Call' />,
-        status: 'Waiting on Figma',
+        component: (
+          <Flex direction='row-space-between'>
+            <Dot type='leg1' />
+            <Dot type='leg2' />
+            <Dot type='leg3' />
+            <Dot type='leg4' />
+            <Dot type='leg5' />
+            <Dot type='leg6' />
+            <Dot type='leg7' />
+            <Dot type='leg8' />
+            <Dot type='leg9' />
+            <Dot type='leg10' />
+            <Dot type='leg11' />
+            <Dot type='leg12' />
+            <Dot type='leg13' />
+            <Dot type='leg14' />
+            <Dot type='leg15' />
+          </Flex>
+        ),
+        status: 'Done',
       },
       {
         name: 'DropdownMenu',

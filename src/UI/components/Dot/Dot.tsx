@@ -2,24 +2,25 @@
 import styles from './Dot.module.scss';
 
 // Types
-export type DotTypes = 'White' | 'Call' | 'Put' | 'BinaryCall' | 'BinaryPut' | 'Forward (10 Nov 23)' | 'Forward (Next Auction)';
+export type DotTypes = `leg${number}`;
 
 type DotProps = {
   type: DotTypes;
 };
 
-const TYPE_TO_COLOR: Record<DotTypes, string> = {
-  White: styles.white,
-  Call: styles.blue,
-  Put: styles.red,
-  'BinaryCall': styles.orange,
-  'BinaryPut': styles.purple,
-  'Forward (10 Nov 23)': styles.green,
-  'Forward (Next Auction)': styles.primary,
+// Generate the type to color mapping
+const generateTypeToColorMapping = () => {
+  const mapping: Record<DotTypes, string> = {};
+  for (let i = 1; i <= 15; i++) {
+    mapping[`leg${i}` as DotTypes] = styles[`leg${i}`];
+  }
+  return mapping;
 };
 
+const TYPE_TO_COLOR: Record<DotTypes, string> = generateTypeToColorMapping();
+
 const Dot = ({ type }: DotProps) => {
-  const className = TYPE_TO_COLOR[type] || styles.gray;
+  const className = TYPE_TO_COLOR[type] || styles.leg1;
 
   return <div className={`${styles.dot} ${className}`} />;
 };
