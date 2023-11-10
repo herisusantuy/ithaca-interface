@@ -12,7 +12,6 @@ import Minus from '@/UI/components/Icons/Minus';
 
 // Styles
 import styles from '../components/TableOrder/TableOrder.module.scss';
-import { TableFundLockDataProps } from '../constants/tableFundLock';
 
 // orderDate Sort
 export const orderDateSort = (data: TableRowDataWithExpanded[], dir: boolean) => {

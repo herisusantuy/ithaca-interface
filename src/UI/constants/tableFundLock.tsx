@@ -13,23 +13,16 @@ export type TableFundLockDataProps = {
   currency: string;
 };
 
+function getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // Function to generate a random date string
 const getRandomDate = (): string => {
-  const start = new Date(2022, 0, 1).getTime();
-  const end = new Date().getTime();
-  const randomDate = new Date(start + Math.random() * (end - start));
-
-  return randomDate
-    .toLocaleString('en-US', {
-      year: '2-digit',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
-    .replace(/,\s?/, '')
-    .replace(' ', '');
+  const month = getRandomInt(1, 12);
+  const day = getRandomInt(1, 28);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${day} ${months[month - 1]} ${23} 17:46`;
 };
 
 // The renderDate function now should work with the output of getRandomDate.

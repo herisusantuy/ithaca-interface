@@ -164,7 +164,7 @@
 .date {
   display: flex;
   align-items: center;
-  gap: rem(1);
+  gap: rem(3);
 
   .time {
     @include spacing(margin, 8, 'left');
