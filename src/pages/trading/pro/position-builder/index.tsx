@@ -185,7 +185,7 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? toPrecision(
-                        orderSummary.orderLock.underlierAmount - orderSummary.order.totalNetPrice,
+                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
                         currencyPrecision.strike
                       )
                       : '-'
