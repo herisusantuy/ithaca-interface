@@ -1,7 +1,7 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 import dayjs from 'dayjs';
 
 // Lib
@@ -57,11 +57,11 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableOrder.module.scss';
+import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 
 // Types
 type TableOrderProps = {
   type?: TABLE_TYPE;
-  isDisconnected: boolean;
 };
 
 export enum TABLE_TYPE {
@@ -70,7 +70,7 @@ export enum TABLE_TYPE {
   TRADE,
 }
 
-const TableOrder = ({ type, isDisconnected }: TableOrderProps) => {
+const TableOrder = ({ type }: TableOrderProps) => {
   // Cancel order state
   const [data, setData] = useState<TableRowDataWithExpanded[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -86,6 +86,7 @@ const TableOrder = ({ type, isDisconnected }: TableOrderProps) => {
   const [sideArray, setSideArray] = useState<string[]>([]);
   const [sideChecked, setSideChecked] = useState<boolean>(false);
   const { ithacaSDK } = useAppStore();
+  const { address, isDisconnected } = useAccount();
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -548,6 +549,7 @@ const TableOrder = ({ type, isDisconnected }: TableOrderProps) => {
           <Summary detail={rowToCancelOrder} />
         </Modal>
       )}
+      {!address && <DisconnectedWallet showButton={false} />}
     </>
   );
 };

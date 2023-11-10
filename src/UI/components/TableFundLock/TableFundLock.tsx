@@ -27,14 +27,16 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableFundLock.module.scss';
+import { useAccount } from 'wagmi';
+import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 
 // Types
 type TableFundLockProps = {
   data: TableFundLockDataProps[];
-  isDisconnected: boolean;
 };
 
-const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
+const TableFundLock = ({ data }: TableFundLockProps) => {
+  const { address, isDisconnected } = useAccount();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -306,6 +308,7 @@ const TableFundLock = ({ data, isDisconnected }: TableFundLockProps) => {
           />
         </Flex>
       ) : null}
+      {!address && <DisconnectedWallet showButton={false} />}
     </>
   );
 };

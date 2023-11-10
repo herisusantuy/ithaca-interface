@@ -1,6 +1,6 @@
 // Packages
 import { useRouter } from 'next/router';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -19,23 +19,17 @@ type Tab = {
 type TabsProps = {
   tabs: Tab[];
   className?: string;
+  activeTab: string;
+  onChange?: (tabId: string) => void;
 };
 
-const Tabs = ({ tabs, className }: TabsProps) => {
+const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
+  const router = useRouter();
+
   // Ensure tabs is defined and has at least one tab
   if (!tabs || tabs.length === 0) {
     return <div className={styles.tabs}>No tabs available.</div>;
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const router = useRouter();
-  const initialTab = tabs.find(t => {
-    return t.path === '/' ? router.pathname === t.path : router.pathname.includes(t.path || '');
-  });
-
-  // Tab state
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeTab, setActiveTab] = useState(initialTab?.id || tabs[0]?.id);
 
   // Get tab button styles from toggle state
   const getTabClass = (tabId: string) => {
@@ -52,7 +46,7 @@ const Tabs = ({ tabs, className }: TabsProps) => {
             key={tab.id}
             onClick={e => {
               e.stopPropagation();
-              setActiveTab(tab.id);
+              onChange?.(tab.id);
               if (tab.path) {
                 router.push(tab.path);
               }

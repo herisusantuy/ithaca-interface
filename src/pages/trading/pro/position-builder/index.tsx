@@ -28,12 +28,12 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
 // Styles
 import styles from './position-builder.module.scss';
-import ReadyState from '@/UI/utils/ReadyState';
 
 // Types
 import { getNumber } from '@/UI/utils/Numbers';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import ReadyState from '@/UI/utils/ReadyState';
 
 export interface PositionBuilderStrategy {
   leg: Leg;
@@ -55,7 +55,8 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
 
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } = useAppStore();
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
+    useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
@@ -129,15 +130,15 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
-                      valueList={expiryList.map((date) => ({
+                      valueList={expiryList.map(date => ({
                         label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY')
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
                       }))}
-                      onChange={(value) => {
+                      onChange={value => {
                         setOrderSummary(undefined);
-                        setPositionBuilderStrategies([])
-                        setChartData(undefined)
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')))
+                        setPositionBuilderStrategies([]);
+                        setChartData(undefined);
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
                       }}
                       value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
                       hasDropdown={true}
@@ -185,9 +186,9 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? toPrecision(
-                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
-                        currencyPrecision.strike
-                      )
+                          orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
+                          currencyPrecision.strike
+                        )
                       : '-'
                   }
                   premium={orderSummary?.order.totalNetPrice || '-'}
