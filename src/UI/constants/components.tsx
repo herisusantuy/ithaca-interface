@@ -197,7 +197,7 @@ const COMPONENT_GROUPS = [
         status: 'Done',
       },
       {
-        name: 'Checkbox',
+        name: 'CheckBox',
         component: <CheckBox label='Checkbox' onChange={() => {}} clearCheckMark={false} />,
         status: 'Done',
       },
