@@ -318,34 +318,36 @@ const COMPONENT_GROUPS = [
       {
         name: 'RadioButton',
         component: (
-          <Flex direction='row-center' gap='gap-12'>
-            <RadioButton
-              options={[
-                { option: 'Call', value: 'Call' },
-                { option: 'Put', value: 'Put' },
-              ]}
-              name='callOrPut'
-              onChange={value => console.log(value)}
-            />
-            <RadioButton
-              options={[
-                { option: <Plus key='plus' />, value: 'Plus' },
-                { option: <Minus key='minus' />, value: 'Minus' },
-              ]}
-              name='plusOrMinus'
-              orientation='vertical'
-              onChange={value => console.log(value)}
-            />
-            <RadioButton
-              options={[
-                { option: 'Option', value: 'Option' },
-                { option: 'Digital Options', value: 'Digital Options' },
-                { option: 'Dated Forward', value: 'Dated Forward' },
-              ]}
-              name='multi'
-              onChange={value => console.log(value)}
-            />
-          </Flex>
+          <Panel>
+            <Flex direction='row-center' gap='gap-12'>
+              <RadioButton
+                options={[
+                  { option: 'Call', value: 'Call' },
+                  { option: 'Put', value: 'Put' },
+                ]}
+                name='callOrPut'
+                onChange={value => console.log(value)}
+              />
+              <RadioButton
+                options={[
+                  { option: <Plus key='plus' />, value: 'Plus' },
+                  { option: <Minus key='minus' />, value: 'Minus' },
+                ]}
+                name='plusOrMinus'
+                orientation='vertical'
+                onChange={value => console.log(value)}
+              />
+              <RadioButton
+                options={[
+                  { option: 'Option', value: 'Option' },
+                  { option: 'Digital Options', value: 'Digital Options' },
+                  { option: 'Dated Forward', value: 'Dated Forward' },
+                ]}
+                name='multi'
+                onChange={value => console.log(value)}
+              />
+            </Flex>
+          </Panel>
         ),
         status: 'Done',
       },

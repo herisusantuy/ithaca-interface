@@ -1,5 +1,5 @@
 // Packages
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, useRef } from 'react';
 
 // Utils
 import { checkValidMinMaxValue, generateLabelList, stepArray } from '@/UI/utils/SliderUtil';
@@ -26,7 +26,6 @@ type SliderProps = {
 };
 
 const Slider = ({
-  title,
   value,
   min,
   max,
@@ -42,6 +41,7 @@ const Slider = ({
   const [maxPos, setMaxPos] = useState<number>(0);
   const labelList = generateLabelList(min, max, label);
   const stepList = stepArray(min, max, step);
+  const controlWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMinPos(((minValue - min) / (max - min)) * 100);
@@ -94,22 +94,52 @@ const Slider = ({
     const offsetX = event.nativeEvent.offsetX;
     const width = event.currentTarget.clientWidth;
     const value = min + Math.round(((max - min) / width) * offsetX);
-    console.log(offsetX, width, value);
-    if (range) {
-      if (value > maxValue) {
-        setMaxValue(checkValidMinMaxValue(stepList, value));
-      } else if (value < minValue) {
-        setMinValue(checkValidMinMaxValue(stepList, value));
-      } else {
-        const betweenVal = minValue + (maxValue - minValue) / 2;
-        if (value >= betweenVal) {
-          setMaxValue(checkValidMinMaxValue(stepList, value));
-        } else {
-          setMinValue(checkValidMinMaxValue(stepList, value));
+    const className = event.currentTarget.className;
+    if (className.includes('Slider_innerRail') || className.includes('Slider_rail') || className.includes('Slider_controlWrapper')) {
+      if (range) {
+        if (controlWrapperRef.current) {
+          const rect = controlWrapperRef.current.getBoundingClientRect();
+          const distanceFromXAxis = rect.left;
+          const cursorPoint = event.clientX - distanceFromXAxis;
+          const offestPosition = (width / 100) * minPos + offsetX;
+          if (cursorPoint < (width / 100) * minPos) {
+            setMinValue(checkValidMinMaxValue(stepList, value));
+          } else if (cursorPoint > (width / 100) * maxPos) {
+            setMaxValue(checkValidMinMaxValue(stepList, value));
+          } else {
+            const rangeItemValue = min + Math.round(((max - min) / width) * offestPosition);
+            const betweenVal = minValue + (maxValue - minValue) / 2;
+            if (rangeItemValue > maxValue) {
+              setMaxValue(checkValidMinMaxValue(stepList, rangeItemValue));
+            } else if (rangeItemValue < minValue) {
+              setMinValue(checkValidMinMaxValue(stepList, rangeItemValue));
+            } else if (betweenVal < rangeItemValue) {
+              setMaxValue(checkValidMinMaxValue(stepList, rangeItemValue));
+            } else if (betweenVal >= rangeItemValue) {
+              setMinValue(checkValidMinMaxValue(stepList, rangeItemValue));
+            }
+          }
         }
+      } else {
+        setMaxValue(checkValidMinMaxValue(stepList, value));
       }
     } else {
-      setMaxValue(checkValidMinMaxValue(stepList, value));
+      if (range) {
+        if (value > maxValue) {
+          setMaxValue(checkValidMinMaxValue(stepList, value));
+        } else if (value < minValue) {
+          setMinValue(checkValidMinMaxValue(stepList, value));
+        } else {
+          const betweenVal = minValue + (maxValue - minValue) / 2;
+          if (value >= betweenVal) {
+            setMaxValue(checkValidMinMaxValue(stepList, value));
+          } else {
+            setMinValue(checkValidMinMaxValue(stepList, value));
+          }
+        }
+      } else {
+        setMaxValue(checkValidMinMaxValue(stepList, value));
+      }
     }
   };
 
@@ -136,7 +166,7 @@ const Slider = ({
         />
       </div>
       <div className={styles.sliderEffect} onClick={event => getValuePosition(event)}></div>
-      <div data-id={title} className={styles.controlWrapper}>
+      <div className={styles.controlWrapper} onClick={event => getValuePosition(event)} ref={controlWrapperRef}>
         <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
         <div className={styles.rail}>
           <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
