@@ -13,12 +13,10 @@ import styles from './Modal.module.scss';
 
 // Animation
 const animatedModal = {
-  hidden: {
-    y: '-100vh',
-    opacity: 0,
-  },
+  hidden: { opacity: 1, scale: 1 },
   visible: {
     y: '0',
+    scale: [0.2, 0.3, 0.5, 0.7, 0.9, 1],
     opacity: 1,
     transition: {
       duration: 0.3,
@@ -28,7 +26,7 @@ const animatedModal = {
     },
   },
   exit: {
-    y: '100vh',
+    y: '0',
     opacity: 0,
   },
 };
