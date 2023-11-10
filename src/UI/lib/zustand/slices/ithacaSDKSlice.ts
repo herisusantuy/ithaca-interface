@@ -59,11 +59,11 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   }),
   systemInfo: {
     chainId: 0,
-    fundlockAddress: '',
+    fundlockAddress: '' as `0x${string}`,
     tokenAddress: {},
     tokenDecimals: {},
     currencyPrecision: {},
-    tokenManagerAddress: '',
+    tokenManagerAddress: '' as `0x${string}`,
     networks: [],
   },
   nextAuction: {

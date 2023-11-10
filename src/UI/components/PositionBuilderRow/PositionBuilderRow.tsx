@@ -52,7 +52,6 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
   const contracts = getContractsByPayoff(title === 'Forwards' ? 'Forward' : payoff);
   const [unitPrice, setUnitPrice] = useState(title === 'Forwards' ? `${contracts['-'].referencePrice}` : '');
 
-
   // Sections
   const sections: SectionType[] = [
     { name: 'Side', style: styles.side },
@@ -68,9 +67,8 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
     setPayoff(payoff);
     if (title === 'Forwards') {
       setStrike('-');
-      setUnitPrice(`${contracts['-'].referencePrice}`)
-    }
-    else {
+      setUnitPrice(`${contracts['-'].referencePrice}`);
+    } else {
       setStrike(undefined);
       setUnitPrice('');
     }
@@ -173,15 +171,16 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
             />
           </div>
           <div className={styles.strike}>
-            {title !== 'Forwards' ?
+            {title !== 'Forwards' ? (
               <DropdownMenu
-                value={strike}
-                options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))
-                }
+                value={strike ? { name: strike, value: strike } : undefined}
+                options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))}
                 iconEnd={<LogoUsdc />}
-                onChange={handleStrikeChange}
-              /> :
-              <div className={styles.forwardPlaceholder} />}
+                onChange={option => handleStrikeChange(option.value)}
+              />
+            ) : (
+              <div className={styles.forwardPlaceholder} />
+            )}
           </div>
           <div className={styles.unitPrice}>
             <Input
