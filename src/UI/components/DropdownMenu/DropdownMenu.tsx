@@ -48,6 +48,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
         setIsDropdownOpen(false);
       }
     };
+    value && setSelectedOption(value)
     setMounted(true);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
