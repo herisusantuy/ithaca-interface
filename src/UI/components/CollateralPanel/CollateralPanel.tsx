@@ -157,7 +157,7 @@ const CollateralPanel = () => {
               },
             ]}
             value={selectedCurrency}
-            onChange={setSelectedCurrency}
+            onChange={option => setSelectedCurrency({ name: option, value: option})}
             iconStart={selectedCurrency && collateralSummary[selectedCurrency.value].currencyLogo}
           />
           <Input value={modalAmount} onChange={({ target }) => setModalAmount(getNumberValue(target.value))} />

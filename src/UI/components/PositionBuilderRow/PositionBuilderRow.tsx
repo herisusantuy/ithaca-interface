@@ -176,7 +176,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
                 value={strike ? { name: strike, value: strike } : undefined}
                 options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))}
                 iconEnd={<LogoUsdc />}
-                onChange={option => handleStrikeChange(option.value)}
+                onChange={option => handleStrikeChange(option)}
               />
             ) : (
               <div className={styles.forwardPlaceholder} />
