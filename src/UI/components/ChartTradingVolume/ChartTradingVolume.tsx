@@ -2,7 +2,7 @@
 import { BarChart, Bar, XAxis, YAxis, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 // Constants
-import { ChartTradingVolumeData } from '@/UI/constants/chartTradingVolume';
+import { ChartTradingVolumeData } from '@/UI/constants/charts/chartTradingVolume';
 
 // Components
 import ChartLegend from './ChartLegend';
