@@ -18,7 +18,7 @@
 }
 
 .leftPanel {
-  width: 40%;
+  width: 37%;
 }
 
 .tab {
@@ -27,37 +27,39 @@
   display: flex;
   align-items: flex-start;
   gap: rem(16);
-  cursor: pointer;
   position: relative;
 
   &:first-child {
     border-top-left-radius: rem(30);
+    border-top-right-radius: rem(30);
   }
 
   &:last-child {
     border-bottom-left-radius: rem(30);
+    border-bottom-right-radius: rem(30);
   }
 
   &:after {
     content: '';
     height: rem(1);
-    background: #5a5b62;
+    background: var(--white-10);
     position: absolute;
     bottom: 0;
-    left: rem(20);
-    right: rem(20);
+    left: 0;
+    right: 0;
   }
 
   &:last-child:after {
     display: none;
   }
+
+  &:hover:not(.isActive) {
+    background-color: var(--white-5);
+  }
 }
 
 .isActive {
-  background: var(
-    --Selected-fill,
-    linear-gradient(270deg, rgba(94, 225, 145, 0) 45.44%, rgba(94, 225, 154, 0.25) 100%)
-  );
+  background: var(--Selected-fill, linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%));
 
   &:first-child {
     border-top-left-radius: rem(30);
