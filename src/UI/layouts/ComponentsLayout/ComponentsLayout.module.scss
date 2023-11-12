@@ -1,34 +1,71 @@
 .container {
+  @include spacing(padding, 24, 'left+right');
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
   gap: rem(32);
+  max-width: map-get($container-sizes, xl);
 }
 
 .sidebar {
-  @include spacing(padding, 80, 'bottom');
+  @include spacing(padding, 12, 'all');
   display: flex;
   flex-direction: column;
   width: 15%;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-  background: var(--gray-rgba);
-  backdrop-filter: blur(rem(12));
-  border-right: rem(1) solid var(--gray-800);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%), rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10rem);
+  position: relative;
+  border-radius: rem(8);
+
+  &:before {
+    content: '';
+    position: absolute;
+    border-radius: rem(8);
+    top: -(rem(1));
+    bottom: -(rem(1));
+    right: -(rem(1));
+    left: -(rem(1));
+    z-index: -1;
+    border: rem(1) solid transparent;
+    background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+
+  &:after {
+    content: '';
+    background-image: url('../../../assets/noise.png');
+    background-repeat: repeat;
+    position: absolute;
+    opacity: 0.4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: rem(8);
+  }
 
   h3 {
     @include font-size('text-sm', 'bold');
     color: var(--white);
   }
+
+  > * {
+    z-index: 1;
+    position: relative;
+  }
 }
 
 .main {
-  @include spacing(padding, 40, 'all');
+  @include spacing(padding, 40, 'top+bottom');
   flex: 1;
   margin: 0 auto;
   color: var(--white);
-  margin-left: 15%;
 }
 
 .component {
@@ -83,16 +120,21 @@
 }
 
 .yellow {
-  background-color: var(--yellow-rgba);
-  border-color: var(--yellow);
+  color: #efb646;
+  border-color: #efb646;
 }
 
 .green {
-  background-color: var(--green-rgba);
-  border-color: var(--green);
+  color: #5ee192;
+  border-color: #5ee192;
 }
 
 .red {
-  background-color: var(--red-rgba);
-  border-color: var(--red);
+  color: #ff3f57;
+  border-color: #ff3f57;
+}
+
+.blue {
+  color: #7da2ea;
+  border-color: #7da2ea;
 }

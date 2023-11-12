@@ -22,6 +22,7 @@ export const SPECIAL_DUMMY_DATA: SpecialDotLabel[] = [
   { value: 40451 },
   { value: 40451.02 },
 ];
+
 // Payoff chart dummy data
 export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [
   {
@@ -81,4 +82,4 @@ export const CHART_FAKE_DATA = [
 // Table order data
 export const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
