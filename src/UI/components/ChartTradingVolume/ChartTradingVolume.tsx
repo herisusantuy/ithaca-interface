@@ -4,22 +4,28 @@ import { BarChart, Bar, XAxis, YAxis, Legend, ResponsiveContainer, CartesianGrid
 // Constants
 import { ChartTradingVolumeData } from '@/UI/constants/chartTradingVolume';
 
+// Components
+import ChartLegend from './ChartLegend';
+
 // Types
 type ChartTradingVolumeProps = {
   data: ChartTradingVolumeData[];
 };
 
+// Styles
+import styles from './ChartTradingVolume.module.scss';
+
 const ChartTradingVolume = ({ data }: ChartTradingVolumeProps) => {
   return (
-    <ResponsiveContainer width='100%' height={611}>
+    <ResponsiveContainer className={styles.container} width='100%' height={611}>
       <BarChart
         barCategoryGap={12}
         data={data}
         margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
+          top: 18,
+          right: 46,
+          left: -10,
+          bottom: 35,
         }}
       >
         <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
@@ -29,10 +35,17 @@ const ChartTradingVolume = ({ data }: ChartTradingVolumeProps) => {
             <stop offset='100%' stopColor='#B5B5F8' stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey='date' tickLine={false} />
-        <YAxis type='number' allowDecimals={false} axisLine={false} tickLine={false} />
-        <Legend />
-        <Bar dataKey='volume' fill='url(#gradient)' barSize={20} radius={[4, 4, 0, 0]} />
+        <XAxis dataKey='date' tickLine={false} axisLine={false} style={{ fill: '#9D9DAA', fontSize: 12 }} dy={21} />
+        <YAxis
+          type='number'
+          allowDecimals={false}
+          axisLine={false}
+          tickLine={false}
+          style={{ fill: '#9D9DAA', fontSize: 12 }}
+          dx={-5}
+        />
+        <Legend content={<ChartLegend />} />
+        <Bar dataKey='volume' fill='url(#gradient)' barSize={30} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
