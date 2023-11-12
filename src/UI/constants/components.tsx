@@ -470,7 +470,7 @@ const COMPONENT_GROUPS = [
             <ChartTradingVolume data={CHART_TRADING_VOLUME_DATA} />
           </Panel>
         ),
-        status: 'To Review',
+        status: 'In Progress',
       },
       {
         name: 'ChartOpenInterest',
@@ -493,7 +493,7 @@ const COMPONENT_GROUPS = [
         status: 'To Do',
       },
       {
-        name: 'ChartMaxPain',
+        name: 'ChartTradeCount',
         component: (
           <Panel margin='ptb-24 plr-30'>
             <h3 className='mb-18'>Trade Count</h3>
