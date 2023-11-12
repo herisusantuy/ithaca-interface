@@ -1,4 +1,4 @@
-import { PayoffDataProps, SpecialDotLabel } from '../constants/charts';
+import { PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
 export const isIncrementing = (arr: PayoffDataProps[]) => {
   for (let i = 0; i < arr.length - 1; i++) {

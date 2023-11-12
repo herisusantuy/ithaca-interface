@@ -5,7 +5,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Slider from '../../Slider/Slider';
 import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts';
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
