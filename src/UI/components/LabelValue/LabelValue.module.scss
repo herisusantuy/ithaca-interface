@@ -48,34 +48,39 @@
 }
 
 .dropdownMenu {
-  @include spacing(padding, 16, 'all');
+  @include spacing(padding, 10, 'all');
+  position: absolute;
+  top: rem(35);
+  left: 0;
+  list-style-type: none;
+  border-radius: rem(8);
+  background: var(--background-70, rgba(18, 23, 34, 0.7));
+  box-shadow:
+    rem(2) rem(2) rem(4) rem(0) rgba(0, 0, 0, 0.15),
+    rem(0) rem(0) rem(4) rem(0) rgba(43, 46, 58, 0.15) inset,
+    rem(0) rem(0) rem(15) rem(0) rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: rem(10);
-  position: absolute;
-  left: 0;
-  top: rem(40);
-  border-radius: rem(8);
-  background: var(--Dropdown-background, rgba(32, 38, 49, 0.8));
-  box-shadow:
-    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
-    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
-    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
-  backdrop-filter: blur(rem(10));
-  list-style: none;
-  z-index: 9999;
-  margin: 0;
+  cursor: pointer;
+  z-index: 999999;
 
   li {
-    @include font-size('text-sm', 'regular');
-    color: var(--white);
-    font-family: $roboto;
     transition: $transition_all;
     cursor: pointer;
-    text-align: right;
+    @include font-size('text-md', 'regular');
+    font-family: $roboto;
+    color: var(--white);
+    border-radius: rem(3);
+    padding: rem(4) rem(5);
 
-    &:hover {
-      color: var(--green-30);
+    &:hover:not(.selected) {
+      background-color: var(--white-10);
     }
+  }
+
+  .selected {
+    color: var(--green-30);
   }
 }

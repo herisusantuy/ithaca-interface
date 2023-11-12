@@ -80,7 +80,7 @@ const LabelValue = ({
     return (
       <ul className={styles.dropdownMenu}>
         {valueList.map(option => (
-          <li key={option.value} className={styles.dropdownItem} onClick={() => handleOptionClick(option.value)}>
+          <li key={option.value} className={`${styles.dropdownItem} ${value == option.value ? styles.selected : ''}`} onClick={() => handleOptionClick(option.value)}>
             {option.label}
           </li>
         ))}
