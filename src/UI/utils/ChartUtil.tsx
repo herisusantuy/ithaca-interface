@@ -82,7 +82,7 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const makingChartData = (data: any[], key: string) => {
-  const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined }));
+  const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined, x: item['x'] }));
   return result;
 };
 
