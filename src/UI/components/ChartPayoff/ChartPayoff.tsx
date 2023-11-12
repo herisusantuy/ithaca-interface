@@ -11,13 +11,12 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts/charts';
 
-//Event Props
+// Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
-// Styles
-import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+// Utils
 import {
   breakPointList,
   getLegs,
@@ -28,11 +27,15 @@ import {
 } from '@/UI/utils/ChartUtil';
 import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
 
+// Types
 type ChartDataProps = {
   chartData: PayoffMap[];
   height: number;
   showKeys?: boolean;
 };
+
+// Styles
+import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true } = props;
