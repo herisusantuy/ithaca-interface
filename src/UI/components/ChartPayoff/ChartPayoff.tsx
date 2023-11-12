@@ -98,7 +98,7 @@ const ChartPayoff = (props: ChartDataProps) => {
           <div className={styles.unlimited}>
             <h3>Potential P&L:</h3>
             <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-              {changeVal >= 0 ? '+' + '' + changeVal : changeVal}
+              {changeVal >= 0 ? '+' + '' + changeVal.toFixed(2) : changeVal.toFixed(2)}
             </p>
             <LogoUsdc />
           </div>
@@ -177,7 +177,11 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text x={10} y={height - 50} fill='#FF3F57' fontSize={10} textAnchor='left'>
-                        {downSide ? 'Unlimited Downside' : minimize >= 0 ? '+' + '' + minimize : '' + minimize}
+                        {downSide
+                          ? 'Unlimited Downside'
+                          : minimize >= 0
+                          ? '+' + '' + minimize.toFixed(2)
+                          : '' + minimize.toFixed(2)}
                       </text>
                       {downSide ? <></> : <LogoUsdc x={60} y={height - 63} />}
                     </>
