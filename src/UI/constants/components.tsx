@@ -48,6 +48,10 @@ import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Balance from '@/UI/components/Balance/Balance';
 import NumberFormat from '@/UI/components/NumberFormat/NumberFormat';
+import ChartTradingVolume from '@/UI/components/ChartTradingVolume/ChartTradingVolume';
+import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenInterest';
+import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
+import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -63,6 +67,7 @@ import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { CHART_FAKE_DATA } from './charts';
 import { TABLE_FUND_LOCK_DATA } from './tableFundLock';
+import { CHART_TRADING_VOLUME_DATA } from './chartTradingVolume';
 
 const COMPONENT_GROUPS = [
   {
@@ -460,11 +465,42 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChartTradingVolume',
         component: (
-          <Panel margin='p-30'>
-            <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+          <Panel margin='ptb-24 plr-30'>
+            <h3 className='mb-18'>Trading Volumes</h3>
+            <ChartTradingVolume data={CHART_TRADING_VOLUME_DATA} />
           </Panel>
         ),
         status: 'To Review',
+      },
+      {
+        name: 'ChartOpenInterest',
+        component: (
+          <Panel margin='ptb-24 plr-30'>
+            <h3 className='mb-18'>Open Interest</h3>
+            <ChartOpenInterest />
+          </Panel>
+        ),
+        status: 'To Do',
+      },
+      {
+        name: 'ChartMaxPain',
+        component: (
+          <Panel margin='ptb-24 plr-30'>
+            <h3 className='mb-18'>Max Pain</h3>
+            <ChartMaxPain />
+          </Panel>
+        ),
+        status: 'To Do',
+      },
+      {
+        name: 'ChartMaxPain',
+        component: (
+          <Panel margin='ptb-24 plr-30'>
+            <h3 className='mb-18'>Trade Count</h3>
+            <ChartTradeCount />
+          </Panel>
+        ),
+        status: 'To Do',
       },
     ],
   },
