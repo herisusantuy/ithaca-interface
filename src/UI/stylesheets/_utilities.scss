@@ -7,13 +7,15 @@
   flex-direction: column;
 }
 
-.isDropdownActive {
+.isDropdownActive,
+.isDropdownActive:hover {
   background: var(--purple-30);
 }
 
-.isLinkActive {
+.isLinkActive,
+.isLinkActive:hover {
   @include font-size('text-sm', 'bold');
-  background: var(--purple-10);
+  background: rgba(0, 0, 0, 0.2);
   color: var(--white-60);
   cursor: default;
 }

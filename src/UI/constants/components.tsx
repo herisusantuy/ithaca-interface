@@ -71,12 +71,12 @@ const COMPONENT_GROUPS = [
       {
         name: 'Asset',
         component: <Asset icon={<LogoEth />} label='ETH' />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Balance',
         component: <Balance fundLock={0} balance={'0'} margin='mtb-20' />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Button',
@@ -194,22 +194,22 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'CheckBox',
         component: <CheckBox label='Checkbox' onChange={() => {}} clearCheckMark={false} />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'CollateralAmount',
         component: <CollateralAmount wethAmount={10} usdcAmount={20} />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'CurrencyDisplay',
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'DisconnectedWallet',
@@ -218,7 +218,7 @@ const COMPONENT_GROUPS = [
             <DisconnectedWallet />
           </div>
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Dot',
@@ -241,7 +241,7 @@ const COMPONENT_GROUPS = [
             <Dot type='leg15' />
           </Flex>
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'DropdownMenu',
@@ -262,7 +262,7 @@ const COMPONENT_GROUPS = [
             />
           </Flex>
         ),
-        status: 'Done',
+        status: 'To Review',
       },
       {
         name: 'Input',
@@ -276,7 +276,7 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'LabelValue',
@@ -287,70 +287,68 @@ const COMPONENT_GROUPS = [
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
         ),
-        status: 'Waiting on Figma',
+        status: 'Approved',
       },
       {
         name: 'Loader',
         component: <Loader />,
-        status: 'Waiting on Figma',
+        status: 'To Do',
       },
       {
         name: 'Logo',
         component: <Logo />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'OrderSummary',
         component: (
           <OrderSummary limit='-' collatarelETH='-' collatarelUSDC='-' premium='-' fee={1.5} submitAuction={() => {}} />
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Pagination',
         component: <Pagination totalItems={50} itemsPerPage={10} currentPage={1} onPageChange={() => {}} />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'PriceLabel',
         component: <PriceLabel label='-' icon={<LogoEth />} />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'RadioButton',
         component: (
-          <Panel>
-            <Flex direction='row-center' gap='gap-12'>
-              <RadioButton
-                options={[
-                  { option: 'Call', value: 'Call' },
-                  { option: 'Put', value: 'Put' },
-                ]}
-                name='callOrPut'
-                onChange={value => console.log(value)}
-              />
-              <RadioButton
-                options={[
-                  { option: <Plus key='plus' />, value: 'Plus' },
-                  { option: <Minus key='minus' />, value: 'Minus' },
-                ]}
-                name='plusOrMinus'
-                orientation='vertical'
-                onChange={value => console.log(value)}
-              />
-              <RadioButton
-                options={[
-                  { option: 'Option', value: 'Option' },
-                  { option: 'Digital Options', value: 'Digital Options' },
-                  { option: 'Dated Forward', value: 'Dated Forward' },
-                ]}
-                name='multi'
-                onChange={value => console.log(value)}
-              />
-            </Flex>
-          </Panel>
+          <Flex direction='row-center' gap='gap-12'>
+            <RadioButton
+              options={[
+                { option: 'Call', value: 'Call' },
+                { option: 'Put', value: 'Put' },
+              ]}
+              name='callOrPut'
+              onChange={value => console.log(value)}
+            />
+            <RadioButton
+              options={[
+                { option: <Plus key='plus' />, value: 'Plus' },
+                { option: <Minus key='minus' />, value: 'Minus' },
+              ]}
+              name='plusOrMinus'
+              orientation='vertical'
+              onChange={value => console.log(value)}
+            />
+            <RadioButton
+              options={[
+                { option: 'Option', value: 'Option' },
+                { option: 'Digital Options', value: 'Digital Options' },
+                { option: 'Dated Forward', value: 'Dated Forward' },
+              ]}
+              name='multi'
+              onChange={value => console.log(value)}
+            />
+          </Flex>
         ),
-        status: 'Done',
+        status: 'To Review',
       },
       {
         name: 'Slider',
@@ -386,22 +384,22 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
       {
         name: 'Tabs',
         component: <Tabs tabs={TABS} activeTab={TABS[0].id} />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'TabCard',
         component: <TabCard tabs={TRADING_MARKET_TABS} />,
-        status: 'Waiting on Figma',
+        status: 'To Do',
       },
       {
         name: 'Toggle',
         component: <Toggle leftLabel='Lite' rightLabel='Pro' />,
-        status: 'Done',
+        status: 'Approved',
       },
     ],
   },
@@ -419,12 +417,12 @@ const COMPONENT_GROUPS = [
             totalCollateral={30}
           />
         ),
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'TableFundLock',
         component: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
-        status: 'Done',
+        status: 'To Review',
       },
       {
         name: 'TableStrategy',
@@ -434,7 +432,7 @@ const COMPONENT_GROUPS = [
             <TableStrategy strategies={[]} removeRow={() => {}} />
           </>
         ),
-        status: 'Done',
+        status: 'To Review',
       },
       {
         name: 'TableOrder',
@@ -443,7 +441,7 @@ const COMPONENT_GROUPS = [
             <TableOrder />
           </Panel>
         ),
-        status: 'Done',
+        status: 'To Review',
       },
     ],
   },
@@ -459,6 +457,15 @@ const COMPONENT_GROUPS = [
         ),
         status: 'In Progress',
       },
+      {
+        name: 'ChartTradingVolume',
+        component: (
+          <Panel margin='p-30'>
+            <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+          </Panel>
+        ),
+        status: 'To Review',
+      },
     ],
   },
   {
@@ -467,27 +474,27 @@ const COMPONENT_GROUPS = [
       {
         name: 'Container',
         component: <Container>Container</Container>,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Flex',
         component: <Flex>Flex</Flex>,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Header',
         component: <Header className='position-relative' />,
-        status: 'Waiting on Figma',
+        status: 'To Review',
       },
       {
         name: 'Main',
         component: <Main>Main</Main>,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Panel',
         component: <Panel margin='p-30'>Panel</Panel>,
-        status: 'Done',
+        status: 'To Review',
       },
     ],
   },
@@ -497,12 +504,12 @@ const COMPONENT_GROUPS = [
       {
         name: 'CountdownTimer',
         component: <CountdownTimer />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Meta',
         component: <Meta />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Modal',
@@ -511,7 +518,7 @@ const COMPONENT_GROUPS = [
             <Tabs tabs={MODAL_TABS} activeTab={MODAL_TABS[0].id} />
           </ModalWithButton>
         ),
-        status: 'Waiting on Figma',
+        status: 'To Review',
       },
       {
         name: 'NumberFormat',
@@ -525,7 +532,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Wallet',
         component: <Wallet />,
-        status: 'Waiting on Figma',
+        status: 'To Do',
       },
     ],
   },
@@ -535,17 +542,17 @@ const COMPONENT_GROUPS = [
       {
         name: 'Hamburger',
         component: <Hamburger onClick={() => {}} isActive={false} className='display-inline-flex' />,
-        status: 'Waiting on Figma',
+        status: 'To Do',
       },
       {
         name: 'Navigation',
         component: <Navigation />,
-        status: 'Waiting on Figma',
+        status: 'To Review',
       },
       {
         name: 'SlidingNav',
         component: <SlidingNav isActive={false} onClick={() => {}} />,
-        status: 'Waiting on Figma',
+        status: 'To Do',
       },
     ],
   },
@@ -555,67 +562,67 @@ const COMPONENT_GROUPS = [
       {
         name: 'Bell',
         component: <Bell />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Bookmark',
         component: <Bookmark />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'ChevronDown',
         component: <ChevronDown />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'ChevronUp',
         component: <ChevronUp />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Close',
         component: <Close />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Dropdown',
         component: <Dropdown />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Error',
         component: <Error />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'LogoUsdc',
         component: <LogoUsdc />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'LogoEth',
         component: <LogoEth />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Minus',
         component: <Minus />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Plus',
         component: <Plus />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Filter',
         component: <Filter />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Sort',
         component: <Sort />,
-        status: 'Done',
+        status: 'Approved',
       },
     ],
   },
@@ -625,7 +632,7 @@ const COMPONENT_GROUPS = [
       {
         name: 'Typography',
         component: <Typography />,
-        status: 'Done',
+        status: 'Approved',
       },
       {
         name: 'Color',
@@ -645,7 +652,7 @@ const COMPONENT_GROUPS = [
             </Flex>
           </>
         ),
-        status: 'Done',
+        status: 'Approved',
       },
     ],
   },
