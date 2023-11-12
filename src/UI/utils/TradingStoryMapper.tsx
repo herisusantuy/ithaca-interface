@@ -10,6 +10,7 @@ const storyMap: { [key: string]: JSX.Element } = {
 };
 
 export const getTradingStoryMapper = (contentId: string, compact?: boolean) => {
+  console.log(contentId);
   if (storyMap[contentId]) {
     return React.cloneElement(storyMap[contentId], { compact });
   }

@@ -148,6 +148,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               selectedOption={payoff}
               name={`${title}-payoff`}
               onChange={handlePayoffChange}
+              width={225}
             />
           </div>
           <div className={styles.side}>

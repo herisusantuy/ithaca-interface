@@ -73,7 +73,7 @@
 .tabInfo {
   display: flex;
   flex-direction: column;
-  width: 55%;
+  width: 52%;
 
   h3 {
     color: var(--white);
@@ -84,12 +84,13 @@
 
   p {
     @include font-size('text-xs', 'regular');
-    opacity: 0.6;
+    color: var(--white-60);
+    line-height: rem(20);
   }
 }
 
 .subTabs {
-  width: 45%;
+  width: 48%;
 
   button {
     width: 100%;
