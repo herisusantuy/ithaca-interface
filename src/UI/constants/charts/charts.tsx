@@ -9,20 +9,13 @@ export type PayoffDataProps = {
 
 export type SpecialDotLabel = {
   value: number;
+  x: number;
 };
 
 export type KeyType = {
   type: DotTypes;
   label: string;
 };
-
-export const SPECIAL_DUMMY_DATA: SpecialDotLabel[] = [
-  {
-    value: -90.98,
-  },
-  { value: 40451 },
-  { value: 40451.02 },
-];
 
 // Payoff chart dummy data
 export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [

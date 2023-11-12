@@ -45,11 +45,13 @@ export const breakPointList = (data: PayoffDataProps[]) => {
         } else {
           const obj: SpecialDotLabel = {
             value: data[i].value,
+            x: data[i].x,
           };
           offsets.push(obj);
         }
         const obj1: SpecialDotLabel = {
           value: data[i + 1].value,
+          x: data[i].x,
         };
         offsets.push(obj1);
         increament = true;
