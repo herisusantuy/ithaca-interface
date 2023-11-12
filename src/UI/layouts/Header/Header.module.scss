@@ -67,12 +67,8 @@
   gap: rem(25);
 
   button {
-    font-family: $roboto !important;
-    font-size: rem(12) !important;
-    padding: rem(10) rem(16) !important;
     border-radius: rem(16) !important;
     position: relative !important;
-    background: #3c8d60 !important;
 
     &:hover,
     &:active {
@@ -107,4 +103,9 @@
       }
     }
   }
+}
+
+.humburger {
+  padding: rem(10) rem(16) !important;
+  background: #3c8d60 !important;
 }
