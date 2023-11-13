@@ -1,6 +1,6 @@
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { TradingStoriesProps } from '../../TradingStories';
+import { TradingStoriesProps } from '@/UI/components/Market';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 
 import styles from './OptionsChart.module.scss';
