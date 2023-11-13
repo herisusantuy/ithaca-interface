@@ -42,7 +42,7 @@ const Header = ({ className }: HeaderProps) => {
         <div className={styles.right}>
           <Bell />
           <Wallet />
-          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
+          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} className={styles.humburger} />}
         </div>
       </div>
       {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
