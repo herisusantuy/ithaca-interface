@@ -1,6 +1,6 @@
 // Packages
 import { useEffect, useState } from 'react';
-import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
@@ -109,12 +109,17 @@ const ChartPayoff = (props: ChartDataProps) => {
           </div>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart data={modifiedData} onMouseMove={handleMouseMove}>
+              <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
               <defs>
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
                   <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
                   <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
                 </linearGradient>
+
+                <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+                  <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+                </filter>
 
                 <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='2%' stopColor='#5ee192' stopOpacity={0.1} />
