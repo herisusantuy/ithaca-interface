@@ -254,3 +254,7 @@
   flex-grow: 0;
   flex-basis: 55%;
 }
+
+.recharts-layer path:focus {
+  outline: none;
+}
