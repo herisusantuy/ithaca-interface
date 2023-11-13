@@ -70,6 +70,7 @@ import { TABLE_FUND_LOCK_DATA } from './tableFundLock';
 import { CHART_TRADING_VOLUME_DATA } from './charts/chartTradingVolume';
 import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
 import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
+import { CHART_MAX_PAIN_DATA } from './charts/chartMaxPain';
 
 const COMPONENT_GROUPS = [
   {
@@ -489,10 +490,10 @@ const COMPONENT_GROUPS = [
         component: (
           <Panel margin='ptb-24 plr-30'>
             <h3 className='mb-18'>Max Pain</h3>
-            <ChartMaxPain />
+            <ChartMaxPain data={CHART_MAX_PAIN_DATA} />
           </Panel>
         ),
-        status: 'To Do',
+        status: 'In Progress',
       },
       {
         name: 'ChartTradeCount',
