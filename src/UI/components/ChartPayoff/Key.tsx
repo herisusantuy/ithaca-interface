@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // constants
-import { KeyType, getRandomInt } from '@/UI/constants/charts';
+import { KeyType, getRandomInt } from '@/UI/constants/charts/charts';
 
 // Components
 import Dot, { DotTypes } from '@/UI/components/Dot/Dot';

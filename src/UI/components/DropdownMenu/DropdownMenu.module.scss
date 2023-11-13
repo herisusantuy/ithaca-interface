@@ -59,6 +59,16 @@
   }
 }
 
+.clickedDropdown {
+  &:before {
+    background: linear-gradient(0deg, var(--green-40), rgba(255, 255, 255, 0) 80%) border-box;
+    border: rem(0.5) solid transparent;
+    opacity: 0.3;
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+}
+
 .placeholder {
   color: var(--white-60) !important;
 }
@@ -75,7 +85,7 @@
 .options {
   @include spacing(padding, 10, 'all');
   position: absolute;
-  top: rem(35);
+  top: rem(37);
   list-style-type: none;
   border-radius: rem(8);
   background: var(--background-70, rgba(18, 23, 34, 0.7));
@@ -99,16 +109,15 @@
     border-radius: rem(3);
     padding: rem(4) rem(5);
 
-    &:hover {
+    &:hover:not(.selected) {
       background-color: var(--white-10);
     }
-
   }
-  
+
   .selected {
     color: var(--green-30);
   }
-  
+
   &.isHidden {
     display: none;
   }

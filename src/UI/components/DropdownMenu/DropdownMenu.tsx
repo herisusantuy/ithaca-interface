@@ -67,7 +67,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
     setOptionsPosition({
       width: containerRect?.width ?? 100,
       left: containerRect?.x ?? 0,
-      top: (containerRect?.y ?? 0) + (containerRect?.height ?? 0),
+      top: (containerRect?.y ?? 0) + (containerRect?.height ?? 0) + 1,
     });
     if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
@@ -89,7 +89,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
         onClick={handleDropdownClick}
         role='button'
       >
-        <div className={styles.input}>
+        <div className={`${styles.input} ${isDropdownOpen ? styles.clickedDropdown : ''}`}>
           {iconStart && iconStart}
           <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           <div className={styles.iconEnd}>

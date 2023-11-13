@@ -31,10 +31,12 @@ const ComponentLayout = ({ sidebarContent, selectedComponent }: ComponentLayoutP
     switch (status) {
       case 'In Progress':
         return styles.yellow;
-      case 'Done':
+      case 'Approved':
         return styles.green;
-      case 'Waiting on Figma':
+      case 'To Review':
         return styles.red;
+      case 'To Do':
+        return styles.blue;
       default:
         return '';
     }

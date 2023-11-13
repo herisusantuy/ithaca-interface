@@ -11,13 +11,12 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts/charts';
 
-//Event Props
+// Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
-// Styles
-import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+// Utils
 import {
   breakPointList,
   getLegs,
@@ -28,14 +27,20 @@ import {
 } from '@/UI/utils/ChartUtil';
 import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
 
+// Types
 type ChartDataProps = {
   chartData: PayoffMap[];
   height: number;
   showKeys?: boolean;
+  showPortial?: boolean;
+  showUnlimited?: boolean;
 };
 
+// Styles
+import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, showUnlimited = true } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -95,10 +100,10 @@ const ChartPayoff = (props: ChartDataProps) => {
     <>
       {isClient && (
         <>
-          <div className={styles.unlimited}>
+          <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
             <h3>Potential P&L:</h3>
             <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-              {changeVal >= 0 ? '+' + '' + changeVal : changeVal}
+              {changeVal >= 0 ? '+' + '' + changeVal.toFixed(2) : changeVal.toFixed(2)}
             </p>
             <LogoUsdc />
           </div>
@@ -172,12 +177,16 @@ const ChartPayoff = (props: ChartDataProps) => {
                 content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
               />
 
-              <XAxis tick={false} axisLine={false}>
+              <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`}>
                 <Label
                   content={
                     <>
                       <text x={10} y={height - 50} fill='#FF3F57' fontSize={10} textAnchor='left'>
-                        {downSide ? 'Unlimited Downside' : minimize >= 0 ? '+' + '' + minimize : '' + minimize}
+                        {downSide
+                          ? 'Unlimited Downside'
+                          : minimize >= 0
+                          ? '+' + '' + minimize.toFixed(2)
+                          : '' + minimize.toFixed(2)}
                       </text>
                       {downSide ? <></> : <LogoUsdc x={60} y={height - 63} />}
                     </>

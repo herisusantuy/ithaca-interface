@@ -1,4 +1,4 @@
-import { PayoffDataProps, SpecialDotLabel } from '../constants/charts';
+import { PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
 export const isIncrementing = (arr: PayoffDataProps[]) => {
   for (let i = 0; i < arr.length - 1; i++) {
@@ -45,11 +45,13 @@ export const breakPointList = (data: PayoffDataProps[]) => {
         } else {
           const obj: SpecialDotLabel = {
             value: data[i].value,
+            x: data[i].x,
           };
           offsets.push(obj);
         }
         const obj1: SpecialDotLabel = {
           value: data[i + 1].value,
+          x: data[i].x,
         };
         offsets.push(obj1);
         increament = true;
@@ -82,7 +84,7 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const makingChartData = (data: any[], key: string) => {
-  const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined }));
+  const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined, x: item['x'] }));
   return result;
 };
 

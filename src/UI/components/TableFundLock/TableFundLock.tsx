@@ -27,8 +27,8 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableFundLock.module.scss';
-import { useAccount } from 'wagmi';
 import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Types
 type TableFundLockProps = {
@@ -36,7 +36,7 @@ type TableFundLockProps = {
 };
 
 const TableFundLock = ({ data }: TableFundLockProps) => {
-  const { address, isDisconnected } = useAccount();
+  const { isAuthenticated } = useAppStore();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -268,7 +268,7 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
   };
 
   // Get table className
-  const tableClass = `${styles.table} ${isDisconnected ? styles.isOpacity : ''}`;
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''}`;
 
   return (
     <>
@@ -308,7 +308,7 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
           />
         </Flex>
       ) : null}
-      {!address && <DisconnectedWallet showButton={false} />}
+      {!isAuthenticated && <DisconnectedWallet showButton={false} />}
     </>
   );
 };

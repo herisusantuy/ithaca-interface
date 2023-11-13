@@ -7,7 +7,7 @@ import Asset from '@/UI/components/Asset/Asset';
 
 // Styles
 import styles from './TableCollateral.module.scss';
-import { useAccount } from 'wagmi';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Types
 type CollateralTableProps = {
@@ -18,8 +18,8 @@ type CollateralTableProps = {
 };
 
 const TableCollateral = ({ collateralSummary, deposit, withdraw, faucet }: CollateralTableProps) => {
-  const { isDisconnected } = useAccount();
-  const tableClass = `${styles.table} ${isDisconnected ? styles.isOpacity : ''}`;
+  const { isAuthenticated } = useAppStore();
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''}`;
 
   return (
     <div className={tableClass.trim()}>

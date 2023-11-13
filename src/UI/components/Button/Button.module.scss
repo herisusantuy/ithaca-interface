@@ -172,24 +172,24 @@
   background: var(--purple-rgba);
   color: var(--white);
   border: rem(1) solid var(--purple);
-  border-bottom: 0;
+  border-top: rem(1) solid rgba(0, 0, 0, 0.5);
   justify-content: space-between;
+
+  &:last-child {
+    border-bottom: rem(1) solid rgba(0, 0, 0, 0.5);
+  }
 
   svg path {
     stroke: var(--white);
   }
 
-  &:last-child {
-    border-bottom: rem(1) solid var(--purple);
-  }
-
   &:hover {
-    background: var(--purple);
+    background: rgba(0, 0, 0, 0.5);
   }
 }
 
 .btn--link {
-  @include spacing(padding, 12, 'all');
+  @include spacing(padding, 16, 'left+right');
   @include font-size('text-sm', 'regular');
   border-radius: 0;
   background: none;
@@ -197,7 +197,6 @@
   justify-content: flex-start;
 
   &:hover {
-    background: var(--purple-30);
-    color: var(--white-60);
+    background: rgba(0, 0, 0, 0.5);
   }
 }
