@@ -109,7 +109,6 @@ const ChartPayoff = (props: ChartDataProps) => {
           </div>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart data={modifiedData} onMouseMove={handleMouseMove}>
-              <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
               <defs>
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
@@ -118,7 +117,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 </linearGradient>
 
                 <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
-                  <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+                  <feGaussianBlur in='SourceGraphic' stdDeviation='3' result='blur' />
                 </filter>
 
                 <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -143,9 +142,9 @@ const ChartPayoff = (props: ChartDataProps) => {
               <Area
                 type='linear'
                 stroke='url(#lineGradient)'
-                strokeWidth='2'
                 dataKey='value'
                 fill='url(#fillGradient)'
+                filter='url(#glow)'
                 label={
                   <CustomLabel
                     base={baseValue}
@@ -162,6 +161,14 @@ const ChartPayoff = (props: ChartDataProps) => {
                     dataList={modifiedData}
                   />
                 }
+                activeDot={false}
+              />
+              <Area
+                type='linear'
+                stroke='url(#lineGradient)'
+                strokeWidth='2'
+                dataKey='value'
+                fill='transparent'
                 activeDot={false}
               />
               <Area
