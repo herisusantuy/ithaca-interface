@@ -4,6 +4,7 @@ import React, { ReactNode, useState } from 'react';
 // Styles
 import styles from './TabCard.module.scss';
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
+import { getMarketMap } from '@/UI/utils/MarketMapper';
 
 // Types
 type SubTab = {
@@ -22,9 +23,10 @@ type MainTab = {
 
 type TabCardProps = {
   tabs: MainTab[];
+  method?: boolean;
 };
 
-const TabCard = ({ tabs }: TabCardProps) => {
+const TabCard = ({ tabs, method = true }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
@@ -41,7 +43,7 @@ const TabCard = ({ tabs }: TabCardProps) => {
               <h3>{tab.title}</h3>
               <p>{tab.description}</p>
             </div>
-            <div>{getTradingStoryMapper(tab.contentId, true)}</div>
+            <div className={styles.subTabs}>{method ? getMarketMap(tab.contentId, true) : getTradingStoryMapper(tab.contentId, true)}</div>
           </div>
         ))}
       </div>
@@ -51,7 +53,7 @@ const TabCard = ({ tabs }: TabCardProps) => {
           <h2>{activeTab.title}</h2>
           <p>Show Instructions</p>
         </div>
-        <div>{getTradingStoryMapper(activeTab.contentId)}</div>
+        <div>{method ? getMarketMap(activeTab.contentId) : getTradingStoryMapper(activeTab.contentId)}</div>
       </div>
     </div>
   );
