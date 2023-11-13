@@ -69,6 +69,7 @@ import { CHART_FAKE_DATA } from './charts/charts';
 import { TABLE_FUND_LOCK_DATA } from './tableFundLock';
 import { CHART_TRADING_VOLUME_DATA } from './charts/chartTradingVolume';
 import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
+import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 
 const COMPONENT_GROUPS = [
   {
@@ -471,17 +472,17 @@ const COMPONENT_GROUPS = [
             <ChartTradingVolume data={CHART_TRADING_VOLUME_DATA} />
           </Panel>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
       {
         name: 'ChartOpenInterest',
         component: (
           <Panel margin='ptb-24 plr-30'>
             <h3 className='mb-18'>Open Interest</h3>
-            <ChartOpenInterest />
+            <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
           </Panel>
         ),
-        status: 'To Do',
+        status: 'In Progress',
       },
       {
         name: 'ChartMaxPain',
@@ -501,7 +502,7 @@ const COMPONENT_GROUPS = [
             <ChartTradeCount data={CHART_TRADE_COUNT_DATA} />
           </Panel>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
     ],
   },
