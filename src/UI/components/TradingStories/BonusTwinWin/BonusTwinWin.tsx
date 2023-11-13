@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './BonusTwinWin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -11,19 +11,25 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
+import RadioButton from '../../RadioButton/RadioButton';
 
-const BonusTwinWin = ({ compact = false }: TradingStoriesProps) => {
+const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'bonus' | 'twin-win'>('bonus');
+
   return (
     <div>
       <Flex margin='mb-12'>
-        {/* <RadioButton
-          options={['Bonus', 'Twin-Win']}
+        <RadioButton
+          options={[
+            { option: 'Bonus', value: 'bonus' },
+            { option: 'Twin-Win', value: 'twin-win' },
+          ]}
+          selectedOption={bonusOrTwinWin}
           name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
-          defaultOption='Bonus'
-          onChange={value => console.log(value)}
-        /> */}
+          // onChange={}
+        />
       </Flex>
-      {!compact && (
+      {!compact && showInstructions && (
         <div className={styles.instructions}>
           <div>
             i. Select <LogoEth /> Price Reference.
@@ -82,7 +88,7 @@ const BonusTwinWin = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

@@ -13,8 +13,11 @@ import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
 import TabCard from '@/UI/components/TabCard/TabCard';
 import { TRADING_STORIES_TABS } from '@/UI/constants/tabCard';
 import styles from './stories.module.scss';
+import { useState } from 'react';
 
 const Index = () => {
+  const [showInstructions, setShowInstructions] = useState(true);
+
   return (
     <>
       <Meta />
@@ -24,14 +27,16 @@ const Index = () => {
           <Flex gap='gap-12'>
             <Asset icon={<LogoEth />} label='ETH' />
             <LabelValue label='Expiry Date' value='10Nov23' hasDropdown={true} />
-            <LabelValue
-              label='Next Auction'
-              value={<CountdownTimer />}
-            />
+            <LabelValue label='Next Auction' value={<CountdownTimer />} />
             <LabelValue label='Last Auction Price' value='1,807.28' subValue='10Oct23 13:23' />
           </Flex>
-          <div className={styles.tabWrapper }>
-            <TabCard tabs={TRADING_STORIES_TABS} />
+          <div className={styles.tabWrapper}>
+            <TabCard
+              tabs={TRADING_STORIES_TABS}
+              showInstructions={showInstructions}
+              setShowInstructions={setShowInstructions}
+              method={false}
+            />
           </div>
         </Container>
       </Main>

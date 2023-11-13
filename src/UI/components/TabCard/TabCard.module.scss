@@ -23,10 +23,11 @@
 
 .tab {
   @include spacing(padding, 24, 'left+right');
-  @include spacing(padding, 34, 'top+bottom');
+  @include spacing(padding, 34, 'top'); // TODO: should be changed to top+bottom once chart height is fixed
   display: flex;
   align-items: flex-start;
-  gap: rem(16);
+  gap: rem(15);
+  cursor: pointer;
   position: relative;
 
   &:first-child {
@@ -73,7 +74,7 @@
 .tabInfo {
   display: flex;
   flex-direction: column;
-  width: 52%;
+  flex: 1;
 
   h3 {
     color: var(--white);
@@ -87,6 +88,10 @@
     color: var(--white-60);
     line-height: rem(20);
   }
+}
+
+.tabChart {
+  flex: 1;
 }
 
 .subTabs {
@@ -119,6 +124,10 @@
   justify-content: space-between;
   align-items: center;
   @include spacing(margin, 12, 'bottom');
+
+  div {
+    width: unset;
+  }
 
   h2 {
     color: var(--white);

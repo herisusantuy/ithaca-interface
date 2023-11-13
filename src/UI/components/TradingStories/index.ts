@@ -1,6 +1,16 @@
-export type TradingStoriesProps = {
-  compact?: boolean;
-};
+import { ClientConditionalOrder, OrderLock, OrderPayoff } from '@ithaca-finance/sdk';
+
+export interface TradingStoriesProps {
+  showInstructions: boolean;
+  compact: boolean;
+  chartHeight: number;
+}
+
+export interface OrderDetails {
+  order: ClientConditionalOrder;
+  orderLock: OrderLock;
+  orderPayoff: OrderPayoff;
+}
 
 export { default as Bet } from './Bet/Bet';
 export { default as Earn } from './Earn/Earn';

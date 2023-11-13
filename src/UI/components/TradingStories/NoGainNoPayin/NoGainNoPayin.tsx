@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './NoGainNoPayin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -11,12 +11,15 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
+import RadioButton from '../../RadioButton/RadioButton';
 
-const NoGainNoPayin = ({ compact = false }: TradingStoriesProps) => {
+const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
+
   return (
     <div>
-      {!compact && (
-        <div className={styles.instructions}>
+      {!compact && showInstructions && (
+        <div className={`${styles.instructions} mb-20`}>
           <div>
             i. Select <LogoEth /> Price Reference.
           </div>
@@ -37,16 +40,19 @@ const NoGainNoPayin = ({ compact = false }: TradingStoriesProps) => {
           </div>
         </div>
       )}
-      <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>
+      <Flex direction='column' margin='mb-14' gap='gap-12'>
         <Flex gap='gap-15'>
           <div>
             {!compact && <label className={styles.label}>Type</label>}
-            {/* <RadioButton
-              options={['Call', 'Put']}
+            <RadioButton
+              options={[
+                { option: 'Call', value: 'call' },
+                { option: 'Put', value: 'put' },
+              ]}
+              selectedOption={callOrPut}
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
-              defaultOption='Call'
-              onChange={value => console.log(value)}
-            /> */}
+              // onChange={}
+            />
           </div>
           {!compact && (
             <>
@@ -90,7 +96,7 @@ const NoGainNoPayin = ({ compact = false }: TradingStoriesProps) => {
       </Flex>
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

@@ -1,8 +1,8 @@
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { TradingStoriesProps } from '../../TradingStories';
+import { TradingStoriesProps } from '@/UI/components/Market';
 
-import styles from './ForwardChart.module.scss'
+import styles from './ForwardChart.module.scss';
 
 const ForwardChart = ({ compact = false }: TradingStoriesProps) => {
   if (compact == true) {

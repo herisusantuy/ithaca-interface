@@ -12,10 +12,10 @@ import Button from '../../Button/Button';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 
-const Earn = ({ compact = false }: TradingStoriesProps) => {
+const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   return (
     <div>
-      {!compact && (
+      {!compact && showInstructions && (
         <div className={styles.instructions}>
           <div>
             i. Select <LogoEth /> Target Price.
@@ -79,7 +79,7 @@ const Earn = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

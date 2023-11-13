@@ -401,7 +401,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TabCard',
-        component: <TabCard tabs={TRADING_MARKET_TABS} />,
+        component: <TabCard tabs={TRADING_MARKET_TABS} showInstructions setShowInstructions={() => {}} />,
         status: 'To Do',
       },
       {
