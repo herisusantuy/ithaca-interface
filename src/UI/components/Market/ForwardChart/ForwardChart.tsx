@@ -1,4 +1,4 @@
-import { CHART_FAKE_DATA } from '@/UI/constants/charts';
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { TradingStoriesProps } from '../../TradingStories';
 
