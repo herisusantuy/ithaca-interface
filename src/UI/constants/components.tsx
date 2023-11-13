@@ -71,6 +71,7 @@ import { CHART_TRADING_VOLUME_DATA } from './charts/chartTradingVolume';
 import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
 import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_DATA } from './charts/chartMaxPain';
+import ToastTest from '../components/Toast/ToastTest';
 
 const COMPONENT_GROUPS = [
   {
@@ -571,7 +572,16 @@ const COMPONENT_GROUPS = [
       {
         name: 'Wallet',
         component: <Wallet />,
-        status: 'To Do',
+        status: 'To Review',
+      },
+      {
+        name: 'Toast',
+        component: (
+          <Flex>
+            <ToastTest />
+          </Flex>
+        ),
+        status: 'In Progress',
       },
     ],
   },
