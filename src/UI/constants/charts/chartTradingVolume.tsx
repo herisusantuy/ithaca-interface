@@ -1,3 +1,4 @@
+// Types
 export type ChartTradingVolumeData = {
   date: string;
   volume: number;
