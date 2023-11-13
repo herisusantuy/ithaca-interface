@@ -1,7 +1,7 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useAccount, useWalletClient } from 'wagmi';
+import { useWalletClient } from 'wagmi';
 import dayjs from 'dayjs';
 
 // Lib
@@ -91,7 +91,6 @@ const TableOrder = ({ type }: TableOrderProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
-  const { data: walletClient } = useWalletClient();
 
   const dataToRows = (res: Order[]) => {
     setData(

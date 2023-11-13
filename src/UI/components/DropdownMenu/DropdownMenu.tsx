@@ -48,13 +48,13 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
         setIsDropdownOpen(false);
       }
     };
-    value && setSelectedOption(value)
+    setSelectedOption(value || null)
     setMounted(true);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, []);
+  }, [value]);
 
   useEscKey(() => {
     if (isDropdownOpen) {
