@@ -1,10 +1,11 @@
 // Packages
-import React, { ReactNode, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 
 // Styles
 import styles from './TabCard.module.scss';
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
 import { getMarketMap } from '@/UI/utils/MarketMapper';
+import Toggle from '../Toggle/Toggle';
 
 // Types
 type SubTab = {
@@ -23,10 +24,12 @@ type MainTab = {
 
 type TabCardProps = {
   tabs: MainTab[];
+  showInstructions: boolean;
+  setShowInstructions: Dispatch<SetStateAction<boolean>>;
   method?: boolean;
 };
 
-const TabCard = ({ tabs, method = true }: TabCardProps) => {
+const TabCard = ({ tabs, showInstructions, setShowInstructions, method = true }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
@@ -43,7 +46,11 @@ const TabCard = ({ tabs, method = true }: TabCardProps) => {
               <h3>{tab.title}</h3>
               <p>{tab.description}</p>
             </div>
-            <div className={styles.subTabs}>{method ? getMarketMap(tab.contentId, true) : getTradingStoryMapper(tab.contentId, true)}</div>
+            {method ? (
+              <div className={styles.subTabs}>{getMarketMap(tab.contentId, true)}</div>
+            ) : (
+              <div className={styles.tabChart}>{getTradingStoryMapper(tab.contentId, false, true)}</div>
+            )}
           </div>
         ))}
       </div>
@@ -51,9 +58,18 @@ const TabCard = ({ tabs, method = true }: TabCardProps) => {
       <div className={styles.rightPanel}>
         <div className={styles.rightPanelHeader}>
           <h2>{activeTab.title}</h2>
-          <p>Show Instructions</p>
+          <Toggle
+            defaultState={showInstructions ? 'right' : 'left'}
+            rightLabel='Show Instructions'
+            onChange={() => setShowInstructions(!showInstructions)}
+          />
+          {/* <p>Show Instructions</p> */}
         </div>
-        <div>{method ? getMarketMap(activeTab.contentId) : getTradingStoryMapper(activeTab.contentId)}</div>
+        {method ? (
+          <div>{getMarketMap(activeTab.contentId)}</div>
+        ) : (
+          <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
+        )}
       </div>
     </div>
   );

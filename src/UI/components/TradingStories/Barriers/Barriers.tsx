@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './Barriers.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -11,11 +11,17 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
+import RadioButton from '../../RadioButton/RadioButton';
 
-const Barriers = ({ compact = false }: TradingStoriesProps) => {
+const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
+  const [buyOrSell, setBuyOrSell] = useState<'buy' | 'sell'>('buy');
+  const [upOrDown, setUpOrDown] = useState<'up' | 'down'>('up');
+  const [inOrOut, setInOrOut] = useState<'in' | 'out'>('in');
+
   return (
     <div>
-      {!compact && (
+      {!compact && showInstructions && (
         <div className={styles.instructions}>
           <div>i. Select Desired Direction</div>
           <div>
@@ -29,59 +35,75 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
       )}
       {compact ? (
         <Flex gap='gap-3'>
-          {/* <RadioButton
-            options={['+', '-']}
-            valueProps={['Plus', 'Minus']}
-            name='plusOrMinus'
-            defaultOption='Plus'
+          <RadioButton
+            options={[
+              { option: '+', value: 'buy' },
+              { option: '-', value: 'sell' },
+            ]}
+            selectedOption={buyOrSell}
+            name='buyOrSellCompact'
             orientation='vertical'
-            onChange={value => console.log(value)}
+            // onChange={}
           />
           <RadioButton
-            options={['UP', 'DOWN']}
-            name={compact ? 'upOrDownCompact' : 'upOrDown'}
-            defaultOption='UP'
+            options={[
+              { option: 'UP', value: 'up' },
+              { option: 'DOWN', value: 'down' },
+            ]}
+            selectedOption={upOrDown}
+            name='upOrDownCompact'
             orientation='vertical'
-            onChange={value => console.log(value)}
+            // onChange={}
           />
           <RadioButton
-            options={['IN', 'OUT']}
-            name={compact ? 'inOrOutCompact' : 'inOrOut'}
-            defaultOption='IN'
+            options={[
+              { option: 'IN', value: 'in' },
+              { option: 'OUT', value: 'out' },
+            ]}
+            selectedOption={inOrOut}
+            name='inOrOutCompact'
             orientation='vertical'
-            onChange={value => console.log(value)}
-          /> */}
+            // onChange={}
+          />
         </Flex>
       ) : (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
           <Flex gap='gap-10'>
             <div>
               <label className={styles.label}>Type</label>
-              {/* <RadioButton
-                options={['Call', 'Put']}
-                name={compact ? 'callOrPutCompact' : 'callOrPut'}
-                defaultOption='Call'
+              <RadioButton
+                options={[
+                  { option: 'Call', value: 'call' },
+                  { option: 'Put', value: 'put' },
+                ]}
+                name='callOrPut'
+                selectedOption={callOrPut}
                 onChange={value => console.log(value)}
-              /> */}
+              />
             </div>
             <div>
               <label className={styles.label}>Side</label>
               <Flex gap='gap-10'>
-                {/* <RadioButton
-                  options={[<Plus key='plus' />, <Minus key='minus' />]}
-                  valueProps={['Plus', 'Minus']}
-                  name='plusOrMinus'
-                  defaultOption='Plus'
+                <RadioButton
+                  options={[
+                    { option: '+', value: 'buy' },
+                    { option: '-', value: 'sell' },
+                  ]}
+                  selectedOption={buyOrSell}
+                  name='buyOrSell'
                   orientation='vertical'
-                  onChange={value => console.log(value)}
+                  // onChange={}
                 />
                 <RadioButton
-                  options={['UP', 'DOWN']}
-                  name={compact ? 'upOrDownCompact' : 'upOrDown'}
-                  defaultOption='UP'
+                  options={[
+                    { option: 'UP', value: 'up' },
+                    { option: 'DOWN', value: 'down' },
+                  ]}
+                  selectedOption={upOrDown}
+                  name='upOrDown'
                   orientation='vertical'
-                  onChange={value => console.log(value)}
-                /> */}
+                  // onChange={}
+                />
               </Flex>
             </div>
             <div>
@@ -90,13 +112,16 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
             </div>
             <div className={styles.collateralWrapper}>Knock</div>
             <div className={styles.collateralWrapper}>
-              {/* <RadioButton
-                options={['IN', 'OUT']}
-                name={compact ? 'inOrOutCompact' : 'inOrOut'}
-                defaultOption='IN'
+              <RadioButton
+                options={[
+                  { option: 'IN', value: 'in' },
+                  { option: 'OUT', value: 'out' },
+                ]}
+                selectedOption={inOrOut}
+                name='inOrOut'
                 orientation='vertical'
-                onChange={value => console.log(value)}
-              /> */}
+                // onChange={}
+              />
             </div>
             <div className={styles.collateralWrapper}>@</div>
             <div>
@@ -127,7 +152,7 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
           </div>
         </Flex>
       )}
-      {!compact && (
+      {!compact && showInstructions && (
         <div className={`${styles.additionalInstructions} mb-16`}>
           <div>
             BUY UP and IN Call if <LogoEth /> will end up at expiry UP from the strike price and NOT INside {'<'} the
@@ -141,7 +166,7 @@ const Barriers = ({ compact = false }: TradingStoriesProps) => {
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>

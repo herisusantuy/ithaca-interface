@@ -49,7 +49,6 @@ export const TRADING_MARKET_TABS: Tab[] = [
   },
 ];
 
-
 export const TRADING_STORIES_TABS: Tab[] = [
   {
     id: 'bet',
@@ -65,15 +64,13 @@ export const TRADING_STORIES_TABS: Tab[] = [
   {
     id: 'earn',
     title: 'Earn',
-    description:
-      'Earn risky yield on your capital at risk. Define an asset price target.',
+    description: 'Earn risky yield on your capital at risk. Define an asset price target.',
     contentId: 'earnChart',
   },
   {
     id: 'noGainNoPayin',
     title: 'No Gain, No Payin’',
-    description:
-      'Buy an option with maximum downside amount to be lost if asset price ends up at the strike.',
+    description: 'Buy an option with maximum downside amount to be lost if asset price ends up at the strike.',
     contentId: 'noGainNoPayinChart',
     subTabs: [
       { id: 'call', label: 'Call', contentId: 'optionsCall' },
@@ -83,8 +80,7 @@ export const TRADING_STORIES_TABS: Tab[] = [
   {
     id: 'bonusTwinWin',
     title: 'Bonus | Twin-Win',
-    description:
-      'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
+    description: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
     contentId: 'bonusTwinWinChart',
     subTabs: [
       { id: 'bonus', label: 'Bonus', contentId: 'optionsBonus' },
