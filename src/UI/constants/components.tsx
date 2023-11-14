@@ -54,6 +54,7 @@ import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
+import ToastTest from '@/UI/components/Toast/ToastTest';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -61,7 +62,6 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Header from '@/UI/layouts/Header/Header';
 import Main from '@/UI/layouts/Main/Main';
 import Panel from '@/UI/layouts/Panel/Panel';
-import ToastTest from '@/UI/components/Toast/ToastTest';
 
 // Constants
 import { MODAL_TABS, TABS } from './tabs';
@@ -508,7 +508,7 @@ const COMPONENT_GROUPS = [
             <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
           </Panel>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
       {
         name: 'ChartMaxPain',
@@ -605,7 +605,7 @@ const COMPONENT_GROUPS = [
             <ToastTest />
           </Flex>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
     ],
   },

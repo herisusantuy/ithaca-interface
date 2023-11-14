@@ -1,13 +1,11 @@
 // Packages
 import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { AppProps } from 'next/app';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
 
 // Constants
 import { LATO, ROBOTO } from '@/UI/constants/fonts';
-import { TOAST_STYLES } from '@/UI/constants/toast';
 
 // Utils
 import { chains, appInfo, wagmiConfig } from '@/UI/utils/RainbowKit';
@@ -42,19 +40,6 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
           <ReadyState>
             <Component {...pageProps} />
           </ReadyState>
-          <Toaster
-            position='top-right'
-            toastOptions={{
-              className: 'toast',
-              duration: 5000,
-              success: {
-                style: TOAST_STYLES.success,
-              },
-              error: {
-                style: TOAST_STYLES.error,
-              },
-            }}
-          />
         </div>
       </RainbowKitProvider>
     </WagmiConfig>
