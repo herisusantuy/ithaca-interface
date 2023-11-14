@@ -13,10 +13,11 @@ import styles from './ChartPayoff.module.scss';
 type KeysProps = {
   keys: string[];
   onChange: (label: string) => void;
+  onDashed: (label: string) => void;
 };
 
 const Key = (props: KeysProps) => {
-  const { keys, onChange } = props;
+  const { keys, onChange, onDashed } = props;
   const [keyMap, setKeyMap] = useState<KeyType[]>([]);
 
   useEffect(() => {
@@ -47,6 +48,10 @@ const Key = (props: KeysProps) => {
     onChange(label);
   };
 
+  const showDashedLine = (label: string) => { 
+    onDashed(label);
+  }
+
   return (
     <div className={styles.container}>
       {keyMap.map((key, index) => (
@@ -54,6 +59,8 @@ const Key = (props: KeysProps) => {
           key={index}
           className={`${styles.key} ${getBadgeClass(key.label)}`}
           onClick={() => updateChange(key.label)}
+          onMouseEnter={() => showDashedLine(key.label)}
+          onMouseLeave={() => showDashedLine('')}
         >
           <Dot type={key.type} />
           <p>{key.label}</p>

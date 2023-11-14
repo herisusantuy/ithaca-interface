@@ -39,11 +39,18 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {
-    const currentOffset = Math.abs(data[i + 1].value - data[i].value);
+    const currentOffset = Math.abs(Math.round(data[i + 1].value) - Math.round(data[i].value));
     if (currentOffset != 0) {
-      if (currentOffset > offsetCompareVal) {
+      if (currentOffset >= offsetCompareVal) {
         if (increament) {
-          offsets.pop();
+          if (i - 2 >= 0) {
+            const previewOffset = Math.abs(data[i - 2].value - data[i - 1].value);
+            if (previewOffset > offsetCompareVal) {
+              offsets.pop();
+            }
+          } else {
+            offsets.pop();
+          }
         } else {
           const obj: SpecialDotLabel = {
             value: data[i].value,
@@ -69,24 +76,32 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
   let maxOffset = 0;
 
   for (let i = 0; i < data.length - 1; i++) {
-    const currentOffset = data[i + 1].value - data[i].value;
+    const currentOffset = Math.abs(data[i + 1].value - data[i].value);
     if (currentOffset > maxOffset) {
-      maxOffset = currentOffset;
+      maxOffset = Math.round(currentOffset);
     }
   }
 
-  if (maxOffset >= 10000) {
+  if (maxOffset > 10000) {
     return 1000;
-  } else if (maxOffset >= 1000 && maxOffset < 10000) {
+  } else if (maxOffset > 5000 && maxOffset <= 10000) {
+    return 500;
+  } else if (maxOffset > 1000 && maxOffset <= 5000) {
     return 100;
-  } else if (maxOffset >= 100 && maxOffset < 1000) {
+  } else if (maxOffset > 500 && maxOffset <= 1000) {
+    return 50;
+  } else if (maxOffset > 100 && maxOffset <= 500) {
     return 10;
   } else return 2;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const makingChartData = (data: any[], key: string) => {
-  const result: PayoffDataProps[] = data.map(item => ({ value: item[key], dashValue: undefined, x: item['x'] }));
+export const makingChartData = (data: any[], key: string, dashed: string) => {
+  const result: PayoffDataProps[] = data.map(item => ({
+    value: item[key],
+    dashValue: dashed != '' && dashed != key ? item[dashed] : undefined,
+    x: item['x'],
+  }));
   return result;
 };
 

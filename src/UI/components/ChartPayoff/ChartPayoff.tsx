@@ -45,6 +45,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
   const [bridge, setBridge] = useState<string>('total');
+  const [dashed, setDashed] = useState<string>('');
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
@@ -62,7 +63,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    const tempData = makingChartData(chartData, bridge);
+    const tempData = makingChartData(chartData, bridge, dashed);
     setMinimize(Math.min(...tempData.map(i => i.value)));
     isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
     isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
@@ -76,7 +77,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
-  }, [bridge, chartData]);
+  }, [bridge, chartData, dashed]);
 
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
@@ -224,7 +225,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </XAxis>
             </AreaChart>
           </ResponsiveContainer>
-          {showKeys && <Key keys={key} onChange={setBridge} />}
+          {showKeys && <Key keys={key} onChange={setBridge} onDashed={setDashed} />}
         </>
       )}
     </>
