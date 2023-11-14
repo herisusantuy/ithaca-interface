@@ -1,0 +1,88 @@
+.container {
+  @include spacing(padding, 32, 'left+right');
+  @include spacing(padding, 24, 'top+bottom');
+  display: flex;
+  flex-direction: column;
+  gap: rem(16);
+  border-radius: rem(30);
+  background: var(
+    --gradient-d-leaderboard-card,
+    radial-gradient(100% 100% at 50.11% 100%, rgba(94, 225, 146, 0.16) 0%, rgba(94, 225, 146, 0) 100%)
+  );
+  width: 100%;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    border-radius: rem(30);
+    top: -(rem(1));
+    bottom: -(rem(1));
+    right: -(rem(1));
+    left: -(rem(1));
+    z-index: -1;
+    border: rem(1) solid transparent;
+    background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+
+  &:after {
+    content: '';
+    background-image: url('../../../assets/noise.png');
+    background-repeat: repeat;
+    position: absolute;
+    opacity: 0.4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: rem(30);
+  }
+
+  > * {
+    z-index: 1;
+    position: relative;
+  }
+
+  p {
+    font-family: $lato;
+    @include font-size('text-md', 'semibold');
+  }
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: rem(10);
+
+  p {
+    @include font-size('text-sm', 'regular');
+  }
+}
+
+.data {
+  color: var(--white-60);
+
+  .value {
+    @include font-size('text-lg', 'regular');
+    font-family: $roboto;
+    color: var(--white);
+  }
+
+  p {
+    @include spacing(margin, 4, 'bottom');
+    color: var(--white-60);
+    @include font-size('text-xs', 'regular');
+    font-family: $roboto;
+  }
+
+  & span {
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+  }
+}

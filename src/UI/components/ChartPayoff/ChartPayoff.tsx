@@ -1,6 +1,6 @@
 // Packages
 import { useEffect, useState } from 'react';
-import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
