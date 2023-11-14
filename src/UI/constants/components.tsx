@@ -484,7 +484,7 @@ const COMPONENT_GROUPS = [
             <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
           </Panel>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
       {
         name: 'ChartMaxPain',
@@ -581,7 +581,7 @@ const COMPONENT_GROUPS = [
             <ToastTest />
           </Flex>
         ),
-        status: 'In Progress',
+        status: 'To Review',
       },
     ],
   },
