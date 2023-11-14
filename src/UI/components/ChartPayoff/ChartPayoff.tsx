@@ -89,7 +89,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updateChange = (val: number) => {
     setTimeout(() => {
-      setChangeVal(val);
+      setChangeVal(Math.round(val));
     }, 10);
   };
 
@@ -104,7 +104,7 @@ const ChartPayoff = (props: ChartDataProps) => {
           <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
             <h3>Potential P&L:</h3>
             <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-              {changeVal >= 0 ? '+' + '' + changeVal.toFixed(2) : changeVal.toFixed(2)}
+              {changeVal >= 0 ? '+' + '' + changeVal : changeVal}
             </p>
             <LogoUsdc />
           </div>
@@ -198,8 +198,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
-                          ? '+' + '' + minimize.toFixed(2)
-                          : '' + minimize.toFixed(2)}
+                          ? '+' + '' + Math.round(minimize)
+                          : '' + Math.round(minimize)}
                       </text>
                       {downSide ? <></> : <LogoUsdc x={60} y={height - 63} />}
                     </>
