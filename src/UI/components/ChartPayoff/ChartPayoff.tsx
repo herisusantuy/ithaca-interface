@@ -11,7 +11,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel } from '@/UI/constants/charts/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KeyType } from '@/UI/constants/charts/charts';
 
 // Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
@@ -38,13 +38,14 @@ type ChartDataProps = {
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
+import { getNumber } from '@/UI/utils/Numbers';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, showUnlimited = true } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
-  const [bridge, setBridge] = useState<string>('total');
+  const [bridge, setBridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
   const [dashed, setDashed] = useState<string>('');
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
@@ -54,7 +55,25 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
+  const [color, setColor] = useState<string>('#4bb475');
   const baseValue = 0;
+  const colorArray = [
+    '#4bb475',
+    '#b5b5f8',
+    '#ff772a',
+    '#a855f7',
+    '#7ad136',
+    '#ff3f57',
+    '#6545a4',
+    '#18b5b5',
+    '#4421af',
+    '#d7658b',
+    '#7c1158',
+    '#786028',
+    '#50e991',
+    '#b33dc6',
+    '#00836e',
+  ];
 
   useEffect(() => {
     setIsClient(true);
@@ -63,7 +82,9 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    const tempData = makingChartData(chartData, bridge, dashed);
+    const tempData = makingChartData(chartData, bridge.label, dashed);
+    const colorIndex = getNumber(bridge.type.replace('leg', ''));
+    setColor(colorArray[colorIndex - 1]);
     setMinimize(Math.min(...tempData.map(i => i.value)));
     isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
     isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
@@ -77,6 +98,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
   // mouse move handle events
@@ -112,7 +134,7 @@ const ChartPayoff = (props: ChartDataProps) => {
             <AreaChart data={modifiedData} onMouseMove={handleMouseMove}>
               <defs>
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='5%' stopColor='#5ee192' stopOpacity={0.4} />
+                  <stop offset='5%' stopColor={color} stopOpacity={0.4} />
                   <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
                   <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
                 </linearGradient>
@@ -122,8 +144,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                 </filter>
 
                 <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='2%' stopColor='#5ee192' stopOpacity={0.1} />
-                  <stop offset='40%' stopColor='#5ee192' stopOpacity={0.3} />
+                  <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+                  <stop offset='40%' stopColor={color} stopOpacity={0.3} />
                   <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
                   <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.3} />
                   <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
@@ -136,7 +158,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 </linearGradient>
 
                 <linearGradient id='referenceLine' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='8%' stopColor='#5ee192' stopOpacity={0.3} />
+                  <stop offset='8%' stopColor={color} stopOpacity={0.3} />
                   <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
                 </linearGradient>
               </defs>
