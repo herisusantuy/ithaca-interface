@@ -4,20 +4,281 @@ import styles from './Barriers.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { TradingStoriesProps } from '..';
+import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
 import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
 import RadioButton from '../../RadioButton/RadioButton';
+import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import { useAppStore } from '@/UI/lib/zustand/store';
+import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
+  const callContracts = getContractsByPayoff('Call');
+  const putContracts = getContractsByPayoff('Put');
+  const binaryCallContracts = getContractsByPayoff('BinaryCall');
+  const binaryPutContracts = getContractsByPayoff('BinaryPut');
+
   const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
   const [buyOrSell, setBuyOrSell] = useState<'buy' | 'sell'>('buy');
   const [upOrDown, setUpOrDown] = useState<'up' | 'down'>('up');
   const [inOrOut, setInOrOut] = useState<'in' | 'out'>('in');
+  const [strike, setStrike] = useState<string>();
+  const [barrier, setBarrier] = useState<string>();
+  const [size, setSize] = useState('');
+  const [orderDetails, setOrderDetails] = useState<OrderDetails>();
+  const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  const strikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+    const isValidStrike = barrier
+      ? upOrDown === 'up'
+        ? parseFloat(currStrike) < parseFloat(barrier)
+        : parseFloat(currStrike) > parseFloat(barrier)
+      : true;
+    if (isValidStrike) strikeArr.push(currStrike);
+    return strikeArr;
+  }, []);
+  const barrierStrikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+    const isValidStrike = strike
+      ? upOrDown === 'up'
+        ? parseFloat(currStrike) > parseFloat(strike)
+        : parseFloat(currStrike) < parseFloat(strike)
+      : true;
+    if (isValidStrike) strikeArr.push(currStrike);
+    return strikeArr;
+  }, []);
+
+  const handleCallOrPutChange = async (callOrPut: 'call' | 'put') => {
+    setCallOrPut(callOrPut);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const handleBuyOrSellChange = async (buyOrSell: 'buy' | 'sell') => {
+    setBuyOrSell(buyOrSell);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const handleUpOrDownChange = async (upOrDown: 'up' | 'down') => {
+    setUpOrDown(upOrDown);
+    setBarrier(undefined);
+    setOrderDetails(undefined);
+    setPayoffMap(undefined);
+  };
+
+  const handleInOrOutChange = async (inOrOut: 'in' | 'out') => {
+    setInOrOut(inOrOut);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const handleStrikeChange = async (strike: string) => {
+    setStrike(strike);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const handleBarrierChange = async (barrier: string) => {
+    setBarrier(barrier);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const handleSizeChange = async (amount: string) => {
+    const size = getNumberValue(amount);
+    setSize(size);
+    if (!strike || !barrier) return;
+    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
+
+  const prepareOrderLegs = async (
+    callOrPut: 'call' | 'put',
+    buyOrSell: 'buy' | 'sell',
+    upOrDown: 'up' | 'down',
+    strike: string,
+    inOrOut: 'in' | 'out',
+    barrier: string,
+    size: number
+  ) => {
+    if (isInvalidNumber(size)) {
+      setOrderDetails(undefined);
+      setPayoffMap(undefined);
+      return;
+    }
+
+    let legs: Leg[];
+    let referencePrices: number[];
+    let estimatePayoffData: OptionLeg[];
+    if (upOrDown === 'up') {
+      if (inOrOut === 'in') {
+        const buyCallContract = callContracts[barrier];
+        const buyBinaryCallContract = binaryCallContracts[barrier];
+        const buyCallLeg: Leg = {
+          contractId: buyCallContract.contractId,
+          quantity: `${size}`,
+          side: 'BUY',
+        };
+        const buyBinaryCallLeg: Leg = {
+          contractId: buyBinaryCallContract.contractId,
+          quantity: `${size * (getNumber(barrier) - getNumber(strike))}`,
+          side: 'BUY',
+        };
+        legs = [buyCallLeg, buyBinaryCallLeg];
+        referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
+        estimatePayoffData = [
+          {
+            ...buyCallContract,
+            ...buyCallLeg,
+            premium: buyCallContract.referencePrice,
+          },
+          {
+            ...buyBinaryCallContract,
+            ...buyBinaryCallLeg,
+            premium: buyBinaryCallContract.referencePrice,
+          },
+        ];
+      } else {
+        const buyCallContract = callContracts[strike];
+        const sellCallContract = callContracts[barrier];
+        const sellBinaryCallContract = binaryCallContracts[barrier];
+        const buyCallLeg: Leg = {
+          contractId: buyCallContract.contractId,
+          quantity: `${size}`,
+          side: 'BUY',
+        };
+        const sellCallLeg: Leg = {
+          contractId: sellCallContract.contractId,
+          quantity: `${size}`,
+          side: 'SELL',
+        };
+        const sellBinaryCallLeg: Leg = {
+          contractId: sellBinaryCallContract.contractId,
+          quantity: `${size * (getNumber(barrier) - getNumber(strike))}`,
+          side: 'SELL',
+        };
+        legs = [buyCallLeg, sellCallLeg, sellBinaryCallLeg];
+        referencePrices = [
+          buyCallContract.referencePrice,
+          sellCallContract.referencePrice,
+          sellBinaryCallContract.referencePrice,
+        ];
+        estimatePayoffData = [
+          {
+            ...buyCallContract,
+            ...buyCallLeg,
+            premium: buyCallContract.referencePrice,
+          },
+          {
+            ...sellCallContract,
+            ...sellCallLeg,
+            premium: sellCallContract.referencePrice,
+          },
+          {
+            ...sellBinaryCallContract,
+            ...sellBinaryCallLeg,
+            premium: sellBinaryCallContract.referencePrice,
+          },
+        ];
+      }
+    } else {
+      if (inOrOut == 'in') {
+        const buyPutContract = putContracts[barrier];
+        const buyBinaryPutContract = binaryPutContracts[barrier];
+        const buyPutLeg: Leg = {
+          contractId: buyPutContract.contractId,
+          quantity: `${size}`,
+          side: 'BUY',
+        };
+        const buyBinaryPutLeg: Leg = {
+          contractId: buyBinaryPutContract.contractId,
+          quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
+          side: 'BUY',
+        };
+        legs = [buyPutLeg, buyBinaryPutLeg];
+        referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
+        estimatePayoffData = [
+          {
+            ...buyPutContract,
+            ...buyPutLeg,
+            premium: buyPutContract.referencePrice,
+          },
+          {
+            ...buyBinaryPutContract,
+            ...buyBinaryPutLeg,
+            premium: buyBinaryPutContract.referencePrice,
+          },
+        ];
+      } else {
+        const buyPutContract = putContracts[strike];
+        const sellPutContract = putContracts[barrier];
+        const sellBinaryPutContract = binaryPutContracts[barrier];
+        const buyPutLeg: Leg = {
+          contractId: buyPutContract.contractId,
+          quantity: `${size}`,
+          side: 'BUY',
+        };
+        const sellPutLeg: Leg = {
+          contractId: sellPutContract.contractId,
+          quantity: `${size}`,
+          side: 'SELL',
+        };
+        const sellBinaryPutLeg: Leg = {
+          contractId: sellBinaryPutContract.contractId,
+          quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
+          side: 'SELL',
+        };
+        legs = [buyPutLeg, sellPutLeg, sellBinaryPutLeg];
+        referencePrices = [
+          buyPutContract.referencePrice,
+          sellPutContract.referencePrice,
+          sellBinaryPutContract.referencePrice,
+        ];
+        estimatePayoffData = [
+          {
+            ...buyPutContract,
+            ...buyPutLeg,
+            premium: buyPutContract.referencePrice,
+          },
+          {
+            ...sellPutContract,
+            ...sellPutLeg,
+            premium: sellPutContract.referencePrice,
+          },
+          {
+            ...sellBinaryPutContract,
+            ...sellBinaryPutLeg,
+            premium: sellBinaryPutContract.referencePrice,
+          },
+        ];
+      }
+    }
+
+    const order: ClientConditionalOrder = {
+      clientOrderId: createClientOrderId(),
+      totalNetPrice: calculateNetPrice(legs, referencePrices, currencyPrecision.strike),
+      legs,
+    };
+
+    const payoffMap = estimateOrderPayoff(estimatePayoffData);
+    setPayoffMap(payoffMap);
+
+    try {
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
+      setOrderDetails({
+        order,
+        orderLock,
+        orderPayoff,
+      });
+    } catch (error) {
+      console.error('Order estimation for earn failed', error);
+    }
+  };
 
   return (
     <div>
@@ -43,7 +304,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={buyOrSell}
             name='buyOrSellCompact'
             orientation='vertical'
-            // onChange={}
+            onChange={value => handleBuyOrSellChange(value as 'buy' | 'sell')}
           />
           <RadioButton
             options={[
@@ -53,7 +314,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={upOrDown}
             name='upOrDownCompact'
             orientation='vertical'
-            // onChange={}
+            onChange={value => handleUpOrDownChange(value as 'up' | 'down')}
           />
           <RadioButton
             options={[
@@ -63,7 +324,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={inOrOut}
             name='inOrOutCompact'
             orientation='vertical'
-            // onChange={}
+            onChange={value => handleInOrOutChange(value as 'in' | 'out')}
           />
         </Flex>
       ) : (
@@ -78,7 +339,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                 ]}
                 name='callOrPut'
                 selectedOption={callOrPut}
-                onChange={value => console.log(value)}
+                onChange={value => handleCallOrPutChange(value as 'call' | 'put')}
               />
             </div>
             <div>
@@ -92,7 +353,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                   selectedOption={buyOrSell}
                   name='buyOrSell'
                   orientation='vertical'
-                  // onChange={}
+                  onChange={value => handleBuyOrSellChange(value as 'buy' | 'sell')}
                 />
                 <RadioButton
                   options={[
@@ -102,13 +363,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                   selectedOption={upOrDown}
                   name='upOrDown'
                   orientation='vertical'
-                  // onChange={}
+                  onChange={value => handleUpOrDownChange(value as 'up' | 'down')}
                 />
               </Flex>
             </div>
             <div>
               <label className={styles.label}>Strike</label>
-              <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} />
+              <DropdownMenu
+                options={strikes.map(strike => ({ name: strike, value: strike }))}
+                value={strike ? { name: strike, value: strike } : undefined}
+                onChange={handleStrikeChange}
+              />
             </div>
             <div className={styles.collateralWrapper}>Knock</div>
             <div className={styles.collateralWrapper}>
@@ -120,23 +385,32 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                 selectedOption={inOrOut}
                 name='inOrOut'
                 orientation='vertical'
-                // onChange={}
+                onChange={value => handleInOrOutChange(value as 'in' | 'out')}
               />
             </div>
             <div className={styles.collateralWrapper}>@</div>
             <div>
               <label className={styles.label}>Barrier</label>
-              <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} />
+              <DropdownMenu
+                options={barrierStrikes.map(strike => ({ name: strike, value: strike }))}
+                value={barrier ? { name: barrier, value: barrier } : undefined}
+                onChange={handleBarrierChange}
+              />
             </div>
             <div className={styles.inputWrapper}>
-              <Input id='in' label='Size' type='number' />
+              <Input
+                label='Size'
+                type='number'
+                value={size}
+                onChange={({ target }) => handleSizeChange(target.value)}
+              />
             </div>
           </Flex>
           <div className={styles.calculationWrapper}>
             <div className={styles.calculation}>
               Total Premium
               <div className={styles.amountWrapper}>
-                <span className={styles.amount}>400</span>
+                <span className={styles.amount}>{orderDetails?.order.totalNetPrice}</span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
               </div>
@@ -166,7 +440,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>
