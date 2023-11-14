@@ -107,6 +107,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
+    setMinimumPosition(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
@@ -126,6 +127,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updatePosition = (val: number) => {
     if (val > minimumPosition) {
+
       setMinimumPosition(val);
       // setTimeout(() => {
       // }, 5);
@@ -235,14 +237,14 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <Label
                   content={
                     <>
-                      <text x={10} y={minimumPosition - 10} fill='#FF3F57' fontSize={10} textAnchor='left'>
+                      <text x={10} y={minimumPosition + 5} fill='#FF3F57' fontSize={10} textAnchor='left'>
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
                           ? '+' + '' + Math.round(minimize)
                           : '' + Math.round(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition - 23} />}
+                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition - 8} />}
                     </>
                   }
                   position='insideBottom'
