@@ -19,6 +19,7 @@ type KeysProps = {
 const Key = (props: KeysProps) => {
   const { keys, onChange, onDashed } = props;
   const [keyMap, setKeyMap] = useState<KeyType[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selected, setSelected] = useState<KeyType>({ label: 'total', type: 'leg1' });
 
   useEffect(() => {
