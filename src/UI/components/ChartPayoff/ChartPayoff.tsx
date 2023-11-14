@@ -63,6 +63,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [key, setKey] = useState<string[]>(['total']);
   const [color, setColor] = useState<string>('#4bb475');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
+  const [minimumPosition, setMinimumPosition] = useState<number>(0);
   const baseValue = 0;
   const colorArray = [
     '#4bb475',
@@ -121,6 +122,15 @@ const ChartPayoff = (props: ChartDataProps) => {
     setTimeout(() => {
       setChangeVal(Math.round(val));
     }, 10);
+  };
+
+  const updatePosition = (val: number) => {
+    console.log(val, '------------------', minimumPosition);
+    if (val > minimumPosition) {
+      setMinimumPosition(val);
+      // setTimeout(() => {
+      // }, 5);
+    }
   };
 
   const handleResize = (width: number) => {
@@ -191,6 +201,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                     dataSize={modifiedData.length}
                     special={breakPoints}
                     dataList={modifiedData}
+                    updatePosition={updatePosition}
                   />
                 }
                 activeDot={false}
@@ -225,14 +236,14 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <Label
                   content={
                     <>
-                      <text x={10} y={height - 50} fill='#FF3F57' fontSize={10} textAnchor='left'>
+                      <text x={10} y={minimumPosition - 10} fill='#FF3F57' fontSize={10} textAnchor='left'>
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
                           ? '+' + '' + Math.round(minimize)
                           : '' + Math.round(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={60} y={height - 63} />}
+                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition - 23} />}
                     </>
                   }
                   position='insideBottom'
