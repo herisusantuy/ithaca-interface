@@ -254,8 +254,12 @@
   @include font-size('text-xxs', 'regular');
 }
 
-.u-full-width {
+.full-width {
   width: 100% !important;
+}
+
+.full-height {
+  height: 100% !important;
 }
 
 .width-50 {
@@ -265,4 +269,8 @@
 
 .recharts-layer path:focus {
   outline: none;
+}
+
+.align-stretch {
+  align-items: stretch !important;
 }

@@ -1,4 +1,5 @@
 // Packages
+import { useState } from 'react';
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Sector, Tooltip } from 'recharts';
 
 // Constants
@@ -11,7 +12,6 @@ import ChartTooltip from './ChartTooltip';
 
 // Styles
 import styles from './ChartOpenInterest.module.scss';
-import { useState } from 'react';
 
 // Types
 type ChartOpenInterestProps = {
@@ -98,7 +98,7 @@ const ChartOpenInterest = ({ data }: ChartOpenInterestProps) => {
     <>
       <div className={styles.pieContainer}>
         <div className={styles.waterMark}>{renderLabel()}</div>
-        <ResponsiveContainer className={styles.container} width='100%' height={400}>
+        <ResponsiveContainer className={styles.container} width='100%' height={600}>
           <PieChart>
             <Legend layout='vertical' verticalAlign='top' align='right' content={<ChartLegend />} />
             <defs>

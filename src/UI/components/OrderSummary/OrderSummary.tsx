@@ -22,7 +22,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, fee, subm
   return (
     <Panel margin='br-22 p-20 mt-116'>
       <Flex direction='row-space-between' gap='gap-24'>
-        <h3 className='mb-0 u-full-width'>Order Summary</h3>
+        <h3 className='mb-0 full-width'>Order Summary</h3>
         <Flex direction='column' gap='gap-6'>
           <h5>Order Limit</h5>
           <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
