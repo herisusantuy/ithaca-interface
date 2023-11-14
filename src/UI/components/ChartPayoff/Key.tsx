@@ -12,7 +12,7 @@ import styles from './ChartPayoff.module.scss';
 
 type KeysProps = {
   keys: string[];
-  onChange: (key: KeyType) => void;
+  onChange?: (key: KeyType) => void;
   onDashed: (label: string) => void;
 };
 
@@ -23,7 +23,23 @@ const Key = (props: KeysProps) => {
 
   useEffect(() => {
     const keyArray: KeyType[] = [];
-    const dotArray: DotTypes[] = ['leg1', 'leg2', 'leg3', 'leg4', 'leg5', 'leg6', 'leg7', 'leg8', 'leg9', 'leg10', 'leg11', 'leg12', 'leg13', 'leg14', 'leg15'];
+    const dotArray: DotTypes[] = [
+      'leg1',
+      'leg2',
+      'leg3',
+      'leg4',
+      'leg5',
+      'leg6',
+      'leg7',
+      'leg8',
+      'leg9',
+      'leg10',
+      'leg11',
+      'leg12',
+      'leg13',
+      'leg14',
+      'leg15',
+    ];
 
     keys.map(item => {
       if (item == 'total') {
@@ -46,14 +62,13 @@ const Key = (props: KeysProps) => {
 
   // Change Label
   const updateChange = (key: KeyType) => {
-    setSelected(key);
-    onChange(key);
+    // setSelected(key);
+    if (onChange) onChange(key);
   };
 
-  const showDashedLine = (label: string) => { 
+  const showDashedLine = (label: string) => {
     onDashed(label);
-    
-  }
+  };
 
   return (
     <div className={styles.container}>

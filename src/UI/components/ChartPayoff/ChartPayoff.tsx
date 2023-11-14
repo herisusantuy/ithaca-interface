@@ -256,7 +256,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </XAxis>
             </AreaChart>
           </ResponsiveContainer>
-          {showKeys && <Key keys={key} onChange={setBridge} onDashed={setDashed} />}
+          {showKeys && <Key keys={key} onDashed={setDashed} />}
         </>
       )}
     </>
