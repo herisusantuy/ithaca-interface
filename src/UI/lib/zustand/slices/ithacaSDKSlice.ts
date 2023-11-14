@@ -12,7 +12,7 @@ export interface AuctionTimes {
   milliseconds: number;
 }
 
-interface ContractDetails {
+export interface ContractDetails {
   [strike: string]: Contract & ReferencePrice;
 }
 

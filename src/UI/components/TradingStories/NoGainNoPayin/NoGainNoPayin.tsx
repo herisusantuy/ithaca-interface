@@ -3,18 +3,131 @@ import React, { useState } from 'react';
 import styles from './NoGainNoPayin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { TradingStoriesProps } from '..';
+import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
 import Button from '../../Button/Button';
 import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 import Input from '../../Input/Input';
 import RadioButton from '../../RadioButton/RadioButton';
+import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { useAppStore } from '@/UI/lib/zustand/store';
+import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
+  const callContracts = getContractsByPayoff('Call');
+  const putContracts = getContractsByPayoff('Put');
+  const binaryCallContracts = getContractsByPayoff('BinaryCall');
+  const binaryPutContracts = getContractsByPayoff('BinaryPut');
+
   const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
+  const [priceReference, setPriceReference] = useState<string>();
+  const [maxPotentialLoss, setMaxPotentialLoss] = useState('');
+  const [multiplier, setMultiplier] = useState('');
+  const [orderDetails, setOrderDetails] = useState<OrderDetails>();
+  const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  const handleCallOrPutChange = async (callOrPut: 'call' | 'put') => {
+    setCallOrPut(callOrPut);
+    if (!priceReference) return;
+    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
+  };
+
+  const handleMaxPotentialLossChange = async (amount: string) => {
+    const maxPotentialDownside = getNumberValue(amount);
+    if (!priceReference) return;
+    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier), getNumber(maxPotentialDownside));
+  };
+
+  const handleMultiplierChange = async (amount: string) => {
+    const multiplier = getNumberValue(amount);
+    setMultiplier(multiplier);
+    if (!priceReference) return;
+    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
+  };
+
+  const handlePriceReferenceChange = async (
+    priceReference: string,
+    callOrPut: 'call' | 'put',
+    multiplier: number,
+    maxPotentialLoss?: number
+  ) => {
+    if (isInvalidNumber(multiplier) || (maxPotentialLoss && isInvalidNumber(maxPotentialLoss))) {
+      setOrderDetails(undefined);
+      setPayoffMap(undefined);
+      return;
+    }
+
+    const buyContracts = callOrPut === 'call' ? callContracts : putContracts;
+    const sellContracts = callOrPut === 'call' ? binaryCallContracts : binaryPutContracts;
+    const buyContractId = buyContracts[priceReference].contractId;
+    const sellContractId = sellContracts[priceReference].contractId;
+    const buyContractRefPrice = buyContracts[priceReference].referencePrice;
+    const sellContractRefPrice = sellContracts[priceReference].referencePrice;
+
+    let sizeMultipier = multiplier;
+    let downside = toPrecision((multiplier * buyContractRefPrice) / sellContractRefPrice, currencyPrecision.strike);
+
+    if (maxPotentialLoss) {
+      sizeMultipier = toPrecision(
+        (maxPotentialLoss * sellContractRefPrice) / buyContractRefPrice,
+        currencyPrecision.strike
+      );
+      downside = maxPotentialLoss;
+    }
+
+    const buyLeg: Leg = { contractId: buyContractId, quantity: `${sizeMultipier}`, side: 'BUY' };
+    const sellLeg: Leg = { contractId: sellContractId, quantity: `${downside}`, side: 'SELL' };
+
+    const order: ClientConditionalOrder = {
+      clientOrderId: createClientOrderId(),
+      totalNetPrice: calculateNetPrice(
+        [buyLeg, sellLeg],
+        [buyContractRefPrice, sellContractRefPrice],
+        currencyPrecision.strike
+      ),
+      legs: [buyLeg, sellLeg],
+    };
+
+    const payoffMap = estimateOrderPayoff([
+      {
+        ...buyContracts[priceReference],
+        ...buyLeg,
+        premium: buyContracts[priceReference].referencePrice,
+      },
+      {
+        ...sellContracts[priceReference],
+        ...sellLeg,
+        premium: sellContracts[priceReference].referencePrice,
+      },
+    ]);
+    setPayoffMap(payoffMap);
+    setMaxPotentialLoss(`${downside}`);
+
+    try {
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
+      setOrderDetails({
+        order,
+        orderLock,
+        orderPayoff,
+      });
+    } catch (error) {
+      console.error('Order estimation for earn failed', error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!orderDetails) return;
+    try {
+      await ithacaSDK.orders.newOrder(orderDetails.order, 'No Gain, No Payin’');
+    } catch (error) {
+      console.error('Failed to submit order', error);
+    }
+  };
 
   return (
     <div>
@@ -51,7 +164,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               ]}
               selectedOption={callOrPut}
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
-              // onChange={}
+              onChange={value => handleCallOrPutChange(value as 'call' | 'put')}
             />
           </div>
           {!compact && (
@@ -61,16 +174,31 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                   <LogoEth />
                   Price Reference
                 </label>
-                <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} />
+                <DropdownMenu
+                  options={Object.keys(callContracts).map(strike => ({ name: strike, value: strike }))}
+                  value={priceReference ? { name: priceReference, value: priceReference } : undefined}
+                  onChange={value => {
+                    setPriceReference(value);
+                    handlePriceReferenceChange(value, callOrPut, getNumber(multiplier));
+                  }}
+                />
               </div>
               <div>
                 <label className={styles.label}>Max Potential Loss</label>
-                <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} />
+                <Input
+                  type='number'
+                  value={maxPotentialLoss}
+                  onChange={({ target }) => handleMaxPotentialLossChange(target.value)}
+                />
               </div>
               <div className={styles.priceReference}>
                 Price Reference + Min Upside | Max Loss
                 <div className={styles.amountWrapper}>
-                  <span className={styles.amount}>125</span>
+                  <span className={styles.amount}>
+                    {priceReference &&
+                      !isInvalidNumber(getNumber(maxPotentialLoss)) &&
+                      toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)}
+                  </span>
                   <LogoUsdc />
                   <span className={styles.currency}>USDC</span>
                 </div>
@@ -81,12 +209,21 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         {!compact && (
           <Flex gap='gap-15'>
             <div className={styles.inputWrapper}>
-              <Input id='in' label='Size (Multiplier)' type='number' />
+              <Input
+                label='Size (Multiplier)'
+                type='number'
+                value={multiplier}
+                onChange={({ target }) => handleMultiplierChange(target.value)}
+              />
             </div>
             <div className={styles.collateralWrapper}>
               Collateral
               <div className={styles.amountWrapper}>
-                <span className={styles.amount}>1000</span>
+                <span className={styles.amount}>
+                  {!isInvalidNumber(getNumber(multiplier)) &&
+                    !isInvalidNumber(getNumber(maxPotentialLoss)) &&
+                    toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike)}
+                </span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
               </div>
@@ -96,7 +233,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       </Flex>
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
       </div>
       {!compact && (
         <div className={styles.orderSummary}>
@@ -116,7 +253,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               <small>USDC</small>
             </div>
           </div>
-          <Button size='sm' title='Click to submit to auction'>
+          <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
             Submit to Auction
           </Button>
         </div>
