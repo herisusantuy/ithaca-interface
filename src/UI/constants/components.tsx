@@ -52,6 +52,7 @@ import ChartTradingVolume from '@/UI/components/ChartTradingVolume/ChartTradingV
 import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenInterest';
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
+import Card from '@/UI/components/Card/Card';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -59,6 +60,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Header from '@/UI/layouts/Header/Header';
 import Main from '@/UI/layouts/Main/Main';
 import Panel from '@/UI/layouts/Panel/Panel';
+import ToastTest from '@/UI/components/Toast/ToastTest';
 
 // Constants
 import { MODAL_TABS, TABS } from './tabs';
@@ -71,7 +73,7 @@ import { CHART_TRADING_VOLUME_DATA } from './charts/chartTradingVolume';
 import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
 import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_DATA } from './charts/chartMaxPain';
-import ToastTest from '../components/Toast/ToastTest';
+import { LEADERBOARD_CARDS } from './leaderboard';
 
 const COMPONENT_GROUPS = [
   {
@@ -204,6 +206,17 @@ const COMPONENT_GROUPS = [
           </>
         ),
         status: 'Approved',
+      },
+      {
+        name: 'Card',
+        component: (
+          <Flex direction='row-space-between' gap='gap-15'>
+            {LEADERBOARD_CARDS.map((data, index) => (
+              <Card key={index} {...data} />
+            ))}
+          </Flex>
+        ),
+        status: 'To Review',
       },
       {
         name: 'CheckBox',
@@ -479,10 +492,10 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChartOpenInterest',
         component: (
-            <Panel margin='ptb-24 plr-30'>
-              <h3 className='mb-18'>Open Interest</h3>
-              <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
-            </Panel>
+          <Panel margin='ptb-24 plr-30'>
+            <h3 className='mb-18'>Open Interest</h3>
+            <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
+          </Panel>
         ),
         status: 'In Progress',
       },
