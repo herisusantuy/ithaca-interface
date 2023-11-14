@@ -1,6 +1,6 @@
 // Packages
 import { useEffect, useState } from 'react';
-import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, YAxis } from 'recharts';
 
 // Components
 import CustomTooltip from '@/UI/components/ChartPayoff/CustomTooltip';
@@ -19,6 +19,7 @@ import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalC
 // Utils
 import {
   breakPointList,
+  findOverallMinMaxValues,
   getLegs,
   gradientOffset,
   isDecrementing,
@@ -34,6 +35,11 @@ type ChartDataProps = {
   showKeys?: boolean;
   showPortial?: boolean;
   showUnlimited?: boolean;
+};
+
+type DomainType = {
+  min: number;
+  max: number;
 };
 
 // Styles
@@ -56,6 +62,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
   const [color, setColor] = useState<string>('#4bb475');
+  const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const baseValue = 0;
   const colorArray = [
     '#4bb475',
@@ -82,6 +89,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
+    setDomain(findOverallMinMaxValues(chartData));
     const tempData = makingChartData(chartData, bridge.label, dashed);
     const colorIndex = getNumber(bridge.type.replace('leg', ''));
     setColor(colorArray[colorIndex - 1]);
@@ -98,7 +106,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
   // mouse move handle events
@@ -162,6 +170,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
                 </linearGradient>
               </defs>
+              <YAxis type='number' domain={[domain.min, domain.max]} hide={true} />
               <Area
                 type='linear'
                 stroke='url(#lineGradient)'

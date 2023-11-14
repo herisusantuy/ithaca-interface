@@ -110,3 +110,22 @@ export const getLegs = (data: any[]) => {
   const keys = Object.keys(data[0]).filter(item => !['x'].includes(item));
   return keys;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const findOverallMinMaxValues = (data: any) => {
+    let overallMin = Infinity;
+    let overallMax = -Infinity;
+
+    // Iterate over the data array to find overall min and max values
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data.forEach((entry: any) => {
+        Object.keys(entry).forEach(key => {
+            if (key !== 'x') {
+                overallMin = Math.min(overallMin, entry[key]);
+                overallMax = Math.max(overallMax, entry[key]);
+            }
+        });
+    });
+
+    return { min: overallMin, max: overallMax };
+}
