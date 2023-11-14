@@ -31,7 +31,6 @@ export const gradientOffset = (data: PayoffDataProps[]) => {
   if (max - Math.abs(min) == 0) {
     return 0;
   }
-  console.log(max / (max - min));
   return max / (max - min);
 };
 

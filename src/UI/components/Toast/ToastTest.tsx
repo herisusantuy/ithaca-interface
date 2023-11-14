@@ -1,8 +1,13 @@
-import { ToastItemProp, generateTestData } from '@/UI/constants/toast';
-import Button from '../Button/Button';
-import Toast from './Toast';
+// Load packages
 import { useState } from 'react';
+
+// Load components
+import Button from '@/UI/components/Button/Button';
+import Toast from './Toast';
 import Flex from '@/UI/layouts/Flex/Flex';
+
+// Load constants
+import { ToastItemProp, generateTestData } from '@/UI/constants/toast';
 
 const ToastTest = () => {
   const [position, setPosition] = useState('top-right');

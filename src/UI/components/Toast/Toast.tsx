@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import styles from './Toast.module.scss';
-import Close from '../Icons/Close';
+import Close from '@/UI/components/Icons/Close';
 import { ToastItemProp } from '@/UI/constants/toast';
 
 type ToastPropType = {
   toastList: ToastItemProp[];
-  //   position: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left';
   position: string;
   autoDelete?: boolean;
   autoDeleteTime?: number;
@@ -19,7 +18,6 @@ const Toast = (Props: ToastPropType) => {
 
   useEffect(() => {
     setList([...toastList]);
-    console.log(list);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastList]);
 
