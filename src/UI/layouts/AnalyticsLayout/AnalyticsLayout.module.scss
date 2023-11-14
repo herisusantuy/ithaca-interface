@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  align-items: stretch;
+  gap: rem(15);
+  @include spacing(margin, 15, 'bottom');
+}
+
+.leftPanel {
+  width: 25%;
+}
+
+.rightPanel {
+  width: 75%;
+}

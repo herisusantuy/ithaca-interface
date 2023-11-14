@@ -1,0 +1,95 @@
+.container {
+  @include spacing(padding, 32, 'left+right');
+  @include spacing(padding, 24, 'top+bottom');
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    border-radius: rem(30);
+    top: -(rem(1));
+    bottom: -(rem(1));
+    right: -(rem(1));
+    left: -(rem(1));
+    z-index: -1;
+    border: rem(1) solid transparent;
+    background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+
+  &:after {
+    content: '';
+    background-image: url('../../../assets/noise.png');
+    background-repeat: repeat;
+    position: absolute;
+    opacity: 0.4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: rem(30);
+  }
+
+  > * {
+    z-index: 1;
+    position: relative;
+  }
+}
+
+.title {
+  @include font-size('text-md', 'semibold');
+  @include spacing(margin, 16, 'bottom');
+  font-family: $lato;
+  color: var(--white);
+}
+
+.data {
+  @include font-size('text-xl', 'regular');
+  @include spacing(margin, 4, 'bottom');
+  font-family: $roboto;
+  display: flex;
+  align-items: center;
+  gap: rem(5);
+  color: var(--white);
+
+  span {
+    @include font-size('text-xs', 'regular');
+    font-family: $lato;
+    display: flex;
+    align-items: center;
+    gap: rem(5);
+    color: var(--white-60);
+  }
+}
+
+.positive {
+  font-family: $roboto;
+  font-size: rem(16) !important;
+  color: var(--green-20) !important;
+}
+
+.negative {
+  font-family: $roboto;
+  font-size: rem(16) !important;
+  color: var(--red-20) !important;
+}
+
+.change,
+.change span {
+  display: flex;
+  align-items: center;
+  gap: rem(5);
+}
+
+.change span:last-child {
+  @include font-size('text-xs', 'regular');
+  font-family: $lato;
+  color: var(--white-60);
+}
