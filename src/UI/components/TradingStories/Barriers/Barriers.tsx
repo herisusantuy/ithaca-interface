@@ -23,7 +23,6 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
 
-  const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
   const [buyOrSell, setBuyOrSell] = useState<'buy' | 'sell'>('buy');
   const [upOrDown, setUpOrDown] = useState<'up' | 'down'>('up');
   const [inOrOut, setInOrOut] = useState<'in' | 'out'>('in');
@@ -52,16 +51,10 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     return strikeArr;
   }, []);
 
-  const handleCallOrPutChange = async (callOrPut: 'call' | 'put') => {
-    setCallOrPut(callOrPut);
-    if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
-  };
-
   const handleBuyOrSellChange = async (buyOrSell: 'buy' | 'sell') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleUpOrDownChange = async (upOrDown: 'up' | 'down') => {
@@ -74,30 +67,29 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const handleInOrOutChange = async (inOrOut: 'in' | 'out') => {
     setInOrOut(inOrOut);
     if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleStrikeChange = async (strike: string) => {
     setStrike(strike);
     if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleBarrierChange = async (barrier: string) => {
     setBarrier(barrier);
     if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleSizeChange = async (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike || !barrier) return;
-    prepareOrderLegs(callOrPut, buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const prepareOrderLegs = async (
-    callOrPut: 'call' | 'put',
     buyOrSell: 'buy' | 'sell',
     upOrDown: 'up' | 'down',
     strike: string,
@@ -121,12 +113,12 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyCallLeg: Leg = {
           contractId: buyCallContract.contractId,
           quantity: `${size}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         const buyBinaryCallLeg: Leg = {
           contractId: buyBinaryCallContract.contractId,
           quantity: `${size * (getNumber(barrier) - getNumber(strike))}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         legs = [buyCallLeg, buyBinaryCallLeg];
         referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
@@ -149,17 +141,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyCallLeg: Leg = {
           contractId: buyCallContract.contractId,
           quantity: `${size}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         const sellCallLeg: Leg = {
           contractId: sellCallContract.contractId,
           quantity: `${size}`,
-          side: 'SELL',
+          side: buyOrSell === 'buy' ? 'SELL' : 'BUY',
         };
         const sellBinaryCallLeg: Leg = {
           contractId: sellBinaryCallContract.contractId,
           quantity: `${size * (getNumber(barrier) - getNumber(strike))}`,
-          side: 'SELL',
+          side: buyOrSell === 'buy' ? 'SELL' : 'BUY',
         };
         legs = [buyCallLeg, sellCallLeg, sellBinaryCallLeg];
         referencePrices = [
@@ -192,12 +184,12 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyPutLeg: Leg = {
           contractId: buyPutContract.contractId,
           quantity: `${size}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         const buyBinaryPutLeg: Leg = {
           contractId: buyBinaryPutContract.contractId,
           quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         legs = [buyPutLeg, buyBinaryPutLeg];
         referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
@@ -220,17 +212,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyPutLeg: Leg = {
           contractId: buyPutContract.contractId,
           quantity: `${size}`,
-          side: 'BUY',
+          side: buyOrSell === 'buy' ? 'BUY' : 'SELL',
         };
         const sellPutLeg: Leg = {
           contractId: sellPutContract.contractId,
           quantity: `${size}`,
-          side: 'SELL',
+          side: buyOrSell === 'buy' ? 'SELL' : 'BUY',
         };
         const sellBinaryPutLeg: Leg = {
           contractId: sellBinaryPutContract.contractId,
           quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
-          side: 'SELL',
+          side: buyOrSell === 'buy' ? 'SELL' : 'BUY',
         };
         legs = [buyPutLeg, sellPutLeg, sellBinaryPutLeg];
         referencePrices = [
@@ -330,18 +322,6 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       ) : (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
           <Flex gap='gap-10'>
-            <div>
-              <label className={styles.label}>Type</label>
-              <RadioButton
-                options={[
-                  { option: 'Call', value: 'call' },
-                  { option: 'Put', value: 'put' },
-                ]}
-                name='callOrPut'
-                selectedOption={callOrPut}
-                onChange={value => handleCallOrPutChange(value as 'call' | 'put')}
-              />
-            </div>
             <div>
               <label className={styles.label}>Side</label>
               <Flex gap='gap-10'>
