@@ -68,3 +68,24 @@
   @include spacing(padding, 16, 'top');
   text-align: center;
 }
+
+.sort {
+  @include spacing(padding, 4, 'all');
+  background: none;
+  height: auto;
+  border-radius: rem(4);
+
+  &:before {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--white-5);
+  }
+}
+
+.sort {
+  svg path {
+    stroke: inherit;
+  }
+}
