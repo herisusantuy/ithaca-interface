@@ -125,7 +125,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    console.log(val, '------------------', minimumPosition);
     if (val > minimumPosition) {
       setMinimumPosition(val);
       // setTimeout(() => {
