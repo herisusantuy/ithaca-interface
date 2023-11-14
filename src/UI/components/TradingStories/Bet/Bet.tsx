@@ -13,8 +13,8 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { ClientConditionalOrder, Leg, Payoff, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 import RadioButton from '../../RadioButton/RadioButton';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, ithacaSDK, getContractsByPayoff } = useAppStore();
@@ -45,6 +45,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     if (isInvalidNumber(capitalAtRisk)) {
       setTargetEarn('');
       setOrderDetails(undefined);
+      setPayoffMap(undefined);
       return;
     }
 
@@ -95,9 +96,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       { ...maxContract, ...legMax, premium: maxContract.referencePrice },
     ]);
     setPayoffMap(payoffMap);
+    setTargetEarn(quantity);
 
     try {
-      const orderLock = await ithacaSDK.calculation.estimateOrderPayoff(order);
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
       const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
@@ -107,8 +109,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     } catch (error) {
       console.error('Order estimation for bet failed', error);
     }
-
-    setTargetEarn(quantity);
   };
 
   const handleSubmit = async () => {
