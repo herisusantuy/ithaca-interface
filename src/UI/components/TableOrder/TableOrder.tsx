@@ -62,6 +62,7 @@ import styles from './TableOrder.module.scss';
 type TableOrderProps = {
   type?: TABLE_TYPE;
   cancelOrder?: boolean;
+  description?: boolean;
 };
 
 export enum TABLE_TYPE {
@@ -70,7 +71,7 @@ export enum TABLE_TYPE {
   TRADE,
 }
 
-const TableOrder = ({ type, cancelOrder = true }: TableOrderProps) => {
+const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrderProps) => {
   // Cancel order state
   const [data, setData] = useState<TableRowDataWithExpanded[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -520,13 +521,17 @@ const TableOrder = ({ type, cancelOrder = true }: TableOrderProps) => {
       </div>
       {slicedData.length > 0 ? (
         <Flex direction='row-space-between' margin='mt-35'>
-          <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
-            totalCollateral={30}
-          />
+          {description ? (
+            <TableDescription
+              possibleReleaseX={10}
+              possibleReleaseY={20}
+              postOptimisationX={8}
+              postOptimisationY={18}
+              totalCollateral={30}
+            />
+          ) : (
+            <div />
+          )}
           <Pagination
             totalItems={data.length}
             itemsPerPage={pageLimit}
