@@ -16,6 +16,13 @@ p {
   color: var(--white);
 }
 
+h1 {
+  color: var(--white);
+  font-family: $lato;
+  @include font-size('text-xl', 'semibold');
+  @include spacing(margin, 24, 'bottom');
+}
+
 h3 {
   @include font-size('text-md', 'semibold');
   @include spacing(margin, 15, 'bottom');
