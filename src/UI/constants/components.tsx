@@ -53,6 +53,7 @@ import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenIntere
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
+import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -74,6 +75,7 @@ import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
 import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_DATA } from './charts/chartMaxPain';
 import { LEADERBOARD_CARDS } from './leaderboard';
+import { TABLE_LEADERBOARD_DATA } from './tableLeaderboard';
 
 const COMPONENT_GROUPS = [
   {
@@ -461,6 +463,15 @@ const COMPONENT_GROUPS = [
         component: (
           <Panel margin='p-30'>
             <TableOrder />
+          </Panel>
+        ),
+        status: 'To Review',
+      },
+      {
+        name: 'TableLeaderboard',
+        component: (
+          <Panel margin='p-30'>
+            <TableLeaderboard data={TABLE_LEADERBOARD_DATA} />
           </Panel>
         ),
         status: 'To Review',
