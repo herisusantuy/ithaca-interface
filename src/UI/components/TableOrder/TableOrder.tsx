@@ -1,7 +1,6 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useWalletClient } from 'wagmi';
 import dayjs from 'dayjs';
 
 // Lib
@@ -51,17 +50,18 @@ import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
 import Sort from '@/UI/components/Icons/Sort';
 import Filter from '@/UI/components/Icons/Filter';
 import CheckBox from '@/UI/components/CheckBox/CheckBox';
+import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
 
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableOrder.module.scss';
-import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 
 // Types
 type TableOrderProps = {
   type?: TABLE_TYPE;
+  cancelOrder?: boolean;
 };
 
 export enum TABLE_TYPE {
@@ -70,7 +70,7 @@ export enum TABLE_TYPE {
   TRADE,
 }
 
-const TableOrder = ({ type }: TableOrderProps) => {
+const TableOrder = ({ type, cancelOrder = true }: TableOrderProps) => {
   // Cancel order state
   const [data, setData] = useState<TableRowDataWithExpanded[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -487,13 +487,15 @@ const TableOrder = ({ type }: TableOrderProps) => {
                   </div>
                   <div className={styles.cell}>{row.orderLimit}</div>
                   <div className={styles.cell}>
-                    <Button
-                      title='Click to cancel order'
-                      className={styles.delete}
-                      onClick={() => handleCancelOrderClick(rowIndex)}
-                    >
-                      <Delete />
-                    </Button>
+                    {cancelOrder && (
+                      <Button
+                        title='Click to cancel order'
+                        className={styles.delete}
+                        onClick={() => handleCancelOrderClick(rowIndex)}
+                      >
+                        <Delete />
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <AnimatePresence>
