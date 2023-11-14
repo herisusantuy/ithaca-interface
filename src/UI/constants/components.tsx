@@ -479,10 +479,10 @@ const COMPONENT_GROUPS = [
       {
         name: 'ChartOpenInterest',
         component: (
-          <Panel margin='ptb-24 plr-30'>
-            <h3 className='mb-18'>Open Interest</h3>
-            <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
-          </Panel>
+            <Panel margin='ptb-24 plr-30'>
+              <h3 className='mb-18'>Open Interest</h3>
+              <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
+            </Panel>
         ),
         status: 'In Progress',
       },
