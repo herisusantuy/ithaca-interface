@@ -1,21 +1,23 @@
-// Components
-import Meta from '@/UI/components/Meta/Meta';
-import Card from '@/UI/components/Card/Card';
+// Constants
+import { LEADERBOARD_CARDS } from '@/UI/constants/leaderboard';
 
 // Layout
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Flex from '@/UI/layouts/Flex/Flex';
-import { LEADERBOARD_CARDS } from '@/UI/constants/leaderboard';
+
+// Components
+import Meta from '@/UI/components/Meta/Meta';
+import Card from '@/UI/components/Card/Card';
 
 const Leaderboard = () => {
   return (
     <>
       <Meta />
       <Main>
-        <Container>
+        <Container margin='mb-15'>
           <h1>Leaderboard</h1>
-          <Flex>
+          <Flex direction='row-space-between' gap='gap-15'>
             {LEADERBOARD_CARDS.map((data, index) => (
               <Card key={index} {...data} />
             ))}

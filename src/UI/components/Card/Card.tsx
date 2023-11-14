@@ -30,10 +30,10 @@ const Card = ({ title, address, label, value, icon, currency }: CardProps) => {
       </div>
       <div className={styles.data}>
         <p>{label}</p>
-        <Flex>
-          <span>{value}</span>
+        <Flex gap='gap-5' direction='row-center'>
+          <span className={styles.value}>{value}</span>
           {icon && icon}
-          {currency && currency}
+          <span>{currency && currency}</span>
         </Flex>
       </div>
     </div>
