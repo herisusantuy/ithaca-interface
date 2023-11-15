@@ -32,6 +32,6 @@ export const formatNumber = (value: number, type: string) => {
   } else if (value > 1000) {
     return (value / 1000).toFixed(1) + 'k';
   } else {
-    return type == 'int' ? value.toString() : value.toFixed(1).toString();
+    return type == 'int' ? Math.round(value).toString() : value.toFixed(1).toString();
   }
 };
