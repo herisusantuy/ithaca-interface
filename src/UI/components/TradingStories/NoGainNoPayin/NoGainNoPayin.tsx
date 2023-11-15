@@ -5,7 +5,6 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
-import Button from '../../Button/Button';
 import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import Input from '../../Input/Input';
@@ -15,6 +14,7 @@ import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import StorySummary from '../StorySummary/StorySummary';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -23,14 +23,14 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
 
-  const [callOrPut, setCallOrPut] = useState<'call' | 'put'>('call');
+  const [callOrPut, setCallOrPut] = useState<'CALL' | 'PUT'>('CALL');
   const [priceReference, setPriceReference] = useState<string>();
   const [maxPotentialLoss, setMaxPotentialLoss] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const handleCallOrPutChange = async (callOrPut: 'call' | 'put') => {
+  const handleCallOrPutChange = async (callOrPut: 'CALL' | 'PUT') => {
     setCallOrPut(callOrPut);
     if (!priceReference) return;
     await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
@@ -51,7 +51,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
 
   const handlePriceReferenceChange = async (
     priceReference: string,
-    callOrPut: 'call' | 'put',
+    callOrPut: 'CALL' | 'PUT',
     multiplier: number,
     maxPotentialLoss?: number
   ) => {
@@ -61,8 +61,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       return;
     }
 
-    const buyContracts = callOrPut === 'call' ? callContracts : putContracts;
-    const sellContracts = callOrPut === 'call' ? binaryCallContracts : binaryPutContracts;
+    const buyContracts = callOrPut === 'CALL' ? callContracts : putContracts;
+    const sellContracts = callOrPut === 'CALL' ? binaryCallContracts : binaryPutContracts;
     const buyContractId = buyContracts[priceReference].contractId;
     const sellContractId = sellContracts[priceReference].contractId;
     const buyContractRefPrice = buyContracts[priceReference].referencePrice;
@@ -116,7 +116,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         orderPayoff,
       });
     } catch (error) {
-      console.error('Order estimation for earn failed', error);
+      console.error('Order estimation for No Gain, No Payin’ failed', error);
     }
   };
 
@@ -158,13 +158,14 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
           <div>
             {!compact && <label className={styles.label}>Type</label>}
             <RadioButton
+              width={compact ? 0 : 225}
               options={[
-                { option: 'Call', value: 'call' },
-                { option: 'Put', value: 'put' },
+                { option: 'Call', value: 'CALL' },
+                { option: 'Put', value: 'PUT' },
               ]}
               selectedOption={callOrPut}
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
-              onChange={value => handleCallOrPutChange(value as 'call' | 'put')}
+              onChange={value => handleCallOrPutChange(value as 'CALL' | 'PUT')}
             />
           </div>
           {!compact && (
@@ -208,13 +209,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         </Flex>
         {!compact && (
           <Flex gap='gap-15'>
-            <div className={styles.inputWrapper}>
-              <Input
-                label='Size (Multiplier)'
-                type='number'
-                value={multiplier}
-                onChange={({ target }) => handleMultiplierChange(target.value)}
-              />
+            <div>
+              <label className={styles.label}>Size (Multiplier)</label>
+              <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </div>
             <div className={styles.collateralWrapper}>
               Collateral
@@ -233,31 +230,14 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       </Flex>
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
       </div>
-      {!compact && (
-        <div className={styles.orderSummary}>
-          <div className={styles.summary}>
-            <h5>Total Premium</h5>
-            <div className={styles.summaryInfoWrapper}>
-              <h3>{1500}</h3>
-              <LogoUsdc />
-              <p>USDC</p>
-            </div>
-          </div>
-          <div className={styles.summary}>
-            <h6>Platform Fee</h6>
-            <div className={styles.summaryInfoWrapper}>
-              <small>{1.5}</small>
-              <LogoUsdc />
-              <small>USDC</small>
-            </div>
-          </div>
-          <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
-            Submit to Auction
-          </Button>
-        </div>
-      )}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
 };

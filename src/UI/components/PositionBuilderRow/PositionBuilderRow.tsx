@@ -24,7 +24,13 @@ import Panel from '@/UI/layouts/Panel/Panel';
 
 // Styles
 import styles from './PositionBuilderRow.module.scss';
-import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import {
+  ClientConditionalOrder,
+  Leg,
+  calculateNetPrice,
+  createClientOrderId,
+  calcCollateralRequirement,
+} from '@ithaca-finance/sdk';
 import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 
 type PositionBuilderRowProps = {
@@ -41,7 +47,7 @@ type SectionType = {
 
 const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: PositionBuilderRowProps) => {
   // Store
-  const { currencyPrecision, currentExpiryDate, expiryList, ithacaSDK, getContractsByPayoff, getContractsByExpiry } =
+  const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
     useAppStore();
 
   // State
@@ -88,7 +94,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
     setUnitPrice(`${contracts[strike].referencePrice}`);
   };
 
-  const calcCollateralRequirement = () => {
+  const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';
     const leg = {
       contractId: contracts[strike].contractId,
@@ -100,7 +106,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
       leg.contractId = forwardContracts[strike].contractId;
     }
-    return ithacaSDK.calculation.calcCollateralRequirement(
+    return calcCollateralRequirement(
       leg,
       title === 'Forwards' ? 'Forward' : payoff,
       getNumber(strike),
@@ -120,7 +126,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
       leg.contractId = forwardContracts[strike].contractId;
     }
-    return ithacaSDK.calculation.calcPremium(leg, getNumber(unitPrice), currencyPrecision.strike);
+    return calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike);
   };
 
   return (
@@ -192,7 +198,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
             />
           </div>
           <div className={styles.collateral}>
-            <PriceLabel label={calcCollateralRequirement()} icon={<LogoEth />} />
+            <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
           </div>
           <div className={styles.premium}>
             <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />

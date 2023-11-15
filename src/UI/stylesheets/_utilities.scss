@@ -28,6 +28,10 @@
   gap: rem(3) !important;
 }
 
+.gap-4 {
+  gap: rem(4) !important;
+}
+
 .gap-5 {
   gap: rem(5) !important;
 }
@@ -132,6 +136,10 @@
   margin-bottom: rem(32) !important;
 }
 
+.mb-34 {
+  margin-bottom: rem(34) !important;
+}
+
 .mt-32 {
   margin-top: rem(32) !important;
 }
@@ -219,6 +227,11 @@
 
 .nowrap {
   white-space: nowrap;
+}
+
+.p-10 {
+  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'top+bottom');
 }
 
 .p-20 {

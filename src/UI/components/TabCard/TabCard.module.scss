@@ -23,7 +23,7 @@
 
 .tab {
   @include spacing(padding, 24, 'left+right');
-  @include spacing(padding, 34, 'top'); // TODO: should be changed to top+bottom once chart height is fixed
+  @include spacing(padding, 34, 'top+bottom');
   display: flex;
   align-items: flex-start;
   gap: rem(15);

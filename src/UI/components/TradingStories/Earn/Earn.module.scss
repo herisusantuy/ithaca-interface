@@ -60,21 +60,8 @@
   @include font-size('text-md', 'semibold');
 }
 
-.returnsWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: rem(34);
-  @include spacing(margin, 6, 'bottom');
-}
-
-.earnWrapper {
-  display: flex;
-  align-items: flex-end;
-  gap: rem(4);
-}
-
 .aprWrapper {
+  grid-column: span 2;
   display: flex;
   align-items: center;
   gap: rem(8);
@@ -96,52 +83,4 @@
     font-family: $lato;
     @include font-size('text-md', 'semibold');
   }
-}
-
-.orderSummary {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: rem(16);
-}
-
-.summary {
-  h3 {
-    color: var(--white);
-    font-family: $roboto;
-    margin-bottom: 0;
-    @include font-size('text-md', 'regular');
-  }
-
-  h5 {
-    color: var(--white);
-    font-family: $lato;
-    @include font-size('text-xs', 'regular');
-    @include spacing(margin, 6, 'bottom');
-  }
-
-  h6 {
-    color: var(--white-60);
-    font-family: $lato;
-    @include font-size('text-xxs', 'regular');
-    @include spacing(margin, 4, 'bottom');
-  }
-
-  p {
-    color: var(--white-60);
-    font-family: $lato;
-    @include font-size('text-xs', 'regular');
-  }
-
-  small {
-    color: var(--white-60);
-    font-family: $roboto;
-    @include font-size('text-xxs', 'regular');
-  }
-}
-
-.summaryInfoWrapper {
-  display: flex;
-  align-items: center;
-  gap: rem(4);
 }
