@@ -21,7 +21,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
         <p className={styles.tooltipValue}>
           {`${
             payload && Math.abs(payload[0].value) >= 0
-              ? payload[0].value > 0
+              ? payload[0].value >= 0
                 ? getNumberFormat(Math.round(payload[0].value + Number(base)))
                 : '-' + getNumberFormat(Math.round(payload[0].value + Number(base)))
               : 0
