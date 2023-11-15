@@ -1,13 +1,25 @@
 // Packages
 import { useState } from 'react';
 import { ChartMaxPainData } from '@/UI/constants/charts/chartMaxPain';
-import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Label,
+  Legend,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 // Components
 import ChartLegend from './ChartLegend';
 import ChartTooltip from './ChartTooltip';
 import ChartCursor from './ChartCursor';
+import ChartLabel from './ChartLabel';
 
 // Styles
 import styles from './ChartMaxPain.module.scss';
@@ -40,6 +52,18 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
         }}
         onMouseMove={handleMouseMove}
       >
+        <ReferenceLine
+          x={1600}
+          stroke='#561198'
+          strokeDasharray={'2 2'}
+          label={<ChartLabel label='Max Pain' value='1600' />}
+        />
+        <ReferenceLine
+          x={1700}
+          stroke='#9D9DAA'
+          strokeDasharray={'2 2'}
+          label={<ChartLabel label='Underlying Price' value='1700' />}
+        />
         <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
         <defs>
           <linearGradient id='greenGradient' x1='0%' y1='0%' x2='0%' y2='100%'>
