@@ -1,9 +1,25 @@
 // Packages
+import { useState } from 'react';
 import { ChartMaxPainData } from '@/UI/constants/charts/chartMaxPain';
-import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Label,
+  Legend,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 // Components
 import ChartLegend from './ChartLegend';
+import ChartTooltip from './ChartTooltip';
+import ChartCursor from './ChartCursor';
+import ChartLabel from './ChartLabel';
 
 // Styles
 import styles from './ChartMaxPain.module.scss';
@@ -14,6 +30,15 @@ type ChartMaxPainProps = {
 };
 
 const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
+  const [cursorX, setCursorX] = useState(0);
+
+  const handleMouseMove = (e: CategoricalChartState) => {
+    if (e.activePayload) {
+      const xValue = e.chartX;
+      setCursorX(xValue ?? 0);
+    }
+  };
+
   return (
     <ResponsiveContainer className={styles.container} width='100%' height={487}>
       <BarChart
@@ -25,7 +50,20 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
           left: 20,
           bottom: 35,
         }}
+        onMouseMove={handleMouseMove}
       >
+        <ReferenceLine
+          x={1600}
+          stroke='#561198'
+          strokeDasharray={'2 2'}
+          label={<ChartLabel label='Max Pain' value='1600' />}
+        />
+        <ReferenceLine
+          x={1700}
+          stroke='#9D9DAA'
+          strokeDasharray={'2 2'}
+          label={<ChartLabel label='Underlying Price' value='1700' />}
+        />
         <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
         <defs>
           <linearGradient id='greenGradient' x1='0%' y1='0%' x2='0%' y2='100%'>
@@ -52,7 +90,7 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
           label={{ value: 'Option Market Value', angle: -90, position: 'left' }}
           className={styles.axisLabel}
         />
-        <Tooltip />
+        <Tooltip content={<ChartTooltip />} cursor={<ChartCursor x={cursorX} />} />
         <Legend content={<ChartLegend />} />
         <Bar dataKey='call' fill='url(#greenGradient)' barSize={20} radius={[4, 4, 0, 0]} />
         <Bar dataKey='put' fill='url(#redGradient)' barSize={20} radius={[4, 4, 0, 0]} />

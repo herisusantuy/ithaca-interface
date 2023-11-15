@@ -67,3 +67,41 @@
   font-family: $roboto;
   color: var(--white-60);
 }
+
+.tooltip {
+  @include spacing(padding, 10, 'all');
+  display: flex;
+  flex-direction: column;
+  gap: rem(8);
+  border-radius: rem(8);
+  background: rgba(18, 23, 34, 0.7);
+  box-shadow:
+    rem(2) rem(2) rem(4) 0px rgba(0, 0, 0, 0.15),
+    0px 0px rem(4) 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px rem(15) 0px rgba(43, 46, 58, 0.15) inset;
+  backdrop-filter: blur(rem(10));
+
+  .row {
+    @include font-size('text-md', 'regular');
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--white);
+    font-family: $roboto;
+    gap: rem(8);
+
+    p,
+    span {
+      @include font-size('text-xs', 'regular');
+      color: var(--white-60);
+      font-family: $lato;
+    }
+
+    .value {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: rem(4);
+    }
+  }
+}
