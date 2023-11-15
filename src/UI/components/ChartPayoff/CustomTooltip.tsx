@@ -19,7 +19,13 @@ const CustomTooltip = (props: CustomTooltipProps) => {
       <div>
         <p className={styles.tooltipLabel}>Price at Expiry</p>
         <p className={styles.tooltipValue}>
-          {`${payload && Math.abs(payload[0].value) >= 0 ? getNumberFormat(Math.round(payload[0].value + Number(base))) : 0}`}
+          {`${
+            payload && Math.abs(payload[0].value) >= 0
+              ? payload[0].value > 0
+                ? getNumberFormat(Math.round(payload[0].value + Number(base)))
+                : '-' + getNumberFormat(Math.round(payload[0].value + Number(base)))
+              : 0
+          }`}
         </p>
       </div>
     );
