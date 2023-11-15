@@ -34,7 +34,7 @@ export const gradientOffset = (data: PayoffDataProps[]) => {
   return max / (max - min);
 };
 
-export const breakPointList = (data: PayoffDataProps[]) => {
+export const breakPointList1 = (data: PayoffDataProps[]) => {
   const offsets: SpecialDotLabel[] = [];
   const minMaxOffsetRange = findOverallMinMaxValues(data);
   const offsetCompareVal = offsetLimitStudiedValue(data);
@@ -89,6 +89,24 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   //     }
   //   }
   // }
+  return offsets;
+};
+
+export const breakPointList = (data: PayoffDataProps[]) => {
+  const offsets: SpecialDotLabel[] = [];
+  let preTanValue = 0;
+  for (let i = 1; i < data.length - 1; i++) {
+    const tanValue = (data[i].value - data[i - 1].value) / (data[i].x - data[i - 1].x);
+    if (Math.round(preTanValue) !== Math.round(tanValue)) {
+      preTanValue = tanValue;
+      if (!offsets.find(p => Math.round(p.x / 100) === Math.round(data[i-1].x / 100))) { /// consider some points than has less than 100 distance
+        offsets.push({
+          x: data[i - 1].x,
+          value: data[i].value,
+        })
+      }
+    }
+  }
   return offsets;
 };
 
