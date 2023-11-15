@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Toolt
 
 // Components
 import ChartLegend from './ChartLegend';
+import ChartTooltip from './ChartTooltip';
 
 // Styles
 import styles from './ChartMaxPain.module.scss';
@@ -52,7 +53,7 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
           label={{ value: 'Option Market Value', angle: -90, position: 'left' }}
           className={styles.axisLabel}
         />
-        <Tooltip />
+        <Tooltip content={<ChartTooltip />} />
         <Legend content={<ChartLegend />} />
         <Bar dataKey='call' fill='url(#greenGradient)' barSize={20} radius={[4, 4, 0, 0]} />
         <Bar dataKey='put' fill='url(#redGradient)' barSize={20} radius={[4, 4, 0, 0]} />
