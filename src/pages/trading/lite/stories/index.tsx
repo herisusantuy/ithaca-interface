@@ -35,7 +35,6 @@ const Index = () => {
               tabs={TRADING_STORIES_TABS}
               showInstructions={showInstructions}
               setShowInstructions={setShowInstructions}
-              method={false}
             />
           </div>
         </Container>

@@ -8,22 +8,29 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
-import Button from '../../Button/Button';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
-import { ClientConditionalOrder, Leg, Payoff, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import {
+  ClientConditionalOrder,
+  Leg,
+  calculateAPY,
+  calculateNetPrice,
+  createClientOrderId,
+  toPrecision,
+} from '@ithaca-finance/sdk';
 import RadioButton from '../../RadioButton/RadioButton';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import StorySummary from '../StorySummary/StorySummary';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, ithacaSDK, getContractsByPayoff } = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
 
-  const binaryPutContracts = getContractsByPayoff(Payoff.BINARY_PUT);
-  const binaryCallContracts = getContractsByPayoff(Payoff.BINARY_CALL);
+  const binaryPutContracts = getContractsByPayoff('BinaryPut');
+  const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const strikes = Object.keys(binaryPutContracts).map(strike => parseFloat(strike));
 
-  const [insideOrOutside, setInsideOrOutside] = useState<'inside' | 'outside'>('outside');
+  const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('OUTSIDE');
   const [strike, setStrike] = useState({ min: strikes[0], max: strikes[5] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
@@ -33,12 +40,80 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
     setCapitalAtRisk(capitalAtRisk);
-    await handleStrikeChange(strike, insideOrOutside === 'inside', getNumber(capitalAtRisk));
+    await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
   };
 
-  const handleBetTypeChange = async (betType: 'inside' | 'outside') => {
+  const handleBetTypeChange = async (betType: 'INSIDE' | 'OUTSIDE') => {
     setInsideOrOutside(betType);
-    await handleStrikeChange(strike, betType === 'inside', getNumber(capitalAtRisk));
+    await handleStrikeChange(strike, betType === 'INSIDE', getNumber(capitalAtRisk));
+  };
+
+  const handleTargetEarnChange = async (amount: string) => {
+    const targetEarn = getNumberValue(amount);
+    setTargetEarn(targetEarn);
+    if (isInvalidNumber(getNumber(targetEarn))) {
+      setCapitalAtRisk('');
+      setOrderDetails(undefined);
+      setPayoffMap(undefined);
+      return;
+    }
+
+    const inRange = insideOrOutside === 'INSIDE';
+    const isBelowSpot = strike.min < currentSpotPrice && strike.max < currentSpotPrice;
+
+    const minContract = !inRange
+      ? binaryPutContracts[strike.min]
+      : isBelowSpot
+      ? binaryPutContracts[strike.max]
+      : binaryCallContracts[strike.min];
+    const maxContract = !inRange
+      ? binaryCallContracts[strike.max]
+      : isBelowSpot
+      ? binaryPutContracts[strike.min]
+      : binaryCallContracts[strike.max];
+
+    const legMin: Leg = {
+      contractId: minContract.contractId,
+      quantity: targetEarn as `${number}`,
+      side: 'BUY',
+    };
+    const legMax: Leg = {
+      contractId: maxContract.contractId,
+      quantity: targetEarn as `${number}`,
+      side: !inRange ? 'BUY' : 'SELL',
+    };
+
+    const totalNetPrice = calculateNetPrice(
+      [legMin, legMax],
+      [minContract.referencePrice, maxContract.referencePrice],
+      currencyPrecision.strike
+    );
+    const size = toPrecision(getNumber(targetEarn) * getNumber(totalNetPrice), currencyPrecision.strike);
+
+    const order = {
+      clientOrderId: createClientOrderId(),
+      totalNetPrice,
+      legs: [legMin, legMax],
+    } as ClientConditionalOrder;
+
+    const payoffMap = estimateOrderPayoff([
+      { ...minContract, ...legMin, premium: minContract.referencePrice },
+      { ...maxContract, ...legMax, premium: maxContract.referencePrice },
+    ]);
+    setPayoffMap(payoffMap);
+    setCapitalAtRisk(`${size}`);
+
+    try {
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
+      setOrderDetails({
+        order,
+        orderLock,
+        orderPayoff,
+      });
+    } catch (error) {
+      console.error('Order estimation for bet failed', error);
+    }
   };
 
   const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number) => {
@@ -120,6 +195,12 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     }
   };
 
+  const getAPY = () => {
+    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) return '-%';
+    const apy = calculateAPY(`${currentExpiryDate}`, 'Bet', getNumber(capitalAtRisk), getNumber(targetEarn));
+    return `${apy}%`;
+  };
+
   return (
     <div>
       {!compact && showInstructions && (
@@ -143,7 +224,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             step={100}
             onChange={strike => {
               setStrike(strike);
-              handleStrikeChange(strike, insideOrOutside === 'inside', getNumber(capitalAtRisk));
+              handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
             }}
             range
           />
@@ -151,13 +232,14 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       )}
       <Flex margin='mt-10 mb-24'>
         <RadioButton
+          width={compact ? 0 : 225}
           options={[
-            { option: 'Inside Range', value: 'inside' },
-            { option: 'Outside Range', value: 'outside' },
+            { option: 'Inside Range', value: 'INSIDE' },
+            { option: 'Outside Range', value: 'OUTSIDE' },
           ]}
           selectedOption={insideOrOutside}
           name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
-          onChange={betType => handleBetTypeChange(betType as 'inside' | 'outside')}
+          onChange={betType => handleBetTypeChange(betType as 'INSIDE' | 'OUTSIDE')}
         />
       </Flex>
       {!compact && (
@@ -170,7 +252,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             step={100}
             onChange={strike => {
               setStrike(strike);
-              handleStrikeChange(strike, insideOrOutside === 'inside', getNumber(capitalAtRisk));
+              handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
             }}
             range
           />
@@ -182,7 +264,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Flex direction='row-center'>
               <span className={styles.label}>Bet</span>
             </Flex>
-            <div className={styles.inputWrapper}>
+            <div>
               <Input
                 type='number'
                 value={capitalAtRisk}
@@ -193,48 +275,35 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <span />
             <span className={`${styles.label} ${styles.inputHint}`}>Capital At Risk</span>
           </div>
-          <div>
-            <div className={styles.returnsWrapper}>
-              <div className={styles.earnWrapper}>
-                <span className={styles.label}>Target Earn</span>
-                <span className={styles.earn}>{targetEarn}</span>
-                <LogoUsdc />
-              </div>
+          <div className={styles.gridWrapper}>
+            <Flex direction='row-center'>
+              <span className={styles.label}>Target Earn</span>
+            </Flex>
+            <div>
+              <Input
+                type='number'
+                value={targetEarn}
+                onChange={({ target }) => handleTargetEarnChange(target.value)}
+                icon={<LogoUsdc />}
+              />
             </div>
             <div className={styles.aprWrapper}>
               <span className={`${styles.label} ${styles.inputHint}`}>Expected Return</span>
-              <span className={styles.apr}>46.6%</span>
+              <span className={styles.apr}>{getAPY()}</span>
             </div>
           </div>
         </div>
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
       </div>
-      {!compact && (
-        <div className={styles.orderSummary}>
-          <div className={styles.summary}>
-            <h5>Total Premium</h5>
-            <div className={styles.summaryInfoWrapper}>
-              <h3>{1500}</h3>
-              <LogoUsdc />
-              <p>USDC</p>
-            </div>
-          </div>
-          <div className={styles.summary}>
-            <h6>Platform Fee</h6>
-            <div className={styles.summaryInfoWrapper}>
-              <small>{1.5}</small>
-              <LogoUsdc />
-              <small>USDC</small>
-            </div>
-          </div>
-          <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
-            Submit to Auction
-          </Button>
-        </div>
-      )}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
 };

@@ -6,7 +6,6 @@ import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
-import Button from '../../Button/Button';
 import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import Input from '../../Input/Input';
@@ -15,6 +14,7 @@ import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import StorySummary from '../StorySummary/StorySummary';
 
 const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
@@ -156,6 +156,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     <div>
       <Flex margin='mb-12'>
         <RadioButton
+          width={compact ? 0 : 225}
           options={[
             { option: 'Bonus', value: 'Bonus' },
             { option: 'Twin-Win', value: 'Twin Win' },
@@ -204,13 +205,9 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
             </div>
           </Flex>
           <Flex gap='gap-15'>
-            <div className={styles.inputWrapper}>
-              <Input
-                label='Size (Multiplier)'
-                type='number'
-                value={multiplier}
-                onChange={({ target }) => handleMultiplierChange(target.value)}
-              />
+            <div>
+              <label className={styles.label}>Size (Multiplier)</label>
+              <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </div>
             <div className={styles.collateralWrapper}>
               Total Premium
@@ -233,31 +230,14 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
       </div>
-      {!compact && (
-        <div className={styles.orderSummary}>
-          <div className={styles.summary}>
-            <h5>Total Premium</h5>
-            <div className={styles.summaryInfoWrapper}>
-              <h3>{1500}</h3>
-              <LogoUsdc />
-              <p>USDC</p>
-            </div>
-          </div>
-          <div className={styles.summary}>
-            <h6>Platform Fee</h6>
-            <div className={styles.summaryInfoWrapper}>
-              <small>{1.5}</small>
-              <LogoUsdc />
-              <small>USDC</small>
-            </div>
-          </div>
-          <Button size='sm' title='Click to submit to auction'>
-            Submit to Auction
-          </Button>
-        </div>
-      )}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
 };

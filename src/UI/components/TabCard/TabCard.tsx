@@ -4,32 +4,23 @@ import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 // Styles
 import styles from './TabCard.module.scss';
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
-import { getMarketMap } from '@/UI/utils/MarketMapper';
 import Toggle from '../Toggle/Toggle';
 
 // Types
-type SubTab = {
-  id: string;
-  label: string;
-  contentId: string;
-};
-
 type MainTab = {
   id: string;
   title: string;
   description: ReactNode;
   contentId: string;
-  subTabs?: SubTab[];
 };
 
 type TabCardProps = {
   tabs: MainTab[];
   showInstructions: boolean;
   setShowInstructions: Dispatch<SetStateAction<boolean>>;
-  method?: boolean;
 };
 
-const TabCard = ({ tabs, showInstructions, setShowInstructions, method = true }: TabCardProps) => {
+const TabCard = ({ tabs, showInstructions, setShowInstructions }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
@@ -46,11 +37,7 @@ const TabCard = ({ tabs, showInstructions, setShowInstructions, method = true }:
               <h3>{tab.title}</h3>
               <p>{tab.description}</p>
             </div>
-            {method ? (
-              <div className={styles.subTabs}>{getMarketMap(tab.contentId, true)}</div>
-            ) : (
-              <div className={styles.tabChart}>{getTradingStoryMapper(tab.contentId, false, true)}</div>
-            )}
+            <div className={styles.tabChart}>{getTradingStoryMapper(tab.contentId, false, true)}</div>
           </div>
         ))}
       </div>
@@ -65,11 +52,7 @@ const TabCard = ({ tabs, showInstructions, setShowInstructions, method = true }:
           />
           {/* <p>Show Instructions</p> */}
         </div>
-        {method ? (
-          <div>{getMarketMap(activeTab.contentId)}</div>
-        ) : (
-          <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
-        )}
+        <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
       </div>
     </div>
   );

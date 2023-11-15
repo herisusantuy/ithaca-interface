@@ -7,17 +7,24 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { OrderDetails, TradingStoriesProps } from '..';
 import LogoEth from '../../Icons/LogoEth';
-import Button from '../../Button/Button';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import Input from '../../Input/Input';
 import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
-import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
+import {
+  ClientConditionalOrder,
+  Leg,
+  calculateAPY,
+  calculateNetPrice,
+  createClientOrderId,
+  toPrecision,
+} from '@ithaca-finance/sdk';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { ContractDetails } from '@/UI/lib/zustand/slices/ithacaSDKSlice';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import StorySummary from '../StorySummary/StorySummary';
 
 const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, ithacaSDK, getContractsByPayoff } = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
 
@@ -41,6 +48,63 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
     await handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
   };
 
+  const handleTargetEarnChange = async (amount: string) => {
+    const targetEarn = getNumberValue(amount);
+    setTargetEarn(targetEarn);
+    if (isInvalidNumber(getNumber(targetEarn))) {
+      setCapitalAtRisk('');
+      setOrderDetails(undefined);
+      setPayoffMap(undefined);
+      return;
+    }
+
+    const contracts = currency === 'WETH' ? callContracts : putContracts;
+    const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
+      const isValidStrike =
+        currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
+      if (isValidStrike) contractDetails[strike] = contracts[strike];
+      return contractDetails;
+    }, {});
+    const quantity =
+      currency === 'WETH'
+        ? `${toPrecision(
+            getNumber(targetEarn) / filteredContracts[strike.max].referencePrice,
+            currencyPrecision.strike
+          )}`
+        : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+
+    const leg = {
+      contractId: filteredContracts[strike.max].contractId,
+      quantity,
+      side: 'SELL',
+    } as Leg;
+
+    const order = {
+      clientOrderId: createClientOrderId(),
+      totalNetPrice: getNumber(targetEarn).toFixed(currencyPrecision.strike),
+      legs: [leg],
+      addCollateral: currency === 'WETH',
+    } as ClientConditionalOrder;
+
+    const payoffMap = estimateOrderPayoff([
+      { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
+    ]);
+    setPayoffMap(payoffMap);
+    setCapitalAtRisk(quantity);
+
+    try {
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
+      setOrderDetails({
+        order,
+        orderLock,
+        orderPayoff,
+      });
+    } catch (error) {
+      console.error('Order estimation for earn failed', error);
+    }
+  };
+
   const handleStrikeChange = async (strike: { min: number; max: number }, currency: string, capitalAtRisk: number) => {
     if (isInvalidNumber(capitalAtRisk)) {
       setTargetEarn('');
@@ -57,10 +121,10 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
       return contractDetails;
     }, {});
     const quantity =
-      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(capitalAtRisk / strike.min, currencyPrecision.strike)}`;
+      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(capitalAtRisk / strike.max, currencyPrecision.strike)}`;
 
     const leg = {
-      contractId: filteredContracts[strike.min].contractId,
+      contractId: filteredContracts[strike.max].contractId,
       quantity,
       side: 'SELL',
     } as Leg;
@@ -73,10 +137,10 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
     } as ClientConditionalOrder;
 
     const payoffMap = estimateOrderPayoff([
-      { ...filteredContracts[strike.min], ...leg, premium: filteredContracts[strike.min].referencePrice },
+      { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
     ]);
     setPayoffMap(payoffMap);
-    setTargetEarn(calculateNetPrice([leg], [filteredContracts[strike.min].referencePrice], currencyPrecision.strike));
+    setTargetEarn(calculateNetPrice([leg], [filteredContracts[strike.max].referencePrice], currencyPrecision.strike));
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -98,6 +162,13 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
     } catch (error) {
       console.error('Failed to submit order', error);
     }
+  };
+
+  const getAPY = () => {
+    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) return '-%';
+    const risk = currency === 'WETH' ? getNumber(capitalAtRisk) * strike.max : getNumber(capitalAtRisk);
+    const apy = calculateAPY(`${currentExpiryDate}`, 'Earn', risk, getNumber(targetEarn));
+    return `${apy}%`;
   };
 
   return (
@@ -156,48 +227,34 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
             <span />
             <span className={`${styles.label} ${styles.inputHint}`}>Capital At Risk</span>
           </div>
-          <div>
-            <div className={styles.returnsWrapper}>
-              <div className={styles.earnWrapper}>
-                <span className={styles.label}>Earn</span>
-                <span className={styles.earn}>{targetEarn}</span>
-                <LogoUsdc />
-              </div>
-            </div>
+          <div className={styles.gridWrapper}>
+            <Flex direction='row-center'>
+              <span className={styles.label}>Earn</span>
+            </Flex>
+            <Input
+              type='number'
+              value={targetEarn}
+              onChange={({ target }) => handleTargetEarnChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+            <span />
             <div className={styles.aprWrapper}>
               <span className={`${styles.label} ${styles.inputHint}`}>Expected Return</span>
-              <span className={styles.apr}>5.0%</span>
+              <span className={styles.apr}>{getAPY()}</span>
             </div>
           </div>
         </div>
       )}
       <div className={styles.payoff}>
         {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff chartData={payoffMap ?? CHART_FAKE_DATA} height={chartHeight} showKeys={false} />
+        <ChartPayoff
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
       </div>
-      {!compact && (
-        <div className={styles.orderSummary}>
-          <div className={styles.summary}>
-            <h5>Total Premium</h5>
-            <div className={styles.summaryInfoWrapper}>
-              <h3>{1500}</h3>
-              <LogoUsdc />
-              <p>USDC</p>
-            </div>
-          </div>
-          <div className={styles.summary}>
-            <h6>Platform Fee</h6>
-            <div className={styles.summaryInfoWrapper}>
-              <small>{1.5}</small>
-              <LogoUsdc />
-              <small>USDC</small>
-            </div>
-          </div>
-          <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
-            Submit to Auction
-          </Button>
-        </div>
-      )}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
 };

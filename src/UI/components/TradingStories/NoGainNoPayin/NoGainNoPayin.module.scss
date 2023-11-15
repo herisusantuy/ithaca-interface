@@ -33,15 +33,6 @@
   @include font-size('text-sm', 'regular');
 }
 
-.inputWrapper {
-  div {
-    width: rem(96);
-    input {
-      width: 0;
-    }
-  }
-}
-
 .amountWrapper {
   display: flex;
   align-items: center;
@@ -82,52 +73,4 @@
     font-family: $lato;
     @include font-size('text-md', 'semibold');
   }
-}
-
-.orderSummary {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: rem(16);
-}
-
-.summary {
-  h3 {
-    color: var(--white);
-    font-family: $roboto;
-    margin-bottom: 0;
-    @include font-size('text-md', 'regular');
-  }
-
-  h5 {
-    color: var(--white);
-    font-family: $lato;
-    @include font-size('text-xs', 'regular');
-    @include spacing(margin, 6, 'bottom');
-  }
-
-  h6 {
-    color: var(--white-60);
-    font-family: $lato;
-    @include font-size('text-xxs', 'regular');
-    @include spacing(margin, 4, 'bottom');
-  }
-
-  p {
-    color: var(--white-60);
-    font-family: $lato;
-    @include font-size('text-xs', 'regular');
-  }
-
-  small {
-    color: var(--white-60);
-    font-family: $roboto;
-    @include font-size('text-xxs', 'regular');
-  }
-}
-
-.summaryInfoWrapper {
-  display: flex;
-  align-items: center;
-  gap: rem(4);
 }

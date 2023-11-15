@@ -1,0 +1,47 @@
+.label {
+  display: block;
+  color: var(--white-60);
+  font-family: $roboto;
+  @include font-size('text-xs', 'regular');
+  @include spacing(margin, 8, 'bottom');
+}
+
+.payoff {
+  position: relative;
+
+  h4 {
+    position: absolute;
+
+    color: var(--white);
+    font-family: $lato;
+    @include font-size('text-md', 'semibold');
+  }
+}
+
+.greeks {
+  color: var(--white);
+  font-family: $lato;
+  @include font-size('text-md', 'medium');
+}
+
+.greeksLabel {
+  display: flex;
+  align-items: center;
+  gap: rem(2);
+  color: var(--white-60);
+  font-family: $roboto;
+  @include font-size('text-xs', 'regular');
+  @include spacing(margin, 4, 'bottom');
+
+  span {
+    color: var(--white-60);
+    font-family: $lato;
+    @include font-size('text-md', 'semi-bold');
+  }
+}
+
+.greeksAmount {
+  color: var(--white);
+  font-family: $roboto;
+  @include font-size('text-sm', 'regular');
+}
