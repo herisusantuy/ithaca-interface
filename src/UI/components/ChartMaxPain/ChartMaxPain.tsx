@@ -1,10 +1,13 @@
 // Packages
+import { useState } from 'react';
 import { ChartMaxPainData } from '@/UI/constants/charts/chartMaxPain';
 import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
 
 // Components
 import ChartLegend from './ChartLegend';
 import ChartTooltip from './ChartTooltip';
+import ChartCursor from './ChartCursor';
 
 // Styles
 import styles from './ChartMaxPain.module.scss';
@@ -15,6 +18,15 @@ type ChartMaxPainProps = {
 };
 
 const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
+  const [cursorX, setCursorX] = useState(0);
+
+  const handleMouseMove = (e: CategoricalChartState) => {
+    if (e.activePayload) {
+      const xValue = e.chartX;
+      setCursorX(xValue ?? 0);
+    }
+  };
+
   return (
     <ResponsiveContainer className={styles.container} width='100%' height={487}>
       <BarChart
@@ -26,6 +38,7 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
           left: 20,
           bottom: 35,
         }}
+        onMouseMove={handleMouseMove}
       >
         <CartesianGrid strokeDasharray='0' vertical={false} stroke='rgba(255, 255, 255, 0.2)' />
         <defs>
@@ -53,7 +66,7 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
           label={{ value: 'Option Market Value', angle: -90, position: 'left' }}
           className={styles.axisLabel}
         />
-        <Tooltip content={<ChartTooltip />} />
+        <Tooltip content={<ChartTooltip />} cursor={<ChartCursor x={cursorX} />} />
         <Legend content={<ChartLegend />} />
         <Bar dataKey='call' fill='url(#greenGradient)' barSize={20} radius={[4, 4, 0, 0]} />
         <Bar dataKey='put' fill='url(#redGradient)' barSize={20} radius={[4, 4, 0, 0]} />
