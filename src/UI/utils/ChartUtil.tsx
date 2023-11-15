@@ -82,11 +82,11 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   // } else {
   //   ruleValue = 1;
   // }
-  // for (let i = 1; i < data.length - 1; i++) { 
+  // for (let i = 1; i < data.length - 1; i++) {
   //   if (data[i].value <= 0 && data[i + 1].value > 0) {
   //     if (Math.abs(data[i].value) < Math.abs(data[i + 1].value)) {
   //       if(Math.abs(data[i] < rule))
-  //     } 
+  //     }
   //   }
   // }
   return offsets;
@@ -122,7 +122,27 @@ export const makingChartData = (data: any[], key: string, dashed: string) => {
     dashValue: dashed != '' && dashed != key ? item[dashed] : undefined,
     x: item['x'],
   }));
-  return result;
+
+  const tempDataArray: PayoffDataProps[] = [];
+  for (let i = 0; i < result.length; i++) {
+    if (i == 0) {
+      tempDataArray.push(result[0]);
+    } else {
+      const prevItem = result[i - 1];
+      const currentItem = result[i];
+      if (currentItem.value == 0) {
+        tempDataArray.push(currentItem);
+        continue;
+      } else if (prevItem.value < 0 && currentItem.value > 0) {
+        tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(currentItem.x + prevItem.x) / 2 });
+      } else if (prevItem.value > 0 && currentItem.value < 0) {
+        tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(currentItem.x + prevItem.x) / 2 });
+      } else {
+        tempDataArray.push(currentItem);
+      }
+    }
+  }
+  return tempDataArray;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -133,19 +153,19 @@ export const getLegs = (data: any[]) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const findOverallMinMaxValues = (data: any) => {
-    let overallMin = Infinity;
-    let overallMax = -Infinity;
+  let overallMin = Infinity;
+  let overallMax = -Infinity;
 
-    // Iterate over the data array to find overall min and max values
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data.forEach((entry: any) => {
-        Object.keys(entry).forEach(key => {
-            if (key !== 'x') {
-                overallMin = Math.min(overallMin, entry[key]);
-                overallMax = Math.max(overallMax, entry[key]);
-            }
-        });
+  // Iterate over the data array to find overall min and max values
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data.forEach((entry: any) => {
+    Object.keys(entry).forEach(key => {
+      if (key !== 'x') {
+        overallMin = Math.min(overallMin, entry[key]);
+        overallMax = Math.max(overallMax, entry[key]);
+      }
     });
+  });
 
-    return { min: overallMin, max: overallMax };
-}
+  return { min: overallMin, max: overallMax };
+};
