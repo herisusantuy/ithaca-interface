@@ -17,8 +17,8 @@ const CustomLabel = (props: LabelProps) => {
   const { x, y, value, base, index, dataSize, special, dataList } = props;
 
   const renderLabel = (dx: number = 0, dy: number = 0, idx: number) => (
-    <text x={x} y={y} dx={dx} dy={dy} fill='#9D9DAA' fontSize={12} textAnchor='middle' key={idx}>
-      {dataList[Number(index) - 1].x.toFixed(2)}
+    <text x={x} y={y} dx={dx + 10} dy={dy} fill='#9D9DAA' fontSize={9} textAnchor='middle' key={idx}>
+      {Math.round(dataList[Number(index) - 1].x)}
     </text>
   );
 

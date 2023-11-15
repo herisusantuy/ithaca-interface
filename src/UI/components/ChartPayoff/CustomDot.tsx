@@ -12,10 +12,13 @@ type CustomDotProps = {
   special: SpecialDotLabel[];
   index?: number;
   dataList: PayoffDataProps[];
+  updatePosition: (val: number) => void;
 };
 
 const CustomDot = (props: CustomDotProps) => {
-  const { cx, cy, payload, special, base, dataSize, index, dataList } = props;
+  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
+
+  updatePosition(cy ? Math.round(cy) : 0);
 
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) == 0) {
