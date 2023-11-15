@@ -1,4 +1,5 @@
 // Styles
+import { getNumberFormat } from '@/UI/utils/Numbers';
 import styles from './ChartPayoff.module.scss';
 
 // Types
@@ -18,7 +19,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
       <div>
         <p className={styles.tooltipLabel}>Price at Expiry</p>
         <p className={styles.tooltipValue}>
-          {`${payload && Math.abs(payload[0].value) >= 0 ? Math.round(payload[0].value + Number(base)) : 0}`}
+          {`${payload && Math.abs(payload[0].value) >= 0 ? getNumberFormat(Math.round(payload[0].value + Number(base))) : 0}`}
         </p>
       </div>
     );

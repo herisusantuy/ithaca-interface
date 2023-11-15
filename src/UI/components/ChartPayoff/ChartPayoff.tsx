@@ -44,7 +44,7 @@ type DomainType = {
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
-import { getNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
@@ -145,7 +145,7 @@ const ChartPayoff = (props: ChartDataProps) => {
           <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
             <h3>Potential P&L:</h3>
             <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-              {changeVal >= 0 ? '+' + '' + changeVal : changeVal}
+              {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
             </p>
             <LogoUsdc />
           </div>
@@ -223,7 +223,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 fill='transparent'
                 activeDot={false}
               />
-              <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5} />
+              <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5}/>
               <Tooltip
                 isAnimationActive={false}
                 animationDuration={1}
@@ -241,8 +241,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
-                          ? '+' + '' + Math.round(minimize)
-                          : '' + Math.round(minimize)}
+                            ? '+' + '' + getNumberFormat(minimize)
+                            : '-' + getNumberFormat(minimize)}
                       </text>
                       {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition - 8} />}
                     </>

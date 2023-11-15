@@ -36,6 +36,7 @@ export const gradientOffset = (data: PayoffDataProps[]) => {
 
 export const breakPointList = (data: PayoffDataProps[]) => {
   const offsets: SpecialDotLabel[] = [];
+  const minMaxOffsetRange = findOverallMinMaxValues(data);
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {
@@ -69,6 +70,25 @@ export const breakPointList = (data: PayoffDataProps[]) => {
       }
     }
   }
+
+  // const minMaxOffset = Math.abs(minMaxOffsetRange.min) + Math.abs(minMaxOffsetRange.max);
+  // let ruleValue = 0;
+  // if (minMaxOffset > 10000) {
+  //   ruleValue = 1000;
+  // } else if (minMaxOffset > 1000 && minMaxOffset <= 10000) {
+  //   ruleValue = 100;
+  //  } else if (minMaxOffset > 100 && minMaxOffset <= 1000) {
+  //   ruleValue = 10;
+  // } else {
+  //   ruleValue = 1;
+  // }
+  // for (let i = 1; i < data.length - 1; i++) { 
+  //   if (data[i].value <= 0 && data[i + 1].value > 0) {
+  //     if (Math.abs(data[i].value) < Math.abs(data[i + 1].value)) {
+  //       if(Math.abs(data[i] < rule))
+  //     } 
+  //   }
+  // }
   return offsets;
 };
 
