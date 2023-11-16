@@ -6,7 +6,7 @@ import styles from './Container.module.scss';
 
 // Types
 type ContainerProps = {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'loader';
   margin?: string;
   children: ReactNode;
 };
