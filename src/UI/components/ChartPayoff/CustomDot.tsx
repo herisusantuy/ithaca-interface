@@ -35,20 +35,33 @@ const CustomDot = (props: CustomDotProps) => {
     }
   };
 
+  const drawZeroDot = () => {
+    if (Number(payload?.value) == 0) {
+      if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
+        return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} />;
+      }
+    }
+  };
+
   if (index == 0) {
     return null;
   } else if (dataSize === Number(index) + 1) {
     return null;
-  } else if (special.length == 0) {
-    return null;
   } else {
-    return special.map((item: SpecialDotLabel, idx: number) => {
-      if (item.value === Number(payload?.value) + Number(base)) {
-        if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
-          return renderCircle(idx);
-        }
+    if (special.length == 0) {
+      return drawZeroDot();
+    } else {
+      if (Number(payload?.value) == 0) {
+        return drawZeroDot();
       }
-    });
+      return special.map((item: SpecialDotLabel, idx: number) => {
+        if (item.value === Number(payload?.value) + Number(base)) {
+          if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
+            return renderCircle(idx);
+          }
+        }
+      });
+    }
   }
 };
 

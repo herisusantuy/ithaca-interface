@@ -18,6 +18,9 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
+import Chart from '@/UI/components/Icons/Chart';
 
 // Layouts
 import Main from '@/UI/layouts/Main/Main';
@@ -26,15 +29,15 @@ import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
+// Utils
+import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import ReadyState from '@/UI/utils/ReadyState';
+import { getNumber } from '@/UI/utils/Numbers';
+
 // Styles
 import styles from './position-builder.module.scss';
 
 // Types
-import { getNumber } from '@/UI/utils/Numbers';
-import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import ReadyState from '@/UI/utils/ReadyState';
-
 export interface PositionBuilderStrategy {
   leg: Leg;
   referencePrice: number;
@@ -221,7 +224,13 @@ const Index = () => {
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
                   ) : (
-                    <div className={styles.tableWrapper}></div>
+                    <div className={styles.tableWrapper}>
+                      <div className={styles.chartWrapper}>
+                        <Chart />
+                        <p>Please add a strategy.</p>
+                      </div>
+                      <PayoffOutline />
+                    </div>
                   )}
                 </>
               }
