@@ -20,7 +20,7 @@ const CustomLabel = (props: LabelProps) => {
       {Math.round(dataList[Number(index)].x)}
     </text>
   );
-  if (special.find(item => item.x == dataList[index??0]?.x) || value === 0) {
+  if (special.find(item => item.x == dataList[index??0]?.x) || (value === 0 && dataList[index?index - 1: 0]?.value !== 0)) {
     return renderLabel();
   }
   return null;
