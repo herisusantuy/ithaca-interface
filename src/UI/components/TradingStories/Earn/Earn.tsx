@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './Earn.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -171,6 +171,10 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
     return `${apy}%`;
   };
 
+  useEffect(() => {
+    handleCapitalAtRiskChange('100');
+  }, []);
+
   return (
     <div>
       {!compact && showInstructions && (
@@ -192,7 +196,7 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
           </div>
         </div>
       )}
-      <div className={styles.sliderWrapper}>
+      <div className={compact ? 'mb-12' : 'mt-12 mb-14'}>
         {!compact && (
           <div className={styles.sliderTitle}>
             Select Target Price <LogoEth />
@@ -205,6 +209,7 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
             max={strikes[strikes.length - 1]}
             label={strikes.length}
             step={100}
+            showLabel={!compact}
             onChange={strike => {
               setStrike(strike);
               handleStrikeChange(strike, currency, getNumber(capitalAtRisk));

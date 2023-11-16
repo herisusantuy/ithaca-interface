@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './NoGainNoPayin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -22,9 +22,10 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
+  const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
 
   const [callOrPut, setCallOrPut] = useState<'CALL' | 'PUT'>('CALL');
-  const [priceReference, setPriceReference] = useState<string>();
+  const [priceReference, setPriceReference] = useState<string>(strikes[3].value);
   const [maxPotentialLoss, setMaxPotentialLoss] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -37,9 +38,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   };
 
   const handleMaxPotentialLossChange = async (amount: string) => {
-    const maxPotentialDownside = getNumberValue(amount);
+    const maxPotentialLoss = getNumberValue(amount);
     if (!priceReference) return;
-    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier), getNumber(maxPotentialDownside));
+    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier), getNumber(maxPotentialLoss));
   };
 
   const handleMultiplierChange = async (amount: string) => {
@@ -55,7 +56,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     multiplier: number,
     maxPotentialLoss?: number
   ) => {
-    if (isInvalidNumber(multiplier) || (maxPotentialLoss && isInvalidNumber(maxPotentialLoss))) {
+    if (maxPotentialLoss ? isInvalidNumber(maxPotentialLoss) : isInvalidNumber(multiplier)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -77,6 +78,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         currencyPrecision.strike
       );
       downside = maxPotentialLoss;
+      setMultiplier(`${sizeMultipier}`);
     }
 
     const buyLeg: Leg = { contractId: buyContractId, quantity: `${sizeMultipier}`, side: 'BUY' };
@@ -129,6 +131,10 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     }
   };
 
+  useEffect(() => {
+    handleMultiplierChange('100');
+  }, []);
+
   return (
     <div>
       {!compact && showInstructions && (
@@ -153,12 +159,13 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
           </div>
         </div>
       )}
-      <Flex direction='column' margin='mb-14' gap='gap-12'>
+      <Flex direction='column' margin={compact ? 'mb-10' : 'mb-14'} gap='gap-12'>
         <Flex gap='gap-15'>
           <div>
             {!compact && <label className={styles.label}>Type</label>}
             <RadioButton
-              width={compact ? 0 : 225}
+              size={compact ? 'compact' : 'regular'}
+              width={compact ? 140 : 225}
               options={[
                 { option: 'Call', value: 'CALL' },
                 { option: 'Put', value: 'PUT' },
@@ -176,7 +183,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                   Price Reference
                 </label>
                 <DropdownMenu
-                  options={Object.keys(callContracts).map(strike => ({ name: strike, value: strike }))}
+                  options={strikes}
                   value={priceReference ? { name: priceReference, value: priceReference } : undefined}
                   onChange={value => {
                     setPriceReference(value);

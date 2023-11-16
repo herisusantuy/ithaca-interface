@@ -282,7 +282,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
               />
 
-              <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`}>
+              <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`} height={1}>
                 <Label
                   content={
                     <>

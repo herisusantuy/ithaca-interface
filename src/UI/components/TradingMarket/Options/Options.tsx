@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
 import Flex from '@/UI/layouts/Flex/Flex';
 import RadioButton from '../../RadioButton/RadioButton';
@@ -32,7 +32,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>();
+  const [strike, setStrike] = useState<string>(strikes[4].value);
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -126,12 +126,18 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     return calcCollateralRequirement(leg, callOrPut, getNumber(strike), currencyPrecision.strike);
   };
 
+  useEffect(() => {
+    handleSizeChange('100');
+  }, []);
+
   return (
     <div>
-      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-10'>
+      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
         <div>
           {!compact && <label className={styles.label}>Type</label>}
           <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 120 : 200}
             options={[
               { option: 'Call', value: 'Call' },
               { option: 'Put', value: 'Put' },
@@ -210,7 +216,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
                 <PriceLabel icon={<LogoUsdc />} label={orderDetails ? orderDetails.order.totalNetPrice : '-'} />
               </div>
             </div>
-            <div style={{ alignSelf: 'flex-end' }} onClick={handleSubmit}>
+            <div style={{ alignSelf: 'flex-end', justifySelf: 'flex-end' }} onClick={handleSubmit}>
               <Button size='sm' title='Click to submit to auction'>
                 Submit to Auction
               </Button>

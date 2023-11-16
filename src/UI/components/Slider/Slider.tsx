@@ -25,16 +25,7 @@ type SliderProps = {
   onChange?: (value: ValueProps) => void;
 };
 
-const Slider = ({
-  value,
-  min,
-  max,
-  step = 1,
-  range = false,
-  label = 2,
-  showLabel = true,
-  onChange,
-}: SliderProps) => {
+const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange }: SliderProps) => {
   const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
   const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
   const [minPos, setMinPos] = useState<number>(0);
@@ -95,7 +86,11 @@ const Slider = ({
     const width = event.currentTarget.clientWidth;
     const value = min + Math.round(((max - min) / width) * offsetX);
     const className = event.currentTarget.className;
-    if (className.includes('Slider_innerRail') || className.includes('Slider_rail') || className.includes('Slider_controlWrapper')) {
+    if (
+      className.includes('Slider_innerRail') ||
+      className.includes('Slider_rail') ||
+      className.includes('Slider_controlWrapper')
+    ) {
       if (range) {
         if (controlWrapperRef.current) {
           const rect = controlWrapperRef.current.getBoundingClientRect();
@@ -144,7 +139,7 @@ const Slider = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div className={showLabel ? styles.container : styles.containerNoLabels}>
       <div className={styles.inputWrapper}>
         <input
           className={`${styles.input} ${!range ? styles.hide : ''}`}

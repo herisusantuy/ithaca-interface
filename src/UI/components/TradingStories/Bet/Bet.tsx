@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './Bet.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -201,6 +201,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     return `${apy}%`;
   };
 
+  useEffect(() => {
+    handleCapitalAtRiskChange('100');
+  }, []);
+
   return (
     <div>
       {!compact && showInstructions && (
@@ -222,6 +226,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             max={strikes[strikes.length - 1]}
             label={strikes.length}
             step={100}
+            showLabel={false}
             onChange={strike => {
               setStrike(strike);
               handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
@@ -230,9 +235,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           />
         </Flex>
       )}
-      <Flex margin='mt-10 mb-24'>
+      <Flex margin={`${compact ? 'mt-8 mb-4' : 'mt-10 mb-24'}`}>
         <RadioButton
-          width={compact ? 0 : 225}
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 140 : 225}
           options={[
             { option: 'Inside Range', value: 'INSIDE' },
             { option: 'Outside Range', value: 'OUTSIDE' },
