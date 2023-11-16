@@ -27,6 +27,7 @@ import {
   makingChartData,
 } from '@/UI/utils/ChartUtil';
 import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
+import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 // Types
 type ChartDataProps = {
@@ -44,7 +45,7 @@ type DomainType = {
 
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
-import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
@@ -52,7 +53,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
-  const [bridge, setBridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
+  const [bridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
   const [dashed, setDashed] = useState<KeyType>({ label: 'total', type: 'leg1' });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
@@ -176,28 +177,37 @@ const ChartPayoff = (props: ChartDataProps) => {
     <>
       {isClient && (
         <>
-          <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
-            <h3>Potential P&L:</h3>
-            <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-              {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
-            </p>
-            <LogoUsdc />
-          </div>
+          <Flex direction='row-space-between' margin='mb-10 mt-15'>
+            <h3 className='mb-0'>Payoff Diagram</h3>
+            <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
+              <h3>Potential P&L:</h3>
+              <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
+                {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
+              </p>
+              <LogoUsdc />
+            </div>
+          </Flex>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
-            <AreaChart data={modifiedData} onMouseMove={handleMouseMove}>
+            <AreaChart
+              data={modifiedData}
+              onMouseMove={handleMouseMove}
+              margin={{ top: 18, right: 0, left: 0, bottom: 0 }}
+            >
               <defs>
+                {/* Area gradient */}
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='10%' stopColor={color} stopOpacity={0.7} />
-                  <stop offset='40%' stopColor={color} stopOpacity={0.2} />
+                  <stop offset='10%' stopColor={color} stopOpacity={0.2} />
+                  <stop offset='40%' stopColor={color} stopOpacity={0} />
                   <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-                  <stop offset='60%' stopColor='#FF3F57' stopOpacity={0.2} />
-                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.7} />
+                  <stop offset='60%' stopColor='#FF3F57' stopOpacity={0} />
+                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.2} />
                 </linearGradient>
 
                 <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
-                  <feGaussianBlur in='SourceGraphic' stdDeviation='3' result='blur' />
+                  <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
                 </filter>
 
+                {/* Core line gradient */}
                 <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='2%' stopColor={color} stopOpacity={0.1} />
                   <stop offset='40%' stopColor={color} stopOpacity={0.9} />
@@ -211,13 +221,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                   <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
                   <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
                 </linearGradient>
-
-                <linearGradient id='referenceLine' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='8%' stopColor={color} stopOpacity={0.3} />
-                  <stop offset='92%' stopColor='#FF3F57' stopOpacity={0.3} />
-                </linearGradient>
               </defs>
+
               <YAxis type='number' domain={[domain.min, domain.max]} hide={true} />
+
               <Area
                 type='linear'
                 stroke='url(#lineGradient)'
@@ -243,14 +250,16 @@ const ChartPayoff = (props: ChartDataProps) => {
                 }
                 activeDot={false}
               />
+
               <Area
                 type='linear'
                 stroke='url(#lineGradient)'
-                strokeWidth='2'
+                strokeWidth='1'
                 dataKey='value'
                 fill='transparent'
                 activeDot={false}
               />
+
               <Area
                 type='linear'
                 stroke='url(#dashGradient)'
@@ -259,11 +268,15 @@ const ChartPayoff = (props: ChartDataProps) => {
                 fill='transparent'
                 activeDot={false}
               />
-              <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5} />
+
+              {/* Reference line */}
+              <ReferenceLine y={baseValue} stroke='white' strokeOpacity={0.3} strokeWidth={0.5} />
+
+              {/* Tooltip */}
               <Tooltip
                 isAnimationActive={false}
                 animationDuration={1}
-                position={{ x: cursorX - 50, y: 0 }}
+                position={{ x: cursorX - 50, y: 7 }}
                 wrapperStyle={{ width: 100 }}
                 cursor={<CustomCursor x={cursorX} />}
                 content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
@@ -276,8 +289,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                       <text
                         x={10}
                         y={minimumPosition + 20}
-                        fill={'#FF3F57'}
-                        fontSize={10}
+                        fill={showUnderBar ? '#FF3F57' : 'transparent'}
+                        fontSize={12}
                         textAnchor='left'
                       >
                         {downSide
@@ -286,7 +299,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                           ? '+' + '' + getNumberFormat(minimize)
                           : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition + 7} />}
+                      {downSide || !showUnderBar ? <></> : <LogoUsdc x={50} y={minimumPosition + 7} />}
                     </>
                   }
                   position='insideBottom'
@@ -295,10 +308,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        x={width - 50}
+                        x={width - 67}
                         y={8}
                         fill={upSide ? '#5EE192' : 'transparent'}
-                        fontSize={10}
+                        fontSize={12}
                         textAnchor='middle'
                       >
                         Unlimited Upside

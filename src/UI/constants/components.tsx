@@ -453,7 +453,7 @@ const COMPONENT_GROUPS = [
         component: (
           <>
             <h3 className='mb-14'>Strategy</h3>
-            <TableStrategy strategies={[]} removeRow={() => {}} />
+            <TableStrategy strategies={[]} removeRow={() => {}} clearAll={()=>{}} />
           </>
         ),
         status: 'To Review',
