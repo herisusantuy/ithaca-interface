@@ -45,6 +45,7 @@ type DomainType = {
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import { useDebouncedCallback } from 'use-debounce';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
@@ -149,10 +150,13 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
+    console.log("val", val)
     if (val > minimumPosition) {
       setMinimumPosition(val);
     }
   };
+  const debouncedUpdatePosition = useDebouncedCallback(updatePosition, 500);
+
 
   const handleResize = (width: number) => {
     setWidth(width);
@@ -236,7 +240,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                     dataSize={modifiedData.length}
                     special={breakPoints}
                     dataList={modifiedData}
-                    updatePosition={updatePosition}
+                    updatePosition={debouncedUpdatePosition}
                   />
                 }
                 activeDot={false}
