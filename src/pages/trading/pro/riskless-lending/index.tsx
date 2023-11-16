@@ -281,6 +281,7 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index)
                     }}
+                    clearAll={() => {}}
                   />
                   <h3>Payoff Diagram</h3>
                   {chartData ? (
