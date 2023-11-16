@@ -6,7 +6,8 @@
 }
 
 .tooltipValue {
-  @include font-size('text-xs', 'regular');
+  @include font-size('text-sm', 'regular');
+  color: var(--white);
   font-family: $roboto;
   text-align: center;
   margin-top: rem(3);
@@ -24,20 +25,16 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: rem(10);
   gap: rem(5);
+
   p {
     font-family: $roboto;
     @include font-size('text-xs', 'regular');
   }
-  h2 {
-    font-family: $roboto;
-    @include font-size('text-xxs', 'regular');
-    color: var(--green-30);
-  }
+
   h3 {
     font-family: $roboto;
-    @include font-size('text-xxs', 'bold');
+    @include font-size('text-xs', 'semibold');
     color: var(--white);
     margin: 0 !important;
   }
@@ -48,6 +45,7 @@
   align-items: center;
   justify-content: center;
   gap: rem(8);
+  margin-top: rem(24);
 }
 
 .badge {
