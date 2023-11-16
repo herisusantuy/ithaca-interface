@@ -67,15 +67,3 @@
   font-family: $roboto;
   @include font-size('text-xs', 'regular');
 }
-
-.payoff {
-  position: relative;
-
-  h4 {
-    position: absolute;
-
-    color: var(--white);
-    font-family: $lato;
-    @include font-size('text-md', 'semibold');
-  }
-}

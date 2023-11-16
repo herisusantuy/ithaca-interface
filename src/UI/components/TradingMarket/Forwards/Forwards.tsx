@@ -211,15 +211,13 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
           </div>
         </Flex>
       )}
-      <div className={styles.payoff}>
-        {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff
-          chartData={payoffMap ?? CHART_FAKE_DATA}
-          height={chartHeight}
-          showKeys={false}
-          showPortial={!compact}
-        />
-      </div>
+      <ChartPayoff
+        compact={compact}
+        chartData={payoffMap ?? CHART_FAKE_DATA}
+        height={chartHeight}
+        showKeys={false}
+        showPortial={!compact}
+      />
       {!compact && (
         <Flex direction='row-space-between' gap='gap-4' padding='p-10'>
           <h5 className={styles.greeks}>Greeks</h5>
