@@ -26,7 +26,7 @@ export const LEADERBOARD_CARDS: CardProps[] = [
     title: 'The Most Profitable',
     address: '0x4c31...c0ed',
     label: 'PnL (USDC)',
-    value: 33100,
+    value: -33100,
     icon: <LogoUsdc />,
     currency: 'USDC',
   },
