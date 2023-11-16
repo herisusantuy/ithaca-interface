@@ -12,6 +12,7 @@ import Remove from '@/UI/components/Icons/Remove';
 import styles from './TableStrategy.module.scss';
 import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 import Dot from '../Dot/Dot';
+import { formatNumber } from '@/UI/utils/Numbers';
 
 type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];
@@ -41,7 +42,7 @@ const TableStrategy = ({ strategies, removeRow }: StrategyTableProps) => {
           <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
           <div className={styles.cell}>{strategy.leg.quantity}</div>
           <div className={styles.cell}>{strategy.strike}</div>
-          <div className={styles.cell}>{strategy.referencePrice}</div>
+          <div className={styles.cell}>{formatNumber(strategy.referencePrice, 'string')}</div>
           <div className={styles.cell}>
             <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
               <Remove />
