@@ -16,7 +16,6 @@ import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
 import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
@@ -65,7 +64,7 @@ const Index = () => {
 
   const handleStrategyChange = (strat: string) => {
     console.log(strategy)
-    const newStrategy = STRATEGIES.find((s) => s.key === strat);
+    const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);

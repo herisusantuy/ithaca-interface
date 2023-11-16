@@ -1,5 +1,5 @@
 // Packages
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -21,7 +21,6 @@ import Panel from '@/UI/layouts/Panel/Panel';
 
 // Styles
 import styles from './DynamicOptionRow.module.scss';
-import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 import { StrategyLeg } from '@/UI/constants/prepackagedStrategies';
 import { DynamicOptionStrategy } from '@/pages/trading/pro/dynamic-option-strategies';
 import { Leg } from '@ithaca-finance/sdk';
@@ -35,7 +34,7 @@ type DynamicOptionRowProps = {
   id: string;
 };
 
-const PRODUCT_OPTIONS = [{
+const PRODUCT_OPTIONS: ProductOption[] = [{
   option: 'Option',
   value: 'option'
 }, {
@@ -46,7 +45,7 @@ const PRODUCT_OPTIONS = [{
   value: 'Forward'
 }];
 
-const PRODUCT_TYPES = {
+const PRODUCT_TYPES: ProductType = {
   option: [{
     option: 'Call',
     value: 'Call'
@@ -68,18 +67,23 @@ const PRODUCT_TYPES = {
     option: 'Next Auction',
     value: 'NEXT'
   }]
+};
+
+type ProductType = Record<string, ProductOption[]>;
+
+type ProductOption = {
+  option: string,
+  value: string
 }
-
-
 
 const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: DynamicOptionRowProps) => {
   // Store
-  const { currencyPrecision, currentExpiryDate, expiryList, ithacaSDK, getContractsByPayoff, getContractsByExpiry, spotPrices } =
+  const { getContractsByPayoff, spotPrices } =
     useAppStore();
 
   // State
   const [product, setProduct] = useState(strategy.product);
-  const [typeList, setTypeList] = useState(PRODUCT_TYPES[strategy.product]);
+  const [typeList, setTypeList] = useState<ProductOption[]>(PRODUCT_TYPES[strategy.product]);
   const [type, setType] = useState(strategy.type);
   const [side, setSide] = useState<'BUY' | 'SELL'>(strategy.side);
   const [size, setSize] = useState('100');
@@ -90,6 +94,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
 
   useEffect(() => {
     handleStrikeListUpdate()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikeList, id]);
 
   const handleProductChange = (product: string) => {
@@ -143,7 +148,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     else {
       const spot = spotPrices['WETH/USDC'];
       const list = Object.keys(strikeList);
-      let closest = list.sort((a, b) => Math.abs(spot - a) - Math.abs(spot - b))[0];
+      const closest = list.sort((a, b) => Math.abs(spot - parseFloat(a)) - Math.abs(spot - parseFloat(b)))[0];
       const index = list.sort().findIndex((a) => a === closest);
       const strikePoint = index + strategy.strike
       const newStrike = list[strikePoint < 0 ? 0 : strikePoint >= list.length ? list.length - 1 : strikePoint];
@@ -198,10 +203,6 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
       strike,
     });
   };
-  useEffect(() => {
-    console.log('test')
-    handleStrikeListUpdate()
-  }, []);
 
   return (
     <>
