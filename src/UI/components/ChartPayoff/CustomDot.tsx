@@ -1,6 +1,6 @@
 // Constants
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // Types
 type CustomDotProps = {
@@ -14,14 +14,19 @@ type CustomDotProps = {
   index?: number;
   dataList: PayoffDataProps[];
   updatePosition: (val: number) => void;
+  updatePnlLabelPosition: (val: number) => void;
 };
 
 const CustomDot = (props: CustomDotProps) => {
-  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
+  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition, updatePnlLabelPosition } = props;
 
   // updatePosition(cy ? Math.round(cy) : 0);
 
   useEffect(() => {
+    const minValue = Math.min(...dataList.map(i => i.value));
+    if (payload?.value == minValue) {
+      updatePnlLabelPosition(Number(cy));
+    }
     if (payload?.value == 0) {
       updatePosition(Number(cy));
     }

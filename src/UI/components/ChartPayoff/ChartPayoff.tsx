@@ -68,6 +68,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [minimumPosition, setMinimumPosition] = useState<number>(height - 30);
   const [showUnderBar, setShowUnderBar] = useState<boolean>(false);
+  const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const baseValue = 0;
   const colorArray = [
     '#4bb475',
@@ -115,7 +116,6 @@ const ChartPayoff = (props: ChartDataProps) => {
     setShowUnderBar(false);
     setDomain(findOverallMinMaxValues(chartData));
     const tempData = makingChartData(chartData, bridge.label, dashed.label);
-    console.log(tempData);
     const colorIndex = getNumber(bridge.type.replace('leg', ''));
     setColor(colorArray[colorIndex - 1]);
     const dashedColorIndex = getNumber(dashed.type.replace('leg', ''));
@@ -153,7 +153,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    console.log(val);
     if (val > 100) {
       setMinimumPosition(val);
     } else {
@@ -166,7 +165,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const handleAnimationEnd = () => {
-    setShowUnderBar(false);
     setTimeout(() => {
       setShowUnderBar(true);
     }, 2000);
@@ -255,6 +253,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       special={breakPoints}
                       dataList={modifiedData}
                       updatePosition={updatePosition}
+                      updatePnlLabelPosition={setPnlLabelPosition}
                     />
                   )
                 }
@@ -290,8 +289,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} y={ minimumPosition } />}
-                  content={<CustomTooltip x={cursorX} y={ minimumPosition } base={baseValue} setChangeVal={updateChange} />}
+                  cursor={<CustomCursor x={cursorX} y={minimumPosition} />}
+                  content={
+                    <CustomTooltip x={cursorX} y={minimumPosition} base={baseValue} setChangeVal={updateChange} />
+                  }
                 />
               )}
 
@@ -299,20 +300,14 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <Label
                   content={
                     <>
-                      <text
-                        x={10}
-                        y={minimumPosition + 20}
-                        fill={showUnderBar ? '#FF3F57' : 'transparent'}
-                        fontSize={12}
-                        textAnchor='left'
-                      >
+                      <text x={10} y={(pnlLabelPosition + 20) > height ? height - 20 : (pnlLabelPosition + 20)} fill={'#FF3F57'} fontSize={12} textAnchor='left'>
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
                           ? '+' + '' + getNumberFormat(minimize)
                           : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide || !showUnderBar ? <></> : <LogoUsdc x={50} y={minimumPosition + 7} />}
+                      {downSide ? <></> : <LogoUsdc x={50} y={(pnlLabelPosition + 20) > height ? height - 33 : (pnlLabelPosition + 7)} />}
                     </>
                   }
                   position='insideBottom'
