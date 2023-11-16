@@ -186,7 +186,7 @@ const ChartPayoff = (props: ChartDataProps) => {
             <AreaChart
               data={modifiedData}
               onMouseMove={handleMouseMove}
-              margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: 0 }}
+              margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
             >
               <defs>
                 {/* Area gradient */}
@@ -246,7 +246,6 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataList={modifiedData}
                       updatePosition={updatePosition}
                       updatePnlLabelPosition={setPnlLabelPosition}
-                      height={height}
                     />
                   )
                 }
