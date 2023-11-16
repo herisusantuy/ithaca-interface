@@ -25,10 +25,13 @@ import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 import { StrategyLeg } from '@/UI/constants/prepackagedStrategies';
 import { DynamicOptionStrategy } from '@/pages/trading/pro/dynamic-option-strategies';
 import { Leg } from '@ithaca-finance/sdk';
+import Button from '../Button/Button';
+import Remove from '../Icons/Remove';
 
 type DynamicOptionRowProps = {
   strategy: StrategyLeg
   updateStrategy: (strategy: DynamicOptionStrategy) => void;
+  removeStrategy: () => void;
   id: string;
 };
 
@@ -40,7 +43,7 @@ const PRODUCT_OPTIONS = [{
   value: 'digital-option'
 }, {
   option: 'Forward',
-  value: 'forward'
+  value: 'Forward'
 }];
 
 const PRODUCT_TYPES = {
@@ -58,7 +61,7 @@ const PRODUCT_TYPES = {
     option: 'Put',
     value: 'BinaryPut'
   }],
-  forward: [{
+  Forward: [{
     option: 'Call',
     value: 'CURRENT'
   }, {
@@ -69,7 +72,7 @@ const PRODUCT_TYPES = {
 
 
 
-const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProps) => {
+const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: DynamicOptionRowProps) => {
   // Store
   const { currencyPrecision, currentExpiryDate, expiryList, ithacaSDK, getContractsByPayoff, getContractsByExpiry, spotPrices } =
     useAppStore();
@@ -80,66 +83,25 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
   const [type, setType] = useState(strategy.type);
   const [side, setSide] = useState<'BUY' | 'SELL'>(strategy.side);
   const [size, setSize] = useState('100');
-  const [strike, setStrike] = useState<string | undefined>(strategy.product === 'forward' ? '-' : undefined);
-  const contracts = getContractsByPayoff(strategy.product === 'forward' ? 'Forward' : strategy.type);
+  const [strike, setStrike] = useState<string | undefined>(strategy.product === 'Forward' ? '-' : undefined);
+  const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
-  const [unitPrice, setUnitPrice] = useState(strategy.product === 'forward' ? `${contracts['-'].referencePrice}` : '');
+  const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
 
   useEffect(() => {
-    console.log(strikeList)
-    let price = '';
-    if (product === 'forward') {
-      price = `${strikeList['-'].referencePrice}`;
-      setUnitPrice(price);
-      if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-      const leg = {
-        contractId: strikeList['-'].contractId,
-        quantity: size,
-        side,
-      } as Leg;
-      updateStrategy({
-        leg,
-        referencePrice: getNumber(unitPrice),
-        payoff: product,
-        strike,
-      });
-    }
-    else {
-      const spot = spotPrices['WETH/USDC'];
-      const list = Object.keys(strikeList);
-      let closest = list.sort((a, b) => Math.abs(spot - a) - Math.abs(spot - b))[0];
-      const index = list.sort().findIndex((a) => a === closest);
-      const strikePoint = index + strategy.strike
-      const newStrike = list[strikePoint < 0 ? 0 : strikePoint >= list.length ? list.length - 1 : strikePoint];
-      setStrike(newStrike);
-       price = `${strikeList[newStrike].referencePrice}`;
-      setUnitPrice(`${strikeList[newStrike].referencePrice}`);
-      if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-      const leg = {
-        contractId: strikeList[newStrike].contractId,
-        quantity: size,
-        side,
-      } as Leg;
-      updateStrategy({
-        leg,
-        referencePrice: getNumber(unitPrice),
-        payoff: product,
-        strike,
-      });
-    }
+    handleStrikeListUpdate()
+  }, [strikeList, id]);
 
-  }, [strikeList])
-  // getStrikeFromSpot();
   const handleProductChange = (product: string) => {
     setProduct(product);
     setTypeList(PRODUCT_TYPES[product]);
     setType(PRODUCT_TYPES[product][0].value);
-    setStrikeList({...getContractsByPayoff(product === 'forward' ? 'Forward' : PRODUCT_TYPES[product][0].value)})
+    setStrikeList({...getContractsByPayoff(product === 'Forward' ? 'Forward' : PRODUCT_TYPES[product][0].value)})
   };
 
   const handleTypeChange = (type: string) => {
     setType(type);
-    setStrikeList({...getContractsByPayoff(product === 'forward' ? 'Forward' : type)});
+    setStrikeList({...getContractsByPayoff(product === 'Forward' ? 'Forward' : type)});
   };
 
   const handleSideChange = (side: 'BUY' | 'SELL') => {
@@ -153,11 +115,56 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
     updateStrategy({
       leg,
       referencePrice: getNumber(unitPrice),
-      payoff: product,
+      payoff: product === 'Forward' ? 'Forward': type,
       strike,
     });
   };
 
+  const handleStrikeListUpdate = () => {
+    let price = '';
+    if (product === 'Forward') {
+      const newStrike = '-'
+      price = `${strikeList[newStrike].referencePrice}`;
+      setUnitPrice(price);
+      setStrike(newStrike);
+      if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
+      const leg = {
+        contractId: strikeList[newStrike].contractId,
+        quantity: size,
+        side,
+      } as Leg;
+      updateStrategy({
+        leg,
+        referencePrice: getNumber(price),
+        payoff: 'Forward',
+        strike: newStrike,
+      });
+    }
+    else {
+      const spot = spotPrices['WETH/USDC'];
+      const list = Object.keys(strikeList);
+      let closest = list.sort((a, b) => Math.abs(spot - a) - Math.abs(spot - b))[0];
+      const index = list.sort().findIndex((a) => a === closest);
+      const strikePoint = index + strategy.strike
+      const newStrike = list[strikePoint < 0 ? 0 : strikePoint >= list.length ? list.length - 1 : strikePoint];
+      setStrike(newStrike);
+       price = `${strikeList[newStrike].referencePrice}`;
+      setUnitPrice(price);
+      if (!newStrike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
+      const leg = {
+        contractId: strikeList[newStrike].contractId,
+        quantity: size,
+        side,
+      } as Leg;
+        updateStrategy({
+          leg,
+          referencePrice: getNumber(price),
+          payoff: type,
+          strike: newStrike,
+        });
+    }
+  };
+ 
   const handleSizeChange = (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
@@ -170,7 +177,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
     updateStrategy({
       leg,
       referencePrice: getNumber(unitPrice),
-      payoff: product,
+      payoff: product === 'Forward' ? 'Forward': type,
       strike,
     });
   };
@@ -187,10 +194,14 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
     updateStrategy({
       leg,
       referencePrice: getNumber(unitPrice),
-      payoff: product,
+      payoff: product === 'Forward' ? 'Forward': type,
       strike,
     });
   };
+  useEffect(() => {
+    console.log('test')
+    handleStrikeListUpdate()
+  }, []);
 
   return (
     <>
@@ -235,7 +246,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
             />
           </div>
           <div className={styles.strike}>
-            {product !== 'forward' ? (
+            {product !== 'Forward' ? (
               <DropdownMenu
                 value={strike ? { name: strike, value: strike } : undefined}
                 options={Object.keys(strikeList).map(strike => ({ name: strike, value: strike }))}
@@ -261,7 +272,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
                 updateStrategy({
                   leg,
                   referencePrice: getNumber(target.value),
-                  product,
+                  payoff: product === 'Forward' ? 'Forward': type,
                   strike,
                 });
                 setUnitPrice(getNumberValue(target.value))}
@@ -269,6 +280,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id }: DynamicOptionRowProp
             />
           </div>
           <div className={styles.action}>
+            <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+              <Remove />
+            </Button>
           </div>
         </div>
       </Panel>

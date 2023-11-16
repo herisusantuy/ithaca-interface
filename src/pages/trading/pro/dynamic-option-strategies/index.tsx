@@ -36,7 +36,9 @@ import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
 import DynamicOptionRow from '@/UI/components/DynamicOptionRow/DynamicOptionRow';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
-import { STRATEGIES } from '@/UI/constants/prepackagedStrategies';
+import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
+import Button from '@/UI/components/Button/Button';
+import Plus from '@/UI/components/Icons/Plus';
 
 export interface DynamicOptionStrategy {
   leg: Leg;
@@ -56,7 +58,7 @@ const Index = () => {
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
   const [chartData, setChartData] = useState<PayoffMap[]>();
-  const [strategy, setStrategy] = useState(STRATEGIES[0])
+  const [strategy, setStrategy] = useState(STRATEGIES[0]);
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
@@ -64,8 +66,14 @@ const Index = () => {
   const handleStrategyChange = (strat: string) => {
     console.log(strategy)
     const newStrategy = STRATEGIES.find((s) => s.key === strat);
-
-    setStrategy(newStrategy)
+    setOrderSummary(undefined);
+    setChartData(undefined);
+    setPositionBuilderStrategies([]);
+    setStrategy({
+      label: newStrategy?.label,
+      key: newStrategy?.key,
+      strategies: newStrategy?.strategies
+    });
   };
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: DynamicOptionStrategy[]) => {
@@ -113,10 +121,37 @@ const Index = () => {
   };
 
   const handleStrategyUpdate = (strategy: DynamicOptionStrategy, index: number) => {
-    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
-    setPositionBuilderStrategies(newPositionBuilderStrategies);
-    getPositionBuilderSummary(newPositionBuilderStrategies);
+    positionBuilderStrategies[index] = strategy;
+    setPositionBuilderStrategies(positionBuilderStrategies);
+    getPositionBuilderSummary(positionBuilderStrategies);
   };
+
+  const handleRemoveStrategy = (index: number) => {
+    const newPositionBuilderStrategies = [...positionBuilderStrategies];
+    newPositionBuilderStrategies.splice(index, 1);
+    strategy.strategies.splice(index, 1);
+    setStrategy({ ...strategy })
+    if (!newPositionBuilderStrategies.length) {
+      setPositionBuilderStrategies([]);
+      setOrderSummary(undefined);
+      setChartData(undefined);
+    } else {
+      setPositionBuilderStrategies(newPositionBuilderStrategies);
+      getPositionBuilderSummary(newPositionBuilderStrategies);
+    }
+  };
+  
+  const addPosition = () => {
+    strategy.strategies.push((
+      {
+          product: "option",
+          type: "Call",
+          side: "BUY",
+          size: 100,
+          strike: 0
+      }));
+      setStrategy({...strategy});
+  }
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
@@ -157,29 +192,43 @@ const Index = () => {
                     <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
                   </Flex>
                   <h3>Dynamic Option Strategy</h3>
-                  <DropdownMenu
-                    value={{
-                      name: strategy.label,
-                      value: strategy.key
-                    }}
-                    options={STRATEGIES.map((strat) => {
-                      return {
-                        name: strat.label,
-                        value: strat.key
-                      }
-                    })}
-                    onChange={option => handleStrategyChange(option)}
-                  />
+                  <Flex>
+                    <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
+                    <div className={styles.dropDownWrapper}>
+                      <DropdownMenu
+                        value={{
+                          name: strategy.label,
+                          value: strategy.key
+                        }}
+                        options={STRATEGIES.map((strat) => {
+                          return {
+                            name: strat.label,
+                            value: strat.key
+                          }
+                        })}
+                        onChange={option => handleStrategyChange(option)}
+                      />
+                    </div>
+                  </Flex>
                   {strategy.strategies.map((strat, index) => {
                     return (
                       <DynamicOptionRow
-                        id={`strategy-${index}`}
+                        id={`strategy-${index}-${strategy.key}`}
                         key={`strategy-${index}`}
                         strategy={strat}
                         updateStrategy={(strat) => handleStrategyUpdate(strat, index)}
+                        removeStrategy={() => handleRemoveStrategy(index)}
                       />
                     )
                   })}
+                  <Button
+                    title='Click to add Position '
+                    size='sm'
+                    variant='secondary'
+                    onClick={() => addPosition()}
+                  >
+                    <Plus/> Add Position
+                  </Button>
                 </>
               }
               orderSummary={
@@ -208,16 +257,7 @@ const Index = () => {
                   <TableStrategy
                     strategies={positionBuilderStrategies}
                     removeRow={(index: number) => {
-                      const newPositionBuilderStrategies = [...positionBuilderStrategies];
-                      newPositionBuilderStrategies.splice(index, 1);
-                      if (!newPositionBuilderStrategies.length) {
-                        setPositionBuilderStrategies([]);
-                        setOrderSummary(undefined);
-                        setChartData(undefined);
-                      } else {
-                        setPositionBuilderStrategies(newPositionBuilderStrategies);
-                        getPositionBuilderSummary(newPositionBuilderStrategies);
-                      }
+                      handleRemoveStrategy(index)
                     }}
                   />
                   <h3>Payoff Diagram</h3>

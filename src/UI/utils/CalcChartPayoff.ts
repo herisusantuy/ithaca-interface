@@ -24,7 +24,7 @@ const range = (start: number, stop: number, step: number = 10) =>
     .map((x, y) => x + y * step);
 
 const calculateRange = (legs: OptionLeg[]) => {
-  const legsSorted = legs.map(leg => (leg.payoff === 'Forward' ? leg.premium : leg.economics.strike || 1000)).sort();
+  const legsSorted = legs.map(leg => (leg.payoff === 'Forward' ? leg.premium : leg.economics?.strike || 1000)).sort();
   return range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 10);
 };
 
