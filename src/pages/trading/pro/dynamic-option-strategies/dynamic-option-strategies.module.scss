@@ -1,6 +1,15 @@
 .title {
-  color: white;
+  color: var(--white);
   margin-top: 24px;
+}
+
+.positionTitle {
+  margin-bottom: 18px;
+  margin-top: 24px;
+  color: var(--white);
+  & p {
+    color: var( --white-rgba-20);
+  }
 }
 
 .positionBuilder {
@@ -8,23 +17,39 @@
   height: 257px;
   background-color: rgba(28, 32, 40, 0.4);
   border-radius: 30px;
-  width: 912px;
 }
 
 .summary {
   height: 80px;
-  width: 912px;
   margin-top: 118px;
   background-color: rgba(28, 32, 40, 0.4);
   border-radius: 30px;
 }
 
-.strategy {
-  height: 550px;
-  width: 465px;
-  border-radius: 30px;
+.strategyPanel {
+  margin-left: 15px;
+}
+
+.strategyWrapper {
   padding: 20px;
-  background-color: rgba(28, 32, 40, 0.4);
-  margin-left: 16px;
-  color: white;
+  z-index: 10;
+  position: relative;
+}
+
+.summaryWrapper {
+  margin-top: 120px;
+}
+
+.tableWrapper {
+  min-height: 200px;
+}
+
+.dropDownWrapper {
+  width: 150px;
+}
+
+.prePackagedTitle {
+  color: var(--white);
+  margin-top: 10px;
+  margin-right: 12px;
 }
