@@ -57,6 +57,8 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
 import styles from './TableOrder.module.scss';
+import Container from '@/UI/layouts/Container/Container';
+import Loader from '../Loader/Loader';
 
 // Types
 type TableOrderProps = {
@@ -80,6 +82,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [slicedData, setSlicedData] = useState<TableRowDataWithExpanded[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [direction, setDirection] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [productArray, setProductArray] = useState<string[]>([]);
@@ -123,19 +126,23 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         case TABLE_TYPE.LIVE:
           ithacaSDK.orders.clientOpenOrders().then(res => {
             dataToRows(res);
+            setLoading(false);
           });
           break;
         case TABLE_TYPE.ORDER:
           ithacaSDK.client.currentPositions().then((res) => {
-            dataToRows(res)
+            dataToRows(res);
+            setLoading(false);
           })
           break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {
             dataToRows(res);
+            setLoading(false);
           });
           break;
         default:
+          setLoading(false);
           setData(TABLE_ORDER_DATA_WITH_EXPANDED);
           break;
       }
@@ -143,9 +150,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    setData(TABLE_ORDER_DATA_WITH_EXPANDED);
-  }, []);
+  // useEffect(() => {
+  //   setData(TABLE_ORDER_DATA_WITH_EXPANDED);
+  // }, []);
 
   // Handle cancel order
   const handleCancelOrderClick = (rowIndex: number) => {
@@ -515,7 +522,10 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               </Fragment>
             );
           })
-        ) : (
+        ) : isLoading ? (
+          <Container size='loader'>
+            <Loader />
+          </Container>) :(
           <p className={styles.emptyTable}>No results found</p>
         )}
       </div>
