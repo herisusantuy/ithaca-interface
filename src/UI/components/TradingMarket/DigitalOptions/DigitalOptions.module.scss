@@ -6,18 +6,6 @@
   @include spacing(margin, 8, 'bottom');
 }
 
-.payoff {
-  position: relative;
-
-  h4 {
-    position: absolute;
-
-    color: var(--white);
-    font-family: $lato;
-    @include font-size('text-md', 'semibold');
-  }
-}
-
 .greeks {
   color: var(--white);
   font-family: $lato;

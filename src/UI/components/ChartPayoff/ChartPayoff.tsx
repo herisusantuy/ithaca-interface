@@ -36,6 +36,7 @@ type ChartDataProps = {
   showKeys?: boolean;
   showPortial?: boolean;
   showUnlimited?: boolean;
+  compact?: boolean;
 };
 
 type DomainType = {
@@ -48,8 +49,7 @@ import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
-
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -138,6 +138,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
+    if (!e) return; // Avoid null event in compact mode when tooltip is not rendered
     if (e.activePayload) {
       const xValue = e.chartX;
       setCursorX(xValue ?? 0);
@@ -176,21 +177,23 @@ const ChartPayoff = (props: ChartDataProps) => {
     <>
       {isClient && (
         <>
-          <Flex direction='row-space-between' margin='mb-10 mt-15'>
-            <h3 className='mb-0'>Payoff Diagram</h3>
-            <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
-              <h3>Potential P&L:</h3>
-              <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-                {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
-              </p>
-              <LogoUsdc />
-            </div>
-          </Flex>
+          {!compact && (
+            <Flex direction='row-space-between' margin='mb-10 mt-15'>
+              <h3 className='mb-0'>Payoff Diagram</h3>
+              <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
+                <h3>Potential P&L:</h3>
+                <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
+                  {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
+                </p>
+                <LogoUsdc />
+              </div>
+            </Flex>
+          )}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}
               onMouseMove={handleMouseMove}
-              margin={{ top: 18, right: 0, left: 0, bottom: 0 }}
+              margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: 0 }}
             >
               <defs>
                 {/* Area gradient */}
@@ -231,21 +234,25 @@ const ChartPayoff = (props: ChartDataProps) => {
                 fill='url(#fillGradient)'
                 filter='url(#glow)'
                 label={
-                  <CustomLabel
-                    base={baseValue}
-                    dataSize={modifiedData.length}
-                    special={breakPoints}
-                    dataList={modifiedData}
-                  />
+                  !compact && (
+                    <CustomLabel
+                      base={baseValue}
+                      dataSize={modifiedData.length}
+                      special={breakPoints}
+                      dataList={modifiedData}
+                    />
+                  )
                 }
                 dot={
-                  <CustomDot
-                    base={baseValue}
-                    dataSize={modifiedData.length}
-                    special={breakPoints}
-                    dataList={modifiedData}
-                    updatePosition={updatePosition}
-                  />
+                  !compact && (
+                    <CustomDot
+                      base={baseValue}
+                      dataSize={modifiedData.length}
+                      special={breakPoints}
+                      dataList={modifiedData}
+                      updatePosition={updatePosition}
+                    />
+                  )
                 }
                 onAnimationEnd={handleAnimationEnd}
                 activeDot={false}
@@ -273,14 +280,16 @@ const ChartPayoff = (props: ChartDataProps) => {
               <ReferenceLine y={baseValue} stroke='white' strokeOpacity={0.3} strokeWidth={0.5} />
 
               {/* Tooltip */}
-              <Tooltip
-                isAnimationActive={false}
-                animationDuration={1}
-                position={{ x: cursorX - 50, y: 7 }}
-                wrapperStyle={{ width: 100 }}
-                cursor={<CustomCursor x={cursorX} />}
-                content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
-              />
+              {!compact && (
+                <Tooltip
+                  isAnimationActive={false}
+                  animationDuration={1}
+                  position={{ x: cursorX - 50, y: 7 }}
+                  wrapperStyle={{ width: 100 }}
+                  cursor={<CustomCursor x={cursorX} />}
+                  content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
+                />
+              )}
 
               <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`} height={1}>
                 <Label

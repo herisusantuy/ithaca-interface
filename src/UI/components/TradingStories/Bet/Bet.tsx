@@ -300,15 +300,13 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           </div>
         </div>
       )}
-      <div className={styles.payoff}>
-        {!compact && <h4>Payoff Diagram</h4>}
-        <ChartPayoff
-          chartData={payoffMap ?? CHART_FAKE_DATA}
-          height={chartHeight}
-          showKeys={false}
-          showPortial={!compact}
-        />
-      </div>
+      <ChartPayoff
+        compact={compact}
+        chartData={payoffMap ?? CHART_FAKE_DATA}
+        height={chartHeight}
+        showKeys={false}
+        showPortial={!compact}
+      />
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
