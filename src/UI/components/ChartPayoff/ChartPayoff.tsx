@@ -49,6 +49,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
+
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -246,8 +247,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                     updatePosition={updatePosition}
                   />
                 }
-                activeDot={false}
                 onAnimationEnd={handleAnimationEnd}
+                activeDot={false}
               />
 
               <Area

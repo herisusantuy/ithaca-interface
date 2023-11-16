@@ -42,10 +42,12 @@
 
 .container {
   display: flex;
+  flex-wrap: wrap; 
   align-items: center;
   justify-content: center;
   gap: rem(8);
   margin-top: rem(24);
+  
 }
 
 .badge {
@@ -61,7 +63,6 @@
   align-items: center;
   gap: rem(4);
   cursor: pointer;
-
   p {
     @include font-size('text-xs', 'regular');
     font-family: $roboto;
