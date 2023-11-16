@@ -45,6 +45,12 @@ const PRODUCT_OPTIONS: ProductOption[] = [{
   value: 'Forward'
 }];
 
+
+type SectionType = {
+  name: string;
+  style: string;
+};
+
 const PRODUCT_TYPES: ProductType = {
   option: [{
     option: 'Call',
@@ -91,7 +97,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
   const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
-
+  
   useEffect(() => {
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps

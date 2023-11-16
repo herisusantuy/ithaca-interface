@@ -53,6 +53,11 @@ type OrderSummary = {
   orderPayoff: OrderPayoff;
 };
 
+type SectionType = {
+  name: string;
+  style: string;
+};
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
@@ -64,7 +69,6 @@ const Index = () => {
     useAppStore();
 
   const handleStrategyChange = (strat: string) => {
-    console.log(strategy)
     const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
@@ -75,7 +79,14 @@ const Index = () => {
       strategies: newStrategy?.strategies
     });
   };
-
+  const sections: SectionType[] = [
+    { name: 'Product', style: styles.product },
+    { name: 'Type', style: styles.type },
+    { name: 'Side', style: styles.side },
+    { name: 'Size', style: styles.size },
+    { name: 'Strike', style: styles.strike },
+    { name: '', style: styles.action },
+  ];
   const getPositionBuilderSummary = async (positionBuilderStrategies: DynamicOptionStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
       legs: Leg[];
@@ -210,6 +221,17 @@ const Index = () => {
                       />
                     </div>
                   </Flex>
+
+                  <div className={styles.parent}>
+                      <>
+                        {sections.map((section, index) => (
+                          <div key={index} className={section.style}>
+                            <p>{section.name}</p>
+                          </div>
+                        ))}
+                        <div className={styles.action}></div>
+                      </>
+                  </div>
                   {strategy.strategies.map((strat, index) => {
                     return (
                       <RisklessLendingRow
