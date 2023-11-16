@@ -12,6 +12,7 @@ import Remove from '@/UI/components/Icons/Remove';
 import styles from './TableStrategy.module.scss';
 import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
 import Dot from '../Dot/Dot';
+import { formatNumber } from '@/UI/utils/Numbers';
 
 type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];

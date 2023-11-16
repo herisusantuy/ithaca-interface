@@ -32,7 +32,7 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
-import { getNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber } from '@/UI/utils/Numbers';
 
 // Styles
 import styles from './position-builder.module.scss';
@@ -184,17 +184,17 @@ const Index = () => {
               }
               orderSummary={
                 <OrderSummary
-                  limit={orderSummary?.order.totalNetPrice || '-'}
-                  collatarelETH={orderSummary ? orderSummary.orderLock.underlierAmount : '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? toPrecision(
+                      ? formatNumber(toPrecision(
                           orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                           currencyPrecision.strike
-                        )
+                        ), 'string')
                       : '-'
                   }
-                  premium={orderSummary?.order.totalNetPrice || '-'}
+                  premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
                   fee={1.5}
                   submitAuction={() => {
                     if (!orderSummary) return;
