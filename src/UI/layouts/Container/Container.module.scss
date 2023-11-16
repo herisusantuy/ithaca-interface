@@ -18,4 +18,13 @@
   &.xl {
     max-width: map-get($container-sizes, xl);
   }
+
+  &.loader {
+    max-width: map-get($container-sizes, xl);
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    justify-content: center;
+    align-items: center;
+  }
 }

@@ -8,14 +8,14 @@ export type LeaderboardEntry = {
 };
 
 export const TABLE_LEADERBOARD_DATA: LeaderboardEntry[] = [
-  { ranking: 1, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 2, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 3, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 4, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 5, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 6, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 7, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 8, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 9, user: '0x4c31...c0ed', points: '32k', totalPoints: '184.2k' },
-  { ranking: 24, user: 'You', points: '32k', totalPoints: '184.2k' },
+  { ranking: 1, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 2, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 3, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 4, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 5, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 6, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 7, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 8, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 9, user: '0x4c31...c0ed', points: '32000', totalPoints: '184200' },
+  { ranking: 24, user: 'You', points: '32000', totalPoints: '184200' },
 ];

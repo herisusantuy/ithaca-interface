@@ -52,7 +52,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
   const [bridge, setBridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
-  const [dashed, setDashed] = useState<string>('');
+  const [dashed, setDashed] = useState<KeyType>({ label: 'total', type: 'leg1' });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
@@ -62,10 +62,30 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
   const [color, setColor] = useState<string>('#4bb475');
+  const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [minimumPosition, setMinimumPosition] = useState<number>(0);
+  const [showUnderBar, setShowUnderBar] = useState<boolean>(false);
   const baseValue = 0;
   const colorArray = [
+    '#4bb475',
+    '#b5b5f8',
+    '#ff772a',
+    '#a855f7',
+    '#7ad136',
+    '#ff3f57',
+    '#6545a4',
+    '#18b5b5',
+    '#4421af',
+    '#d7658b',
+    '#7c1158',
+    '#786028',
+    '#50e991',
+    '#b33dc6',
+    '#00836e',
+  ];
+
+  const dashedColorArray = [
     '#4bb475',
     '#b5b5f8',
     '#ff772a',
@@ -90,10 +110,13 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
+    setShowUnderBar(false);
     setDomain(findOverallMinMaxValues(chartData));
-    const tempData = makingChartData(chartData, bridge.label, dashed);
+    const tempData = makingChartData(chartData, bridge.label, dashed.label);
     const colorIndex = getNumber(bridge.type.replace('leg', ''));
     setColor(colorArray[colorIndex - 1]);
+    const dashedColorIndex = getNumber(dashed.type.replace('leg', ''));
+    setDashedColor(dashedColorArray[dashedColorIndex - 1]);
     setMinimize(Math.min(...tempData.map(i => i.value)));
     isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
     isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
@@ -127,15 +150,24 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updatePosition = (val: number) => {
     if (val > minimumPosition) {
-
       setMinimumPosition(val);
-      // setTimeout(() => {
-      // }, 5);
     }
   };
 
   const handleResize = (width: number) => {
     setWidth(width);
+  };
+
+  const handleAnimationEnd = () => {
+    setShowUnderBar(false);
+    setTimeout(() => {
+      setShowUnderBar(true);
+    }, 2000);
+  };
+
+  const updateDashed = (val: KeyType) => {
+    setShowUnderBar(false);
+    setDashed(val);
   };
 
   return (
@@ -153,9 +185,11 @@ const ChartPayoff = (props: ChartDataProps) => {
             <AreaChart data={modifiedData} onMouseMove={handleMouseMove}>
               <defs>
                 <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='5%' stopColor={color} stopOpacity={0.4} />
+                  <stop offset='10%' stopColor={color} stopOpacity={0.7} />
+                  <stop offset='40%' stopColor={color} stopOpacity={0.2} />
                   <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.4} />
+                  <stop offset='60%' stopColor='#FF3F57' stopOpacity={0.2} />
+                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.7} />
                 </linearGradient>
 
                 <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
@@ -164,16 +198,16 @@ const ChartPayoff = (props: ChartDataProps) => {
 
                 <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='2%' stopColor={color} stopOpacity={0.1} />
-                  <stop offset='40%' stopColor={color} stopOpacity={0.3} />
+                  <stop offset='40%' stopColor={color} stopOpacity={0.9} />
                   <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
-                  <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.3} />
+                  <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.9} />
                   <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
                 </linearGradient>
 
                 <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='90%' stopColor='#B5B5F8' stopOpacity={0.4} />
-                  <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.3} />
-                  <stop offset='5%' stopColor='#B5B5F8' stopOpacity={0.1} />
+                  <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+                  <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+                  <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
                 </linearGradient>
 
                 <linearGradient id='referenceLine' x1='0' y1='0' x2='0' y2='1'>
@@ -206,6 +240,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   />
                 }
                 activeDot={false}
+                onAnimationEnd={handleAnimationEnd}
               />
               <Area
                 type='linear'
@@ -223,7 +258,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 fill='transparent'
                 activeDot={false}
               />
-              <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5}/>
+              <ReferenceLine y={baseValue} stroke='#ffffff4d' strokeWidth={0.5} />
               <Tooltip
                 isAnimationActive={false}
                 animationDuration={1}
@@ -237,14 +272,20 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <Label
                   content={
                     <>
-                      <text x={10} y={minimumPosition + 5} fill='#FF3F57' fontSize={10} textAnchor='left'>
+                      <text
+                        x={10}
+                        y={minimumPosition + 20}
+                        fill={showUnderBar ? '#FF3F57' : 'transparent'}
+                        fontSize={10}
+                        textAnchor='left'
+                      >
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
-                            ? '+' + '' + getNumberFormat(minimize)
-                            : '-' + getNumberFormat(minimize)}
+                          ? '+' + '' + getNumberFormat(minimize)
+                          : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition - 8} />}
+                      {downSide || !showUnderBar ? <></> : <LogoUsdc x={60} y={minimumPosition + 7} />}
                     </>
                   }
                   position='insideBottom'
@@ -268,7 +309,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </XAxis>
             </AreaChart>
           </ResponsiveContainer>
-          {showKeys && <Key keys={key} onDashed={setDashed} />}
+          {showKeys && <Key keys={key} onDashed={updateDashed} />}
         </>
       )}
     </>

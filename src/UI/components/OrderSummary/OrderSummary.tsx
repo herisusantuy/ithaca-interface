@@ -39,7 +39,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, fee, subm
           <CurrencyDisplay amount={premium} symbol={<LogoUsdc />} currency='USDC' />
         </Flex>
         <Flex direction='column' gap='gap-6'>
-          <h5 className='fs-xs'>Platform Fee</h5>
+          <h5 className='fs-xxs'>Platform Fee</h5>
           <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' size='sm' />
         </Flex>
         <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>

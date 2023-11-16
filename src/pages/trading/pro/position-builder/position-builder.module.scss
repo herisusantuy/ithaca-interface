@@ -8,7 +8,7 @@
   margin-top: 24px;
   color: var(--white);
   & p {
-    color: var( --white-rgba-20);
+    color: var(--white-rgba-20);
   }
 }
 
@@ -41,5 +41,26 @@
 }
 
 .tableWrapper {
-  min-height: 200px;
+  position: relative;
+
+  svg {
+    max-width: rem(328);
+  }
+}
+
+.chartWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: rem(8);
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  p {
+    @include font-size('text-sm', 'regular');
+    font-family: $lato;
+  }
 }

@@ -264,6 +264,10 @@
 }
 
 .fs-xs {
+  @include font-size('text-xs', 'regular');
+}
+
+.fs-xxs {
   @include font-size('text-xxs', 'regular');
 }
 
@@ -281,7 +285,7 @@
 }
 
 .recharts-layer path:focus {
-  outline: none;
+  outline: none !important;
 }
 
 .align-stretch {

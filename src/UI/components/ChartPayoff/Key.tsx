@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // constants
-import { KeyType, getRandomInt } from '@/UI/constants/charts/charts';
+import { KeyType } from '@/UI/constants/charts/charts';
 
 // Components
 import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
@@ -13,14 +13,14 @@ import styles from './ChartPayoff.module.scss';
 type KeysProps = {
   keys: string[];
   onChange?: (key: KeyType) => void;
-  onDashed: (label: string) => void;
+  onDashed: (key: KeyType) => void;
 };
 
 const Key = (props: KeysProps) => {
   const { keys, onChange, onDashed } = props;
   const [keyMap, setKeyMap] = useState<KeyType[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selected, setSelected] = useState<KeyType>({ label: 'total', type: 'leg1' });
+  const [selected, setSelected] = useState<KeyType>({ label: 'Total', type: 'leg16' });
 
   useEffect(() => {
     const keyArray: KeyType[] = [];
@@ -40,15 +40,16 @@ const Key = (props: KeysProps) => {
       'leg13',
       'leg14',
       'leg15',
+      'leg16',
     ];
 
     keys.map(item => {
       if (item == 'total') {
-        const keyObj: KeyType = { label: item, type: 'leg1' };
+        const keyObj: KeyType = { label: 'Total', type: 'leg16' };
         keyArray.push(keyObj);
       } else {
-        const dotTypeInt = getRandomInt(1, 14);
-        const keyObj: KeyType = { label: item, type: dotArray[dotTypeInt - 1] };
+        const type: DotTypes = dotArray.find(key => key === item) || 'leg1';
+        const keyObj: KeyType = { label: item, type: type };
         keyArray.push(keyObj);
       }
     });
@@ -67,8 +68,8 @@ const Key = (props: KeysProps) => {
     if (onChange) onChange(key);
   };
 
-  const showDashedLine = (label: string) => {
-    onDashed(label);
+  const showDashedLine = (key: KeyType) => {
+    onDashed(key);
   };
 
   return (
@@ -78,8 +79,8 @@ const Key = (props: KeysProps) => {
           key={index}
           className={`${styles.key} ${getBadgeClass(key.label)}`}
           onClick={() => updateChange(key)}
-          onMouseEnter={() => showDashedLine(key.label)}
-          onMouseLeave={() => showDashedLine('')}
+          onMouseEnter={() => showDashedLine(key)}
+          onMouseLeave={() => showDashedLine({ label: 'total', type: 'leg16' })}
         >
           <Dot type={key.type} />
           <p>{key.label}</p>
