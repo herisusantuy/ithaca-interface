@@ -55,7 +55,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll }: StrategyTableProps) 
         ) : (
           <div className={styles.emptyContainer}>Please add a strategy.</div>
         )}
-        {strategies.length && (
+        {strategies.length > 0 && (
           <Button title='Click to clear all' onClick={clearAll} variant='clear'>
             Clear All
           </Button>

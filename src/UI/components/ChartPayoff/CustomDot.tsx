@@ -19,10 +19,8 @@ type CustomDotProps = {
 const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
 
-  useEffect(() => {
-    updatePosition(cy ? Math.round(cy) : 0);
-  }, []);
-
+  updatePosition(cy ? Math.round(cy) : 0);
+  
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) == 0) {
       if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
