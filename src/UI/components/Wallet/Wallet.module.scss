@@ -16,12 +16,27 @@
 }
 
 .connectWallet {
-  @include font-size('text-xs', 'regular');
+  @include font-size('text-xs', 'bold');
   font-family: $roboto;
   background: var(--green-20) !important;
   padding: rem(10) rem(16) !important;
   color: var(--white);
   border-width: rem(0);
+  border-radius: rem(16);
+  position: relative;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: rem(16);
+    top: -(rem(1));
+    bottom: -(rem(1));
+    right: -(rem(1));
+    left: -(rem(1));
+    z-index: -1;
+    background: linear-gradient(var(--green-30) 0%, rgba(94, 225, 146, 0) 100%);
+  }
 }
 
 .wrongNetwork {
