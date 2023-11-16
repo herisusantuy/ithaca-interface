@@ -25,6 +25,7 @@ import {
   isDecrementing,
   isIncrementing,
   makingChartData,
+  showGradientTags,
 } from '@/UI/utils/ChartUtil';
 import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
@@ -130,10 +131,14 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
 
     // set gradient value
-    setOff(gradientOffset(modified));
+    setOff(gradientOffset(xAxisPosition, height));
     setXAxisPosition(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
+
+  useEffect(() => {
+    setOff(gradientOffset(xAxisPosition, height));
+  }, [xAxisPosition]);
 
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
@@ -151,11 +156,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    if (val > 100) {
-      setXAxisPosition(val);
-    } else {
-      setXAxisPosition(height / 2);
-    }
+    setXAxisPosition(val);
   };
 
   const handleResize = (width: number) => {
@@ -164,6 +165,10 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updateDashed = (val: KeyType) => {
     setDashed(val);
+  };
+
+  const renderGradient = () => {
+    return showGradientTags(off, color, dashedColor);
   };
 
   return (
@@ -188,35 +193,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               onMouseMove={handleMouseMove}
               margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
             >
-              <defs>
-                {/* Area gradient */}
-                <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='10%' stopColor={color} stopOpacity={0.2} />
-                  <stop offset='40%' stopColor={color} stopOpacity={0} />
-                  <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-                  <stop offset='60%' stopColor='#FF3F57' stopOpacity={0} />
-                  <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.2} />
-                </linearGradient>
-
-                <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
-                  <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
-                </filter>
-
-                {/* Core line gradient */}
-                <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='2%' stopColor={color} stopOpacity={0.1} />
-                  <stop offset='40%' stopColor={color} stopOpacity={0.9} />
-                  <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
-                  <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.9} />
-                  <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
-                </linearGradient>
-
-                <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
-                  <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
-                  <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
+              {renderGradient()}
 
               <YAxis type='number' domain={[domain.min, domain.max]} hide={true} />
 
@@ -280,9 +257,15 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} />}
+                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} height={height} />}
                   content={
-                    <CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />
+                    <CustomTooltip
+                      x={cursorX}
+                      y={xAxisPosition}
+                      base={baseValue}
+                      setChangeVal={updateChange}
+                      height={height}
+                    />
                   }
                 />
               )}
@@ -291,14 +274,24 @@ const ChartPayoff = (props: ChartDataProps) => {
                 <Label
                   content={
                     <>
-                      <text x={10} y={(pnlLabelPosition + 20) > height ? height - 20 : (pnlLabelPosition + 20)} fill={'#FF3F57'} fontSize={12} textAnchor='left'>
+                      <text
+                        x={10}
+                        y={pnlLabelPosition + 20 > height ? height - 20 : pnlLabelPosition + 20}
+                        fill={'#FF3F57'}
+                        fontSize={12}
+                        textAnchor='left'
+                      >
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
                           ? '+' + '' + getNumberFormat(minimize)
                           : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={60} y={(pnlLabelPosition + 20) > height ? height - 33 : (pnlLabelPosition + 7)} />}
+                      {downSide ? (
+                        <></>
+                      ) : (
+                        <LogoUsdc x={60} y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7} />
+                      )}
                     </>
                   }
                   position='insideBottom'
