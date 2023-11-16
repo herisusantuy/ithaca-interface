@@ -4,6 +4,9 @@ import { useMemo, useState } from 'react';
 // Constants
 import { LeaderboardEntry, TABLE_LEADERBOARD_HEADERS } from '@/UI/constants/tableLeaderboard';
 
+// Utils
+import { getNumberFormat } from '@/UI/utils/Numbers';
+
 // Layout
 import Flex from '@/UI/layouts/Flex/Flex';
 
@@ -103,8 +106,8 @@ const TableLeaderboard = ({ data }: TableLeaderboardProps) => {
               <Avatar />
               {leader.user}
             </div>
-            <div className={styles.cell}>{leader.points}</div>
-            <div className={styles.cell}>{leader.totalPoints}</div>
+            <div className={styles.cell}>{getNumberFormat(leader.points)}</div>
+            <div className={styles.cell}>{getNumberFormat(leader.totalPoints)}</div>
           </div>
         ))
       ) : (

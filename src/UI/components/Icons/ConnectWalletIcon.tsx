@@ -11,8 +11,8 @@ const ConnectWalletIcon = () => {
           gradientUnits='userSpaceOnUse'
           gradientTransform='translate(15 15) rotate(90) scale(15)'
         >
-          <stop offset='0.491319' stop-color='#4949A2' />
-          <stop offset='1' stop-color='#5EE192' />
+          <stop offset='0.491319' stopColor='#4949A2' />
+          <stop offset='1' stopColor='#5EE192' />
         </radialGradient>
       </defs>
     </svg>
