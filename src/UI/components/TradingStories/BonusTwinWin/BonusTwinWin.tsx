@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './BonusTwinWin.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -28,7 +28,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>('Bonus');
-  const [koBarrier, setKoBarrier] = useState<string>();
+  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[3]);
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -152,11 +152,16 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     }
   };
 
+  useEffect(() => {
+    handleMultiplierChange('100');
+  }, []);
+
   return (
     <div>
-      <Flex margin='mb-12'>
+      <Flex margin={compact ? 'mb-10' : 'mb-12'}>
         <RadioButton
-          width={compact ? 0 : 225}
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 140 : 225}
           options={[
             { option: 'Bonus', value: 'Bonus' },
             { option: 'Twin-Win', value: 'Twin Win' },

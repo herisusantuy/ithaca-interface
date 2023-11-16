@@ -26,6 +26,12 @@
   height: rem(30);
 }
 
+.containerNoLabels {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .wrapper {
   position: relative;
   display: flex;

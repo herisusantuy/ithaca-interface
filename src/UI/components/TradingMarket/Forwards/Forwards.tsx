@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
 import Flex from '@/UI/layouts/Flex/Flex';
 import RadioButton from '../../RadioButton/RadioButton';
@@ -124,13 +124,18 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     return calcCollateralRequirement(leg, 'Forward', 0, currencyPrecision.strike);
   };
 
+  useEffect(() => {
+    handleSizeChange('100');
+  }, []);
+
   return (
     <div>
       {!compact && (
-        <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-10'>
+        <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
           <div>
             {!compact && <label className={styles.label}>Type</label>}
             <RadioButton
+              width={200}
               options={[
                 { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' },
                 { option: 'Next Auction', value: 'NEXT' },

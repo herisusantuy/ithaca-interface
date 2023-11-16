@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './Barriers.module.scss';
 import LogoUsdc from '../../Icons/LogoUsdc';
@@ -26,8 +26,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [upOrDown, setUpOrDown] = useState<'UP' | 'DOWN'>('UP');
   const [inOrOut, setInOrOut] = useState<'IN' | 'OUT'>('IN');
-  const [strike, setStrike] = useState<string>();
-  const [barrier, setBarrier] = useState<string>();
+  const [strike, setStrike] = useState<string>('1900');
+  const [barrier, setBarrier] = useState<string | undefined>('2300');
   const [size, setSize] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -281,6 +281,10 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     }
   };
 
+  useEffect(() => {
+    handleSizeChange('100');
+  }, []);
+
   return (
     <div>
       {!compact && showInstructions && (
@@ -296,8 +300,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         </div>
       )}
       {compact ? (
-        <Flex gap='gap-3'>
+        <Flex gap='gap-3' margin='mb-10'>
           <RadioButton
+            size={compact ? 'compact' : 'regular'}
             options={[
               { option: '+', value: 'BUY' },
               { option: '-', value: 'SELL' },
@@ -308,6 +313,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
           />
           <RadioButton
+            size={compact ? 'compact' : 'regular'}
             options={[
               { option: 'UP', value: 'UP' },
               { option: 'DOWN', value: 'DOWN' },
@@ -318,6 +324,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
           />
           <RadioButton
+            size={compact ? 'compact' : 'regular'}
             options={[
               { option: 'IN', value: 'IN' },
               { option: 'OUT', value: 'OUT' },

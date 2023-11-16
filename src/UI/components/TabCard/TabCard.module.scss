@@ -22,8 +22,7 @@
 }
 
 .tab {
-  @include spacing(padding, 24, 'left+right');
-  @include spacing(padding, 34, 'top+bottom');
+  @include spacing(padding, 20, 'all');
   display: flex;
   align-items: flex-start;
   gap: rem(15);
@@ -74,7 +73,7 @@
 .tabInfo {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  width: 60%;
 
   h3 {
     color: var(--white);
@@ -85,13 +84,14 @@
 
   p {
     @include font-size('text-xs', 'regular');
-    color: var(--white-60);
+    color: var(--white);
+    opacity: 0.6;
     line-height: rem(20);
   }
 }
 
 .tabChart {
-  flex: 1;
+  width: 40%;
 }
 
 .subTabs {
