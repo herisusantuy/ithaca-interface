@@ -48,6 +48,7 @@ import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
+  
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
