@@ -151,7 +151,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    console.log(val, minimumPosition);
     if (val > minimumPosition) {
       setMinimumPosition(val);
     }
@@ -161,12 +160,12 @@ const ChartPayoff = (props: ChartDataProps) => {
     setWidth(width);
   };
 
-  // const handleAnimationEnd = () => {
-  //   setShowUnderBar(false);
-  //   setTimeout(() => {
-  //     setShowUnderBar(true);
-  //   }, 2000);
-  // };
+  const handleAnimationEnd = () => {
+    setShowUnderBar(false);
+    setTimeout(() => {
+      setShowUnderBar(true);
+    }, 2000);
+  };
 
   const updateDashed = (val: KeyType) => {
     setShowUnderBar(false);
@@ -248,6 +247,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                     updatePosition={updatePosition}
                   />
                 }
+                onAnimationEnd={handleAnimationEnd}
                 activeDot={false}
               />
 
