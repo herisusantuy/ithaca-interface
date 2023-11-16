@@ -111,5 +111,10 @@
 }
 
 .emptyContainer {
-  height: 144px;
+  @include spacing(padding, 74, 'top+bottom');
+  @include font-size('text-sm', 'regular');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $lato;
 }
