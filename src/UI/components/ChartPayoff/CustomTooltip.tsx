@@ -1,5 +1,7 @@
-// Styles
+// Utils
 import { getNumberFormat } from '@/UI/utils/Numbers';
+
+// Styles
 import styles from './ChartPayoff.module.scss';
 
 // Types

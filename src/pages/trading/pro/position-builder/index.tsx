@@ -207,6 +207,7 @@ const Index = () => {
                   <h3 className='mb-13'>Strategy</h3>
                   <TableStrategy
                     strategies={positionBuilderStrategies}
+                    clearAll={() => {}}
                     removeRow={(index: number) => {
                       const newPositionBuilderStrategies = [...positionBuilderStrategies];
                       newPositionBuilderStrategies.splice(index, 1);
@@ -220,17 +221,20 @@ const Index = () => {
                       }
                     }}
                   />
-                  <h3>Payoff Diagram</h3>
+
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
                   ) : (
-                    <div className={styles.tableWrapper}>
-                      <div className={styles.chartWrapper}>
-                        <Chart />
-                        <p>Please add a strategy.</p>
+                    <>
+                      <h3>Payoff Diagram</h3>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.chartWrapper}>
+                          <Chart />
+                          <p>Please add a strategy.</p>
+                        </div>
+                        <PayoffOutline />
                       </div>
-                      <PayoffOutline />
-                    </div>
+                    </>
                   )}
                 </>
               }
