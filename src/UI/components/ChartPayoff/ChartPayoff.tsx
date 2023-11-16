@@ -54,7 +54,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
   const [bridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
-  const [dashed, setDashed] = useState<KeyType>({ label: 'total', type: 'leg1' });
+  const [dashed, setDashed] = useState<KeyType>({ label: '', type: 'leg1' });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
@@ -67,7 +67,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [minimumPosition, setMinimumPosition] = useState<number>(height - 30);
-  const [showUnderBar, setShowUnderBar] = useState<boolean>(false);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const baseValue = 0;
   const colorArray = [
@@ -113,7 +112,6 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    setShowUnderBar(false);
     setDomain(findOverallMinMaxValues(chartData));
     const tempData = makingChartData(chartData, bridge.label, dashed.label);
     const colorIndex = getNumber(bridge.type.replace('leg', ''));
@@ -164,14 +162,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     setWidth(width);
   };
 
-  const handleAnimationEnd = () => {
-    setTimeout(() => {
-      setShowUnderBar(true);
-    }, 2000);
-  };
-
   const updateDashed = (val: KeyType) => {
-    setShowUnderBar(false);
     setDashed(val);
   };
 
@@ -242,6 +233,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataSize={modifiedData.length}
                       special={breakPoints}
                       dataList={modifiedData}
+                      height={height}
                     />
                   )
                 }
@@ -254,10 +246,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataList={modifiedData}
                       updatePosition={updatePosition}
                       updatePnlLabelPosition={setPnlLabelPosition}
+                      height={height}
                     />
                   )
                 }
-                onAnimationEnd={handleAnimationEnd}
                 activeDot={false}
               />
 
@@ -307,7 +299,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                           ? '+' + '' + getNumberFormat(minimize)
                           : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide ? <></> : <LogoUsdc x={50} y={(pnlLabelPosition + 20) > height ? height - 33 : (pnlLabelPosition + 7)} />}
+                      {downSide ? <></> : <LogoUsdc x={60} y={(pnlLabelPosition + 20) > height ? height - 33 : (pnlLabelPosition + 7)} />}
                     </>
                   }
                   position='insideBottom'

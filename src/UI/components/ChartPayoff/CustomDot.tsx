@@ -15,10 +15,11 @@ type CustomDotProps = {
   dataList: PayoffDataProps[];
   updatePosition: (val: number) => void;
   updatePnlLabelPosition: (val: number) => void;
+  height: number;
 };
 
 const CustomDot = (props: CustomDotProps) => {
-  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition, updatePnlLabelPosition } = props;
+  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition, updatePnlLabelPosition, height } = props;
 
   // updatePosition(cy ? Math.round(cy) : 0);
 
@@ -34,14 +35,14 @@ const CustomDot = (props: CustomDotProps) => {
 
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) === 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={Number(cy) >= height - 4 ? height - 3 : Number(cy)} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;
     }
 
     if (Number(payload?.value) > 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#5ee192' stroke='#5ee192' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={Number(cy) >= height - 4 ? height - 3 : Number(cy)} r={2} fill='#5ee192' stroke='#5ee192' strokeWidth={1} key={idx} />;
     }
     if (Number(payload?.value) < 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={Number(cy) >= height - 4 ? height - 3 : Number(cy)} r={2} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} key={idx} />;
     }
   };
 
