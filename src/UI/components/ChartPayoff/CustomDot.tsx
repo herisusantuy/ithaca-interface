@@ -19,13 +19,11 @@ type CustomDotProps = {
 const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
 
-  updatePosition(cy ? Math.round(cy) : 0);
+  // updatePosition(cy ? Math.round(cy) : 0);
   
   const renderCircle = (idx: number) => {
-    if (Number(payload?.value) == 0) {
-      if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
-        return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;
-      }
+    if (Number(payload?.value) === 0) {
+      return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;
     }
 
     if (Number(payload?.value) > 0) {
@@ -36,34 +34,10 @@ const CustomDot = (props: CustomDotProps) => {
     }
   };
 
-  const drawZeroDot = () => {
-    if (Number(payload?.value) == 0) {
-      if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
-        return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} />;
-      }
-    }
-  };
-
-  if (index == 0) {
-    return null;
-  } else if (dataSize === Number(index) + 1) {
-    return null;
-  } else {
-    if (special.length == 0) {
-      return drawZeroDot();
-    } else {
-      if (Number(payload?.value) == 0) {
-        return drawZeroDot();
-      }
-      return special.map((item: SpecialDotLabel, idx: number) => {
-        if (item.value === Number(payload?.value) + Number(base)) {
-          if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(payload?.value)) {
-            return renderCircle(idx);
-          }
-        }
-      });
-    }
+  if (special.find(item => item.x == payload?.x) || payload?.value === 0) {
+    return renderCircle(index ?? 0);
   }
+  return null;
 };
 
 export default CustomDot;

@@ -95,16 +95,14 @@ export const breakPointList1 = (data: PayoffDataProps[]) => {
 export const breakPointList = (data: PayoffDataProps[]) => {
   const offsets: SpecialDotLabel[] = [];
   let preTanValue = 0;
-  for (let i = 1; i < data.length - 1; i++) {
-    const tanValue = (data[i].value - data[i - 1].value) / (data[i].x - data[i - 1].x);
-    if (Math.round(preTanValue) !== Math.round(tanValue)) {
+  for (let i = 0; i < data.length - 1; i++) {
+    const tanValue = (data[i].value - data[i + 1].value) / (data[i].x - data[i + 1].x);
+    if ((preTanValue !== tanValue) && ((Math.round(preTanValue / tanValue * 10) / 10) !== 1) && data[i].value !== 0) {
       preTanValue = tanValue;
-      if (!offsets.find(p => Math.round(p.x / 100) === Math.round(data[i-1].x / 100))) { /// consider some points than has less than 100 distance
-        offsets.push({
-          x: data[i - 1].x,
-          value: data[i].value,
-        })
-      }
+      offsets.push({
+        x: data[i].x ,
+        value: data[i].value,
+      })
     }
   }
   return offsets;
@@ -136,29 +134,22 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const makingChartData = (data: any[], key: string, dashed: string) => {
   const result: PayoffDataProps[] = data.map(item => ({
-    value: item[key],
+    value: Math.round(item[key]),
     dashValue: dashed != '' && dashed != key ? item[dashed] : undefined,
     x: item['x'],
   }));
 
-  const tempDataArray: PayoffDataProps[] = [];
-  for (let i = 0; i < result.length; i++) {
-    if (i == 0) {
-      tempDataArray.push(result[0]);
-    } else {
+  const tempDataArray: PayoffDataProps[] = [result[0]];
+  for (let i = 1; i < result.length; i++) {
       const prevItem = result[i - 1];
       const currentItem = result[i];
-      if (currentItem.value == 0) {
-        tempDataArray.push(currentItem);
-        continue;
-      } else if (prevItem.value < 0 && currentItem.value > 0) {
-        tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(currentItem.x + prevItem.x) / 2 });
-      } else if (prevItem.value > 0 && currentItem.value < 0) {
-        tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(currentItem.x + prevItem.x) / 2 });
+      if (prevItem.value * currentItem.value < 0) {
+        const rate = (currentItem.x - prevItem.x) / (currentItem.value - prevItem.value);
+        const zeroPoint = prevItem.x + Math.abs(rate * prevItem.value);
+        tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(zeroPoint)});
       } else {
         tempDataArray.push(currentItem);
       }
-    }
   }
   return tempDataArray;
 };
