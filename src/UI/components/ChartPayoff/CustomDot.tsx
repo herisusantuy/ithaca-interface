@@ -1,5 +1,6 @@
 // Constants
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
+import { useEffect } from 'react';
 
 // Types
 type CustomDotProps = {
@@ -18,7 +19,9 @@ type CustomDotProps = {
 const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
 
-  updatePosition(cy ? Math.round(cy) : 0);
+  useEffect(() => {
+    updatePosition(cy ? Math.round(cy) : 0);
+  }, []);
 
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) == 0) {

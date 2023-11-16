@@ -22,7 +22,6 @@
 		"react-hot-toast": "^2.4.1",
 		"recharts": "^2.9.1",
 		"sass": "^1.69.5",
-		"use-debounce": "^10.0.0",
 		"viem": "^1.17.2",
 		"wagmi": "^1.4.5",
 		"zustand": "^4.4.5"

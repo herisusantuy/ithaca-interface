@@ -45,11 +45,10 @@ type DomainType = {
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
-import { useDebouncedCallback } from 'use-debounce';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true } = props;
-  
+
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -151,24 +150,22 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    console.log("val", val)
+    console.log(val, minimumPosition);
     if (val > minimumPosition) {
       setMinimumPosition(val);
     }
   };
-  const debouncedUpdatePosition = useDebouncedCallback(updatePosition, 500);
-
 
   const handleResize = (width: number) => {
     setWidth(width);
   };
 
-  const handleAnimationEnd = () => {
-    setShowUnderBar(false);
-    setTimeout(() => {
-      setShowUnderBar(true);
-    }, 2000);
-  };
+  // const handleAnimationEnd = () => {
+  //   setShowUnderBar(false);
+  //   setTimeout(() => {
+  //     setShowUnderBar(true);
+  //   }, 2000);
+  // };
 
   const updateDashed = (val: KeyType) => {
     setShowUnderBar(false);
@@ -241,11 +238,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                     dataSize={modifiedData.length}
                     special={breakPoints}
                     dataList={modifiedData}
-                    updatePosition={debouncedUpdatePosition}
+                    updatePosition={updatePosition}
                   />
                 }
                 activeDot={false}
-                onAnimationEnd={handleAnimationEnd}
               />
               <Area
                 type='linear'
@@ -280,7 +276,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       <text
                         x={10}
                         y={minimumPosition + 20}
-                        fill={showUnderBar ? '#FF3F57' : 'transparent'}
+                        fill={'#FF3F57'}
                         fontSize={10}
                         textAnchor='left'
                       >
@@ -290,7 +286,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                           ? '+' + '' + getNumberFormat(minimize)
                           : '-' + getNumberFormat(minimize)}
                       </text>
-                      {downSide || !showUnderBar ? <></> : <LogoUsdc x={60} y={minimumPosition + 7} />}
+                      {downSide ? <></> : <LogoUsdc x={60} y={minimumPosition + 7} />}
                     </>
                   }
                   position='insideBottom'
