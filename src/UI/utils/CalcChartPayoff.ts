@@ -41,14 +41,21 @@ export function estimateOrderPayoff(legs: OptionLeg[]): PayoffMap[] {
 
   const payoffs = prices.map(price => {
     const payoff: PayoffMap = { x: price, total: 0 };
-    legs.forEach((leg, idx) => {
+    legs.forEach((leg) => {
       const side = leg.side === 'BUY' ? 1 : -1;
       const premium = leg.payoff !== 'Forward' ? -leg.premium * side : 0;
       const intrinsicValue =
         side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, leg.economics.strike || 0) + premium;
-      payoff[`leg${idx + 1}`] = intrinsicValue * parseInt(leg.quantity);
+      const label = `${leg.side == 'BUY' ? '+' : '-'}${leg.payoff} @ ${leg.economics.strike}`
+      payoff[label] = intrinsicValue * parseInt(leg.quantity);
       payoff.total += intrinsicValue * parseInt(leg.quantity);
     });
+    Object.keys(payoff).forEach(key => {
+      if (key != "x" && Math.abs(payoff[key]) > Math.abs(payoff['total'] * 1.25)) {
+        delete payoff[key]
+      }
+      
+    })
     return payoff;
   });
   return payoffs;
