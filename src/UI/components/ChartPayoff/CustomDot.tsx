@@ -20,8 +20,6 @@ type CustomDotProps = {
 const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition, updatePnlLabelPosition } = props;
 
-  // updatePosition(cy ? Math.round(cy) : 0);
-
   useEffect(() => {
     const minValue = Math.min(...dataList.map(i => i.value));
     if (payload?.value == minValue) {

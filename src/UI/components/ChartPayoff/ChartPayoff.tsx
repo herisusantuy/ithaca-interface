@@ -66,7 +66,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [color, setColor] = useState<string>('#4bb475');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
-  const [minimumPosition, setMinimumPosition] = useState<number>(height - 30);
+  const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const baseValue = 0;
   const colorArray = [
@@ -131,7 +131,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     // set gradient value
     setOff(gradientOffset(modified));
-    setMinimumPosition(0);
+    setXAxisPosition(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
@@ -152,9 +152,9 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updatePosition = (val: number) => {
     if (val > 100) {
-      setMinimumPosition(val);
+      setXAxisPosition(val);
     } else {
-      setMinimumPosition(height / 2);
+      setXAxisPosition(height / 2);
     }
   };
 
@@ -280,9 +280,9 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} y={minimumPosition} />}
+                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} />}
                   content={
-                    <CustomTooltip x={cursorX} y={minimumPosition} base={baseValue} setChangeVal={updateChange} />
+                    <CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />
                   }
                 />
               )}
