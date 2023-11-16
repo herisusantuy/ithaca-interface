@@ -45,7 +45,7 @@ const CustomDot = (props: CustomDotProps) => {
     }
   };
 
-  if (special.find(item => item.x == payload?.x) || payload?.value === 0) {
+  if (special.find(item => item.x == payload?.x) || (payload?.value === 0 && dataList[index?index - 1: 0]?.value !== 0)) {
     return renderCircle(index ?? 0);
   }
   return null;

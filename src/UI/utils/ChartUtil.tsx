@@ -99,6 +99,7 @@ export const breakPointList = (data: PayoffDataProps[]) => {
     const tanValue = (data[i].value - data[i + 1].value) / (data[i].x - data[i + 1].x);
     if ((preTanValue !== tanValue) && ((Math.round(preTanValue / tanValue * 10) / 10) !== 1) && data[i].value !== 0) {
       preTanValue = tanValue;
+      if (i === 0) continue;  
       offsets.push({
         x: data[i].x ,
         value: data[i].value,
@@ -147,9 +148,8 @@ export const makingChartData = (data: any[], key: string, dashed: string) => {
         const rate = (currentItem.x - prevItem.x) / (currentItem.value - prevItem.value);
         const zeroPoint = prevItem.x + Math.abs(rate * prevItem.value);
         tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(zeroPoint)});
-      } else {
-        tempDataArray.push(currentItem);
-      }
+      } 
+      tempDataArray.push(currentItem);
   }
   return tempDataArray;
 };
