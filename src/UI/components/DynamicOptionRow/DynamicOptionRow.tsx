@@ -45,6 +45,12 @@ const PRODUCT_OPTIONS: ProductOption[] = [{
   value: 'Forward'
 }];
 
+
+type SectionType = {
+  name: string;
+  style: string;
+};
+
 const PRODUCT_TYPES: ProductType = {
   option: [{
     option: 'Call',
@@ -91,7 +97,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
   const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
-
+  
   useEffect(() => {
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,8 +195,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
 
   const handleStrikeChange = (strike: string) => {
     setStrike(strike);
-    setUnitPrice(`${strikeList[strike].referencePrice}`);
-    if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
+    const price = `${strikeList[strike].referencePrice}`;
+    setUnitPrice(price);
+    if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
     const leg = {
       contractId: strikeList[strike].contractId,
       quantity: size,
@@ -198,7 +205,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     } as Leg;
     updateStrategy({
       leg,
-      referencePrice: getNumber(unitPrice),
+      referencePrice: getNumber(price),
       payoff: product === 'Forward' ? 'Forward': type,
       strike,
     });

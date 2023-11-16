@@ -30,7 +30,7 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 import styles from './riskless-lending.module.scss';
 
 // Types
-import { getNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber } from '@/UI/utils/Numbers';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
@@ -53,6 +53,11 @@ type OrderSummary = {
   orderPayoff: OrderPayoff;
 };
 
+type SectionType = {
+  name: string;
+  style: string;
+};
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
@@ -64,7 +69,6 @@ const Index = () => {
     useAppStore();
 
   const handleStrategyChange = (strat: string) => {
-    console.log(strategy)
     const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
@@ -75,7 +79,14 @@ const Index = () => {
       strategies: newStrategy?.strategies
     });
   };
-
+  const sections: SectionType[] = [
+    { name: 'Product', style: styles.product },
+    { name: 'Type', style: styles.type },
+    { name: 'Side', style: styles.side },
+    { name: 'Size', style: styles.size },
+    { name: 'Strike', style: styles.strike },
+    { name: '', style: styles.action },
+  ];
   const getPositionBuilderSummary = async (positionBuilderStrategies: DynamicOptionStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
       legs: Leg[];
@@ -210,6 +221,17 @@ const Index = () => {
                       />
                     </div>
                   </Flex>
+
+                  <div className={styles.parent}>
+                      <>
+                        {sections.map((section, index) => (
+                          <div key={index} className={section.style}>
+                            <p>{section.name}</p>
+                          </div>
+                        ))}
+                        <div className={styles.action}></div>
+                      </>
+                  </div>
                   {strategy.strategies.map((strat, index) => {
                     return (
                       <RisklessLendingRow
@@ -233,17 +255,17 @@ const Index = () => {
               }
               orderSummary={
                 <OrderSummary
-                  limit={orderSummary?.order.totalNetPrice || '-'}
-                  collatarelETH={orderSummary ? orderSummary.orderLock.underlierAmount : '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? toPrecision(
-                        orderSummary.orderLock.underlierAmount - getNumber(orderSummary.order.totalNetPrice),
-                        currencyPrecision.strike
-                      )
+                      ? formatNumber(toPrecision(
+                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                          currencyPrecision.strike
+                        ), 'string')
                       : '-'
                   }
-                  premium={orderSummary?.order.totalNetPrice || '-'}
+                  premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
                   fee={1.5}
                   submitAuction={() => {
                     if (!orderSummary) return;

@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -106,12 +106,12 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
       leg.contractId = forwardContracts[strike].contractId;
     }
-    return calcCollateralRequirement(
+    return formatNumber(calcCollateralRequirement(
       leg,
       title === 'Forwards' ? 'Forward' : payoff,
       getNumber(strike),
       currencyPrecision.strike
-    );
+    ), 'string');
   };
 
   const calcPremium = () => {
@@ -126,7 +126,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
       leg.contractId = forwardContracts[strike].contractId;
     }
-    return calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike);
+    return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
   };
 
   return (

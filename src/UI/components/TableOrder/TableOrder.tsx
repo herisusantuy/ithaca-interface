@@ -130,10 +130,12 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           });
           break;
         case TABLE_TYPE.ORDER:
-          ithacaSDK.client.currentPositions().then((res) => {
-            dataToRows(res);
-            setLoading(false);
-          })
+          // ithacaSDK.client.currentPositions().then((res) => {
+          //   dataToRows(res);
+          //   setLoading(false);
+          // })
+
+          setData(TABLE_ORDER_DATA_WITH_EXPANDED);
           break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {

@@ -27,11 +27,14 @@ export const getNumberFormat = (value: string | number, type: string = 'int') =>
 };
 
 export const formatNumber = (value: number, type: string) => {
-  if (value > 1000000) {
-    return (value / 1000000).toFixed(3) + 'm';
+  if (!value) return '-'
+  if (value > 1000000000) {
+    return (value / 1000000000).toFixed(6) + 'B';
+  } else if (value > 1000000) {
+    return (value / 1000000).toFixed(3) + 'M';
   } else if (value > 1000) {
-    return (value / 1000).toFixed(1) + 'k';
+    return (value / 1000).toFixed(1) + 'K';
   } else {
-    return type == 'int' ? Math.round(value).toString() : value.toFixed(1).toString();
+    return type == 'int' ? Math.round(value)?.toString() : Number(value)?.toFixed(1)?.toString();
   }
 };
