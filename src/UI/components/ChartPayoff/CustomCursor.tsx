@@ -1,10 +1,12 @@
 // Types
 type CustomCursorProps = {
   x: number;
+  y: number;
 };
 
-const CustomCursor = ({ x }: CustomCursorProps) => (
-  <svg xmlns='http://www.w3.org/2000/svg' width='2' height='91' viewBox='0 0 2 91' fill='none' x={x - 2} y={40}>
+const CustomCursor = ({ x, y }: CustomCursorProps) => (
+  
+  <svg xmlns='http://www.w3.org/2000/svg' width='2' height='91' viewBox='0 0 2 91' fill='none' x={x - 2} y={y - 100}>
     <path d='M0.875 0.742188L0.875004 90.7422' stroke='url(#paint0_linear_1826_73533)' />
     <defs>
       <linearGradient

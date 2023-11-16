@@ -135,7 +135,7 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
 export const makingChartData = (data: any[], key: string, dashed: string) => {
   const result: PayoffDataProps[] = data.map(item => ({
     value: Math.round(item[key]),
-    dashValue: dashed != '' && dashed != key ? item[dashed] : undefined,
+    dashValue: dashed != '' ? item[dashed] : undefined,
     x: item['x'],
   }));
 

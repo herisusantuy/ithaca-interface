@@ -66,7 +66,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [color, setColor] = useState<string>('#4bb475');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
-  const [minimumPosition, setMinimumPosition] = useState<number>(0);
+  const [minimumPosition, setMinimumPosition] = useState<number>(height - 30);
   const [showUnderBar, setShowUnderBar] = useState<boolean>(false);
   const baseValue = 0;
   const colorArray = [
@@ -115,6 +115,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     setShowUnderBar(false);
     setDomain(findOverallMinMaxValues(chartData));
     const tempData = makingChartData(chartData, bridge.label, dashed.label);
+    console.log(tempData);
     const colorIndex = getNumber(bridge.type.replace('leg', ''));
     setColor(colorArray[colorIndex - 1]);
     const dashedColorIndex = getNumber(dashed.type.replace('leg', ''));
@@ -152,8 +153,11 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const updatePosition = (val: number) => {
-    if (val > minimumPosition) {
+    console.log(val);
+    if (val > 100) {
       setMinimumPosition(val);
+    } else {
+      setMinimumPosition(height / 2);
     }
   };
 
@@ -286,8 +290,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} />}
-                  content={<CustomTooltip base={baseValue} setChangeVal={updateChange} />}
+                  cursor={<CustomCursor x={cursorX} y={ minimumPosition } />}
+                  content={<CustomTooltip x={cursorX} y={ minimumPosition } base={baseValue} setChangeVal={updateChange} />}
                 />
               )}
 

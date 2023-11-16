@@ -20,7 +20,13 @@ const CustomDot = (props: CustomDotProps) => {
   const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition } = props;
 
   // updatePosition(cy ? Math.round(cy) : 0);
-  
+
+  useEffect(() => {
+    if (payload?.value == 0) {
+      updatePosition(Number(cy));
+    }
+  }, []);
+
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) === 0) {
       return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;

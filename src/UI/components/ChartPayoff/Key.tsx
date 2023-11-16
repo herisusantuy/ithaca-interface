@@ -45,7 +45,7 @@ const Key = (props: KeysProps) => {
 
     keys.map(item => {
       if (item == 'total') {
-        const keyObj: KeyType = { label: 'Total', type: 'leg16' };
+        const keyObj: KeyType = { label: 'total', type: 'leg16' };
         keyArray.push(keyObj);
       } else {
         const type: DotTypes = dotArray.find(key => key === item) || 'leg1';
@@ -80,10 +80,10 @@ const Key = (props: KeysProps) => {
           className={`${styles.key} ${getBadgeClass(key.label)}`}
           onClick={() => updateChange(key)}
           onMouseEnter={() => showDashedLine(key)}
-          onMouseLeave={() => showDashedLine({ label: 'total', type: 'leg16' })}
+          onMouseLeave={() => showDashedLine({ label: '', type: 'leg16' })}
         >
           <Dot type={key.type} />
-          <p>{key.label}</p>
+          <p>{key.label == 'total' ? 'Total' : key.label}</p>
         </div>
       ))}
     </div>
