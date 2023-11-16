@@ -26,6 +26,7 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
+        modalSize='compact'
         appInfo={appInfo}
         chains={chains}
         theme={darkTheme({

@@ -69,6 +69,7 @@
   button {
     border-radius: rem(16) !important;
     position: relative !important;
+    cursor: pointer;
 
     &:hover,
     &:active {

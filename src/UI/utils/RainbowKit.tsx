@@ -1,9 +1,9 @@
 // Packages
 import { arbitrumGoerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-import { getDefaultWallets, connectorsForWallets } from '@rainbow-me/rainbowkit';
-import { ledgerWallet } from '@rainbow-me/rainbowkit/wallets';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig } from 'wagmi';
+import { metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 // Project ID
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
@@ -20,19 +20,17 @@ const appInfo = {
   appName: 'Ithaca',
 };
 
-// Wallets
-const { wallets } = getDefaultWallets({
-  appName: appInfo.appName,
-  projectId,
-  chains,
-});
-
 // Connectors
 const connectors = connectorsForWallets([
-  ...wallets,
   {
-    groupName: 'Other',
-    wallets: [ledgerWallet({ projectId, chains })],
+    groupName: 'Recommended',
+    wallets: [
+      metaMaskWallet({
+        projectId,
+        chains,
+      }),
+      walletConnectWallet({ projectId, chains }),
+    ],
   },
 ]);
 
