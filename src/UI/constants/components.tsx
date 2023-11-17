@@ -315,8 +315,13 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Loader',
-        component: <Loader />,
-        status: 'To Do',
+        component: (
+          <Flex direction='row-space-between'>
+            <Loader />
+            <Loader type='example' />
+          </Flex>
+        ),
+        status: 'To Review',
       },
       {
         name: 'Logo',
@@ -453,7 +458,7 @@ const COMPONENT_GROUPS = [
         component: (
           <>
             <h3 className='mb-14'>Strategy</h3>
-            <TableStrategy strategies={[]} removeRow={() => {}} clearAll={()=>{}} />
+            <TableStrategy strategies={[]} removeRow={() => {}} clearAll={() => {}} />
           </>
         ),
         status: 'To Review',
