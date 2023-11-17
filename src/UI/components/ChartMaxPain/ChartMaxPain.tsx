@@ -28,14 +28,14 @@ import { maxPainChartFormat } from '@/UI/utils/MaxPainChartUtil';
 type ChartDataType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
-}
+};
 
-const ChartMaxPain = ({data}: ChartDataType) => {
+const ChartMaxPain = ({ data }: ChartDataType) => {
   const [chartData, setChartData] = useState<ChartMaxPainData[]>([]);
 
   useEffect(() => {
     setChartData(maxPainChartFormat(data));
-  }, []);
+  }, [data]);
 
   const [cursorX, setCursorX] = useState(0);
 
