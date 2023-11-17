@@ -10,7 +10,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import Input from '../../Input/Input';
 import RadioButton from '../../RadioButton/RadioButton';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
@@ -29,6 +29,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [strike, setStrike] = useState<string>('1900');
   const [barrier, setBarrier] = useState<string | undefined>('2300');
   const [size, setSize] = useState('');
+  const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
@@ -60,6 +61,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
     setBarrier(undefined);
+    setUnitPrice('-');
     setOrderDetails(undefined);
     setPayoffMap(undefined);
   };
@@ -98,6 +100,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     size: number
   ) => {
     if (isInvalidNumber(size)) {
+      setUnitPrice('-');
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -249,6 +252,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         ];
       }
     }
+
+    const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
+    setUnitPrice(getNumberFormat(unitPrice));
 
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
@@ -405,15 +411,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             <div className={styles.calculation}>
               Total Premium
               <div className={styles.amountWrapper}>
-                <span className={styles.amount}>{orderDetails?.order.totalNetPrice}</span>
+                <span className={styles.amount}>
+                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                </span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
               </div>
             </div>
             <div className={styles.calculation}>
-              Total Price
+              <span className={styles.italic}>Unit Price</span>
               <div className={styles.amountWrapper}>
-                <span className={styles.amount}>17.4K</span>
+                <span className={styles.amount}>{unitPrice}</span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
               </div>
@@ -433,13 +441,15 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           </div>
         </div>
       )}
-      <ChartPayoff
-        compact={compact}
-        chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
-        showKeys={false}
-        showPortial={!compact}
-      />
+      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
+        <ChartPayoff
+          compact={compact}
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
+      </div>
       {!compact && <StorySummary showCollateral summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );

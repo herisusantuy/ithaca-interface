@@ -6,30 +6,13 @@
   @include spacing(margin, 8, 'bottom');
 }
 
-.greeks {
-  color: var(--white);
-  font-family: $lato;
-  @include font-size('text-md', 'medium');
+.textRight {
+  text-align: right;
 }
 
-.greeksLabel {
-  display: flex;
-  align-items: center;
-  gap: rem(2);
-  color: var(--white-60);
-  font-family: $roboto;
-  @include font-size('text-xs', 'regular');
-  @include spacing(margin, 4, 'bottom');
-
-  span {
-    color: var(--white-60);
-    font-family: $lato;
-    @include font-size('text-md', 'semi-bold');
+.radioButtonNoPadding {
+  label {
+    padding-left: 0;
+    padding-right: 0;
   }
-}
-
-.greeksAmount {
-  color: var(--white);
-  font-family: $roboto;
-  @include font-size('text-sm', 'regular');
 }

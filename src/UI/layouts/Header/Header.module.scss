@@ -1,5 +1,5 @@
 .header {
-  @include spacing(padding, 16, 'top+bottom');
+  @include spacing(padding, 10, 'top+bottom');
   background: var(--gradient-panel-bg);
   backdrop-filter: blur(10rem);
   position: relative;
@@ -43,7 +43,8 @@
 }
 
 .container {
-  @include spacing(padding, 24, 'left+right');
+  @include spacing(padding, 24, 'left');
+  @include spacing(padding, 10, 'right');
   display: flex;
   flex-direction: row;
   align-items: center;

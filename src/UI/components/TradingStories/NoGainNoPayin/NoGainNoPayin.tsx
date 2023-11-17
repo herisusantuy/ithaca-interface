@@ -10,7 +10,7 @@ import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import Input from '../../Input/Input';
 import RadioButton from '../../RadioButton/RadioButton';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -165,7 +165,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
             {!compact && <label className={styles.label}>Type</label>}
             <RadioButton
               size={compact ? 'compact' : 'regular'}
-              width={compact ? 140 : 225}
+              width={compact ? 140 : 186}
               options={[
                 { option: 'Call', value: 'CALL' },
                 { option: 'Put', value: 'PUT' },
@@ -205,7 +205,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                   <span className={styles.amount}>
                     {priceReference &&
                       !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                      toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)}
+                      getNumberFormat(
+                        toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
+                      )}
                   </span>
                   <LogoUsdc />
                   <span className={styles.currency}>USDC</span>
@@ -226,7 +228,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 <span className={styles.amount}>
                   {!isInvalidNumber(getNumber(multiplier)) &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                    toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike)}
+                    getNumberFormat(
+                      toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike)
+                    )}
                 </span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
@@ -235,13 +239,16 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
           </Flex>
         )}
       </Flex>
-      <ChartPayoff
-        compact={compact}
-        chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
-        showKeys={false}
-        showPortial={!compact}
-      />
+      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
+        <ChartPayoff
+          compact={compact}
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
+      </div>
+
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );

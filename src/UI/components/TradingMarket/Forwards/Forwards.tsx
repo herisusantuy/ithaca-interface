@@ -14,7 +14,7 @@ import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import {
   Leg,
   ClientConditionalOrder,
@@ -121,7 +121,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
       quantity: size,
       side: buyOrSell,
     };
-    return calcCollateralRequirement(leg, 'Forward', 0, currencyPrecision.strike);
+    const collateral = calcCollateralRequirement(leg, 'Forward', 0, currencyPrecision.strike);
+    return getNumberFormat(collateral, 'double');
   };
 
   useEffect(() => {
@@ -132,10 +133,10 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     <div>
       {!compact && (
         <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
-          <div>
+          <div className={styles.radioButtonNoPadding}>
             {!compact && <label className={styles.label}>Type</label>}
             <RadioButton
-              width={200}
+              width={160}
               options={[
                 { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' },
                 { option: 'Next Auction', value: 'NEXT' },
@@ -181,7 +182,7 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
             />
           </div>
           <div>
-            <label className={styles.label}>Collateral</label>
+            <label className={`${styles.textRight} ${styles.label}`}>Collateral</label>
             <div
               style={{
                 display: 'flex',
@@ -193,7 +194,7 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
             </div>
           </div>
           <div>
-            <label className={styles.label}>Premium</label>
+            <label className={`${styles.textRight} ${styles.label}`}>Premium</label>
             <div
               style={{
                 display: 'flex',
@@ -201,7 +202,10 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
                 height: '60%',
               }}
             >
-              <PriceLabel icon={<LogoUsdc />} label={orderDetails ? orderDetails.order.totalNetPrice : '-'} />
+              <PriceLabel
+                icon={<LogoUsdc />}
+                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+              />
             </div>
           </div>
           <div style={{ alignSelf: 'flex-end' }} onClick={handleSubmit}>
@@ -218,41 +222,6 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
         showKeys={false}
         showPortial={!compact}
       />
-      {!compact && (
-        <Flex direction='row-space-between' gap='gap-4' padding='p-10'>
-          <h5 className={styles.greeks}>Greeks</h5>
-          <div>
-            <label className={styles.greeksLabel}>
-              <span>&Delta;</span>Delta
-            </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
-          </div>
-          <div>
-            <label className={styles.greeksLabel}>
-              <span>&nu;</span>Vega
-            </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
-          </div>
-          <div>
-            <label className={styles.greeksLabel}>
-              <span>&Gamma;</span>Gamma
-            </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
-          </div>
-          <div>
-            <label className={styles.greeksLabel}>
-              <span>&theta;</span>Theta
-            </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
-          </div>
-          <div>
-            <label className={styles.greeksLabel}>
-              <span>&Rho;</span>Rho
-            </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
-          </div>
-        </Flex>
-      )}
     </div>
   );
 };

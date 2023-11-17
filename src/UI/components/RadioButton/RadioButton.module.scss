@@ -28,15 +28,21 @@
   }
 
   &.vertical {
+    @include spacing(padding, 2, 'all');
     flex-direction: column;
-    gap: 0;
-    min-width: 0;
+    gap: rem(1);
+    width: rem(41);
+    border-radius: rem(6);
+
+    &:before {
+      border-radius: rem(6);
+    }
 
     label {
       @include spacing(padding, 2, 'top+bottom');
       @include spacing(padding, 10, 'left+right');
       height: rem(15);
-      min-width: 0;
+      border-radius: rem(5);
 
       svg {
         height: rem(16);
@@ -47,7 +53,8 @@
     .option:first-of-type {
       label:hover,
       input[type='radio']:checked + label {
-        background: var(--green-10);
+        color: var(--green-20);
+        background: var(--green-rgba-10);
         border-color: var(--green-20);
 
         svg path {
@@ -59,7 +66,8 @@
     .option:last-of-type {
       label:hover,
       input[type='radio']:checked + label {
-        background: var(--red-10);
+        color: var(--red-20);
+        background: var(--red-rgba-20);
         border-color: var(--red-20);
 
         svg path {

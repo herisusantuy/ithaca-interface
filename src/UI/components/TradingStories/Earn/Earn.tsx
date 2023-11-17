@@ -250,13 +250,15 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
           </div>
         </div>
       )}
-      <ChartPayoff
-        compact={compact}
-        chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
-        showKeys={false}
-        showPortial={!compact}
-      />
+      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
+        <ChartPayoff
+          compact={compact}
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
+      </div>
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );

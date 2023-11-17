@@ -235,10 +235,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           />
         </Flex>
       )}
-      <Flex margin={`${compact ? 'mt-8 mb-4' : 'mt-10 mb-24'}`}>
+      <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 225}
+          width={compact ? 140 : 221}
           options={[
             { option: 'Inside Range', value: 'INSIDE' },
             { option: 'Outside Range', value: 'OUTSIDE' },
@@ -300,13 +300,15 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           </div>
         </div>
       )}
-      <ChartPayoff
-        compact={compact}
-        chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
-        showKeys={false}
-        showPortial={!compact}
-      />
+      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
+        <ChartPayoff
+          compact={compact}
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
+      </div>
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );
