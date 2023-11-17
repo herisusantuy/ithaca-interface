@@ -11,32 +11,32 @@ type LabelProps = {
   index?: number;
   special: SpecialDotLabel[];
   dataList: PayoffDataProps[];
+  height: number;
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, base, index, dataSize, special, dataList } = props;
-
-  const renderLabel = (dx: number = 0, dy: number = 0, idx: number) => (
-    <text x={x} y={y} dx={dx + 10} dy={dy} fill='#9D9DAA' fontSize={9} textAnchor='middle' key={idx}>
-      {Math.round(dataList[Number(index) - 1].x)}
+  const { x, y, value, base, index, dataSize, special, dataList, height } = props;
+  const renderLabel = () => (
+    <text
+      x={x}
+      y={Number(y) >= height - 30 ? height - 30 : Number(y)}
+      dx={10}
+      dy={20}
+      fill='#9D9DAA'
+      fontSize={9}
+      textAnchor='middle'
+      key={index}
+    >
+      {Math.round(dataList[Number(index)].x)}
     </text>
   );
-
-  if (index == 0) {
-    return null;
-  } else if (dataSize === Number(index) + 1) {
-    return null;
-  } else if (special.length == 0) {
-    return null;
-  } else {
-    return special.map((item: SpecialDotLabel, idx: number) => {
-      if (item.value === Number(value) + Number(base)) {
-        if (dataList[Number(index) - 1] && Number(dataList[Number(index) - 1].value) != Number(value)) {
-          return renderLabel(0, 20, idx);
-        }
-      }
-    });
+  if (
+    special.find(item => item.x == dataList[index ?? 0]?.x) ||
+    (value === 0 && dataList[index ? index - 1 : 0]?.value !== 0)
+  ) {
+    return renderLabel();
   }
+  return null;
 };
 
 export default CustomLabel;
