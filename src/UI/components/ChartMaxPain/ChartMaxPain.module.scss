@@ -23,7 +23,8 @@
   gap: rem(16);
   width: 100%;
   justify-content: center;
-  top: rem(32);
+  top: rem(37);
+  display: flex;
   position: relative;
 }
 
@@ -141,8 +142,8 @@
   }
   & h3 {
     @include font-size('text-md', 'semibold');
-    font-family: $roboto;
-    margin: 0;
+    font-family: $roboto !important;
+    margin: 0 !important;
     padding: 0;
   }
 }
