@@ -17,7 +17,7 @@ import AnalyticsLayout from '@/UI/layouts/AnalyticsLayout/AnalyticsLayout';
 import { CHART_OPEN_INTEREST_DATA } from '@/UI/constants/charts/chartOpenInterest';
 import ChartTradingVolume from '@/UI/components/ChartTradingVolume/ChartTradingVolume';
 import { CHART_TRADING_VOLUME_DATA } from '@/UI/constants/charts/chartTradingVolume';
-import { CHART_MAX_PAIN_DATA } from '@/UI/constants/charts/chartMaxPain';
+import { CHART_MAX_PAIN_ANY_TYPE } from '@/UI/constants/charts/chartMaxPain';
 import { CHART_TRADE_COUNT_DATA } from '@/UI/constants/charts/chartTradeCount';
 import { ANALYTICS_CARD_DATA, AnalyticsCardData } from '@/UI/constants/analytics';
 import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
@@ -70,7 +70,7 @@ const Analytics = () => {
           </Flex>
           <Panel margin='ptb-24 plr-30 full-width'>
             <h3 className='mb-18'>Max Pain</h3>
-            <ChartMaxPain data={CHART_MAX_PAIN_DATA} />
+            <ChartMaxPain data={CHART_MAX_PAIN_ANY_TYPE} />
           </Panel>
         </Container>
       </Main>

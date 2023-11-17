@@ -67,7 +67,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
     setOptionsPosition({
       width: containerRect?.width ?? 100,
       left: containerRect?.x ?? 0,
-      top: (containerRect?.y ?? 0) + (containerRect?.height ?? 0) + 1,
+      top: (containerRect?.y ?? 0) + (containerRect?.height ?? 0) + document.documentElement.scrollTop + 1,
     });
     if (!disabled) setIsDropdownOpen(!isDropdownOpen);
   };
