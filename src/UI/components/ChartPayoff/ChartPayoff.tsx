@@ -27,7 +27,7 @@ import {
   makingChartData,
   showGradientTags,
 } from '@/UI/utils/ChartUtil';
-import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
+import { LabelPositionProp, PayoffMap } from '@/UI/utils/CalcChartPayoff';
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 // Types
@@ -51,6 +51,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact } = props;
+
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -69,6 +70,8 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
+  const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
+
   const baseValue = 0;
   const colorArray = [
     '#4bb475',
@@ -133,6 +136,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     // set gradient value
     setOff(gradientOffset(xAxisPosition, height));
     setXAxisPosition(0);
+    setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
@@ -169,6 +173,14 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const renderGradient = () => {
     return showGradientTags(off, color, dashedColor);
+  };
+
+  const updateLabelPosition = (positionObj: LabelPositionProp) => {
+    const updatedPositions = [...labelPosition, ...[positionObj]];
+    console.log(updatedPositions);
+    setTimeout(() => {
+      setLabelPosition(updatedPositions);
+    }, 10);
   };
 
   return (
@@ -211,6 +223,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                       special={breakPoints}
                       dataList={modifiedData}
                       height={height}
+                      labelPosition={labelPosition}
+                      updateLabelPosition={updateLabelPosition}
                     />
                   )
                 }
@@ -258,14 +272,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
                   cursor={<CustomCursor x={cursorX} y={xAxisPosition} />}
-                  content={
-                    <CustomTooltip
-                      x={cursorX}
-                      y={xAxisPosition}
-                      base={baseValue}
-                      setChangeVal={updateChange}
-                    />
-                  }
+                  content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />}
                 />
               )}
 
