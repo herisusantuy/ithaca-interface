@@ -8,31 +8,31 @@ const storyMap: {
     height: { normal: { withInstructions: number; withoutInstructions: number }; compact: number };
   };
 } = {
-  betChart: { component: Bet, height: { compact: 78, normal: { withInstructions: 275, withoutInstructions: 389 } } },
-  earnChart: { component: Earn, height: { compact: 92, normal: { withInstructions: 283, withoutInstructions: 402 } } },
+  betChart: { component: Bet, height: { compact: 71, normal: { withInstructions: 170, withoutInstructions: 286 } } },
+  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 205, withoutInstructions: 300 } } },
   noGainNoPayinChart: {
     component: NoGainNoPayin,
-    height: { compact: 80, normal: { withInstructions: 270, withoutInstructions: 417 } },
+    height: { compact: 75, normal: { withInstructions: 178, withoutInstructions: 312 } },
   },
   bonusTwinWinChart: {
     component: BonusTwinWin,
-    height: { compact: 80, normal: { withInstructions: 290, withoutInstructions: 362 } },
+    height: { compact: 75, normal: { withInstructions: 215, withoutInstructions: 274 } },
   },
   barriersChart: {
     component: Barriers,
-    height: { compact: 64, normal: { withInstructions: 302, withoutInstructions: 444 } },
+    height: { compact: 61.5, normal: { withInstructions: 170, withoutInstructions: 339 } },
   },
   optionsChart: {
     component: Options,
-    height: { compact: 120, normal: { withInstructions: 300, withoutInstructions: 300 } },
+    height: { compact: 93, normal: { withInstructions: 379, withoutInstructions: 379 } },
   },
   digitalOptionsChart: {
     component: DigitalOptions,
-    height: { compact: 140, normal: { withInstructions: 300, withoutInstructions: 300 } },
+    height: { compact: 104, normal: { withInstructions: 379, withoutInstructions: 379 } },
   },
   forwardsChart: {
     component: Forwards,
-    height: { compact: 150, normal: { withInstructions: 300, withoutInstructions: 300 } },
+    height: { compact: 120, normal: { withInstructions: 300, withoutInstructions: 426 } },
   },
 };
 

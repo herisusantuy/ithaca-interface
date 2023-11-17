@@ -50,7 +50,6 @@ const TabCard = ({ tabs, showInstructions, setShowInstructions }: TabCardProps) 
             rightLabel='Show Instructions'
             onChange={() => setShowInstructions(!showInstructions)}
           />
-          {/* <p>Show Instructions</p> */}
         </div>
         <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
       </div>

@@ -64,6 +64,10 @@
   @include font-size('text-md', 'semibold');
 }
 
+.italic {
+  font-style: italic;
+}
+
 .currency {
   color: var(--white);
   font-family: $lato;

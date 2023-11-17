@@ -12,7 +12,7 @@ import PriceLabel from '../../PriceLabel/PriceLabel';
 import Button from '../../Button/Button';
 import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import {
@@ -123,7 +123,8 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
       quantity: size,
       side: buyOrSell,
     };
-    return calcCollateralRequirement(leg, callOrPut, getNumber(strike), currencyPrecision.strike);
+    const collateral = calcCollateralRequirement(leg, callOrPut, getNumber(strike), currencyPrecision.strike);
+    return getNumberFormat(collateral, 'double');
   };
 
   useEffect(() => {
@@ -137,7 +138,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           {!compact && <label className={styles.label}>Type</label>}
           <RadioButton
             size={compact ? 'compact' : 'regular'}
-            width={compact ? 120 : 200}
+            width={compact ? 120 : 160}
             options={[
               { option: 'Call', value: 'Call' },
               { option: 'Put', value: 'Put' },
@@ -193,7 +194,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
               />
             </div>
             <div>
-              <label className={styles.label}>Collateral</label>
+              <label className={`${styles.textRight} ${styles.label}`}>Collateral</label>
               <div
                 style={{
                   display: 'flex',
@@ -205,7 +206,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
               </div>
             </div>
             <div>
-              <label className={styles.label}>Premium</label>
+              <label className={`${styles.textRight} ${styles.label}`}>Premium</label>
               <div
                 style={{
                   display: 'flex',
@@ -213,7 +214,10 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
                   height: '60%',
                 }}
               >
-                <PriceLabel icon={<LogoUsdc />} label={orderDetails ? orderDetails.order.totalNetPrice : '-'} />
+                <PriceLabel
+                  icon={<LogoUsdc />}
+                  label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                />
               </div>
             </div>
             <div style={{ alignSelf: 'flex-end', justifySelf: 'flex-end' }} onClick={handleSubmit}>
@@ -232,39 +236,39 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         showPortial={!compact}
       />
       {!compact && (
-        <Flex direction='row-space-between' gap='gap-4' padding='p-10'>
-          <h5 className={styles.greeks}>Greeks</h5>
-          <div>
-            <label className={styles.greeksLabel}>
+        <div className={styles.greeksContainer}>
+          <h5 className={styles.greeksTitle}>Greeks</h5>
+          <div className={styles.greeks}>
+            <label>
               <span>&Delta;</span>Delta
             </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
+            <div>38 {`<unit>`}</div>
           </div>
-          <div>
-            <label className={styles.greeksLabel}>
+          <div className={styles.greeks}>
+            <label>
               <span>&nu;</span>Vega
             </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
+            <div>38 {`<unit>`}</div>
           </div>
-          <div>
-            <label className={styles.greeksLabel}>
+          <div className={styles.greeks}>
+            <label>
               <span>&Gamma;</span>Gamma
             </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
+            <div>38 {`<unit>`}</div>
           </div>
-          <div>
-            <label className={styles.greeksLabel}>
+          <div className={styles.greeks}>
+            <label>
               <span>&theta;</span>Theta
             </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
+            <div>38 {`<unit>`}</div>
           </div>
-          <div>
-            <label className={styles.greeksLabel}>
+          <div className={styles.greeks}>
+            <label>
               <span>&Rho;</span>Rho
             </label>
-            <div className={styles.greeksAmount}>38 {`<unit>`}</div>
+            <div>38 {`<unit>`}</div>
           </div>
-        </Flex>
+        </div>
       )}
     </div>
   );

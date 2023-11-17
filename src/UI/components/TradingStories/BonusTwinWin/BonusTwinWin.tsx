@@ -10,7 +10,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import DropdownMenu from '../../DropdownMenu/DropdownMenu';
 import Input from '../../Input/Input';
 import RadioButton from '../../RadioButton/RadioButton';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
@@ -161,7 +161,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
       <Flex margin={compact ? 'mb-10' : 'mb-12'}>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 225}
+          width={compact ? 140 : 186}
           options={[
             { option: 'Bonus', value: 'Bonus' },
             { option: 'Twin-Win', value: 'Twin Win' },
@@ -225,7 +225,9 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
             <div className={styles.collateralWrapper}>
               Total Price
               <div className={styles.amountWrapper}>
-                <span className={styles.amount}>{orderDetails?.order.totalNetPrice}</span>
+                <span className={styles.amount}>
+                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                </span>
                 <LogoUsdc />
                 <span className={styles.currency}>USDC</span>
               </div>
@@ -233,13 +235,15 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
           </Flex>
         </Flex>
       )}
-      <ChartPayoff
-        compact={compact}
-        chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
-        showKeys={false}
-        showPortial={!compact}
-      />
+      <div className={!compact && !showInstructions ? 'mt-24' : ''}>
+        <ChartPayoff
+          compact={compact}
+          chartData={payoffMap ?? CHART_FAKE_DATA}
+          height={chartHeight}
+          showKeys={false}
+          showPortial={!compact}
+        />
+      </div>
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </div>
   );

@@ -8,7 +8,7 @@ import LogoEth from '../../Icons/LogoEth';
 import { OrderDetails } from '..';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { toPrecision } from '@ithaca-finance/sdk';
-import { getNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 type Props = {
   showCollateral?: boolean;
@@ -26,16 +26,18 @@ const StorySummary = ({ showCollateral = false, summary, onSubmit }: Props) => {
           <h5>Collateral Requirement</h5>
           <Flex gap='gap-10'>
             <div className={styles.summaryInfoWrapper}>
-              <h3>{summary?.orderLock.underlierAmount ?? '-'}</h3>
+              <h3>{summary ? getNumberFormat(summary.orderLock.underlierAmount, 'double') : '-'}</h3>
               <LogoEth />
               <p>WETH</p>
             </div>
             <div className={styles.summaryInfoWrapper}>
               <h3>
                 {summary
-                  ? toPrecision(
-                      summary.orderLock.numeraireAmount - getNumber(summary.order.totalNetPrice),
-                      currencyPrecision.strike
+                  ? getNumberFormat(
+                      toPrecision(
+                        summary.orderLock.numeraireAmount - getNumber(summary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      )
                     )
                   : '-'}
               </h3>
@@ -48,7 +50,7 @@ const StorySummary = ({ showCollateral = false, summary, onSubmit }: Props) => {
       <div className={styles.summary}>
         <h5>Total Premium</h5>
         <div className={styles.summaryInfoWrapper}>
-          <h3>{summary?.order.totalNetPrice ?? '-'}</h3>
+          <h3>{summary ? getNumberFormat(summary.order.totalNetPrice) : '-'}</h3>
           <LogoUsdc />
           <p>USDC</p>
         </div>
