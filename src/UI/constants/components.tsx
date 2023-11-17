@@ -315,8 +315,13 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Loader',
-        component: <Loader />,
-        status: 'To Do',
+        component: (
+          <Flex direction='row-space-between'>
+            <Loader />
+            <Loader type='example' />
+          </Flex>
+        ),
+        status: 'To Review',
       },
       {
         name: 'Logo',
