@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChartMaxPainData } from '@/UI/constants/charts/chartMaxPain';
 import {
   Bar,
@@ -23,13 +23,20 @@ import ChartLabel from './ChartLabel';
 
 // Styles
 import styles from './ChartMaxPain.module.scss';
+import { maxPainChartFormat } from '@/UI/utils/MaxPainChartUtil';
 
-// Types
-type ChartMaxPainProps = {
-  data: ChartMaxPainData[];
-};
+type ChartDataType = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+}
 
-const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
+const ChartMaxPain = ({data}: ChartDataType) => {
+  const [chartData, setChartData] = useState<ChartMaxPainData[]>([]);
+
+  useEffect(() => {
+    setChartData(maxPainChartFormat(data));
+  }, []);
+
   const [cursorX, setCursorX] = useState(0);
 
   const handleMouseMove = (e: CategoricalChartState) => {
@@ -43,7 +50,7 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
     <ResponsiveContainer className={styles.container} width='100%' height={487}>
       <BarChart
         barCategoryGap={33}
-        data={data}
+        data={chartData}
         margin={{
           top: 18,
           right: 46,
@@ -53,13 +60,13 @@ const ChartMaxPain = ({ data }: ChartMaxPainProps) => {
         onMouseMove={handleMouseMove}
       >
         <ReferenceLine
-          x={1600}
+          x={1500}
           stroke='#561198'
           strokeDasharray={'2 2'}
           label={<ChartLabel label='Max Pain' value='1600' />}
         />
         <ReferenceLine
-          x={1700}
+          x={1600}
           stroke='#9D9DAA'
           strokeDasharray={'2 2'}
           label={<ChartLabel label='Underlying Price' value='1700' />}

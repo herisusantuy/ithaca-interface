@@ -5,6 +5,20 @@ export type ChartMaxPainData = {
   put: number;
 };
 
+export const CHART_MAX_PAIN_ANY_TYPE = {
+  1100: { Call: 0, Put: 900, 'Binary Call': 0, 'Binary Put': 0 },
+  1200: { Call: 0, Put: 800, 'Binary Call': 0, 'Binary Put': 0 },
+  1300: { Call: 0, Put: 700, 'Binary Call': 0, 'Binary Put': 0 },
+  1400: { Call: 0, Put: 600, 'Binary Call': 0, 'Binary Put': 0 },
+  1500: { Call: 0, Put: 500, 'Binary Call': 0, 'Binary Put': 0 },
+  1600: { Call: 500, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+  1700: { Call: 600, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+  1800: { Call: 700, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+  1900: { Call: 800, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+  2000: { Call: 900, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+  2100: { Call: 1000, Put: 0, 'Binary Call': 0, 'Binary Put': 0 },
+};
+
 export const CHART_MAX_PAIN_DATA: ChartMaxPainData[] = [
   { strike: 1000, call: 3917, put: 2220 },
   { strike: 1100, call: 5714, put: 25026 },
