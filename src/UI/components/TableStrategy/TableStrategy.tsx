@@ -45,7 +45,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll }: StrategyTableProps) 
               <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
               <div className={styles.cell}>{strategy.leg.quantity}</div>
               <div className={styles.cell}>{strategy.strike}</div>
-              <div className={styles.cell}>{strategy.referencePrice}</div>
+              <div className={styles.cell}>{formatNumber(strategy.referencePrice, 'string')}</div>
               <div className={styles.cell}>
                 <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
                   <Remove />
