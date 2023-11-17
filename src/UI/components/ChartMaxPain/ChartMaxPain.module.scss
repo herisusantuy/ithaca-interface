@@ -118,7 +118,7 @@
 .headerContainer {
   display: flex;
   flex-direction: column;
-  gap: rem(18);
+  gap: rem(16);
 }
 
 .headerExpiryContainer {
@@ -136,6 +136,7 @@
   display: flex;
   align-items: center;
   gap: rem(4);
+  margin-bottom: rem(16);
   & p {
     @include font-size('text-xs', 'regular');
     font-family: $lato;
