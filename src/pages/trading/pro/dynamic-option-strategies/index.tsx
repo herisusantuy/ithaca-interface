@@ -38,6 +38,8 @@ import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
+import Chart from '@/UI/components/Icons/Chart';
+import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
 
 export interface DynamicOptionStrategy {
   leg: Leg;
@@ -68,14 +70,14 @@ const Index = () => {
     useAppStore();
 
   const sections: SectionType[] = [
-      { name: 'Product', style: styles.product },
-      { name: 'Type', style: styles.type },
-      { name: 'Side', style: styles.side },
-      { name: 'Size', style: styles.size },
-      { name: 'Strike', style: styles.strike },
-      { name: 'Price Per Leg', style: styles.unitPrice },
-      { name: '', style: styles.action },
-    ];
+    { name: 'Product', style: styles.product },
+    { name: 'Type', style: styles.type },
+    { name: 'Side', style: styles.side },
+    { name: 'Size', style: styles.size },
+    { name: 'Strike', style: styles.strike },
+    { name: 'Price Per Leg', style: styles.unitPrice },
+    { name: '', style: styles.action },
+  ];
   const handleStrategyChange = (strat: string) => {
     const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
@@ -152,17 +154,24 @@ const Index = () => {
       getPositionBuilderSummary(newPositionBuilderStrategies);
     }
   };
-  
+
+  const handleRemoveAllStrategies = () => {
+    setPositionBuilderStrategies([]);
+    setOrderSummary(undefined);
+    setChartData(undefined);
+    setStrategy({ ...strategy, strategies: [] })
+  };
+
   const addPosition = () => {
     strategy.strategies.push((
       {
-          product: "option",
-          type: "Call",
-          side: "BUY",
-          size: 100,
-          strike: 0
+        product: "option",
+        type: "Call",
+        side: "BUY",
+        size: 100,
+        strike: 0
       }));
-      setStrategy({...strategy});
+    setStrategy({ ...strategy });
   }
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
@@ -223,14 +232,14 @@ const Index = () => {
                     </div>
                   </Flex>
                   <div className={styles.parent}>
-                      <>
-                        {sections.map((section, index) => (
-                          <div key={index} className={section.style}>
-                            <p>{section.name}</p>
-                          </div>
-                        ))}
-                        <div className={styles.action}></div>
-                      </>
+                    <>
+                      {sections.map((section, index) => (
+                        <div key={index} className={section.style}>
+                          <p>{section.name}</p>
+                        </div>
+                      ))}
+                      <div className={styles.action}></div>
+                    </>
                   </div>
                   {strategy.strategies.map((strat, index) => {
                     return (
@@ -243,26 +252,33 @@ const Index = () => {
                       />
                     )
                   })}
-                  <Button
-                    title='Click to add Position '
-                    size='sm'
-                    variant='secondary'
-                    onClick={() => addPosition()}
-                  >
-                    <Plus/> Add Position
-                  </Button>
+                  <div>
+                    <Button
+                      title='Click to add Position '
+                      size='sm'
+                      variant='secondary'
+                      onClick={() => addPosition()}
+                    >
+                      <Plus /> Add Position
+                    </Button>
+                    {positionBuilderStrategies.length > 0 && (
+                      <Button className={styles.clearAll} title='Click to clear all' onClick={handleRemoveAllStrategies} variant='clear'>
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
                 </>
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
                   collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
                       ? formatNumber(toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ), 'string')
+                        orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      ), 'string')
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -281,13 +297,21 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index)
                     }}
-                    clearAll={() => {}}
+                    clearAll={() => { }}
                   />
-                  <h3>Payoff Diagram</h3>
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
                   ) : (
-                    <div className={styles.tableWrapper}></div>
+                    <>
+                      <h3>Payoff Diagram</h3>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.chartWrapper}>
+                          <Chart />
+                          <p>Please add a strategy.</p>
+                        </div>
+                        <PayoffOutline />
+                      </div>
+                    </>
                   )}
                 </>
               }
