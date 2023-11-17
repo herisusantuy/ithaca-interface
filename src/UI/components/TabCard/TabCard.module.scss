@@ -103,6 +103,7 @@
   @include spacing(padding, 42, 'left+right');
   @include spacing(padding, 32, 'top+bottom');
   flex: 1;
+  height: rem(651);
 }
 
 .rightPanelHeader {
