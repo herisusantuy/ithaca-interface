@@ -21,7 +21,7 @@ const Sidebar = ({ leftPanel, rightPanel, orderSummary }: SidebarProps) => {
         {leftPanel}
         <div className={styles.orderSummary}>{orderSummary}</div>
       </div>
-      <Panel margin='p-20 width-50'>{rightPanel}</Panel>
+      <Panel margin='p-20 width-50 box-shadow-panel'>{rightPanel}</Panel>
     </div>
   );
 };

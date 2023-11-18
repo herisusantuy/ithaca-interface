@@ -104,6 +104,8 @@
     color: var(--white-60);
     cursor: pointer;
     width: 100%;
+    height: rem(28);
+
     &:hover {
       color: var(--white);
     }
