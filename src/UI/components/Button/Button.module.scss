@@ -34,6 +34,11 @@
   @include spacing(padding, 12, 'top+bottom');
   @include font-size('text-sm', 'bold');
   height: rem(40);
+  border-radius: rem(20);
+
+  &:before {
+    border-radius: rem(20) !important;
+  }
 }
 
 // Variants

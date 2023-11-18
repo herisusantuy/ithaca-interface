@@ -278,6 +278,7 @@
 .br-20 {
   border-radius: rem(20) !important;
 
+  &:before,
   &:after {
     border-radius: rem(20) !important;
   }
@@ -318,4 +319,11 @@
 
 .align-stretch {
   align-items: stretch !important;
+}
+
+.box-shadow-panel {
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
 }
