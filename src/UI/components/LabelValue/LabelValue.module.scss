@@ -30,13 +30,17 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  gap: rem(4);
+  gap: rem(1);
   color: var(--white);
 }
 
 .subValue {
+  display: flex;
+  align-items: center;
+  gap: rem(1);
   @include font-size('text-xxs', 'regular');
   color: var(--white-60);
+  margin-left: rem(3);
 }
 
 .dropdown {
@@ -82,5 +86,13 @@
 
   .selected {
     color: var(--green-30);
+  }
+}
+
+.dropdownItem span {
+  margin-right: rem(1);
+
+  &:last-child {
+    margin-right: 0;
   }
 }

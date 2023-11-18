@@ -79,14 +79,14 @@ const Index = () => {
     { name: '', style: styles.action },
   ];
   const handleStrategyChange = (strat: string) => {
-    const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
+    const newStrategy = STRATEGIES.find(s => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
     setStrategy({
       label: newStrategy?.label,
       key: newStrategy?.key,
-      strategies: newStrategy?.strategies
+      strategies: newStrategy?.strategies,
     });
   };
 
@@ -144,7 +144,7 @@ const Index = () => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies];
     newPositionBuilderStrategies.splice(index, 1);
     strategy.strategies.splice(index, 1);
-    setStrategy({ ...strategy })
+    setStrategy({ ...strategy });
     if (!newPositionBuilderStrategies.length) {
       setPositionBuilderStrategies([]);
       setOrderSummary(undefined);
@@ -159,20 +159,19 @@ const Index = () => {
     setPositionBuilderStrategies([]);
     setOrderSummary(undefined);
     setChartData(undefined);
-    setStrategy({ ...strategy, strategies: [] })
+    setStrategy({ ...strategy, strategies: [] });
   };
 
   const addPosition = () => {
-    strategy.strategies.push((
-      {
-        product: "option",
-        type: "Call",
-        side: "BUY",
-        size: 100,
-        strike: 0
-      }));
+    strategy.strategies.push({
+      product: 'option',
+      type: 'Call',
+      side: 'BUY',
+      size: 100,
+      strike: 0,
+    });
     setStrategy({ ...strategy });
-  }
+  };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
@@ -219,13 +218,13 @@ const Index = () => {
                       <DropdownMenu
                         value={{
                           name: strategy.label,
-                          value: strategy.key
+                          value: strategy.key,
                         }}
-                        options={STRATEGIES.map((strat) => {
+                        options={STRATEGIES.map(strat => {
                           return {
                             name: strat.label,
-                            value: strat.key
-                          }
+                            value: strat.key,
+                          };
                         })}
                         onChange={option => handleStrategyChange(option)}
                       />
@@ -247,22 +246,22 @@ const Index = () => {
                         id={`strategy-${index}-${strategy.key}`}
                         key={`strategy-${index}`}
                         strategy={strat}
-                        updateStrategy={(strat) => handleStrategyUpdate(strat, index)}
+                        updateStrategy={strat => handleStrategyUpdate(strat, index)}
                         removeStrategy={() => handleRemoveStrategy(index)}
                       />
-                    )
+                    );
                   })}
                   <div>
-                    <Button
-                      title='Click to add Position '
-                      size='sm'
-                      variant='secondary'
-                      onClick={() => addPosition()}
-                    >
+                    <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
                       <Plus /> Add Position
                     </Button>
                     {positionBuilderStrategies.length > 0 && (
-                      <Button className={styles.clearAll} title='Click to clear all' onClick={handleRemoveAllStrategies} variant='clear'>
+                      <Button
+                        className={styles.clearAll}
+                        title='Click to clear all'
+                        onClick={handleRemoveAllStrategies}
+                        variant='clear'
+                      >
                         Clear All
                       </Button>
                     )}
@@ -275,10 +274,13 @@ const Index = () => {
                   collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? formatNumber(toPrecision(
-                        orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                        currencyPrecision.strike
-                      ), 'string')
+                      ? formatNumber(
+                          toPrecision(
+                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                            currencyPrecision.strike
+                          ),
+                          'string'
+                        )
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -295,9 +297,9 @@ const Index = () => {
                   <TableStrategy
                     strategies={positionBuilderStrategies}
                     removeRow={(index: number) => {
-                      handleRemoveStrategy(index)
+                      handleRemoveStrategy(index);
                     }}
-                    clearAll={() => { }}
+                    clearAll={() => {}}
                   />
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />

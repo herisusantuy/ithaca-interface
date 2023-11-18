@@ -133,21 +133,42 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
-                      valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                      }))}
+                      valueList={expiryList.map(date => {
+                        const formattedDate = dayjs(date, 'YYYYMMDD');
+                        return {
+                          label: `<span>${formattedDate.format('DD')}</span><span>${formattedDate.format(
+                            'MMM'
+                          )}</span><span>${formattedDate.format('YY')}</span>`,
+                          value: formattedDate.format('DDMMMYY'),
+                        };
+                      })}
                       onChange={value => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
                         setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
                       }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
+                      value={
+                        <>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
+                        </>
+                      }
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+                    <LabelValue
+                      label='Last Auction Price'
+                      value='1629'
+                      subValue={
+                        <>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
+                        </>
+                      }
+                    />
                   </Flex>
                   <h3>Position Builder</h3>
                   <PositionBuilderRow
@@ -184,14 +205,17 @@ const Index = () => {
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
                   collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? formatNumber(toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ), 'string')
+                      ? formatNumber(
+                          toPrecision(
+                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                            currencyPrecision.strike
+                          ),
+                          'string'
+                        )
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}

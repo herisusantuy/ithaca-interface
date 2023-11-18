@@ -277,6 +277,10 @@
 
 .br-20 {
   border-radius: rem(20) !important;
+
+  &:after {
+    border-radius: rem(20) !important;
+  }
 }
 
 .br-22 {
