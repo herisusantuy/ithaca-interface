@@ -15,10 +15,10 @@ import styles from './LabelValue.module.scss';
 
 // Types
 type LabelValueProps = {
-  label: string;
+  label: ReactNode;
   value?: ReactNode;
-  valueList?: ExpiryDateOptions[]
-  subValue?: string;
+  valueList?: ExpiryDateOptions[];
+  subValue?: ReactNode;
   hasDropdown?: boolean;
   defaultValue?: string;
   onChange?: (newValue: string) => void;
@@ -80,13 +80,17 @@ const LabelValue = ({
     return (
       <ul className={styles.dropdownMenu}>
         {valueList.map(option => (
-          <li key={option.value} className={`${styles.dropdownItem} ${value == option.value ? styles.selected : ''}`} onClick={() => handleOptionClick(option.value)}>
-            {option.label}
-          </li>
+          <li
+            key={option.value}
+            className={`${styles.dropdownItem} ${value === option.value ? styles.selected : ''}`}
+            onClick={() => handleOptionClick(option.value)}
+            dangerouslySetInnerHTML={{ __html: option.label }}
+          />
         ))}
       </ul>
     );
   };
+
   return (
     <div className={`${styles.labelValue} ${getDropdownStyle(hasDropdown)}`} ref={containerRef}>
       <div className={styles.contentWrapper}>
