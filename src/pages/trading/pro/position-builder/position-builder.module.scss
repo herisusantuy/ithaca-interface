@@ -64,3 +64,24 @@
     font-family: $lato;
   }
 }
+
+.divider {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  height: 1px;
+  background-color: var(--white);
+  opacity: 0.2;
+}
+
+.currencyLabel {
+  @include font-size('text-sm', 'regular');
+  color: var(--white-60);
+  margin-left: 4px;
+}
+
+
+.amountLabel {
+  @include font-size('text-sm', 'regular');
+  color: var(--white);
+  margin-right: 4px;
+}
