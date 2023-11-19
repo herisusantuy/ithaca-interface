@@ -1,5 +1,6 @@
 // Packages
 import dynamic from 'next/dynamic';
+import { useState } from 'react';
 
 // Constants
 import { TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
@@ -19,7 +20,6 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
-import { useState } from 'react';
 
 const DASHBOARD_TABS = [
   {
@@ -30,7 +30,7 @@ const DASHBOARD_TABS = [
   {
     id: 'positions',
     label: 'Positions',
-    content: <TableOrder type={TABLE_TYPE.ORDER} cancelOrder={false} description={false} />,
+    content: <TableOrder type={TABLE_TYPE.ORDER} cancelOrder={false} description={true} />,
   },
   {
     id: 'tradeHistory',

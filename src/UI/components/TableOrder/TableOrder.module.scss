@@ -219,7 +219,7 @@
 
 .emptyTable {
   @include font-size('text-xs', 'regular');
-  @include spacing(padding, 16, 'top');
+  padding: rem(150) 0;
   text-align: center;
 }
 

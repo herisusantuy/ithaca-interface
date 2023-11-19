@@ -121,6 +121,8 @@
   background: #360e5f;
   color: var(--white);
   gap: rem(4);
+  height: rem(34);
+  border-radius: rem(16);
 
   &:hover {
     background: #47117e;
