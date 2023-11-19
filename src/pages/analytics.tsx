@@ -4,7 +4,6 @@ import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenIntere
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import AnalyticsCard from '@/UI/components/AnalyticsCard/AnalyticsCard';
-import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 
 // Layout
 import Main from '@/UI/layouts/Main/Main';
@@ -20,7 +19,6 @@ import { CHART_TRADING_VOLUME_DATA } from '@/UI/constants/charts/chartTradingVol
 import { CHART_MAX_PAIN_ANY_TYPE } from '@/UI/constants/charts/chartMaxPain';
 import { CHART_TRADE_COUNT_DATA } from '@/UI/constants/charts/chartTradeCount';
 import { ANALYTICS_CARD_DATA, AnalyticsCardData } from '@/UI/constants/analytics';
-import { DROPDOWN_OPTIONS } from '@/UI/constants/dropdown';
 
 const Analytics = () => {
   return (
@@ -29,12 +27,6 @@ const Analytics = () => {
       <Main>
         <Container margin='mb-15 mt-8'>
           <h1>Analytics</h1>
-          <Flex direction='row-center' gap='gap-12' margin='mb-24'>
-            <Flex direction='row-center' gap='gap-12'>
-              <p className='fs-xs'>Total Price</p>
-              <DropdownMenu options={DROPDOWN_OPTIONS} onChange={() => {}} />
-            </Flex>
-          </Flex>
           <AnalyticsLayout
             leftPanel={
               <Flex direction='column' gap='gap-15'>
