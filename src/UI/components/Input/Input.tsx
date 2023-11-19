@@ -19,6 +19,8 @@ type InputProps = {
   id?: string;
   hasError?: boolean;
   errorMessage?: string;
+  className?: string;
+  containerClassName?: string;
 };
 
 // Styles
@@ -35,17 +37,19 @@ const Input = ({
   id,
   hasError = false,
   errorMessage,
+  className,
+  containerClassName,
 }: InputProps) => {
   const inputClass = hasError ? `${styles.input} ${styles.error}` : styles.input;
 
   return (
-    <div className={inputClass}>
+    <div className={`${inputClass} ${className || ''}`}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}
         </label>
       )}
-      <div className={styles.container}>
+      <div className={`${styles.container} ${containerClassName || ''}`}>
         <input
           id={id}
           type={type}

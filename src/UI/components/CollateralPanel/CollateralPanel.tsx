@@ -143,9 +143,10 @@ const CollateralPanel = () => {
           setTransactionInProgress(false);
         }}
       >
-        <Tabs tabs={MODAL_TABS} activeTab={modalTab} onChange={setModalTab} />
-        <Flex direction='row-space-between'>
+        <Tabs tabs={MODAL_TABS} className='mb-20' activeTab={modalTab} onChange={setModalTab} />
+        <Flex direction='row-space-between' gap='gap-15'>
           <DropdownMenu
+            className='full-width'
             options={[
               {
                 name: 'WETH',
@@ -157,10 +158,15 @@ const CollateralPanel = () => {
               },
             ]}
             value={selectedCurrency}
-            onChange={option => setSelectedCurrency({ name: option, value: option})}
+            onChange={option => setSelectedCurrency({ name: option, value: option })}
             iconStart={selectedCurrency && collateralSummary[selectedCurrency.value].currencyLogo}
           />
-          <Input value={modalAmount} onChange={({ target }) => setModalAmount(getNumberValue(target.value))} />
+          <Input
+            className='full-width'
+            containerClassName='full-width'
+            value={modalAmount}
+            onChange={({ target }) => setModalAmount(getNumberValue(target.value))}
+          />
           <Button
             variant='secondary'
             size='sm'
