@@ -22,7 +22,7 @@
   }
 
   .row {
-    @include spacing(padding, 16, 'top+bottom');
+    @include spacing(padding, 14, 'top+bottom');
     border-bottom: rem(1) solid var(--white-rgba-10);
     color: var(--white);
 

@@ -20,7 +20,7 @@ type OrderSummaryProps = {
 
 const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium, fee, submitAuction }: OrderSummaryProps) => {
   return (
-    <Panel margin='br-22 p-20 mt-125'>
+    <Panel margin='br-20 p-20 mt-125'>
       <Flex direction='row-space-between' gap='gap-24'>
         <h3 className='mb-0 full-width'>Order Summary</h3>
         <Flex direction='column' gap='gap-6'>

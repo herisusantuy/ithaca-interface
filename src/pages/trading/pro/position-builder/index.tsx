@@ -36,6 +36,10 @@ import { formatNumber, getNumber } from '@/UI/utils/Numbers';
 
 // Styles
 import styles from './position-builder.module.scss';
+import Modal from '@/UI/components/Modal/Modal';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Toast from '@/UI/components/Toast/Toast';
+import { ToastItemProp } from '@/UI/constants/toast';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -51,11 +55,21 @@ type OrderSummary = {
   orderPayoff: OrderPayoff;
 };
 
+type AuctionSubmission = {
+  type: string,
+  order: ClientConditionalOrder
+}
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
   const [chartData, setChartData] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [position, setPosition] = useState('top-right');
+  const [type, setType] = useState('success');
+  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
@@ -114,9 +128,25 @@ const Index = () => {
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
+      showToast({
+        id: Math.floor(Math.random() * 1000),
+        title: 'Transaction Sent',
+        message: 'We have received your request',
+      }, 'top-right', 'info')
     } catch (error) {
+      showToast({
+        id: Math.floor(Math.random() * 1000),
+        title: 'Transaction Failed',
+        message: 'Transaction Failed, please try again.',
+      }, 'top-right', 'error')
       console.error('Failed to submit order', error);
     }
+  };
+
+  const showToast = (newToast: ToastItemProp, position: string, type: string = 'info') => {
+    setToastList([...toastList, newToast]);
+    setPosition(position);
+    setType(type);
   };
 
   return (
@@ -133,21 +163,42 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
-                      valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                      }))}
+                      valueList={expiryList.map(date => {
+                        const formattedDate = dayjs(date, 'YYYYMMDD');
+                        return {
+                          label: `<span>${formattedDate.format('DD')}</span><span>${formattedDate.format(
+                            'MMM'
+                          )}</span><span>${formattedDate.format('YY')}</span>`,
+                          value: formattedDate.format('DDMMMYY'),
+                        };
+                      })}
                       onChange={value => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
                         setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
                       }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
+                      value={
+                        <>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
+                        </>
+                      }
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+                    <LabelValue
+                      label='Last Auction Price'
+                      value='1629'
+                      subValue={
+                        <>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
+                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
+                        </>
+                      }
+                    />
                   </Flex>
                   <h3>Position Builder</h3>
                   <PositionBuilderRow
@@ -157,7 +208,13 @@ const Index = () => {
                       { option: 'Put', value: 'Put' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => submitToAuction(order, 'Options')}
+                    submitAuction={(order: ClientConditionalOrder) => {
+                      setAuctionSubmission({
+                        order,
+                        type: 'Options'
+                      });
+                      setSubmitModal(true);
+                    }}
                   />
                   <PositionBuilderRow
                     title='Digital Options'
@@ -166,7 +223,13 @@ const Index = () => {
                       { option: 'Put', value: 'BinaryPut' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => submitToAuction(order, 'Digital Options')}
+                    submitAuction={(order: ClientConditionalOrder) => {
+                      setAuctionSubmission({
+                        order,
+                        type: 'Digital Options'
+                      });
+                      setSubmitModal(true);
+                    }}
                   />
                   <PositionBuilderRow
                     title='Forwards'
@@ -178,36 +241,117 @@ const Index = () => {
                       { option: 'Next Auction', value: 'Forward (Next Auction)' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => submitToAuction(order, 'Forward')}
+                    submitAuction={(order: ClientConditionalOrder) => {
+                      setAuctionSubmission({
+                        order,
+                        type: 'Forward'
+                      });
+                      setSubmitModal(true);
+                    }}
                   />
                 </>
               }
               orderSummary={
-                <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
-                  collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
-                  collatarelUSDC={
-                    orderSummary
-                      ? formatNumber(toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ), 'string')
-                      : '-'
-                  }
-                  premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
-                  fee={1.5}
-                  submitAuction={() => {
-                    if (!orderSummary) return;
-                    submitToAuction(orderSummary.order, 'Position Builder');
-                  }}
-                />
+                <>
+                  <OrderSummary
+                    limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
+                    collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                    collatarelUSDC={
+                      orderSummary
+                        ? formatNumber(
+                          toPrecision(
+                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                            currencyPrecision.strike
+                          ),
+                          'string'
+                        )
+                        : '-'
+                    }
+                    premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
+                    fee={1.5}
+                    submitAuction={() => {
+                      if (orderSummary?.order) {
+                        setSubmitModal(true)
+                        setAuctionSubmission({
+                          order: orderSummary?.order,
+                          type: 'Position Builder'
+                        })
+                      }
+                    }}
+                  />
+                  <Modal
+                    title='Submit to Auction'
+                    isOpen={submitModal}
+                    onCloseModal={() => setSubmitModal(false)}
+                    // isLoading={transactionInProgress}
+                    onSubmitOrder={async () => {
+                      if (!auctionSubmission) return;
+                      submitToAuction(auctionSubmission.order, auctionSubmission.type);
+                      setAuctionSubmission(undefined);
+                      setSubmitModal(false);
+                    }}>
+                    <>
+                      <div>Please confirm if you’d like to submit your order to auction.</div>
+                      <div className={styles.divider}></div>
+                      <Flex margin='mb-14'>
+                        <h5 className='flexGrow'>Order Limit</h5>
+                        <div>
+                        <span className={styles.amountLabel}>{formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}</span>
+                          <LogoUsdc />
+                          <span className={styles.currencyLabel}>USDC</span>
+                        </div>
+                      </Flex>
+                      <Flex margin='mb-14'>
+                        <h5 className='flexGrow'>Collateral Requirement</h5>
+                        <div>
+                          <div>
+                          <span className={styles.amountLabel}>{orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}</span>
+                            <LogoEth />
+                            <span className={styles.currencyLabel}>WETH</span>
+                          </div>
+                          <div>
+                          <span className={styles.amountLabel}>{orderSummary
+                              ? formatNumber(
+                                toPrecision(
+                                  orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                                  currencyPrecision.strike
+                                ),
+                                'string'
+                              )
+                              : '-'
+                          }</span> <LogoUsdc />
+                            <span className={styles.currencyLabel}>USDC</span>
+                          </div>
+                        </div>
+                      </Flex>
+                      <Flex margin='mb-14'>
+                        <h5 className='flexGrow color-white'>Total Premium</h5>
+                        <div>
+                        <span className={styles.amountLabel}>{formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}</span>
+                          <LogoUsdc />
+                          <span className={styles.currencyLabel}>USDC</span>
+                        </div>
+                      </Flex>
+                      <div className={styles.divider}></div>
+                      <Flex margin='mb-14'>
+                        <h5 className='flexGrow'>Platform Fee</h5>
+                        <div>
+                        <span className={styles.amountLabel}>1.5</span>
+                          <LogoUsdc />
+                          <span className={styles.currencyLabel}>USDC</span>
+                        </div>
+                      </Flex>
+                    </>
+                  </Modal>
+                  <Toast toastList={toastList} type={type} position={position} />
+                </>
               }
               rightPanel={
                 <>
                   <h3 className='mb-13'>Strategy</h3>
                   <TableStrategy
                     strategies={positionBuilderStrategies}
-                    clearAll={() => {}}
+                    clearAll={() => { }}
                     removeRow={(index: number) => {
                       const newPositionBuilderStrategies = [...positionBuilderStrategies];
                       newPositionBuilderStrategies.splice(index, 1);
@@ -242,6 +386,7 @@ const Index = () => {
           </ReadyState>
         </Container>
       </Main>
+
     </>
   );
 };

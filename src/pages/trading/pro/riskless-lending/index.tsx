@@ -39,6 +39,10 @@ import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrat
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
 import RisklessLendingRow from '@/UI/components/RisklessLendingRow/RisklessLendingRow';
+import Chart from '@/UI/components/Icons/Chart';
+import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
+import Input from '@/UI/components/Input/Input';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 
 export interface DynamicOptionStrategy {
   leg: Leg;
@@ -151,17 +155,25 @@ const Index = () => {
       getPositionBuilderSummary(newPositionBuilderStrategies);
     }
   };
-  
+
+
+  const handleRemoveAllStrategies = () => {
+    setPositionBuilderStrategies([]);
+    setOrderSummary(undefined);
+    setChartData(undefined);
+    setStrategy({...strategy, strategies:[]})
+  };
+
   const addPosition = () => {
     strategy.strategies.push((
       {
-          product: "option",
-          type: "Call",
-          side: "BUY",
-          size: 100,
-          strike: 0
+        product: "option",
+        type: "Call",
+        side: "BUY",
+        size: 100,
+        strike: 0
       }));
-      setStrategy({...strategy});
+    setStrategy({ ...strategy });
   }
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
@@ -220,17 +232,25 @@ const Index = () => {
                         onChange={option => handleStrategyChange(option)}
                       />
                     </div>
+                    <div className={styles.prePackagedTitle}>Total Price</div>
+                    <div className={styles.dropDownWrapper}>
+                      <Input
+                        type='number'
+                        value={1000}
+                        icon={<LogoUsdc />}
+                      />
+                    </div>
                   </Flex>
 
                   <div className={styles.parent}>
-                      <>
-                        {sections.map((section, index) => (
-                          <div key={index} className={section.style}>
-                            <p>{section.name}</p>
-                          </div>
-                        ))}
-                        <div className={styles.action}></div>
-                      </>
+                    <>
+                      {sections.map((section, index) => (
+                        <div key={index} className={section.style}>
+                          <p>{section.name}</p>
+                        </div>
+                      ))}
+                      <div className={styles.action}></div>
+                    </>
                   </div>
                   {strategy.strategies.map((strat, index) => {
                     return (
@@ -243,26 +263,33 @@ const Index = () => {
                       />
                     )
                   })}
-                  <Button
-                    title='Click to add Position '
-                    size='sm'
-                    variant='secondary'
-                    onClick={() => addPosition()}
-                  >
-                    <Plus/> Add Position
-                  </Button>
+                  <div>
+                    <Button
+                      title='Click to add Position '
+                      size='sm'
+                      variant='secondary'
+                      onClick={() => addPosition()}
+                    >
+                      <Plus /> Add Position
+                    </Button>
+                    {positionBuilderStrategies.length > 0 && (
+                      <Button className={styles.clearAll} title='Click to clear all' onClick={handleRemoveAllStrategies} variant='clear'>
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
                 </>
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
                   collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
                       ? formatNumber(toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ), 'string')
+                        orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      ), 'string')
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -281,13 +308,21 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index)
                     }}
-                    clearAll={() => {}}
+                    clearAll={() => { }}
                   />
-                  <h3>Payoff Diagram</h3>
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
                   ) : (
-                    <div className={styles.tableWrapper}></div>
+                    <>
+                      <h3>Payoff Diagram</h3>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.chartWrapper}>
+                          <Chart />
+                          <p>Please add a strategy.</p>
+                        </div>
+                        <PayoffOutline />
+                      </div>
+                    </>
                   )}
                 </>
               }

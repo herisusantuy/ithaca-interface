@@ -524,34 +524,34 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               </Fragment>
             );
           })
-        ) : isLoading ? (
-          <Container size='loader'>
-            <Loader />
-          </Container>) :(
+        ) : !isLoading ? (
+          <Container size='loader' margin='ptb-150'>
+            <Loader type='lg' />
+          </Container>
+        ) : (
           <p className={styles.emptyTable}>No results found</p>
         )}
       </div>
-      {slicedData.length > 0 ? (
-        <Flex direction='row-space-between' margin='mt-35'>
-          {description ? (
-            <TableDescription
-              possibleReleaseX={10}
-              possibleReleaseY={20}
-              postOptimisationX={8}
-              postOptimisationY={18}
-              totalCollateral={30}
-            />
-          ) : (
-            <div />
-          )}
-          <Pagination
-            totalItems={data.length}
-            itemsPerPage={pageLimit}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+
+      <Flex direction='row-space-between' margin='mt-35'>
+        {description ? (
+          <TableDescription
+            possibleReleaseX={10}
+            possibleReleaseY={20}
+            postOptimisationX={8}
+            postOptimisationY={18}
+            totalCollateral={30}
           />
-        </Flex>
-      ) : null}
+        ) : (
+          <div />
+        )}
+        <Pagination
+          totalItems={data.length}
+          itemsPerPage={pageLimit}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </Flex>
 
       {isModalOpen && rowToCancelOrder && (
         <Modal

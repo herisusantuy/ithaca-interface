@@ -116,6 +116,10 @@
   margin-bottom: rem(18) !important;
 }
 
+.mb-20 {
+  margin-bottom: rem(20) !important;
+}
+
 .mb-24 {
   margin-bottom: rem(24) !important;
 }
@@ -235,6 +239,11 @@
   padding-bottom: rem(24) !important;
 }
 
+.ptb-150 {
+  padding-top: rem(150) !important;
+  padding-bottom: rem(150) !important;
+}
+
 .plr-8 {
   padding-left: rem(8) !important;
   padding-right: rem(8) !important;
@@ -263,10 +272,6 @@
   @include spacing(padding, 20, 'top+bottom');
 }
 
-.color-white {
-  color: var(--white);
-}
-
 .color-grey-400 {
   color: var(--white-rgba-20);
 }
@@ -277,6 +282,11 @@
 
 .br-20 {
   border-radius: rem(20) !important;
+
+  &:before,
+  &:after {
+    border-radius: rem(20) !important;
+  }
 }
 
 .br-22 {
@@ -314,4 +324,15 @@
 
 .align-stretch {
   align-items: stretch !important;
+}
+
+.box-shadow-panel {
+  box-shadow:
+    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+}
+
+.flexGrow {
+  flex-grow: 1;
 }

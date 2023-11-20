@@ -38,6 +38,8 @@ import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
+import Chart from '@/UI/components/Icons/Chart';
+import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
 
 export interface DynamicOptionStrategy {
   leg: Leg;
@@ -68,23 +70,23 @@ const Index = () => {
     useAppStore();
 
   const sections: SectionType[] = [
-      { name: 'Product', style: styles.product },
-      { name: 'Type', style: styles.type },
-      { name: 'Side', style: styles.side },
-      { name: 'Size', style: styles.size },
-      { name: 'Strike', style: styles.strike },
-      { name: 'Price Per Leg', style: styles.unitPrice },
-      { name: '', style: styles.action },
-    ];
+    { name: 'Product', style: styles.product },
+    { name: 'Type', style: styles.type },
+    { name: 'Side', style: styles.side },
+    { name: 'Size', style: styles.size },
+    { name: 'Strike', style: styles.strike },
+    { name: 'Price Per Leg', style: styles.unitPrice },
+    { name: '', style: styles.action },
+  ];
   const handleStrategyChange = (strat: string) => {
-    const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
+    const newStrategy = STRATEGIES.find(s => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
     setStrategy({
       label: newStrategy?.label,
       key: newStrategy?.key,
-      strategies: newStrategy?.strategies
+      strategies: newStrategy?.strategies,
     });
   };
 
@@ -142,7 +144,7 @@ const Index = () => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies];
     newPositionBuilderStrategies.splice(index, 1);
     strategy.strategies.splice(index, 1);
-    setStrategy({ ...strategy })
+    setStrategy({ ...strategy });
     if (!newPositionBuilderStrategies.length) {
       setPositionBuilderStrategies([]);
       setOrderSummary(undefined);
@@ -152,18 +154,24 @@ const Index = () => {
       getPositionBuilderSummary(newPositionBuilderStrategies);
     }
   };
-  
+
+  const handleRemoveAllStrategies = () => {
+    setPositionBuilderStrategies([]);
+    setOrderSummary(undefined);
+    setChartData(undefined);
+    setStrategy({ ...strategy, strategies: [] });
+  };
+
   const addPosition = () => {
-    strategy.strategies.push((
-      {
-          product: "option",
-          type: "Call",
-          side: "BUY",
-          size: 100,
-          strike: 0
-      }));
-      setStrategy({...strategy});
-  }
+    strategy.strategies.push({
+      product: 'option',
+      type: 'Call',
+      side: 'BUY',
+      size: 100,
+      strike: 0,
+    });
+    setStrategy({ ...strategy });
+  };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
@@ -210,27 +218,27 @@ const Index = () => {
                       <DropdownMenu
                         value={{
                           name: strategy.label,
-                          value: strategy.key
+                          value: strategy.key,
                         }}
-                        options={STRATEGIES.map((strat) => {
+                        options={STRATEGIES.map(strat => {
                           return {
                             name: strat.label,
-                            value: strat.key
-                          }
+                            value: strat.key,
+                          };
                         })}
                         onChange={option => handleStrategyChange(option)}
                       />
                     </div>
                   </Flex>
                   <div className={styles.parent}>
-                      <>
-                        {sections.map((section, index) => (
-                          <div key={index} className={section.style}>
-                            <p>{section.name}</p>
-                          </div>
-                        ))}
-                        <div className={styles.action}></div>
-                      </>
+                    <>
+                      {sections.map((section, index) => (
+                        <div key={index} className={section.style}>
+                          <p>{section.name}</p>
+                        </div>
+                      ))}
+                      <div className={styles.action}></div>
+                    </>
                   </div>
                   {strategy.strategies.map((strat, index) => {
                     return (
@@ -238,31 +246,41 @@ const Index = () => {
                         id={`strategy-${index}-${strategy.key}`}
                         key={`strategy-${index}`}
                         strategy={strat}
-                        updateStrategy={(strat) => handleStrategyUpdate(strat, index)}
+                        updateStrategy={strat => handleStrategyUpdate(strat, index)}
                         removeStrategy={() => handleRemoveStrategy(index)}
                       />
-                    )
+                    );
                   })}
-                  <Button
-                    title='Click to add Position '
-                    size='sm'
-                    variant='secondary'
-                    onClick={() => addPosition()}
-                  >
-                    <Plus/> Add Position
-                  </Button>
+                  <div>
+                    <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
+                      <Plus /> Add Position
+                    </Button>
+                    {positionBuilderStrategies.length > 0 && (
+                      <Button
+                        className={styles.clearAll}
+                        title='Click to clear all'
+                        onClick={handleRemoveAllStrategies}
+                        variant='clear'
+                      >
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
                 </>
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice),'string') || '-'}
+                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
                   collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? formatNumber(toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ), 'string')
+                      ? formatNumber(
+                          toPrecision(
+                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                            currencyPrecision.strike
+                          ),
+                          'string'
+                        )
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -279,15 +297,23 @@ const Index = () => {
                   <TableStrategy
                     strategies={positionBuilderStrategies}
                     removeRow={(index: number) => {
-                      handleRemoveStrategy(index)
+                      handleRemoveStrategy(index);
                     }}
                     clearAll={() => {}}
                   />
-                  <h3>Payoff Diagram</h3>
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
                   ) : (
-                    <div className={styles.tableWrapper}></div>
+                    <>
+                      <h3>Payoff Diagram</h3>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.chartWrapper}>
+                          <Chart />
+                          <p>Please add a strategy.</p>
+                        </div>
+                        <PayoffOutline />
+                      </div>
+                    </>
                   )}
                 </>
               }

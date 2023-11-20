@@ -10,6 +10,7 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 // Styles
 import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
 import { createPortal } from 'react-dom';
+import Flex from '@/UI/layouts/Flex/Flex';
 
 // Types
 export type DropDownOption = {
@@ -26,9 +27,20 @@ type DropdownMenuProps = {
   value?: DropDownOption;
   iconStart?: ReactNode;
   iconEnd?: ReactNode;
+  className?: string;
 };
 
-const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart, iconEnd }: DropdownMenuProps) => {
+const DropdownMenu = ({
+  onChange,
+  options,
+  disabled,
+  label,
+  id,
+  value,
+  iconStart,
+  iconEnd,
+  className,
+}: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
@@ -48,7 +60,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
         setIsDropdownOpen(false);
       }
     };
-    setSelectedOption(value || null)
+    setSelectedOption(value || null);
     setMounted(true);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
@@ -78,7 +90,7 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
   };
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div className={`${styles.container} ${className || ''}`} ref={containerRef}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}
@@ -90,8 +102,10 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
         role='button'
       >
         <div className={`${styles.input} ${isDropdownOpen ? styles.clickedDropdown : ''}`}>
-          {iconStart && iconStart}
-          <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
+          <Flex direction='dropdown' gap='gap-4'>
+            {iconStart && iconStart}
+            <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
+          </Flex>
           <div className={styles.iconEnd}>
             <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
               <Dropdown />
@@ -114,7 +128,11 @@ const DropdownMenu = ({ onChange, options, disabled, label, id, value, iconStart
                 {options &&
                   options.map((item: DropDownOption, idx: number) => {
                     return (
-                      <li key={idx} onClick={() => handleOptionClick(item)} className={`${selectedOption?.value == item.value ? styles.selected : ''}`}>
+                      <li
+                        key={idx}
+                        onClick={() => handleOptionClick(item)}
+                        className={`${selectedOption?.value == item.value ? styles.selected : ''}`}
+                      >
                         {item.name}
                       </li>
                     );
