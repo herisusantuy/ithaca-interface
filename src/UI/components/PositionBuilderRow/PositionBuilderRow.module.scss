@@ -61,10 +61,16 @@
 
 .collateral {
   grid-area: 1 / 6 / 2 / 7;
+  min-width: 70px;
+  justify-content: right;
+  display: flex;
 }
 
 .premium {
   grid-area: 1 / 7 / 2 / 8;
+  min-width: 70px;
+  justify-content: right;
+  display: flex;
 }
 
 .action {

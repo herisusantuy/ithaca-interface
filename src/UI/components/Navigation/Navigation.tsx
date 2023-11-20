@@ -20,7 +20,7 @@ const Navigation = ({ onClick }: NavigationProps) => {
   const router = useRouter();
 
   const checkIsActivePath = (path: string) => {
-    return path === '/' ? router.pathname === path : router.pathname.includes(path);
+    return path === '/' ? router.pathname === path : router.pathname.includes(path.split('/')[1]);
   };
 
   return (
