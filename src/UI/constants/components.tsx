@@ -55,6 +55,7 @@ import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
+import Datepicker from '@/UI/components/DatePicker/Datepicker';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -76,7 +77,6 @@ import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_ANY_TYPE } from './charts/chartMaxPain';
 import { LEADERBOARD_CARDS } from './leaderboard';
 import { TABLE_LEADERBOARD_DATA } from './tableLeaderboard';
-import Datepicker from '../components/Datepicker/Datepicker';
 
 const COMPONENT_GROUPS = [
   {

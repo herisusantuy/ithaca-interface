@@ -1,15 +1,16 @@
 .datePickerContainer {
   display: flex;
   align-items: center;
-  padding: rem(7) rem(8);
+  padding: rem(7) rem(10);
   gap: rem(4);
   border-radius: rem(12);
-  max-width: rem(180);
+  min-width: rem(167);
   height: rem(34);
   cursor: pointer;
   justify-content: space-between;
   background: var(--gray-rgba-40);
-  border: 1px solid var(--white-60);
+  transition: $transition_all;
+  position: relative;
 
   &:before {
     content: '';
@@ -36,6 +37,10 @@
   @include font-size('text-md', 'regular');
   color: var(--white);
   font-family: $roboto;
+
+  span:last-child {
+    margin-right: rem(1);
+  }
 }
 
 .dateBlock {
@@ -43,7 +48,6 @@
   display: flex;
   flex-direction: column;
   background: rgba(32, 38, 49, 0.8);
-  width: rem(510);
   border-radius: rem(8);
   z-index: 999999;
 }

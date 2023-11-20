@@ -9,5 +9,5 @@ export const formatDate = (inputDate: Date | undefined): string => {
   // Pad the day with a leading zero if it's a single-digit day
   const formattedDay = day;
 
-  return `${formattedDay}${monthAbbreviation}${year}`;
+  return `<span>${formattedDay}</span>${monthAbbreviation}${year}`;
 };
