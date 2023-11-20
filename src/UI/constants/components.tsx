@@ -76,6 +76,7 @@ import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_ANY_TYPE } from './charts/chartMaxPain';
 import { LEADERBOARD_CARDS } from './leaderboard';
 import { TABLE_LEADERBOARD_DATA } from './tableLeaderboard';
+import Datepicker from '../components/Datepicker/Datepicker';
 
 const COMPONENT_GROUPS = [
   {
@@ -234,6 +235,11 @@ const COMPONENT_GROUPS = [
         name: 'CurrencyDisplay',
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
         status: 'Approved',
+      },
+      {
+        name: 'Datepicker',
+        component: <Datepicker />,
+        status: 'In Progress',
       },
       {
         name: 'DisconnectedWallet',
