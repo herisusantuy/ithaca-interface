@@ -134,15 +134,16 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
 
     // set gradient value
-    setOff(gradientOffset(xAxisPosition, height));
+    setOff(gradientOffset(xAxisPosition, height, modified));
     setXAxisPosition(0);
     setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
   useEffect(() => {
-    setOff(gradientOffset(xAxisPosition, height));
-  }, [xAxisPosition]);
+    setOff(gradientOffset(xAxisPosition, height, modifiedData));
+    renderGradient();
+  }, [xAxisPosition, off]);
 
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
@@ -175,13 +176,12 @@ const ChartPayoff = (props: ChartDataProps) => {
     return showGradientTags(off, color, dashedColor);
   };
 
-  const updateLabelPosition = (positionObj: LabelPositionProp) => {
-    const updatedPositions = [...labelPosition, ...[positionObj]];
-    console.log(updatedPositions);
-    setTimeout(() => {
-      setLabelPosition(updatedPositions);
-    }, 10);
-  };
+  // const updateLabelPosition = (positionObj: LabelPositionProp) => {
+  //   const updatedPositions = [...labelPosition, ...[positionObj]];
+  //   setTimeout(() => {
+  //     setLabelPosition(updatedPositions);
+  //   }, 10);
+  // };
 
   return (
     <>
@@ -224,7 +224,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataList={modifiedData}
                       height={height}
                       labelPosition={labelPosition}
-                      updateLabelPosition={updateLabelPosition}
+                      // updateLabelPosition={updateLabelPosition}
                     />
                   )
                 }

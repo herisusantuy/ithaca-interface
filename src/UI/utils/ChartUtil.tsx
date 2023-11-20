@@ -34,12 +34,26 @@ export const gradientOffset1 = (data: PayoffDataProps[]) => {
   return max / (max - min);
 };
 
-export const gradientOffset = (xAxis: number, height: number) => {
+export const gradientOffset = (xAxis: number, height: number, data: PayoffDataProps[]) => {
   return xAxis / (height / 100) / 100;
+  // if (xAxis != 0) {
+  // }
+  // const dataMax = Math.max(...data.map(i => i.value));
+  // const dataMin = Math.min(...data.map(i => i.value));
+
+  // if (dataMax <= 0) {
+  //   return 0;
+  // }
+  // if (dataMin >= 0) {
+  //   return 1;
+  // }
+
+  // return dataMax / (dataMax - dataMin);
 };
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
   if (off == 0) {
+    console.log('hello-------', off);
     return (
       <defs>
         {/* Area gradient */}
@@ -361,7 +375,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } 
+  }
 };
 
 export const breakPointList1 = (data: PayoffDataProps[]) => {

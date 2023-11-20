@@ -15,18 +15,18 @@ type LabelProps = {
   dataList: PayoffDataProps[];
   height: number;
   labelPosition: LabelPositionProp[];
-  updateLabelPosition: (labelPosition: LabelPositionProp) => void;
+  // updateLabelPosition: (labelPosition: LabelPositionProp) => void;
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, base, index, dataSize, special, dataList, height, labelPosition, updateLabelPosition } = props;
+  const { x, y, value, base, index, dataSize, special, dataList, height, labelPosition } = props;
 
   useEffect(() => {
     if (
       special.find(item => item.x == dataList[index ?? 0]?.x) ||
       (value === 0 && dataList[index ? index - 1 : 0]?.value !== 0)
     ) {
-      updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
+      // updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
       // if (labelPosition.length == 0) {
       // } else {
       //   let checkable = false;
