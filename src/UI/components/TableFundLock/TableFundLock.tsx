@@ -30,7 +30,7 @@ import styles from './TableFundLock.module.scss';
 import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs';
-import { formatUnits, parseUnits } from 'viem';
+import { formatUnits } from 'viem';
 import { formatNumber } from '@/UI/utils/Numbers';
 
 type FundlockHistory = {
@@ -71,6 +71,7 @@ const TableFundLock = () => {
         ...withdrawals
       ]);
     })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   },[]);
 
   const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {

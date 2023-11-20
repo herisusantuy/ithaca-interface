@@ -45,12 +45,6 @@ const PRODUCT_OPTIONS: ProductOption[] = [{
   value: 'Forward'
 }];
 
-
-type SectionType = {
-  name: string;
-  style: string;
-};
-
 const PRODUCT_TYPES: ProductType = {
   option: [{
     option: 'Call',

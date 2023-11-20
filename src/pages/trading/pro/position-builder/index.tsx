@@ -20,7 +20,6 @@ import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuild
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
-import Chart from '@/UI/components/Icons/Chart';
 
 // Layouts
 import Main from '@/UI/layouts/Main/Main';

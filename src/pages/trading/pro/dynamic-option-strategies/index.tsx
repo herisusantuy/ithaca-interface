@@ -38,7 +38,6 @@ import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
-import Chart from '@/UI/components/Icons/Chart';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
 
 export interface DynamicOptionStrategy {
