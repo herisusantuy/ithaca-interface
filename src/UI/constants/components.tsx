@@ -53,7 +53,6 @@ import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenIntere
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
-import DatePicker from '@/UI/components/DatePicker/DatePicker';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
 
@@ -236,11 +235,11 @@ const COMPONENT_GROUPS = [
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
         status: 'Approved',
       },
-      {
-        name: 'DatePicker',
-        component: <DatePicker />,
-        status: 'In Progress',
-      },
+      // {
+      //   name: 'DatePicker',
+      //   component: <DatePicker />,
+      //   status: 'In Progress',
+      // },
       {
         name: 'DisconnectedWallet',
         component: (
