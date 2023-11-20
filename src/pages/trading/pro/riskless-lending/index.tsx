@@ -241,7 +241,8 @@ const Index = () => {
                       />
                     </div>
                   </Flex>
-
+                  {strategy.strategies.length ?
+                  (<>
                   <div className={styles.parent}>
                     <>
                       {sections.map((section, index) => (
@@ -263,6 +264,7 @@ const Index = () => {
                       />
                     )
                   })}
+                  </>) : <div className={styles.strategiesPlaceholder}></div>}
                   <div>
                     <Button
                       title='Click to add Position '
@@ -308,7 +310,7 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index)
                     }}
-                    clearAll={() => { }}
+                    clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />

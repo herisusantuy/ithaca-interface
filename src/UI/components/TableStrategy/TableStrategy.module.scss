@@ -112,7 +112,7 @@
 }
 
 .emptyContainer {
-  @include spacing(padding, 74, 'top+bottom');
+  @include spacing(padding, 24, 'top+bottom');
   @include font-size('text-sm', 'regular');
   display: flex;
   align-items: center;
