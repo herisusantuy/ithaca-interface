@@ -53,7 +53,6 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
   if (off == 0) {
-    console.log('hello-------', off);
     return (
       <defs>
         {/* Area gradient */}

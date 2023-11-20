@@ -142,9 +142,11 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     setOff(gradientOffset(xAxisPosition, height, modifiedData));
+  }, [xAxisPosition]);
+  
+  useEffect(() => {
     renderGradient();
-  }, [xAxisPosition, off]);
-
+  }, [off])
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
     if (!e) return; // Avoid null event in compact mode when tooltip is not rendered
