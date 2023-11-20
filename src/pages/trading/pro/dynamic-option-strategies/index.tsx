@@ -307,10 +307,6 @@ const Index = () => {
                     <>
                       <h3>Payoff Diagram</h3>
                       <div className={styles.tableWrapper}>
-                        <div className={styles.chartWrapper}>
-                          <Chart />
-                          <p>Please add a strategy.</p>
-                        </div>
                         <PayoffOutline />
                       </div>
                     </>
