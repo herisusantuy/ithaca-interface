@@ -32,7 +32,6 @@ import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
-import DatePicker from '@/UI/components/DatePicker/Datepicker';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
@@ -236,11 +235,11 @@ const COMPONENT_GROUPS = [
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
         status: 'Approved',
       },
-      {
-        name: 'Datepicker',
-        component: <DatePicker />,
-        status: 'In Progress',
-      },
+      // {
+      //   name: 'DatePicker',
+      //   component: <DatePicker />,
+      //   status: 'In Progress',
+      // },
       {
         name: 'DisconnectedWallet',
         component: (
