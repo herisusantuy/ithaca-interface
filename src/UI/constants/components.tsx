@@ -55,7 +55,6 @@ import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
-import DatePicker from '@/UI/components/DatePicker/DatePicker';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -70,7 +69,6 @@ import { TRADING_MARKET_TABS } from './tabCard';
 import { SOLID_COLORS, TRANSPARENT_COLORS } from './color';
 import { DROPDOWN_OPTIONS } from './dropdown';
 import { CHART_FAKE_DATA } from './charts/charts';
-import { TABLE_FUND_LOCK_DATA } from './tableFundLock';
 import { CHART_TRADING_VOLUME_DATA } from './charts/chartTradingVolume';
 import { CHART_TRADE_COUNT_DATA } from './charts/chartTradeCount';
 import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
@@ -235,11 +233,6 @@ const COMPONENT_GROUPS = [
         name: 'CurrencyDisplay',
         component: <CurrencyDisplay amount={10} symbol={<LogoUsdc />} currency='USDC' />,
         status: 'Approved',
-      },
-      {
-        name: 'DatePicker',
-        component: <DatePicker />,
-        status: 'In Progress',
       },
       {
         name: 'DisconnectedWallet',
@@ -456,7 +449,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TableFundLock',
-        component: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
+        component: <TableFundLock />,
         status: 'To Review',
       },
       {

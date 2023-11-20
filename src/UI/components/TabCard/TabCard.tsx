@@ -46,6 +46,7 @@ const TabCard = ({ tabs, showInstructions, setShowInstructions }: TabCardProps) 
         <div className={styles.rightPanelHeader}>
           <h2>{activeTab.title}</h2>
           <Toggle
+            size='sm'
             defaultState={showInstructions ? 'right' : 'left'}
             rightLabel='Show Instructions'
             onChange={() => setShowInstructions(!showInstructions)}

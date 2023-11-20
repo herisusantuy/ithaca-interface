@@ -1,6 +1,6 @@
 const PayoffOutline = () => {
   return (
-    <svg width='425' height='249' viewBox='0 0 425 249' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg width='287' height='249' viewBox='0 0 425 249' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <g opacity='0.2'>
         <path d='M236.875 34.7158L236.875 124.716' stroke='url(#paint0_linear_2297_214879)' strokeWidth='0.969934' />
         <g filter='url(#filter0_d_2297_214879)'>

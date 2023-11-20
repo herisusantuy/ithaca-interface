@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/tableFundLock';
+import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps, TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
 
 // Utils
 import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
@@ -29,14 +29,18 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import styles from './TableFundLock.module.scss';
 import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 import { useAppStore } from '@/UI/lib/zustand/store';
+import dayjs from 'dayjs';
+import { formatUnits } from 'viem';
+import { formatNumber } from '@/UI/utils/Numbers';
 
-// Types
-type TableFundLockProps = {
-  data: TableFundLockDataProps[];
-};
+type FundlockHistory = {
+  amount: bigint,
+  blockTimestamp: string,
+  token: string
+}
 
-const TableFundLock = ({ data }: TableFundLockProps) => {
-  const { isAuthenticated } = useAppStore();
+const TableFundLock = () => {
+  const { ithacaSDK, isAuthenticated, systemInfo } = useAppStore();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -46,10 +50,43 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
   const [currencyChecked, setCurrencyChecked] = useState<boolean>(false);
   const [auctionArray, setAuctionArray] = useState<string[]>([]);
   const [auctionChecked, setAuctionChecked] = useState<boolean>(false);
+  const [data, setData] = useState<TableFundLockDataProps[]>(TABLE_FUND_LOCK_DATA);
 
   const currencyRef = useRef<HTMLDivElement | null>(null);
   const auctionRef = useRef<HTMLDivElement | null>(null);
   const pageLimit = 9;
+
+  useEffect(() => {
+    ithacaSDK.fundlock.fundlockHistory().then((res) => {
+      const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce((obj, key) => {
+        obj[systemInfo.tokenAddress[key] as string] = key;
+        return obj;
+      }, {} as Record<string, string>);
+      const deposits = convertToRows(res.deposits, 'Deposit', walletAddresses);
+      const releases = convertToRows(res.releases, 'Release', walletAddresses);
+      const withdrawals = convertToRows(res.withdrawalRequests, 'Withdraw', walletAddresses);
+      setData([
+        ...deposits,
+        ...releases,
+        ...withdrawals
+      ]);
+    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  },[]);
+
+  const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
+    return data.map((d) => {
+      const token = walletAddresses[d.token];
+      console.log(dayjs(d.blockTimestamp))
+      return {
+        orderData: dayjs(Number(d.blockTimestamp) *1000).format('DD MMM YY HH:mm'),
+        asset: token,
+        auction: auction,
+        amount: formatNumber(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string'),
+        currency: token
+      }
+    })
+  }
 
   // Page state
   const [currentPage, setCurrentPage] = useState(1);

@@ -16,7 +16,6 @@ import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
 import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
@@ -39,7 +38,6 @@ import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrat
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
 import RisklessLendingRow from '@/UI/components/RisklessLendingRow/RisklessLendingRow';
-import Chart from '@/UI/components/Icons/Chart';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
 import Input from '@/UI/components/Input/Input';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
@@ -241,7 +239,8 @@ const Index = () => {
                       />
                     </div>
                   </Flex>
-
+                  {strategy.strategies.length ?
+                  (<>
                   <div className={styles.parent}>
                     <>
                       {sections.map((section, index) => (
@@ -263,6 +262,7 @@ const Index = () => {
                       />
                     )
                   })}
+                  </>) : <div className={styles.strategiesPlaceholder}></div>}
                   <div>
                     <Button
                       title='Click to add Position '
@@ -308,7 +308,7 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index)
                     }}
-                    clearAll={() => { }}
+                    clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
