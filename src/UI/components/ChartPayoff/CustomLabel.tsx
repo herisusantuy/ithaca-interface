@@ -19,7 +19,7 @@ type LabelProps = {
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, base, index, dataSize, special, dataList, height, labelPosition } = props;
+  const { x, y, value, index, special, dataList, height, labelPosition } = props;
 
   useEffect(() => {
     if (
@@ -50,6 +50,7 @@ const CustomLabel = (props: LabelProps) => {
       //   }
       // }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [x, y]);
 
   function renderLabel() {

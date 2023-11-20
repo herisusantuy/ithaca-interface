@@ -421,7 +421,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
 
 export const breakPointList1 = (data: PayoffDataProps[]) => {
   const offsets: SpecialDotLabel[] = [];
-  const minMaxOffsetRange = findOverallMinMaxValues(data);
+  // const minMaxOffsetRange = findOverallMinMaxValues(data);
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {

@@ -143,10 +143,12 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     setOff(gradientOffset(xAxisPosition, height, modifiedData));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xAxisPosition]);
 
   useEffect(() => {
     renderGradient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
