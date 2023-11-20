@@ -32,7 +32,6 @@ import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
-import DatePicker from '@/UI/components/DatePicker/Datepicker';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
@@ -54,6 +53,7 @@ import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenIntere
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
+import DatePicker from '@/UI/components/DatePicker/DatePicker';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
 
@@ -237,7 +237,7 @@ const COMPONENT_GROUPS = [
         status: 'Approved',
       },
       {
-        name: 'Datepicker',
+        name: 'DatePicker',
         component: <DatePicker />,
         status: 'In Progress',
       },
