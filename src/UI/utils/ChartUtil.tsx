@@ -1,23 +1,45 @@
 import { PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
 export const isIncrementing = (arr: PayoffDataProps[]) => {
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i].value > 0) {
-      if (arr[i].value >= arr[i + 1].value) {
-        return false;
+  let result = true;
+  if (arr[0].value != arr[1].value) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value < arr[i + 1].value) {
+        result = false;
+        break;
+      }
+    }
+  } else if (arr[arr.length - 1].value != arr[arr.length - 2].value ) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value > arr[i + 1].value) {
+        result = false;
+        break;
       }
     }
   }
-  return true;
+
+  return result;
 };
 
 export const isDecrementing = (arr: PayoffDataProps[]) => {
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i].value < arr[i + 1].value) {
-      return false;
+  let result = true;
+  if (arr[0].value != arr[1].value) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value > arr[i + 1].value) {
+        result = false;
+        break;
+      }
     }
-  }
-  return true;
+  } else if (arr[arr.length - 1].value != arr[arr.length - 2].value) {
+    for (let i = 1; i < arr.length - 2; i++) {
+      if (arr[i].value < arr[i + 1].value) {
+        result = false;
+        break;
+      }
+    }
+  } 
+
+  return result;
 };
 
 export const gradientOffset1 = (data: PayoffDataProps[]) => {
@@ -57,7 +79,6 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
 };
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
-  console.log(off);
   if (off == 0) {
     return (
       <defs>

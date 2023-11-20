@@ -274,7 +274,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} />}
+                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} height={height} />}
                   content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />}
                 />
               )}
@@ -299,7 +299,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                       {downSide ? (
                         <></>
                       ) : (
-                        <LogoUsdc x={10 + (getNumberFormat(minimize).length + 1) * 6} y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7} />
+                        <LogoUsdc
+                          x={10 + (getNumberFormat(minimize).length + 1) * 7}
+                          y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7}
+                        />
                       )}
                     </>
                   }
