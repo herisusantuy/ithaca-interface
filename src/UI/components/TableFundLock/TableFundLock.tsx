@@ -29,10 +29,18 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import styles from './TableFundLock.module.scss';
 import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 import { useAppStore } from '@/UI/lib/zustand/store';
+import dayjs from 'dayjs';
+import { formatUnits, parseUnits } from 'viem';
+import { formatNumber } from '@/UI/utils/Numbers';
 
+type FundlockHistory = {
+  amount: bigint,
+  blockTimestamp: string,
+  token: string
+}
 
 const TableFundLock = () => {
-  const { ithacaSDK, isAuthenticated } = useAppStore();
+  const { ithacaSDK, isAuthenticated, systemInfo } = useAppStore();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -50,10 +58,34 @@ const TableFundLock = () => {
 
   useEffect(() => {
     ithacaSDK.fundlock.fundlockHistory().then((res) => {
-      console.log(res)
-      setData(res);
+      const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce((obj, key) => {
+        obj[systemInfo.tokenAddress[key] as string] = key;
+        return obj;
+      }, {} as Record<string, string>);
+      const deposits = convertToRows(res.deposits, 'Deposit', walletAddresses);
+      const releases = convertToRows(res.releases, 'Release', walletAddresses);
+      const withdrawals = convertToRows(res.withdrawalRequests, 'Withdraw', walletAddresses);
+      setData([
+        ...deposits,
+        ...releases,
+        ...withdrawals
+      ]);
     })
-  },[])
+  },[]);
+
+  const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
+    return data.map((d) => {
+      const token = walletAddresses[d.token];
+      console.log(dayjs(d.blockTimestamp))
+      return {
+        orderData: dayjs(d.blockTimestamp *1000).format('DD MMM YY HH:mm'),
+        asset: token,
+        auction: auction,
+        amount: formatNumber(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string'),
+        currency: token
+      }
+    })
+  }
 
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
