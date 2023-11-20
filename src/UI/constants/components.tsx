@@ -456,7 +456,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'TableFundLock',
-        component: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
+        component: <TableFundLock />,
         status: 'To Review',
       },
       {
