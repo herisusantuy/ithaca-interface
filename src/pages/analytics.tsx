@@ -11,6 +11,7 @@ import Container from '@/UI/layouts/Container/Container';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import AnalyticsLayout from '@/UI/layouts/AnalyticsLayout/AnalyticsLayout';
+import DatePicker from '@/UI/components/DatePicker/DatePicker';
 
 // Constants
 import { CHART_OPEN_INTEREST_DATA } from '@/UI/constants/charts/chartOpenInterest';
@@ -27,6 +28,10 @@ const Analytics = () => {
       <Main>
         <Container margin='mb-15 mt-8'>
           <h1>Analytics</h1>
+          <Flex direction='row-center' margin='mb-24' gap='gap-12'>
+            <p className='fs-xs'>Date Range</p>
+            <DatePicker />
+          </Flex>
           <AnalyticsLayout
             leftPanel={
               <Flex direction='column' gap='gap-15'>
