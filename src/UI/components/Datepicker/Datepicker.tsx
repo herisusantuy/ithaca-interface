@@ -1,26 +1,35 @@
-// import modules
+// Packages
 import React, { useState, useRef, useEffect } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { createPortal } from 'react-dom';
 
-import 'react-day-picker/dist/style.css';
-import styles from './Datepicker.module.scss';
+// Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
+
+// Utils
 import { formatDate } from '@/UI/utils/DatePicker';
 
+// Components
+import Calendar from '@/UI/components/Icons/Calendar';
+
+// Styles
+import styles from './DatePicker.module.scss';
+import 'react-day-picker/dist/style.css';
+
+// Types
 type DateProps = {
   start?: Date | undefined;
   end?: Date | undefined;
   disabled?: boolean;
 };
 
-const Datepicker = ({ start, end, disabled = false }: DateProps) => {
+const DatePicker = ({ start, end, disabled = false }: DateProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [startDay, setStartDay] = useState<Date | undefined>(start);
   const [tempStartDay, setTempStartDay] = useState<Date | undefined>(start);
   const [endDay, setEndDay] = useState<Date | undefined>(end);
   const [tempEndDay, setTempEndDay] = useState<Date | undefined>(end);
-  const [dateText, setDateText] = useState<string>();
+  const [dateText, setDateText] = useState<JSX.Element | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const optionsRef = useRef<HTMLDivElement | null>(null);
@@ -38,7 +47,6 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
         setIsDropdownOpen(false);
       }
     };
-    // setSelectedOption(value || null);
     setMounted(true);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
@@ -51,21 +59,6 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
       setIsDropdownOpen(false);
     }
   });
-
-  const calendarSvg = () => {
-    return (
-      <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-        <rect width='16' height='16' rx='4' fill='#35333E' />
-        <path
-          d='M3 6C3 5.22037 3 4.83056 3.17882 4.54596C3.27207 4.39756 3.39756 4.27207 3.54596 4.17882C3.83056 4 4.22037 4 5 4H11C11.7796 4 12.1694 4 12.454 4.17882C12.6024 4.27207 12.7279 4.39756 12.8212 4.54596C13 4.83056 13 5.22037 13 6V6H3V6Z'
-          stroke='white'
-        />
-        <rect x='3' y='4' width='10' height='8' rx='1.16667' stroke='white' />
-        <path d='M6 3L6 4' stroke='white' strokeLinecap='round' />
-        <path d='M10 3L10 4' stroke='white' strokeLinecap='round' />
-      </svg>
-    );
-  };
 
   const handleDropdownClick = () => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -81,11 +74,23 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
     if (startDay && endDay) {
       setTempEndDay(endDay);
       setTempStartDay(startDay);
-      setDateText(formatDate(startDay) + ' - ' + formatDate(endDay));
+      setDateText(
+        <>
+          <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+          {' - '}
+          <span dangerouslySetInnerHTML={{ __html: formatDate(endDay) }} />
+        </>
+      );
     } else if (startDay && !endDay) {
       setEndDay(startDay);
       setTempEndDay(startDay);
-      setDateText(formatDate(startDay) + ' - ' + formatDate(startDay));
+      setDateText(
+        <>
+          <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+          {' - '}
+          <span dangerouslySetInnerHTML={{ __html: formatDate(endDay) }} />
+        </>
+      );
     } else {
       setTempEndDay(endDay);
       setTempStartDay(startDay);
@@ -108,10 +113,15 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
   };
 
   return (
-    <div>
-      <div className={styles.datePickerContainer} onClick={() => handleDropdownClick()} ref={containerRef}>
+    <>
+      <div
+        className={styles.datePickerContainer}
+        onClick={() => handleDropdownClick()}
+        ref={containerRef}
+        role='button'
+      >
         <div className={styles.dateInput}>{dateText}</div>
-        {calendarSvg()}
+        <Calendar />
       </div>
 
       {mounted &&
@@ -121,7 +131,6 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
             <div
               className={`${styles.dateBlock} ${!isDropdownOpen ? styles.isHidden : ''}`}
               style={{
-                width: `${optionsPostion.width}px`,
                 left: `${optionsPostion.left}px`,
                 top: `${optionsPostion.top}px`,
               }}
@@ -163,10 +172,10 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
                 </div>
               </div>
               <div className={styles.buttonContainer}>
-                <div className={styles.cancelButton} onClick={() => handleCancelClick()}>
+                <div className={styles.cancelButton} onClick={() => handleCancelClick()} role='button'>
                   Cancel
                 </div>
-                <div className={styles.applyButton} onClick={() => handleApplyClick()}>
+                <div className={styles.applyButton} onClick={() => handleApplyClick()} role='button'>
                   Apply
                 </div>
               </div>
@@ -174,8 +183,8 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
           </div>,
           document.querySelector<HTMLElement>('#datePicker') as HTMLElement
         )}
-    </div>
+    </>
   );
 };
 
-export default Datepicker;
+export default DatePicker;

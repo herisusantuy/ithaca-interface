@@ -13,10 +13,6 @@
   height: rem(32) !important;
 }
 
-.rdp-head_cell {
-  color: var(--white);
-}
-
 .rdp-caption_label {
   font-size: rem(14) !important;
   color: var(--white) !important;
@@ -26,6 +22,7 @@
 
 .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
   background-color: transparent !important;
+  font-size: rem(12) !important;
 }
 
 .rdp-day_selected,
@@ -41,5 +38,8 @@
 }
 
 .rdp-head_cell {
-    text-transform: none !important;
+  color: var(--white);
+  text-transform: none !important;
+  font-size: rem(12) !important;
+  font-weight: normal !important;
 }
