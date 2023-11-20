@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/tableFundLock';
+import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps, TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
 
 // Utils
 import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
@@ -30,13 +30,9 @@ import styles from './TableFundLock.module.scss';
 import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
-// Types
-type TableFundLockProps = {
-  data: TableFundLockDataProps[];
-};
 
-const TableFundLock = ({ data }: TableFundLockProps) => {
-  const { isAuthenticated } = useAppStore();
+const TableFundLock = () => {
+  const { ithacaSDK, isAuthenticated } = useAppStore();
   const [slicedData, setSlicedData] = useState<TableFundLockDataProps[]>([]);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
@@ -46,10 +42,18 @@ const TableFundLock = ({ data }: TableFundLockProps) => {
   const [currencyChecked, setCurrencyChecked] = useState<boolean>(false);
   const [auctionArray, setAuctionArray] = useState<string[]>([]);
   const [auctionChecked, setAuctionChecked] = useState<boolean>(false);
+  const [data, setData] = useState<TableFundLockDataProps[]>(TABLE_FUND_LOCK_DATA);
 
   const currencyRef = useRef<HTMLDivElement | null>(null);
   const auctionRef = useRef<HTMLDivElement | null>(null);
   const pageLimit = 9;
+
+  useEffect(() => {
+    ithacaSDK.fundlock.fundlockHistory().then((res) => {
+      console.log(res)
+      setData(res);
+    })
+  },[])
 
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
