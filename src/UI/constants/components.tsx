@@ -32,7 +32,7 @@ import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
-import Datepicker from '@/UI/components/Datepicker/Datepicker';
+import DatePicker from '@/UI/components/Datepicker/Datepicker';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
@@ -56,7 +56,6 @@ import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
-import DatePicker from '../components/DatePicker/DatePicker';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
