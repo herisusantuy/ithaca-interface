@@ -2,9 +2,6 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
-// Constants
-import { TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
-
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 import CollateralPanel from '@/UI/components/CollateralPanel/CollateralPanel';
@@ -40,7 +37,7 @@ const DASHBOARD_TABS = [
   {
     id: 'fundLockHistory',
     label: 'Fund Lock History',
-    content: <TableFundLock data={TABLE_FUND_LOCK_DATA} />,
+    content: <TableFundLock />,
   },
 ];
 

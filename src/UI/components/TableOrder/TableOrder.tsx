@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // SDK
-import { Order } from '@ithaca-finance/sdk';
+import { Order, Position } from '@ithaca-finance/sdk';
 
 // Constants
 import {
@@ -89,7 +89,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [productChecked, setProductChecked] = useState<boolean>(false);
   const [sideArray, setSideArray] = useState<string[]>([]);
   const [sideChecked, setSideChecked] = useState<boolean>(false);
-  const { ithacaSDK, isAuthenticated } = useAppStore();
+  const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -120,6 +120,33 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     );
   };
 
+  const positionsDataToRows = (res: Position[]) => {
+    console.log(res);
+    setData(
+      res.map(row => {
+        const contract = unFilteredContractList.find((c) => c.contractId === row.contractId)
+        return {
+        // clientOrderId: row.orderId, // Missing
+        details: '',
+        // orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'), // Missing
+        currencyPair: contract?.economics.currencyPair, // Look up from contract
+        product: contract?.payoff, // Look up from Contract
+        // side: row.details.length === 1 ? row.details[0].side : '', // Missing
+        tenor: dayjs(contract?.economics.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'), // Look up from contract
+        // wethAmount: row.collateral?.numeraireAmount, // Missing
+        // usdcAmount: row.collateral?.underlierAmount, // Missing
+        // orderLimit: row.netPrice, // Missing
+        // expandedInfo: row.details.map(leg => ({ // Missing
+        //   type: leg.contractDto.payoff,
+        //   side: leg.side,
+        //   size: leg.originalQty,
+        //   strike: leg.contractDto.economics.strike,
+        //   enterPrice: leg.execPrice,
+        // })),
+      }}) as TableRowDataWithExpanded[]
+    );
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       switch (type) {
@@ -130,12 +157,10 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           });
           break;
         case TABLE_TYPE.ORDER:
-          // ithacaSDK.client.currentPositions().then((res) => {
-          //   dataToRows(res);
-          //   setLoading(false);
-          // })
-
-          setData(TABLE_ORDER_DATA_WITH_EXPANDED);
+          ithacaSDK.client.currentPositions().then((res) => {
+            positionsDataToRows(res);
+            setLoading(false);
+          })
           break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {
@@ -485,13 +510,13 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       <Dropdown />
                     </Button>
                   </div>
-                  <div className={styles.cell}>{renderDate(row.orderDate)}</div>
+                  <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
                   <div className={styles.cell}>
                     <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
                   </div>
                   <div className={styles.cell}>{row.product}</div>
                   <div className={styles.cell}>{getSideIcon(row.side)}</div>
-                  <div className={styles.cell}>{renderDate(row.tenor)}</div>
+                  <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
                   <div className={styles.cell}>
                     <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
                   </div>
@@ -524,7 +549,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               </Fragment>
             );
           })
-        ) : !isLoading ? (
+        ) : isLoading ? (
           <Container size='loader' margin='ptb-150'>
             <Loader type='lg' />
           </Container>

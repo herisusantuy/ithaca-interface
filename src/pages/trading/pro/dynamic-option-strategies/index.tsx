@@ -38,7 +38,6 @@ import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
-import Chart from '@/UI/components/Icons/Chart';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
 
 export interface DynamicOptionStrategy {
@@ -230,27 +229,30 @@ const Index = () => {
                       />
                     </div>
                   </Flex>
-                  <div className={styles.parent}>
-                    <>
-                      {sections.map((section, index) => (
-                        <div key={index} className={section.style}>
-                          <p>{section.name}</p>
-                        </div>
-                      ))}
-                      <div className={styles.action}></div>
-                    </>
-                  </div>
-                  {strategy.strategies.map((strat, index) => {
-                    return (
-                      <DynamicOptionRow
-                        id={`strategy-${index}-${strategy.key}`}
-                        key={`strategy-${index}`}
-                        strategy={strat}
-                        updateStrategy={strat => handleStrategyUpdate(strat, index)}
-                        removeStrategy={() => handleRemoveStrategy(index)}
-                      />
-                    );
-                  })}
+                  {strategy.strategies.length ?
+                  (<>
+                    <div className={styles.parent}>
+                      <>
+                        {sections.map((section, index) => (
+                          <div key={index} className={section.style}>
+                            <p>{section.name}</p>
+                          </div>
+                        ))}
+                        <div className={styles.action}></div>
+                      </>
+                    </div>
+                    {strategy.strategies.map((strat, index) => {
+                      return (
+                        <DynamicOptionRow
+                          id={`strategy-${index}-${strategy.key}`}
+                          key={`strategy-${index}`}
+                          strategy={strat}
+                          updateStrategy={strat => handleStrategyUpdate(strat, index)}
+                          removeStrategy={() => handleRemoveStrategy(index)}
+                        />
+                      );
+                    })}
+                  </>) : <div className={styles.strategiesPlaceholder}></div>}
                   <div>
                     <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
                       <Plus /> Add Position
@@ -275,12 +277,12 @@ const Index = () => {
                   collatarelUSDC={
                     orderSummary
                       ? formatNumber(
-                          toPrecision(
-                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                            currencyPrecision.strike
-                          ),
-                          'string'
-                        )
+                        toPrecision(
+                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                          currencyPrecision.strike
+                        ),
+                        'string'
+                      )
                       : '-'
                   }
                   premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -299,7 +301,7 @@ const Index = () => {
                     removeRow={(index: number) => {
                       handleRemoveStrategy(index);
                     }}
-                    clearAll={() => {}}
+                    clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
                     <ChartPayoff chartData={chartData} height={300} />
