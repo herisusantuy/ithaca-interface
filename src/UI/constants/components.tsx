@@ -55,7 +55,7 @@ import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
-import DatePicker from '@/UI/components/DatePicker/DatePicker';
+import DatePicker from '../components/DatePicker/DatePicker';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
