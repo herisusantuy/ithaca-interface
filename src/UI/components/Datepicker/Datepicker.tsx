@@ -13,7 +13,7 @@ import { formatDate } from '@/UI/utils/DatePicker';
 import Calendar from '@/UI/components/Icons/Calendar';
 
 // Styles
-import styles from './Datepicker.module.scss';
+import styles from './DatePicker.module.scss';
 import 'react-day-picker/dist/style.css';
 
 // Types
@@ -23,7 +23,7 @@ type DateProps = {
   disabled?: boolean;
 };
 
-const Datepicker = ({ start, end, disabled = false }: DateProps) => {
+const DatePicker = ({ start, end, disabled = false }: DateProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [startDay, setStartDay] = useState<Date | undefined>(start);
   const [tempStartDay, setTempStartDay] = useState<Date | undefined>(start);
@@ -187,4 +187,4 @@ const Datepicker = ({ start, end, disabled = false }: DateProps) => {
   );
 };
 
-export default Datepicker;
+export default DatePicker;

@@ -4,7 +4,6 @@ import ChartOpenInterest from '@/UI/components/ChartOpenInterest/ChartOpenIntere
 import ChartMaxPain from '@/UI/components/ChartMaxPain/ChartMaxPain';
 import ChartTradeCount from '@/UI/components/ChartTradeCount/ChartTradeCount';
 import AnalyticsCard from '@/UI/components/AnalyticsCard/AnalyticsCard';
-import Datepicker from '@/UI/components/DatePicker/Datepicker';
 
 // Layout
 import Main from '@/UI/layouts/Main/Main';
@@ -12,6 +11,7 @@ import Container from '@/UI/layouts/Container/Container';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import AnalyticsLayout from '@/UI/layouts/AnalyticsLayout/AnalyticsLayout';
+import DatePicker from '@/UI/components/DatePicker/DatePicker';
 
 // Constants
 import { CHART_OPEN_INTEREST_DATA } from '@/UI/constants/charts/chartOpenInterest';
@@ -30,7 +30,7 @@ const Analytics = () => {
           <h1>Analytics</h1>
           <Flex direction='row-center' margin='mb-24' gap='gap-12'>
             <p className='fs-xs'>Date Range</p>
-            <Datepicker />
+            <DatePicker />
           </Flex>
           <AnalyticsLayout
             leftPanel={
