@@ -35,6 +35,7 @@ export interface IthacaSDKSlice {
   currentSpotPrice: number;
   currencyPrecision: { underlying: number; strike: number };
   contractList: ContractList;
+  unFilteredContractList: Contract[];
   expiryList: number[];
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
@@ -77,6 +78,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   currentSpotPrice: 0,
   currencyPrecision: { underlying: 0, strike: 0 },
   contractList: {},
+  unFilteredContractList: [],
   expiryList: [],
   referencePrices: [],
   spotPrices: {},
@@ -161,6 +163,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       systemInfo,
       currencyPrecision,
       contractList: filteredContractList,
+      unFilteredContractList: contractList,
       expiryList,
       currentExpiryDate,
       referencePrices,
