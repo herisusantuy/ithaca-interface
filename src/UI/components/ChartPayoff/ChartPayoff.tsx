@@ -65,7 +65,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
-  const [color, setColor] = useState<string>('#4bb475');
+  const [color, setColor] = useState<string>('#5EE192');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
@@ -299,7 +299,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       {downSide ? (
                         <></>
                       ) : (
-                        <LogoUsdc x={60} y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7} />
+                        <LogoUsdc x={10 + (getNumberFormat(minimize).length + 1) * 6} y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7} />
                       )}
                     </>
                   }

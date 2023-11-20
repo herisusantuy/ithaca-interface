@@ -58,7 +58,7 @@ const CustomLabel = (props: LabelProps) => {
         <text
           x={x}
           y={Number(y) >= height - 30 ? height - 30 : Number(y)}
-          dx={10}
+          dx={13}
           dy={20}
           fill='#9D9DAA'
           fontSize={9}
