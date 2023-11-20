@@ -10,9 +10,10 @@ type ToggleProps = {
   rightLabel?: string;
   defaultState?: 'left' | 'right';
   onChange?: (state: 'left' | 'right') => void;
+  size?: string;
 };
 
-const Toggle = ({ leftLabel = '', rightLabel = '', defaultState = 'left', onChange }: ToggleProps) => {
+const Toggle = ({ size, leftLabel = '', rightLabel = '', defaultState = 'left', onChange }: ToggleProps) => {
   // Toggle state
   const [state, setState] = useState(defaultState);
 
@@ -27,7 +28,7 @@ const Toggle = ({ leftLabel = '', rightLabel = '', defaultState = 'left', onChan
   const getSwitchStyle = () => (state === 'right' ? `${styles.switch} ${styles.isActive}` : styles.switch);
 
   return (
-    <div className={styles.toggle} onClick={handleToggle}>
+    <div className={`${styles.toggle} ${styles[`toggle--${size}`]}`} onClick={handleToggle}>
       {leftLabel && <p>{leftLabel}</p>}
       <div className={getSwitchStyle()}>
         <div className={styles.slider}></div>
