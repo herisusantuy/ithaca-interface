@@ -237,7 +237,7 @@ const COMPONENT_GROUPS = [
         status: 'Approved',
       },
       {
-        name: 'Datepicker',
+        name: 'DatePicker',
         component: <DatePicker />,
         status: 'In Progress',
       },
