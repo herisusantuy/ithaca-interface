@@ -79,7 +79,7 @@ const TableFundLock = () => {
       const token = walletAddresses[d.token];
       console.log(dayjs(d.blockTimestamp))
       return {
-        orderData: dayjs(d.blockTimestamp *1000).format('DD MMM YY HH:mm'),
+        orderData: dayjs(Number(d.blockTimestamp) *1000).format('DD MMM YY HH:mm'),
         asset: token,
         auction: auction,
         amount: formatNumber(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string'),
