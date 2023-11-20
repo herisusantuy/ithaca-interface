@@ -48,6 +48,7 @@ class MyDocument extends Document {
         <body>
           <Main />
           <div id="portal" />
+          <div id="datePicker" />
           <NextScript />
         </body>
       </Html>
