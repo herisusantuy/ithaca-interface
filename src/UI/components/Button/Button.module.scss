@@ -56,12 +56,12 @@
     display: block;
     position: absolute;
     border-radius: rem(16);
-    top: -(rem(1));
-    bottom: -(rem(1));
-    right: -(rem(1));
-    left: -(rem(1));
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
     z-index: -1;
-    background: linear-gradient(var(--green-30) 0%, rgba(94, 225, 146, 0) 100%);
+    background: linear-gradient(var(--green-30) 0%, rgba(94, 225, 146, 0) 150%);
   }
 
   &[disabled] {
@@ -70,10 +70,10 @@
       display: block;
       position: absolute;
       border-radius: rem(16);
-      top: -(rem(1));
-      bottom: -(rem(1));
-      right: -(rem(1));
-      left: -(rem(1));
+      top: -(rem(0.5));
+      bottom: -(rem(0.5));
+      right: -(rem(0.5));
+      left: -(rem(0.5));
       z-index: -1;
       background: linear-gradient(#4f4f4f 0%, rgba(79, 79, 79, 0) 100%);
     }
@@ -109,10 +109,10 @@
     display: block;
     position: absolute;
     border-radius: rem(16);
-    top: -(rem(1));
-    bottom: -(rem(1));
-    right: -(rem(1));
-    left: -(rem(1));
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
     z-index: -1;
     background: linear-gradient(var(--purple-30) 0%, rgba(86, 17, 152, 0) 100%);
   }
