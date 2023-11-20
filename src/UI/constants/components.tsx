@@ -32,6 +32,7 @@ import Slider from '@/UI/components/Slider/Slider';
 import Dropdown from '../components/Icons/Dropdown';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Bell from '@/UI/components/Icons/Bell';
+import Datepicker from '@/UI/components/Datepicker/Datepicker';
 import Filter from '@/UI/components/Icons/Filter';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Color from '@/UI/components/Color/Color';
@@ -76,7 +77,6 @@ import { CHART_OPEN_INTEREST_DATA } from './charts/chartOpenInterest';
 import { CHART_MAX_PAIN_ANY_TYPE } from './charts/chartMaxPain';
 import { LEADERBOARD_CARDS } from './leaderboard';
 import { TABLE_LEADERBOARD_DATA } from './tableLeaderboard';
-import Datepicker from '../components/Datepicker/Datepicker';
 
 const COMPONENT_GROUPS = [
   {
