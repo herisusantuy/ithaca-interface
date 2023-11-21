@@ -42,12 +42,11 @@
 
 .container {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: rem(8);
   margin-top: rem(24);
-  
 }
 
 .badge {
@@ -84,4 +83,10 @@
 
 .hide {
   display: none;
+}
+
+.leftSide {
+  position: absolute;
+  width: 10px;
+  height: 100%;
 }

@@ -143,12 +143,12 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     setOff(gradientOffset(xAxisPosition, height, modifiedData));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xAxisPosition]);
 
   useEffect(() => {
     renderGradient();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
@@ -204,6 +204,8 @@ const ChartPayoff = (props: ChartDataProps) => {
               </div>
             </Flex>
           )}
+          <div className={styles.leftSide}></div>
+          <div className={styles.rightSide}></div>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}
