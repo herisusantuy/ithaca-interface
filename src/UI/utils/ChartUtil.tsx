@@ -16,6 +16,8 @@ export const isIncrementing = (arr: PayoffDataProps[]) => {
         break;
       }
     }
+  } else if (arr[0].value == arr[1].value && arr[arr.length - 1].value == arr[arr.length - 2].value) {
+    result = false;
   }
 
   return result;
@@ -37,6 +39,8 @@ export const isDecrementing = (arr: PayoffDataProps[]) => {
         break;
       }
     }
+  } else if (arr[0].value == arr[1].value && arr[arr.length - 1].value == arr[arr.length - 2].value) {
+    result = false;
   }
 
   return result;
