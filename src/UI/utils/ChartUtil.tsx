@@ -1,21 +1,45 @@
 import { PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
 export const isIncrementing = (arr: PayoffDataProps[]) => {
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i].value > arr[i + 1].value) {
-      return false;
+  let result = true;
+  if (arr[0].value != arr[1].value) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value < arr[i + 1].value) {
+        result = false;
+        break;
+      }
+    }
+  } else if (arr[arr.length - 1].value != arr[arr.length - 2].value ) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value > arr[i + 1].value) {
+        result = false;
+        break;
+      }
     }
   }
-  return true;
+
+  return result;
 };
 
 export const isDecrementing = (arr: PayoffDataProps[]) => {
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i].value < arr[i + 1].value) {
-      return false;
+  let result = true;
+  if (arr[0].value != arr[1].value) {
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i].value > arr[i + 1].value) {
+        result = false;
+        break;
+      }
     }
-  }
-  return true;
+  } else if (arr[arr.length - 1].value != arr[arr.length - 2].value) {
+    for (let i = 1; i < arr.length - 2; i++) {
+      if (arr[i].value < arr[i + 1].value) {
+        result = false;
+        break;
+      }
+    }
+  } 
+
+  return result;
 };
 
 export const gradientOffset1 = (data: PayoffDataProps[]) => {
@@ -34,8 +58,24 @@ export const gradientOffset1 = (data: PayoffDataProps[]) => {
   return max / (max - min);
 };
 
-export const gradientOffset = (xAxis: number, height: number) => {
-  return xAxis / (height / 100) / 100;
+export const gradientOffset = (xAxis: number, height: number, data: PayoffDataProps[]) => {
+  if (xAxis == 0) {
+    return xAxis / (height / 100) / 100;
+  }
+
+  const max = Math.max(...data.map(i => i.value));
+  const min = Math.min(...data.map(i => i.value));
+
+  if (max <= 0) {
+    return 0;
+  }
+  if (min >= 0) {
+    return 1;
+  }
+  if (max - Math.abs(min) == 0) {
+    return 0;
+  }
+  return max / (max - min);
 };
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
@@ -44,10 +84,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='10%' stopColor={color} stopOpacity={0} />
-          <stop offset='30%' stopColor={color} stopOpacity={0} />
+          <stop offset='10%' stopColor={color} stopOpacity={0.2} />
+          <stop offset='40%' stopColor={color} stopOpacity={0} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='99%' stopColor='#FF3F57' stopOpacity={0} />
+          <stop offset='60%' stopColor='#FF3F57' stopOpacity={0} />
+          <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.2} />
         </linearGradient>
 
         <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
@@ -56,9 +97,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
 
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='2%' stopColor='#fff' stopOpacity={0} />
-          <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='98%' stopColor='#fff' stopOpacity={0} />
+          <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='40%' stopColor={color} stopOpacity={0.9} />
+          <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='75%' stopColor='#FF3F57' stopOpacity={0.9} />
+          <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
         <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -87,6 +130,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -116,6 +160,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -145,6 +190,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -175,6 +221,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -204,7 +251,9 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={0.6} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -234,7 +283,9 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
+          <stop offset='80%' stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
 
@@ -263,6 +314,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
@@ -292,6 +344,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
@@ -321,6 +374,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
@@ -350,6 +404,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='2%' stopColor={color} stopOpacity={0.1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={0.6} />
           <stop offset='98%' stopColor='#FF3F57' stopOpacity={0.1} />
         </linearGradient>
@@ -361,12 +416,12 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } 
+  }
 };
 
 export const breakPointList1 = (data: PayoffDataProps[]) => {
   const offsets: SpecialDotLabel[] = [];
-  const minMaxOffsetRange = findOverallMinMaxValues(data);
+  // const minMaxOffsetRange = findOverallMinMaxValues(data);
   const offsetCompareVal = offsetLimitStudiedValue(data);
   let increament = false;
   for (let i = 0; i < data.length - 1; i++) {
