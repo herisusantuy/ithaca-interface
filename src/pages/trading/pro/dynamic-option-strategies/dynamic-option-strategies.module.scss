@@ -71,24 +71,28 @@
     z-index: 9;
   }
 
+  .product p {
+    left: rem(6);
+  }
+
   .type p {
-    left: rem(220);
+    left: rem(188);
   }
 
   .side p {
-    left: rem(320);
+    left: rem(258);
   }
 
   .size p {
-    left: rem(240);
+    left: rem(182);
   }
 
   .strike p {
-    left: rem(204);
+    left: rem(184);
   }
 
   .unitPrice p {
-    left: rem(190);
+    left: rem(176);
   }
 }
 
@@ -130,6 +134,10 @@
 }
 
 .strategiesPlaceholder {
-  width: 1050px;
-  height: 94px;
+  width: rem(921);
+  height: rem(94);
+}
+
+.strategiesWrapper {
+  min-height: rem(200);
 }

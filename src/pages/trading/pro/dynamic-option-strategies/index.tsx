@@ -195,78 +195,82 @@ const Index = () => {
                     <LabelValue
                       label='Expiry Date'
                       valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
+                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
                       }))}
                       onChange={value => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
                       }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
+                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
                     <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
                   </Flex>
                   <h3>Dynamic Option Strategy</h3>
-                  <Flex>
-                    <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
-                    <div className={styles.dropDownWrapper}>
-                      <DropdownMenu
-                        value={{
-                          name: strategy.label,
-                          value: strategy.key,
-                        }}
-                        options={STRATEGIES.map(strat => {
-                          return {
-                            name: strat.label,
-                            value: strat.key,
-                          };
-                        })}
-                        onChange={option => handleStrategyChange(option)}
-                      />
-                    </div>
-                  </Flex>
-                  {strategy.strategies.length ?
-                  (<>
-                    <div className={styles.parent}>
-                      <>
-                        {sections.map((section, index) => (
-                          <div key={index} className={section.style}>
-                            <p>{section.name}</p>
-                          </div>
-                        ))}
-                        <div className={styles.action}></div>
-                      </>
-                    </div>
-                    {strategy.strategies.map((strat, index) => {
-                      return (
-                        <DynamicOptionRow
-                          id={`strategy-${index}-${strategy.key}`}
-                          key={`strategy-${index}`}
-                          strategy={strat}
-                          updateStrategy={strat => handleStrategyUpdate(strat, index)}
-                          removeStrategy={() => handleRemoveStrategy(index)}
+                  <div className='mb-24'>
+                    <Flex>
+                      <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
+                      <div className={styles.dropDownWrapper}>
+                        <DropdownMenu
+                          value={{
+                            name: strategy.label,
+                            value: strategy.key,
+                          }}
+                          options={STRATEGIES.map(strat => {
+                            return {
+                              name: strat.label,
+                              value: strat.key,
+                            };
+                          })}
+                          onChange={option => handleStrategyChange(option)}
                         />
-                      );
-                    })}
-                  </>) : <div className={styles.strategiesPlaceholder}></div>}
-                  <div>
-                    <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
-                      <Plus /> Add Position
-                    </Button>
-                    {positionBuilderStrategies.length > 0 && (
-                      <Button
-                        className={styles.clearAll}
-                        title='Click to clear all'
-                        onClick={handleRemoveAllStrategies}
-                        variant='clear'
-                      >
-                        Clear All
+                      </div>
+                    </Flex>
+                  </div>
+                  <div className={styles.strategiesWrapper}>
+                    {strategy.strategies.length ?
+                      (<>
+                        <div className={styles.parent}>
+                          <>
+                            {sections.map((section, index) => (
+                              <div key={index} className={section.style}>
+                                <p>{section.name}</p>
+                              </div>
+                            ))}
+                            <div className={styles.action}></div>
+                          </>
+                        </div>
+                        {strategy.strategies.map((strat, index) => {
+                          return (
+                            <DynamicOptionRow
+                              id={`strategy-${index}-${strategy.key}`}
+                              key={`strategy-${index}`}
+                              strategy={strat}
+                              updateStrategy={strat => handleStrategyUpdate(strat, index)}
+                              removeStrategy={() => handleRemoveStrategy(index)}
+                            />
+                          );
+                        })}
+                      </>) : <div className={styles.strategiesPlaceholder}></div>}
+                    <div>
+                      <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
+                        <Plus /> Add Position
                       </Button>
-                    )}
+                      {positionBuilderStrategies.length > 0 && (
+                        <Button
+                          className={styles.clearAll}
+                          title='Click to clear all'
+                          onClick={handleRemoveAllStrategies}
+                          variant='clear'
+                        >
+                          Clear All
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </>
               }
@@ -304,7 +308,7 @@ const Index = () => {
                     clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
-                    <ChartPayoff chartData={chartData} height={300} />
+                    <ChartPayoff chartData={chartData} height={230} />
                   ) : (
                     <>
                       <h3>Payoff Diagram</h3>

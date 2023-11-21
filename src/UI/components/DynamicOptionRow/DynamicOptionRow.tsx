@@ -26,6 +26,7 @@ import { DynamicOptionStrategy } from '@/pages/trading/pro/dynamic-option-strate
 import { Leg } from '@ithaca-finance/sdk';
 import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
+import dayjs from 'dayjs';
 
 type DynamicOptionRowProps = {
   strategy: StrategyLeg
@@ -78,10 +79,11 @@ type ProductOption = {
 
 const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: DynamicOptionRowProps) => {
   // Store
-  const { getContractsByPayoff, spotPrices } =
+  const { getContractsByPayoff, spotPrices, currentExpiryDate } =
     useAppStore();
 
   // State
+  const [productTypes, setProductTypes] = useState(PRODUCT_TYPES);
   const [product, setProduct] = useState(strategy.product);
   const [typeList, setTypeList] = useState<ProductOption[]>(PRODUCT_TYPES[strategy.product]);
   const [type, setType] = useState(strategy.type);
@@ -96,6 +98,17 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikeList, id]);
+
+  useEffect(() => {
+    productTypes.Forward = [{
+      option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
+      value: 'CURRENT'
+    }, {
+      option: 'Next Auction',
+      value: 'NEXT'
+    }];
+    setProductTypes(productTypes)
+  }, [currentExpiryDate])
 
   const handleProductChange = (product: string) => {
     setProduct(product);
@@ -207,7 +220,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
 
   return (
     <>
-      <Panel margin='ptb-8 plr-8 br-20 mb-14 mt-10'>
+      <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
             <RadioButton
@@ -215,7 +228,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
               selectedOption={product}
               name={`${id}-product`}
               onChange={handleProductChange}
-              width={320}
+              width={290}
             />
           </div>
           <div className={styles.type}>
@@ -224,7 +237,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
               selectedOption={type}
               name={`${id}-type`}
               onChange={handleTypeChange}
-              width={225}
+              width={170}
             />
           </div>
           <div className={styles.side}>
@@ -243,6 +256,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
             <Input
               type='number'
               value={size}
+              width={110}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
@@ -263,6 +277,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
             <Input
               type='number'
               value={unitPrice}
+              width={110}
               icon={<LogoUsdc />}
               onChange={({ target }) => {
                 if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(target.value))) return;

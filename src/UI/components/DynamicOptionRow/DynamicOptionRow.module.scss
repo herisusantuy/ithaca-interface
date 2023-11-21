@@ -1,8 +1,8 @@
 .parent {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: auto;
   grid-template-rows: 1fr;
-  grid-column-gap: 12px;
+  grid-column-gap: 8px;
   align-items: center;
 
   p {
@@ -69,8 +69,10 @@
 
 .action {
   grid-area: 1 / 8 / 2 / 9;
+  width: rem(30);
+  height: rem(34);
 }
 
 .forwardPlaceholder {
-  width: 100px;
+  width: rem(100);
 }

@@ -23,14 +23,14 @@
 
 // Sizes
 .btn--sm {
-  @include spacing(padding, 16, 'left+right');
+  @include spacing(padding, 12, 'left+right');
   @include spacing(padding, 10, 'top+bottom');
   @include font-size('text-xs', 'bold');
   height: rem(34);
 }
 
 .btn--lg {
-  @include spacing(padding, 16, 'left+right');
+  @include spacing(padding, 12, 'left+right');
   @include spacing(padding, 12, 'top+bottom');
   @include font-size('text-sm', 'bold');
   height: rem(40);

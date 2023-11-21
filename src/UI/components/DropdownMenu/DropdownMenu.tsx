@@ -25,6 +25,7 @@ type DropdownMenuProps = {
   disabled?: boolean;
   options: DropDownOption[];
   value?: DropDownOption;
+  width?: number;
   iconStart?: ReactNode;
   iconEnd?: ReactNode;
   className?: string;
@@ -35,6 +36,7 @@ const DropdownMenu = ({
   options,
   disabled,
   label,
+  width = 0,
   id,
   value,
   iconStart,
@@ -97,6 +99,7 @@ const DropdownMenu = ({
         </label>
       )}
       <div
+        style={width > 0 ? {minWidth: width + 'px'} : {}}
         className={`${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}
         onClick={handleDropdownClick}
         role='button'
