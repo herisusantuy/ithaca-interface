@@ -147,6 +147,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   }, [xAxisPosition]);
 
   useEffect(() => {
+    console.log('updated off------------------', off);
     renderGradient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off]);
@@ -278,7 +279,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
                   cursor={<CustomCursor x={cursorX} y={xAxisPosition} height={height} />}
-                  content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />}
+                  content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} height={height} />}
                 />
               )}
 
