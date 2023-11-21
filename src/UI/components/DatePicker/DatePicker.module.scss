@@ -11,6 +11,7 @@
   background: var(--gray-rgba-40);
   transition: $transition_all;
   position: relative;
+  max-width: rem(188);
 
   &:before {
     content: '';
