@@ -1,8 +1,11 @@
+// Packages
+import { forwardRef } from 'react';
+
+// Components
 import Rewards from '@/UI/components/Icons/Rewards';
 
 // Styles
 import styles from './RewardsDropdown.module.scss';
-import { forwardRef } from 'react';
 
 // Types
 type RewardsDropdownProps = {
@@ -21,5 +24,7 @@ const RewardsDropdown = forwardRef<HTMLDivElement, RewardsDropdownProps>(({ valu
     </div>
   );
 });
+
+RewardsDropdown.displayName = 'RewardsDropdown';
 
 export default RewardsDropdown;
