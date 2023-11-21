@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
@@ -8,6 +8,8 @@ import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
+import Rewards from '@/UI/components/Icons/Rewards';
+import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
@@ -17,6 +19,8 @@ import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Styles
 import styles from './Header.module.scss';
+import { useClickOutside } from '@/UI/hooks/useClickoutside';
+import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Types
 type HeaderProps = {
@@ -24,13 +28,32 @@ type HeaderProps = {
 };
 
 const Header = ({ className }: HeaderProps) => {
-  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
   const handleHamburgerClick = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
     document.body.classList.toggle('is-active');
   };
+
+  const [isRewardsOpen, setIsRewardsOpen] = useState(false);
+  const rewardsDropdownRef = useRef(null);
+
+  const toggleRewardsDropdown = () => {
+    setIsRewardsOpen(!isRewardsOpen);
+  };
+
+  // Close dropdown callback
+  const closeRewardsDropdown = () => {
+    setIsRewardsOpen(false);
+  };
+
+  // Hook to close the dropdown when clicking outside
+  useClickOutside(rewardsDropdownRef, closeRewardsDropdown);
+
+  // Hook to close the dropdown on ESC key press
+  useEscKey(closeRewardsDropdown);
 
   return (
     <header className={`${styles.header} ${className || ''}`}>
@@ -41,8 +64,12 @@ const Header = ({ className }: HeaderProps) => {
         </div>
         <div className={styles.right}>
           <Bell />
+          <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
           <Wallet />
-          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} className={styles.humburger} />}
+          {tabletBreakpoint && (
+            <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} className={styles.humburger} />
+          )}
+          {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
         </div>
       </div>
       {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
