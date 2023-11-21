@@ -28,7 +28,7 @@ const CustomDot = (props: CustomDotProps) => {
     if (payload?.value == 0) {
       updatePosition(Number(cy));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderCircle = (idx: number) => {
