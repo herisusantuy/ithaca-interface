@@ -79,6 +79,14 @@ export const productFilter = (data: TableRowDataWithExpanded[], filterArray: str
   return filteredData;
 };
 
+// Currency filter(in this case filter value is Forward, Call)
+export const currencyFilter = (data: TableRowDataWithExpanded[], filterArray: string[]) => {
+  if (filterArray.length == 0) {
+    return data;
+  }
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.currencyPair));
+  return filteredData;
+};
 
 // Format currency page
 export const formatCurrencyPair = (currencyPair: string) => (
@@ -96,8 +104,7 @@ export const formatCurrencyPair = (currencyPair: string) => (
 
 // Get side icon
 export const getSideIcon = (side: string) => {
-
-  return side === '+' || side === 'BUY' ? <Plus /> : side === '-' || side === 'SELL'? <Minus /> : '';
+  return side === '+' || side === 'BUY' ? <Plus /> : side === '-' || side === 'SELL' ? <Minus /> : '';
 };
 
 // Split the dates and render as spans

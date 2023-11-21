@@ -34,10 +34,10 @@ import { formatUnits } from 'viem';
 import { formatNumber } from '@/UI/utils/Numbers';
 
 type FundlockHistory = {
-  amount: bigint,
-  blockTimestamp: string,
-  token: string
-}
+  amount: bigint;
+  blockTimestamp: string;
+  token: string;
+};
 
 const TableFundLock = () => {
   const { ithacaSDK, isAuthenticated, systemInfo } = useAppStore();
@@ -57,36 +57,35 @@ const TableFundLock = () => {
   const pageLimit = 9;
 
   useEffect(() => {
-    ithacaSDK.fundlock.fundlockHistory().then((res) => {
-      const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce((obj, key) => {
-        obj[systemInfo.tokenAddress[key] as string] = key;
-        return obj;
-      }, {} as Record<string, string>);
+    ithacaSDK.fundlock.fundlockHistory().then(res => {
+      const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce(
+        (obj, key) => {
+          obj[systemInfo.tokenAddress[key] as string] = key;
+          return obj;
+        },
+        {} as Record<string, string>
+      );
       const deposits = convertToRows(res.deposits, 'Deposit', walletAddresses);
       const releases = convertToRows(res.releases, 'Release', walletAddresses);
       const withdrawals = convertToRows(res.withdrawalRequests, 'Withdraw', walletAddresses);
-      setData([
-        ...deposits,
-        ...releases,
-        ...withdrawals
-      ]);
-    })
+      setData([...deposits, ...releases, ...withdrawals]);
+    });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  },[]);
+  }, []);
 
   const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
-    return data.map((d) => {
+    return data.map(d => {
       const token = walletAddresses[d.token];
-      console.log(dayjs(d.blockTimestamp))
+      console.log(dayjs(d.blockTimestamp));
       return {
-        orderData: dayjs(Number(d.blockTimestamp) *1000).format('DD MMM YY HH:mm'),
+        orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,
         auction: auction,
         amount: formatNumber(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string'),
-        currency: token
-      }
-    })
-  }
+        currency: token,
+      };
+    });
+  };
 
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
@@ -237,7 +236,7 @@ const TableFundLock = () => {
               className={styles.filter}
               onClick={() => showFilterBar(header)}
             >
-              <Filter />
+              <Filter fill={currencyArray.length > 0 ? true : false} />
             </Button>
             <div
               className={`${styles.filterDropdown} ${
@@ -275,7 +274,7 @@ const TableFundLock = () => {
               className={styles.filter}
               onClick={() => showFilterBar(header)}
             >
-              <Filter />
+              <Filter fill={auctionArray.length > 0 ? true : false} />
             </Button>
             <div
               className={`${styles.filterDropdown} ${

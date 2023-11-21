@@ -32,6 +32,7 @@ import {
   SIDE_LABEL,
   productFilter,
   sideFilter,
+  currencyFilter,
 } from '@/UI/utils/TableOrder';
 
 // Hooks
@@ -85,6 +86,8 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [isLoading, setLoading] = useState<boolean>(true);
   const [direction, setDirection] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
+  const [currencyArray, setCurrencyArray] = useState<string[]>([]);
+  const [currencyChecked, setCurrencyChecked] = useState<boolean>(false);
   const [productArray, setProductArray] = useState<string[]>([]);
   const [productChecked, setProductChecked] = useState<boolean>(false);
   const [sideArray, setSideArray] = useState<string[]>([]);
@@ -247,8 +250,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   useEffect(() => {
     let filterData = productFilter(data, productArray);
     filterData = sideFilter(filterData, sideArray);
+    filterData = currencyFilter(filterData, currencyArray);
     setSlicedData(filterData.slice(pageStart, pageEnd));
-  }, [data, productArray, pageEnd, pageStart, sideArray]);
+  }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
@@ -315,7 +319,20 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
 
   // checkbox clickable status
   const selectedLabeStatus = (label: string, status: boolean) => {
-    if (filterHeader == 'Product') {
+    if (filterHeader == 'Currency Pair') {
+      setCurrencyChecked(false);
+      const filter = currencyArray.slice();
+      if (status) {
+        filter.push(label);
+        setCurrencyArray(filter);
+      } else {
+        const indexToRemove = filter.indexOf(label);
+        if (indexToRemove !== -1) {
+          filter.splice(indexToRemove, 1);
+          setCurrencyArray(filter);
+        }
+      }
+    } else if (filterHeader == 'Product') {
       setProductChecked(false);
       const filter = productArray.slice();
       if (status) {
@@ -355,7 +372,8 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         return setProductArray([]);
       }
       case 'currency': {
-        return null;
+        setCurrencyChecked(true);
+        return setCurrencyArray([]);
       }
     }
   };
@@ -386,7 +404,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               className={styles.filter}
               onClick={() => showFilterBar(header)}
             >
-              <Filter />
+              <Filter fill={currencyArray.length > 0 ? true : false} />
             </Button>
             <div
               className={`${styles.filterDropdown} ${
@@ -395,12 +413,20 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               ref={containerRef}
             >
               {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
-                return <CheckBox key={idx} label={item.label} component={item.component} />;
+                return (
+                  <CheckBox
+                    key={idx}
+                    label={item.label}
+                    component={item.component}
+                    onChange={selectedLabeStatus}
+                    clearCheckMark={currencyChecked}
+                  />
+                );
               })}
               <Button
                 title='Click to clear filter options'
-                className={`${styles.clearAll} ${sideArray.length > 0 ? styles.selected : ''}`}
-                onClick={() => clearFilterArray('side')}
+                className={`${styles.clearAll} ${currencyArray.length > 0 ? styles.selected : ''}`}
+                onClick={() => clearFilterArray('currency')}
               >
                 Clear All
               </Button>
