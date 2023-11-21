@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Utils
-import { formatDate } from '@/UI/utils/DatePicker';
+import { formatDate } from '@/UI/utils/DatePickerUtils';
 
 // Components
 import Calendar from '@/UI/components/Icons/Calendar';

@@ -11,7 +11,11 @@
     flex-direction: row;
     align-items: center;
     gap: rem(38);
-    border-bottom: rem(1) solid var(--white-rgba-10);
+    border-top: rem(1) solid var(--white-rgba-10);
+
+    &:last-child {
+      border-bottom: rem(1) solid var(--white-rgba-10);
+    }
 
     &.isExpanded {
       @include spacing(padding, 8, 'bottom');
@@ -23,6 +27,7 @@
       color: var(--gray-400);
       background: none;
       box-shadow: none;
+      border-top: 0;
       border-bottom: rem(1) solid var(--white-rgba-10);
 
       .cell {

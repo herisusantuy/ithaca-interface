@@ -16,6 +16,12 @@ export interface OptionLeg {
   premium: number;
 }
 
+export type LabelPositionProp = {
+  x: number;
+  y: number;
+  offset: number;
+}
+
 export type PayoffMap = Record<string, number>;
 
 const range = (start: number, stop: number, step: number = 10) =>

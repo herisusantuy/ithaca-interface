@@ -27,7 +27,7 @@ import {
   makingChartData,
   showGradientTags,
 } from '@/UI/utils/ChartUtil';
-import { PayoffMap } from '@/UI/utils/CalcChartPayoff';
+import { LabelPositionProp, PayoffMap } from '@/UI/utils/CalcChartPayoff';
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
 // Types
@@ -51,6 +51,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact } = props;
+
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -64,11 +65,13 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
-  const [color, setColor] = useState<string>('#4bb475');
+  const [color, setColor] = useState<string>('#5EE192');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
   const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
+  const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
+
   const baseValue = 0;
   const colorArray = [
     '#4bb475',
@@ -131,15 +134,22 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
 
     // set gradient value
-    setOff(gradientOffset(xAxisPosition, height));
+    setOff(gradientOffset(xAxisPosition, height, modified));
+    // setOff(gradientOffset(modified));
     setXAxisPosition(0);
+    setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed]);
 
   useEffect(() => {
-    setOff(gradientOffset(xAxisPosition, height));
+    setOff(gradientOffset(xAxisPosition, height, modifiedData));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xAxisPosition]);
 
+  useEffect(() => {
+    renderGradient();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [off]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
     if (!e) return; // Avoid null event in compact mode when tooltip is not rendered
@@ -171,6 +181,13 @@ const ChartPayoff = (props: ChartDataProps) => {
     return showGradientTags(off, color, dashedColor);
   };
 
+  // const updateLabelPosition = (positionObj: LabelPositionProp) => {
+  //   const updatedPositions = [...labelPosition, ...[positionObj]];
+  //   setTimeout(() => {
+  //     setLabelPosition(updatedPositions);
+  //   }, 10);
+  // };
+
   return (
     <>
       {isClient && (
@@ -187,6 +204,8 @@ const ChartPayoff = (props: ChartDataProps) => {
               </div>
             </Flex>
           )}
+          <div className={styles.leftSide}></div>
+          <div className={styles.rightSide}></div>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}
@@ -196,38 +215,6 @@ const ChartPayoff = (props: ChartDataProps) => {
               {renderGradient()}
 
               <YAxis type='number' domain={[domain.min, domain.max]} hide={true} />
-
-              <Area
-                type='linear'
-                stroke='url(#lineGradient)'
-                dataKey='value'
-                fill='url(#fillGradient)'
-                filter='url(#glow)'
-                label={
-                  !compact && (
-                    <CustomLabel
-                      base={baseValue}
-                      dataSize={modifiedData.length}
-                      special={breakPoints}
-                      dataList={modifiedData}
-                      height={height}
-                    />
-                  )
-                }
-                dot={
-                  !compact && (
-                    <CustomDot
-                      base={baseValue}
-                      dataSize={modifiedData.length}
-                      special={breakPoints}
-                      dataList={modifiedData}
-                      updatePosition={updatePosition}
-                      updatePnlLabelPosition={setPnlLabelPosition}
-                    />
-                  )
-                }
-                activeDot={false}
-              />
 
               <Area
                 type='linear'
@@ -247,6 +234,39 @@ const ChartPayoff = (props: ChartDataProps) => {
                 activeDot={false}
               />
 
+              <Area
+                type='linear'
+                stroke='url(#lineGradient)'
+                dataKey='value'
+                fill='url(#fillGradient)'
+                filter='url(#glow)'
+                label={
+                  !compact && (
+                    <CustomLabel
+                      base={baseValue}
+                      dataSize={modifiedData.length}
+                      special={breakPoints}
+                      dataList={modifiedData}
+                      height={height}
+                      labelPosition={labelPosition}
+                      // updateLabelPosition={updateLabelPosition}
+                    />
+                  )
+                }
+                dot={
+                  !compact && (
+                    <CustomDot
+                      base={baseValue}
+                      dataSize={modifiedData.length}
+                      special={breakPoints}
+                      dataList={modifiedData}
+                      updatePosition={updatePosition}
+                      updatePnlLabelPosition={setPnlLabelPosition}
+                    />
+                  )
+                }
+                activeDot={false}
+              />
               {/* Reference line */}
               <ReferenceLine y={baseValue} stroke='white' strokeOpacity={0.3} strokeWidth={0.5} />
 
@@ -257,15 +277,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                   animationDuration={1}
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
-                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} />}
-                  content={
-                    <CustomTooltip
-                      x={cursorX}
-                      y={xAxisPosition}
-                      base={baseValue}
-                      setChangeVal={updateChange}
-                    />
-                  }
+                  cursor={<CustomCursor x={cursorX} y={xAxisPosition} height={height} />}
+                  content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} />}
                 />
               )}
 
@@ -289,7 +302,10 @@ const ChartPayoff = (props: ChartDataProps) => {
                       {downSide ? (
                         <></>
                       ) : (
-                        <LogoUsdc x={60} y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7} />
+                        <LogoUsdc
+                          x={10 + (getNumberFormat(minimize).length + 1) * 7}
+                          y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7}
+                        />
                       )}
                     </>
                   }

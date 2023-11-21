@@ -54,3 +54,23 @@
     }
   }
 }
+
+.toggle--sm {
+  .switch {
+    width: rem(30);
+    height: rem(15);
+
+    .slider {
+      width: rem(10);
+      height: rem(10);
+    }
+
+    &.isActive {
+      background: var(--green-20);
+    }
+
+    &.isActive .slider {
+      left: calc(100% - rem(10 + 5));
+    }
+  }
+}

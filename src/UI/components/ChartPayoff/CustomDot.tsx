@@ -1,6 +1,6 @@
 // Constants
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // Types
 type CustomDotProps = {
@@ -18,7 +18,7 @@ type CustomDotProps = {
 };
 
 const CustomDot = (props: CustomDotProps) => {
-  const { cx, cy, payload, special, base, dataSize, index, dataList, updatePosition, updatePnlLabelPosition } = props;
+  const { cx, cy, payload, special, index, dataList, updatePosition, updatePnlLabelPosition } = props;
 
   useEffect(() => {
     const minValue = Math.min(...dataList.map(i => i.value));
@@ -28,6 +28,7 @@ const CustomDot = (props: CustomDotProps) => {
     if (payload?.value == 0) {
       updatePosition(Number(cy));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderCircle = (idx: number) => {
