@@ -20,7 +20,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
   if (active) {
     setChangeVal(payload && Math.abs(payload[0].value) >= 0 ? payload[0].value + Number(base) : 0);
     return (
-      <div style={{ marginTop: y < 100 ? y + 120 + 'px' : y - 140 + 'px' }}>
+      <div style={{ marginTop: y < 130 ? y + 110 + 'px' : y - 130 + 'px' }}>
         <p className={styles.tooltipLabel}>Price at Expiry</p>
         <p className={styles.tooltipValue}>
           {`${
