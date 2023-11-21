@@ -147,7 +147,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   }, [xAxisPosition]);
 
   useEffect(() => {
-    console.log('updated off------------------', off);
     renderGradient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off]);

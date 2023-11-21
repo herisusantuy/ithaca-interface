@@ -63,7 +63,6 @@ export const gradientOffset1 = (data: PayoffDataProps[]) => {
 };
 
 export const gradientOffset = (xAxis: number, height: number, data: PayoffDataProps[]) => {
-  console.log(xAxis, 'xAxis -----------------', height);
   if (xAxis != 0) {
     return xAxis / (height / 100) / 100;
   }
@@ -84,7 +83,6 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
 };
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
-  console.log(off, 'off ----------------')
   if (off == 0) {
     return (
       <defs>
