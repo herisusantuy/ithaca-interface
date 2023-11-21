@@ -124,26 +124,27 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     console.log(res);
     setData(
       res.map(row => {
-        const contract = unFilteredContractList.find((c) => c.contractId === row.contractId)
+        const contract = unFilteredContractList.find(c => c.contractId === row.contractId);
         return {
-        // clientOrderId: row.orderId, // Missing
-        details: '',
-        // orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'), // Missing
-        currencyPair: contract?.economics.currencyPair, // Look up from contract
-        product: contract?.payoff, // Look up from Contract
-        // side: row.details.length === 1 ? row.details[0].side : '', // Missing
-        tenor: dayjs(contract?.economics.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'), // Look up from contract
-        // wethAmount: row.collateral?.numeraireAmount, // Missing
-        // usdcAmount: row.collateral?.underlierAmount, // Missing
-        // orderLimit: row.netPrice, // Missing
-        // expandedInfo: row.details.map(leg => ({ // Missing
-        //   type: leg.contractDto.payoff,
-        //   side: leg.side,
-        //   size: leg.originalQty,
-        //   strike: leg.contractDto.economics.strike,
-        //   enterPrice: leg.execPrice,
-        // })),
-      }}) as TableRowDataWithExpanded[]
+          // clientOrderId: row.orderId, // Missing
+          details: '',
+          // orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'), // Missing
+          currencyPair: contract?.economics.currencyPair, // Look up from contract
+          product: contract?.payoff, // Look up from Contract
+          // side: row.details.length === 1 ? row.details[0].side : '', // Missing
+          tenor: dayjs(contract?.economics.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'), // Look up from contract
+          // wethAmount: row.collateral?.numeraireAmount, // Missing
+          // usdcAmount: row.collateral?.underlierAmount, // Missing
+          // orderLimit: row.netPrice, // Missing
+          // expandedInfo: row.details.map(leg => ({ // Missing
+          //   type: leg.contractDto.payoff,
+          //   side: leg.side,
+          //   size: leg.originalQty,
+          //   strike: leg.contractDto.economics.strike,
+          //   enterPrice: leg.execPrice,
+          // })),
+        };
+      }) as TableRowDataWithExpanded[]
     );
   };
 
@@ -157,10 +158,10 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           });
           break;
         case TABLE_TYPE.ORDER:
-          ithacaSDK.client.currentPositions().then((res) => {
+          ithacaSDK.client.currentPositions().then(res => {
             positionsDataToRows(res);
             setLoading(false);
-          })
+          });
           break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {
@@ -415,7 +416,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               className={styles.filter}
               onClick={() => showFilterBar(header)}
             >
-              <Filter />
+              <Filter fill={productArray.length > 0 ? true : false} />
             </Button>
             <div
               className={`${styles.filterDropdown} ${
@@ -447,7 +448,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               className={styles.filter}
               onClick={() => showFilterBar(header)}
             >
-              <Filter />
+              <Filter fill={sideArray.length > 0 ? true : false} />
             </Button>
             <div
               className={`${styles.filterDropdown} ${
