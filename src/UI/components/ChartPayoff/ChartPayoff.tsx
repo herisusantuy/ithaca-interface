@@ -219,6 +219,24 @@ const ChartPayoff = (props: ChartDataProps) => {
               <Area
                 type='linear'
                 stroke='url(#lineGradient)'
+                strokeWidth='1'
+                dataKey='value'
+                fill='transparent'
+                activeDot={false}
+              />
+
+              <Area
+                type='linear'
+                stroke='url(#dashGradient)'
+                dataKey='dashValue'
+                strokeDasharray='3 3'
+                fill='transparent'
+                activeDot={false}
+              />
+
+              <Area
+                type='linear'
+                stroke='url(#lineGradient)'
                 dataKey='value'
                 fill='url(#fillGradient)'
                 filter='url(#glow)'
@@ -249,25 +267,6 @@ const ChartPayoff = (props: ChartDataProps) => {
                 }
                 activeDot={false}
               />
-
-              <Area
-                type='linear'
-                stroke='url(#lineGradient)'
-                strokeWidth='1'
-                dataKey='value'
-                fill='transparent'
-                activeDot={false}
-              />
-
-              <Area
-                type='linear'
-                stroke='url(#dashGradient)'
-                dataKey='dashValue'
-                strokeDasharray='3 3'
-                fill='transparent'
-                activeDot={false}
-              />
-
               {/* Reference line */}
               <ReferenceLine y={baseValue} stroke='white' strokeOpacity={0.3} strokeWidth={0.5} />
 
