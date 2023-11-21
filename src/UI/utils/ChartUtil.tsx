@@ -546,7 +546,7 @@ export const makingChartData = (data: any[], key: string, dashed: string) => {
     if (prevItem.value * currentItem.value < 0) {
       const rate = (currentItem.x - prevItem.x) / (currentItem.value - prevItem.value);
       const zeroPoint = prevItem.x + Math.abs(rate * prevItem.value);
-      tempDataArray.push({ value: 0, dashValue: undefined, x: Math.round(zeroPoint) });
+      tempDataArray.push({ value: 0, dashValue: undefined, x: zeroPoint });
     }
     tempDataArray.push(currentItem);
   }
