@@ -11,7 +11,7 @@ import Container from '@/UI/layouts/Container/Container';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import AnalyticsLayout from '@/UI/layouts/AnalyticsLayout/AnalyticsLayout';
-import DatePicker from '@/UI/components/Datepicker/DatePicker';
+import DatePicker from '@/UI/components/DatePicker/DatePicker';
 
 // Constants
 import { CHART_OPEN_INTEREST_DATA } from '@/UI/constants/charts/chartOpenInterest';
