@@ -6,7 +6,6 @@ type CustomCursorProps = {
 };
 
 const CustomCursor = ({ x, y, height }: CustomCursorProps) => {
-  console.log(y);
   if (y > 100) {
     return (
       <svg
