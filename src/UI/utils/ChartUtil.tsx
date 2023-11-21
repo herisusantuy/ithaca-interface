@@ -83,7 +83,6 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
 };
 
 export const showGradientTags = (off: number, color: string, dashedColor: string) => {
-  console.log(off);
   if (off == 0) {
     return (
       <defs>
