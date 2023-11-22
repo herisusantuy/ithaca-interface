@@ -94,7 +94,7 @@
   label {
     @include font-size('text-xs', 'bold');
     @include spacing(padding, 8, 'top+bottom');
-    @include spacing(padding, 10, 'left+right');
+    // @include spacing(padding, 10, 'left+right');
     transition: $transition_all;
     font-family: $roboto;
     display: flex;

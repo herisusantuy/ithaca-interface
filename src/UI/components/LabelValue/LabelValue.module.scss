@@ -77,6 +77,7 @@
     font-family: $roboto;
     color: var(--white);
     border-radius: rem(3);
+    white-space: nowrap;
     padding: rem(4) rem(5);
 
     &:hover:not(.selected) {

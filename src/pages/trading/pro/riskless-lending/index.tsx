@@ -197,48 +197,51 @@ const Index = () => {
                     <LabelValue
                       label='Expiry Date'
                       valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DDMMMYY'),
+                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
                       }))}
                       onChange={value => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
                       }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')}
+                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
                     <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
                   </Flex>
                   <h3>Riskless Lending</h3>
-                  <Flex>
-                    <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
-                    <div className={styles.dropDownWrapper}>
-                      <DropdownMenu
-                        value={{
-                          name: strategy.label,
-                          value: strategy.key
-                        }}
-                        options={STRATEGIES.map((strat) => {
-                          return {
-                            name: strat.label,
-                            value: strat.key
-                          }
-                        })}
-                        onChange={option => handleStrategyChange(option)}
-                      />
-                    </div>
-                    <div className={styles.prePackagedTitle}>Total Price</div>
-                    <div className={styles.dropDownWrapper}>
-                      <Input
-                        type='number'
-                        value={1000}
-                        icon={<LogoUsdc />}
-                      />
-                    </div>
-                  </Flex>
+                  <div className='mb-24'>
+                    <Flex>
+                      <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
+                      <div className={styles.dropDownWrapper}>
+                        <DropdownMenu
+                          value={{
+                            name: strategy.label,
+                            value: strategy.key
+                          }}
+                          options={STRATEGIES.map((strat) => {
+                            return {
+                              name: strat.label,
+                              value: strat.key
+                            }
+                          })}
+                          onChange={option => handleStrategyChange(option)}
+                        />
+                      </div>
+                      <div className={styles.prePackagedTitle}>Total Price</div>
+                      <div className={styles.dropDownWrapper}>
+                        <Input
+                          type='number'
+                          value={1000}
+                          icon={<LogoUsdc />}
+                        />
+                      </div>
+                    </Flex>
+                  </div>
+                  <div className={styles.strategiesWrapper}>
                   {strategy.strategies.length ?
                   (<>
                   <div className={styles.parent}>
@@ -263,6 +266,7 @@ const Index = () => {
                     )
                   })}
                   </>) : <div className={styles.strategiesPlaceholder}></div>}
+                  </div>
                   <div>
                     <Button
                       title='Click to add Position '
@@ -311,7 +315,7 @@ const Index = () => {
                     clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
-                    <ChartPayoff chartData={chartData} height={300} />
+                    <ChartPayoff chartData={chartData} height={230} />
                   ) : (
                     <>
                       <h3>Payoff Diagram</h3>

@@ -26,6 +26,7 @@ import { DynamicOptionStrategy } from '@/pages/trading/pro/dynamic-option-strate
 import { Leg } from '@ithaca-finance/sdk';
 import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
+import dayjs from 'dayjs';
 
 type RisklessLendingRowProps = {
   strategy: StrategyLeg
@@ -38,10 +39,7 @@ const PRODUCT_OPTIONS: ProductOption[] = [{
   option: 'Option',
   value: 'option'
 }, {
-  option: 'Digital Option',
-  value: 'digital-option'
-}, {
-  option: 'Forward',
+  option: 'Dated Forward',
   value: 'Forward'
 }];
 
@@ -78,10 +76,11 @@ type ProductOption = {
 
 const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: RisklessLendingRowProps) => {
   // Store
-  const { getContractsByPayoff, spotPrices } =
+  const { getContractsByPayoff, spotPrices, currentExpiryDate } =
     useAppStore();
 
   // State
+  const [productTypes, setProductTypes] = useState(PRODUCT_TYPES);
   const [product, setProduct] = useState(strategy.product);
   const [typeList, setTypeList] = useState<ProductOption[]>(PRODUCT_TYPES[strategy.product]);
   const [type, setType] = useState(strategy.type);
@@ -96,6 +95,17 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikeList, id]);
+
+  useEffect(() => {
+    productTypes.Forward = [{
+      option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
+      value: 'CURRENT'
+    }, {
+      option: 'Next Auction',
+      value: 'NEXT'
+    }];
+    setProductTypes(productTypes)
+  }, [currentExpiryDate])
 
   const handleProductChange = (product: string) => {
     setProduct(product);
@@ -206,7 +216,7 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
 
   return (
     <>
-      <Panel margin='ptb-8 plr-8 br-20 mb-14 mt-10'>
+      <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
             <RadioButton
@@ -214,7 +224,7 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
               selectedOption={product}
               name={`${id}-product`}
               onChange={handleProductChange}
-              width={320}
+              width={250}
             />
           </div>
           <div className={styles.type}>
@@ -223,7 +233,7 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
               selectedOption={type}
               name={`${id}-type`}
               onChange={handleTypeChange}
-              width={225}
+              width={250}
             />
           </div>
           <div className={styles.side}>
@@ -243,12 +253,14 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
               type='number'
               value={size}
               icon={<LogoEth />}
+              width={145}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
           </div>
           <div className={styles.strike}>
             {product !== 'Forward' ? (
               <DropdownMenu
+                width={145}
                 value={strike ? { name: strike, value: strike } : undefined}
                 options={Object.keys(strikeList).map(strike => ({ name: strike, value: strike }))}
                 iconEnd={<LogoUsdc />}
@@ -259,7 +271,7 @@ const RisklessLendingRow = ({ updateStrategy, strategy, id, removeStrategy }: Ri
             )}
           </div>
           <div className={styles.action}>
-            <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+            <Button title='Click to remove row' variant='icon' size='sm' onClick={removeStrategy}>
               <Remove />
             </Button>
           </div>

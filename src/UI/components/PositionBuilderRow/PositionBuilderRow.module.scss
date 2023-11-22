@@ -1,8 +1,9 @@
 .parent {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  // grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: auto;
   grid-template-rows: 1fr;
-  grid-column-gap: 12px;
+  grid-column-gap: 8px;
   align-items: center;
 
   p {
@@ -10,20 +11,19 @@
     color: var(--white-60);
     font-family: $lato;
     position: relative;
-    // top: 40px;
     z-index: 9;
   }
 
   .side p {
-    left: rem(120);
+    left: rem(66);
   }
 
   .size p {
-    left: rem(48);
+    left: rem(8);
   }
 
   .strike p {
-    left: rem(20);
+    left: rem(2);
   }
 
   .unitPrice p {
@@ -31,11 +31,11 @@
   }
 
   .collateral p {
-    left: rem(-20);
+    left: rem(-100);
   }
 
   .premium p {
-    left: rem(-80);
+    left: rem(-168);
   }
 }
 

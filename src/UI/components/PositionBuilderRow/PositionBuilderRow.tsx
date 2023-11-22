@@ -66,7 +66,6 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
     { name: 'Unit Price', style: styles.unitPrice },
     { name: 'Collateral', style: styles.collateral },
     { name: 'Premium', style: styles.premium },
-    { name: '', style: styles.action },
   ];
 
   const handlePayoffChange = (payoff: string) => {
@@ -146,7 +145,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
           </>
         )}
       </div>
-      <Panel margin='ptb-8 plr-8 br-20 mb-14 mt-10'>
+      <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
             <RadioButton
@@ -154,7 +153,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               selectedOption={payoff}
               name={`${title}-payoff`}
               onChange={handlePayoffChange}
-              width={225}
+              width={170}
             />
           </div>
           <div className={styles.side}>
@@ -173,6 +172,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
             <Input
               type='number'
               value={size}
+              width={85}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
@@ -192,6 +192,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
           <div className={styles.unitPrice}>
             <Input
               type='number'
+              width={85}
               value={unitPrice}
               icon={<LogoUsdc />}
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}

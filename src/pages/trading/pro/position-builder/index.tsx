@@ -162,28 +162,17 @@ const Index = () => {
                     <Asset icon={<LogoEth />} label='ETH' />
                     <LabelValue
                       label='Expiry Date'
-                      valueList={expiryList.map(date => {
-                        const formattedDate = dayjs(date, 'YYYYMMDD');
-                        return {
-                          label: `<span>${formattedDate.format('DD')}</span><span>${formattedDate.format(
-                            'MMM'
-                          )}</span><span>${formattedDate.format('YY')}</span>`,
-                          value: formattedDate.format('DDMMMYY'),
-                        };
-                      })}
+                      valueList={expiryList.map(date => ({
+                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                      }))}
                       onChange={value => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DDMMMYY').format('YYYYMMDD')));
+                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
                       }}
-                      value={
-                        <>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
-                        </>
-                      }
+                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
@@ -350,7 +339,11 @@ const Index = () => {
                   <h3 className='mb-13'>Strategy</h3>
                   <TableStrategy
                     strategies={positionBuilderStrategies}
-                    clearAll={() => { }}
+                    clearAll={() => { 
+                      setPositionBuilderStrategies([]);
+                      setOrderSummary(undefined);
+                      setChartData(undefined);
+                    }}
                     removeRow={(index: number) => {
                       const newPositionBuilderStrategies = [...positionBuilderStrategies];
                       newPositionBuilderStrategies.splice(index, 1);

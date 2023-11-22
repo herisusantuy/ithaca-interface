@@ -70,20 +70,24 @@
     z-index: 9;
   }
 
+  .product p {
+    left: rem(6);
+  }
+
   .type p {
-    left: rem(220);
+    left: rem(148);
   }
 
   .side p {
-    left: rem(320);
+    left: rem(296);
   }
 
   .size p {
-    left: rem(250);
+    left: rem(220);
   }
 
   .strike p {
-    left: rem(220);
+    left: rem(254);
   }
 }
 
@@ -125,6 +129,10 @@
 }
 
 .strategiesPlaceholder {
-  width: 1050px;
-  height: 94px;
+  width: rem(929);
+  height: rem(94);
+}
+
+.strategiesWrapper {
+  min-height: rem(200);
 }

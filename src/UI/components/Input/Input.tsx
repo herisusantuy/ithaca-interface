@@ -15,6 +15,7 @@ type InputProps = {
   placeholder?: string;
   disabled?: boolean;
   label?: string;
+  width?: number;
   type?: 'text' | 'number';
   id?: string;
   hasError?: boolean;
@@ -33,6 +34,7 @@ const Input = ({
   disabled,
   placeholder = '-',
   label,
+  width = 0,
   type = 'number',
   id,
   hasError = false,
@@ -49,7 +51,8 @@ const Input = ({
           {label}
         </label>
       )}
-      <div className={`${styles.container} ${containerClassName || ''}`}>
+      <div className={`${styles.container} ${containerClassName || ''}`} 
+      style={width > 0 ? {width: width + 'px'} : {}}>
         <input
           id={id}
           type={type}
