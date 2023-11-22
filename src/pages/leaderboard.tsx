@@ -22,15 +22,15 @@ const Leaderboard = () => {
       <Main>
         <Container margin='mb-15 mt-8'>
           <h1>Leaderboard</h1>
-          <Flex direction='row-space-between' gap='gap-15'>
+          <Flex direction='row-space-between' gap='gap-15 wrap-tablet'>
             {LEADERBOARD_CARDS.map((data, index) => (
               <Card key={index} {...data} />
             ))}
           </Flex>
         </Container>
         <Container>
-          <Panel margin='p-30'>
-            <h3>Weekly Ranking</h3>
+          <Panel margin='p-30 p-tablet-16'>
+            <h3 className='mb-tablet-16'>Weekly Ranking</h3>
             <TableLeaderboard data={TABLE_LEADERBOARD_DATA} />
           </Panel>
         </Container>

@@ -50,8 +50,23 @@
   }
 
   p {
-    font-family: $lato;
     @include font-size('text-md', 'semibold');
+    font-family: $lato;
+
+    @include breakpoint(tablet) {
+      @include font-size('text-sm', 'semibold');
+    }
+  }
+
+  @include breakpoint(tablet) {
+    width: calc(50% - rem(7.5));
+    padding: rem(16);
+    border-radius: rem(20);
+
+    &:before,
+    &:after {
+      border-radius: rem(20);
+    }
   }
 }
 
@@ -62,6 +77,10 @@
 
   p {
     @include font-size('text-sm', 'regular');
+
+    @include breakpoint(tablet) {
+      @include font-size('text-xs', 'regular');
+    }
   }
 }
 
@@ -76,13 +95,18 @@
 
   p {
     @include spacing(margin, 4, 'bottom');
-    color: var(--white-60);
     @include font-size('text-xs', 'regular');
+    color: var(--white-60);
     font-family: $roboto;
+
+    @include breakpoint(tablet) {
+      @include spacing(margin, 6, 'bottom');
+      @include font-size('text-xs', 'regular');
+    }
   }
 
   & span {
-    font-family: $lato;
     @include font-size('text-xs', 'regular');
+    font-family: $lato;
   }
 }

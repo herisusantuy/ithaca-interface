@@ -10,8 +10,6 @@
   border-bottom: rem(1) solid var(--white-rgba-10);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: rem(80);
   font-family: $roboto;
   color: var(--white-60);
   background: none;
@@ -19,7 +17,10 @@
   backdrop-filter: none;
 
   .cell {
+    display: flex;
+    align-items: center;
     position: relative;
+    gap: rem(6);
     @include font-size('text-xs', 'regular');
     width: calc(100% / 4);
 
@@ -29,8 +30,17 @@
 
     &:nth-child(3),
     &:nth-child(4) {
-      text-align: right;
+      justify-content: flex-end;
     }
+
+    @include breakpoint(tablet) {
+      @include font-size('text-xxs', 'regular');
+    }
+  }
+
+  @include breakpoint(tablet) {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -40,8 +50,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  gap: rem(80);
 
   .cell {
     @include font-size('text-md', 'regular');
@@ -60,6 +68,28 @@
     &:nth-child(4) {
       justify-content: flex-end;
     }
+
+    @include breakpoint(tablet) {
+      @include font-size('text-sm', 'regular');
+
+      svg {
+        height: rem(16);
+        width: rem(16);
+      }
+    }
+
+    @include breakpoint(mobile) {
+      @include font-size('text-xs', 'regular');
+
+      svg {
+        display: none;
+      }
+    }
+  }
+
+  @include breakpoint(tablet) {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -70,7 +100,7 @@
 }
 
 .sort {
-  @include spacing(padding, 4, 'all');
+  padding: 0;
   background: none;
   height: auto;
   border-radius: rem(4);

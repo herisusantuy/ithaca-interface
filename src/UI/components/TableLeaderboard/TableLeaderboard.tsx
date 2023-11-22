@@ -116,7 +116,7 @@ const TableLeaderboard = ({ data }: TableLeaderboardProps) => {
         </div>
       )}
       {sortedData.length > 9 ? (
-        <Flex direction='row-space-between' margin='mt-35'>
+        <Flex direction='row-space-between' margin='mt-35 mt-tablet-16'>
           <div />
           <Pagination
             totalItems={data.length}
