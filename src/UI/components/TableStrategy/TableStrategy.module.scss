@@ -9,7 +9,6 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
   font-family: $roboto;
   color: var(--white-60);
   background: none;
@@ -18,10 +17,33 @@
 
   .cell {
     @include font-size('text-xs', 'regular');
+    display: flex;
     padding: 0;
+    width: calc(65% / 4);
+
+    &:first-child {
+      padding-left: rem(26);
+      width: 25%;
+    }
+
+    &:nth-child(2),
+    &:nth-child(3),
+    &:nth-child(4) {
+      justify-content: center;
+    }
+
+    &:nth-child(4) {
+      margin-left: -(rem(4));
+    }
+
+    &:nth-child(5) {
+      justify-content: flex-end;
+      margin-left: -(rem(4));
+    }
 
     &:last-child {
       white-space: nowrap;
+      width: 10%;
     }
   }
 }
@@ -32,7 +54,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
   border-radius: rem(14);
   position: relative;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%), rgba(255, 255, 255, 0.05);
@@ -75,15 +96,26 @@
     display: flex;
     z-index: 1;
     position: relative;
-    flex: 1;
+    width: calc(65% / 4);
 
-    &:nth-child(1) {
+    &:first-child {
       @include font-size('text-sm', 'medium');
+      width: 25%;
+    }
+
+    &:nth-child(2),
+    &:nth-child(3),
+    &:nth-child(4) {
+      justify-content: center;
     }
 
     &:nth-child(5),
     &:last-child {
       justify-content: flex-end;
+    }
+
+    &:last-child {
+      width: 10%;
     }
   }
 
