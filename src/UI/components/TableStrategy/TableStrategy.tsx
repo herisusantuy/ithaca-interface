@@ -33,29 +33,29 @@ const TableStrategy = ({ strategies, removeRow, clearAll }: StrategyTableProps) 
             );
           })}
         </div>
-          {strategies.length ? (
-            strategies.map((strategy, idx) => (
-              <div className={styles.row} key={idx}>
-                <div className={styles.cell}>
-                  <div className={styles.dot}>
-                    <Dot type={`leg${idx + 1}`} />
-                    <div className={styles.strategy}>{strategy.payoff}</div>
-                  </div>
-                </div>
-                <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
-                <div className={styles.cell}>{strategy.leg.quantity}</div>
-                <div className={styles.cell}>{strategy.strike}</div>
-                <div className={styles.cell}>{strategy.referencePrice}</div>
-                <div className={styles.cell}>
-                  <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
-                    <Remove />
-                  </Button>
+        {strategies.length ? (
+          strategies.map((strategy, idx) => (
+            <div className={styles.row} key={idx}>
+              <div className={styles.cell}>
+                <div className={styles.dot}>
+                  <Dot type={`leg${idx + 1}`} />
+                  <div className={styles.strategy}>{strategy.payoff}</div>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className={styles.emptyContainer}>Please add a strategy.</div>
-          )}
+              <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
+              <div className={styles.cell}>{strategy.leg.quantity}</div>
+              <div className={styles.cell}>{formatNumber(Number(strategy.strike), 'string')}</div>
+              <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
+              <div className={styles.cell}>
+                <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
+                  <Remove />
+                </Button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className={styles.emptyContainer}>Please add a strategy.</div>
+        )}
         {strategies.length > 0 && (
           <Button title='Click to clear all' onClick={clearAll} variant='clear'>
             Clear All

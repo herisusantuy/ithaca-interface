@@ -21,14 +21,14 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "BUY",
-                "size": 100,
+                "size": 1,
                 "strike": 0
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "SELL",
-                "size": 100,
+                "size": 1,
                 "strike": 2
             }
         ]
