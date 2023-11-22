@@ -3,12 +3,24 @@
   align-items: stretch;
   gap: rem(15);
   @include spacing(margin, 15, 'bottom');
+
+  @include breakpoint(tablet) {
+    flex-direction: column;
+  }
 }
 
 .leftPanel {
   width: 25%;
+
+  @include breakpoint(tablet) {
+    width: 100%;
+  }
 }
 
 .rightPanel {
   width: 75%;
+
+  @include breakpoint(tablet) {
+    width: 100%;
+  }
 }

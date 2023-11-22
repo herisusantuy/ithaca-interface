@@ -135,16 +135,23 @@
 .headerContent {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: rem(4);
   margin-bottom: rem(16);
+
   & p {
     @include font-size('text-xs', 'regular');
     font-family: $lato;
   }
+
   & h3 {
     @include font-size('text-md', 'semibold');
     font-family: $roboto !important;
     margin: 0 !important;
     padding: 0;
+
+    @include breakpoint(tablet) {
+      @include font-size('text-sm', 'semibold');
+    }
   }
 }

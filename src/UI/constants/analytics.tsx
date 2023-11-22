@@ -31,7 +31,7 @@ export const ANALYTICS_CARD_DATA: AnalyticsCardData[] = [
     isChangePositive: false,
   },
   {
-    title: 'Total Value Locked (TVL)',
+    title: 'Total Value Locked',
     mainValue: '13.1k',
     changeValue: '+29.1',
     currencySymbol: <LogoEth />,

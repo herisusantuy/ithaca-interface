@@ -52,6 +52,10 @@
   margin: 0 auto;
   z-index: 2;
   position: relative;
+
+  @include breakpoint(tablet) {
+    padding-left: rem(18);
+  }
 }
 
 .left,
@@ -66,6 +70,10 @@
 
 .right {
   gap: rem(25);
+
+  @include breakpoint(tablet) {
+    gap: rem(10);
+  }
 
   button {
     border-radius: rem(16) !important;
@@ -109,9 +117,4 @@
   svg {
     cursor: pointer;
   }
-}
-
-.humburger {
-  padding: rem(10) rem(16) !important;
-  background: #3c8d60 !important;
 }

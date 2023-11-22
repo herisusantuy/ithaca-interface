@@ -66,9 +66,7 @@ const Header = ({ className }: HeaderProps) => {
           <Bell />
           <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
           <Wallet />
-          {tabletBreakpoint && (
-            <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} className={styles.humburger} />
-          )}
+          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
           {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
         </div>
       </div>

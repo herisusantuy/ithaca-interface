@@ -21,6 +21,10 @@ h1 {
   font-family: $lato;
   @include font-size('text-xl', 'semibold');
   @include spacing(margin, 24, 'bottom');
+
+  @include breakpoint(tablet) {
+    @include font-size('text-md', 'semibold');
+  }
 }
 
 h3 {
@@ -28,6 +32,10 @@ h3 {
   @include spacing(margin, 15, 'bottom');
   font-family: $lato;
   color: var(--white);
+
+  @include breakpoint(tablet) {
+    @include font-size('text-sm', 'semibold');
+  }
 }
 
 h4 {
