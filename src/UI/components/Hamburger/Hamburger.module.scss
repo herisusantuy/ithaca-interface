@@ -5,6 +5,12 @@
   transition-duration: 0.15s;
   transition-timing-function: linear;
   overflow: visible;
+  height: rem(24) !important;
+  width: rem(24) !important;
+
+  &:before {
+    display: none !important;
+  }
 
   @include breakpoint(tablet) {
     display: flex;
@@ -14,7 +20,7 @@
 .hamburger.isActive .inner,
 .hamburger.isActive .inner::before,
 .hamburger.isActive .inner::after {
-  background-color: var(--white);
+  background-color: var(--white-60);
 }
 
 .hamburger.isActive .inner {
@@ -22,15 +28,15 @@
 }
 
 .hamburger.isActive .inner::before {
-  transform: translate3d(-9px, 3px, 0) rotate(-45deg) scale(0.4, 1);
+  transform: translate3d(-(rem(8)), rem(2), 0) rotate(-45deg) scale(0.4, 1);
 }
 
 .hamburger.isActive .inner::after {
-  transform: translate3d(-9px, -3px, 0) rotate(45deg) scale(0.4, 1);
+  transform: translate3d(-(rem(8)), -(rem(2)), 0) rotate(45deg) scale(0.4, 1);
 }
 
 .box {
-  width: rem(24);
+  width: rem(18);
   height: rem(12);
   display: inline-block;
   position: relative;
@@ -39,20 +45,19 @@
 .inner {
   display: block;
   top: 50%;
-  margin-top: -2px;
 }
 
 .inner,
 .inner::before,
 .inner::after {
-  width: rem(24);
-  height: rem(2);
-  background-color: var(--white);
-  border-radius: rem(4);
+  width: rem(18);
+  height: rem(1);
+  background-color: var(--white-60);
   position: absolute;
   transition-property: transform;
   transition-duration: 0.15s;
   transition-timing-function: ease;
+  border-radius: rem(4);
 }
 
 .inner::before,
@@ -62,9 +67,10 @@
 }
 
 .inner::before {
-  top: -6px;
+  top: -(rem(4));
 }
 
 .inner::after {
-  bottom: -6px;
+  bottom: -(rem(4));
+  width: rem(13);
 }
