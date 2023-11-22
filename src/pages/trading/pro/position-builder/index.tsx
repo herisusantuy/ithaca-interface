@@ -55,9 +55,9 @@ type OrderSummary = {
 };
 
 type AuctionSubmission = {
-  type: string,
-  order: ClientConditionalOrder
-}
+  type: string;
+  order: ClientConditionalOrder;
+};
 
 const Index = () => {
   // State
@@ -127,17 +127,25 @@ const Index = () => {
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
-      showToast({
-        id: Math.floor(Math.random() * 1000),
-        title: 'Transaction Sent',
-        message: 'We have received your request',
-      }, 'top-right', 'info')
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+        },
+        'top-right',
+        'info'
+      );
     } catch (error) {
-      showToast({
-        id: Math.floor(Math.random() * 1000),
-        title: 'Transaction Failed',
-        message: 'Transaction Failed, please try again.',
-      }, 'top-right', 'error')
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+        },
+        'top-right',
+        'error'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -199,7 +207,7 @@ const Index = () => {
                     submitAuction={(order: ClientConditionalOrder) => {
                       setAuctionSubmission({
                         order,
-                        type: 'Options'
+                        type: 'Options',
                       });
                       setSubmitModal(true);
                     }}
@@ -214,7 +222,7 @@ const Index = () => {
                     submitAuction={(order: ClientConditionalOrder) => {
                       setAuctionSubmission({
                         order,
-                        type: 'Digital Options'
+                        type: 'Digital Options',
                       });
                       setSubmitModal(true);
                     }}
@@ -232,7 +240,7 @@ const Index = () => {
                     submitAuction={(order: ClientConditionalOrder) => {
                       setAuctionSubmission({
                         order,
-                        type: 'Forward'
+                        type: 'Forward',
                       });
                       setSubmitModal(true);
                     }}
@@ -247,23 +255,23 @@ const Index = () => {
                     collatarelUSDC={
                       orderSummary
                         ? formatNumber(
-                          toPrecision(
-                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                            currencyPrecision.strike
-                          ),
-                          'string'
-                        )
+                            toPrecision(
+                              orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                              currencyPrecision.strike
+                            ),
+                            'string'
+                          )
                         : '-'
                     }
                     premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
                     fee={1.5}
                     submitAuction={() => {
                       if (orderSummary?.order) {
-                        setSubmitModal(true)
+                        setSubmitModal(true);
                         setAuctionSubmission({
                           order: orderSummary?.order,
-                          type: 'Position Builder'
-                        })
+                          type: 'Position Builder',
+                        });
                       }
                     }}
                   />
@@ -277,14 +285,16 @@ const Index = () => {
                       submitToAuction(auctionSubmission.order, auctionSubmission.type);
                       setAuctionSubmission(undefined);
                       setSubmitModal(false);
-                    }}>
+                    }}
+                  >
                     <>
-                      <div>Please confirm if you’d like to submit your order to auction.</div>
                       <div className={styles.divider}></div>
                       <Flex margin='mb-14'>
                         <h5 className='flexGrow'>Order Limit</h5>
                         <div>
-                        <span className={styles.amountLabel}>{formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}</span>
+                          <span className={styles.amountLabel}>
+                            {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
+                          </span>
                           <LogoUsdc />
                           <span className={styles.currencyLabel}>USDC</span>
                         </div>
@@ -293,21 +303,26 @@ const Index = () => {
                         <h5 className='flexGrow'>Collateral Requirement</h5>
                         <div>
                           <div>
-                          <span className={styles.amountLabel}>{orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}</span>
+                            <span className={styles.amountLabel}>
+                              {orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                            </span>
                             <LogoEth />
                             <span className={styles.currencyLabel}>WETH</span>
                           </div>
                           <div>
-                          <span className={styles.amountLabel}>{orderSummary
-                              ? formatNumber(
-                                toPrecision(
-                                  orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                                  currencyPrecision.strike
-                                ),
-                                'string'
-                              )
-                              : '-'
-                          }</span> <LogoUsdc />
+                            <span className={styles.amountLabel}>
+                              {orderSummary
+                                ? formatNumber(
+                                    toPrecision(
+                                      orderSummary.orderLock.numeraireAmount -
+                                        getNumber(orderSummary.order.totalNetPrice),
+                                      currencyPrecision.strike
+                                    ),
+                                    'string'
+                                  )
+                                : '-'}
+                            </span>{' '}
+                            <LogoUsdc />
                             <span className={styles.currencyLabel}>USDC</span>
                           </div>
                         </div>
@@ -315,7 +330,9 @@ const Index = () => {
                       <Flex margin='mb-14'>
                         <h5 className='flexGrow color-white'>Total Premium</h5>
                         <div>
-                        <span className={styles.amountLabel}>{formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}</span>
+                          <span className={styles.amountLabel}>
+                            {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
+                          </span>
                           <LogoUsdc />
                           <span className={styles.currencyLabel}>USDC</span>
                         </div>
@@ -324,7 +341,7 @@ const Index = () => {
                       <Flex margin='mb-14'>
                         <h5 className='flexGrow'>Platform Fee</h5>
                         <div>
-                        <span className={styles.amountLabel}>1.5</span>
+                          <span className={styles.amountLabel}>1.5</span>
                           <LogoUsdc />
                           <span className={styles.currencyLabel}>USDC</span>
                         </div>
@@ -339,7 +356,7 @@ const Index = () => {
                   <h3 className='mb-13'>Strategy</h3>
                   <TableStrategy
                     strategies={positionBuilderStrategies}
-                    clearAll={() => { 
+                    clearAll={() => {
                       setPositionBuilderStrategies([]);
                       setOrderSummary(undefined);
                       setChartData(undefined);
@@ -374,7 +391,6 @@ const Index = () => {
           </ReadyState>
         </Container>
       </Main>
-
     </>
   );
 };
