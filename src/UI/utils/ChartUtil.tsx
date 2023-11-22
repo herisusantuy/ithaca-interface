@@ -63,7 +63,7 @@ export const gradientOffset1 = (data: PayoffDataProps[]) => {
 };
 
 export const gradientOffset = (xAxis: number, height: number, data: PayoffDataProps[]) => {
-  if (xAxis != 0) {
+  if (xAxis == 0) {
     return xAxis / (height / 100) / 100;
   }
 
@@ -115,7 +115,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.1) {
+  } else if (off <= 0.1) {
     return (
       <defs>
         {/* Area gradient */}
@@ -147,14 +147,15 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.2) {
+  } else if (off <= 0.2) {
+    console.log('0.2-------', off);
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='6%' stopColor={color} stopOpacity={0.1} />
+          <stop offset={off - 0.08} stopColor={color} stopOpacity={0.1} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -164,9 +165,39 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
 
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='8%' stopColor={color} stopOpacity={1} />
-          <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='16%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off - 0.06} stopColor={color} stopOpacity={0.8} />
+          <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.8} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.8} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.25) {
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset={off - 0.05} stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.05} stopColor='#fff' stopOpacity={1} />
+          <stop offset={off + 0.05} stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
@@ -177,14 +208,14 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.3) {
+  } else if (off <= 0.3) {
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='10%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -194,9 +225,9 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
 
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='15%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='32%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.05} stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
@@ -207,15 +238,15 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.4) {
+  } else if (off <= 0.35) {
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='20%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.15} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -225,11 +256,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
 
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='10%' stopColor={color} stopOpacity={1} />
-          <stop offset='30%' stopColor={color} stopOpacity={1} />
-          <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='42%' stopColor='#FF3F57' stopOpacity={1} />
-          <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='10%' stopColor={color} stopOpacity={0.8} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.8} />
+          <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.8} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.8} />
         </linearGradient>
 
         <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -239,15 +270,79 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.5) {
+  } else if (off <= 0.4) {
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='30%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='70%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.8} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.8} />
+          <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.8} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.8} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.45) {
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.8} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.8} />
+          <stop offset={off} stopColor='#fff' stopOpacity={0.8} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.8} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.8} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.5) {
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -259,9 +354,9 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
           <stop offset='30%' stopColor={color} stopOpacity={1} />
-          <stop offset='40%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='53%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='70%' stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
@@ -273,15 +368,15 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.6) {
+  } else if (off <= 0.55) {
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='30%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='80%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -293,9 +388,79 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
           <stop offset='30%' stopColor={color} stopOpacity={1} />
-          <stop offset='50%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='62%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.6) {
+    console.log('0.6--------------', off);
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor='#fff' stopOpacity={1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='70%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.65) {
+    console.log('0.65--------------', off);
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor='#fff' stopOpacity={1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={1} />
           <stop offset='80%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
@@ -306,14 +471,16 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.7) {
+  } else if (off <= 0.7) {
+    console.log('0.7--------------', off);
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='30%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -324,10 +491,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
-          <stop offset='50%' stopColor={color} stopOpacity={1} />
-          <stop offset='60%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.02} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='72%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.15} stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='80%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
         <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -337,15 +505,16 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.8) {
+  } else if (off <= 0.75) {
+    console.log('0.75--------------', off);
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='70%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.1} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='93%' stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset={off + 0.2} stopColor='#FF3F57' stopOpacity={0.2} />
           <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
@@ -356,10 +525,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
-          <stop offset='50%' stopColor={color} stopOpacity={1} />
-          <stop offset='70%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.05} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='83%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
         <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -369,15 +539,17 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         </linearGradient>
       </defs>
     );
-  } else if (off < 0.9) {
+  } else if (off <= 0.8) {
+    console.log('0.8-----------', off);
     return (
       <defs>
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='60%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='99%' stopColor='#FF3F57' stopOpacity={0.1} />
+          <stop offset={off + 0.1} stopColor='#FF3F57' stopOpacity={0.2} />
+          <stop offset='90%' stopColor='#FF3F57' stopOpacity={0.3} />
         </linearGradient>
 
         <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
@@ -388,9 +560,74 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
           <stop offset='30%' stopColor={color} stopOpacity={1} />
-          <stop offset='80%' stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
-          <stop offset='95%' stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset={off + 0.15} stopColor='#FF3F57' stopOpacity={1} />
+          <stop offset='80%' stopColor='#FF3F57' stopOpacity={1} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.85) {
+    console.log('0.85-----------', off);
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset={off - 0.2} stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset='95%' stopColor='#FF3F57' stopOpacity={0.2} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor='#fff' stopOpacity={1} />
+          <stop offset={off + 0.15} stopColor='#FF3F57' stopOpacity={1} />
+        </linearGradient>
+
+        <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+    );
+  } else if (off <= 0.9) {
+    console.log('0.9-----------', off);
+    return (
+      <defs>
+        {/* Area gradient */}
+        <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={0.3} />
+          <stop offset='60%' stopColor={color} stopOpacity={0.2} />
+          <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
+          <stop offset='99%' stopColor='#FF3F57' stopOpacity={0} />
+        </linearGradient>
+
+        <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
+        </filter>
+
+        {/* Core line gradient */}
+        <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='10%' stopColor={color} stopOpacity={1} />
+          <stop offset='30%' stopColor={color} stopOpacity={1} />
+          <stop offset={off - 0.005} stopColor={color} stopOpacity={1} />
+          <stop offset={off} stopColor='#fff' stopOpacity={1} />
+          <stop offset='99%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
 
         <linearGradient id='dashGradient' x1='0' y1='0' x2='0' y2='1'>
@@ -406,9 +643,9 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Area gradient */}
         <linearGradient id='fillGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={0.3} />
-          <stop offset='80%' stopColor={color} stopOpacity={0.2} />
+          <stop offset='85%' stopColor={color} stopOpacity={0.2} />
           <stop offset={off} stopColor='#8884d8' stopOpacity={0} />
-          <stop offset='99%' stopColor='#FF3F57' stopOpacity={0.1} />
+          <stop offset='99%' stopColor='#FF3F57' stopOpacity={0} />
         </linearGradient>
 
         <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
@@ -418,7 +655,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {/* Core line gradient */}
         <linearGradient id='lineGradient' x1='0' y1='0' x2='0' y2='1'>
           <stop offset='10%' stopColor={color} stopOpacity={1} />
-          <stop offset='97%' stopColor={color} stopOpacity={1} />
+          <stop offset='95%' stopColor={color} stopOpacity={1} />
           <stop offset={off} stopColor='#fff' stopOpacity={1} />
           <stop offset='99%' stopColor='#FF3F57' stopOpacity={1} />
         </linearGradient>
@@ -492,6 +729,8 @@ export const breakPointList1 = (data: PayoffDataProps[]) => {
 };
 
 export const breakPointList = (data: PayoffDataProps[]) => {
+  const step = data[1].x - data[0].x;
+  const deviation = calculateStandardDeviation(data);
   const offsets: SpecialDotLabel[] = [];
   let preTanValue = 0;
   for (let i = 0; i < data.length - 1; i++) {
@@ -505,7 +744,40 @@ export const breakPointList = (data: PayoffDataProps[]) => {
       });
     }
   }
-  return offsets;
+
+  offsets.sort((a, b) => a.x - b.x);
+
+  const filteredData = offsets.filter((item, index, array) => {
+    if (index === array.length - 1) {
+      return true;
+    } else {
+      const nextX = array[index + 1].x;
+      if (nextX - item.x > step) {
+        return true;
+      } else {
+        return Math.abs(array[index + 1].value - item.value) > deviation
+      }
+    }
+  });
+
+  return filteredData;
+};
+
+const calculateStandardDeviation = (data: PayoffDataProps[]) => {
+  const n = data.length;
+
+  const mean = data.reduce((sum, item) => sum + item.value, 0) / n;
+
+  const squaredDifferences = data.reduce((sum, item) => {
+    const difference = item.value - mean;
+    return sum + difference * difference;
+  }, 0);
+
+  const variance = squaredDifferences / n;
+
+  const standardDeviation = Math.sqrt(variance);
+
+  return standardDeviation;
 };
 
 export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
