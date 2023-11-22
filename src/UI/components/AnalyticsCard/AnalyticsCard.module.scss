@@ -9,12 +9,12 @@
     content: '';
     position: absolute;
     border-radius: rem(30);
-    top: -(rem(1));
-    bottom: -(rem(1));
-    right: -(rem(1));
-    left: -(rem(1));
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
     z-index: -1;
-    border: rem(1) solid transparent;
+    border: rem(0.5) solid transparent;
     background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
     opacity: 0.2;
     -webkit-mask:
