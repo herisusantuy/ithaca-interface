@@ -53,7 +53,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
   // State
   const [payoff, setPayoff] = useState(options[0].value);
   const [side, setSide] = useState<'BUY' | 'SELL'>('BUY');
-  const [size, setSize] = useState('100');
+  const [size, setSize] = useState('1');
   const [strike, setStrike] = useState<string | undefined>(title === 'Forwards' ? '-' : undefined);
   const contracts = getContractsByPayoff(title === 'Forwards' ? 'Forward' : payoff);
   const [unitPrice, setUnitPrice] = useState(title === 'Forwards' ? `${contracts['-'].referencePrice}` : '');
