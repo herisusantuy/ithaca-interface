@@ -336,3 +336,41 @@
 .flexGrow {
   flex-grow: 1;
 }
+
+.column-tablet {
+  @include breakpoint(tablet) {
+    flex-direction: column !important;
+  }
+}
+
+.column-tablet-start {
+  @include breakpoint(tablet) {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+.wrap-tablet {
+  @include breakpoint(tablet) {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+.p-tablet-16 {
+  @include breakpoint(tablet) {
+    padding: rem(16) !important;
+  }
+}
+
+.mb-tablet-16 {
+  @include breakpoint(tablet) {
+    margin-bottom: rem(16) !important;
+  }
+}
+
+.gap-tablet-8 {
+  @include breakpoint(tablet) {
+    gap: rem(8) !important;
+  }
+}

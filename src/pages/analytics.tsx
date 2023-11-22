@@ -28,13 +28,13 @@ const Analytics = () => {
       <Main>
         <Container margin='mb-15 mt-8'>
           <h1>Analytics</h1>
-          <Flex direction='row-center' margin='mb-24' gap='gap-12'>
+          <Flex direction='row-center' margin='mb-24' gap='gap-12 column-tablet-start gap-tablet-8'>
             <p className='fs-xs'>Date Range</p>
             <DatePicker />
           </Flex>
           <AnalyticsLayout
             leftPanel={
-              <Flex direction='column' gap='gap-15'>
+              <Flex direction='column' gap='gap-15 wrap-tablet'>
                 {ANALYTICS_CARD_DATA.map((card: AnalyticsCardData, index: number) => (
                   <AnalyticsCard
                     key={index}
@@ -49,23 +49,23 @@ const Analytics = () => {
               </Flex>
             }
             rightPanel={
-              <Panel margin='ptb-24 plr-30 full-width full-height'>
-                <h3 className='mb-18'>Trade Count</h3>
+              <Panel margin='ptb-24 plr-30 full-width full-height p-tablet-16'>
+                <h3 className='mb-18 mb-tablet-16'>Trade Count</h3>
                 <ChartTradeCount data={CHART_TRADE_COUNT_DATA} />
               </Panel>
             }
           />
-          <Flex direction='row-space-between' gap='gap-15 mb-15 align-stretch'>
-            <Panel margin='ptb-24 plr-30 full-width'>
+          <Flex direction='row-space-between' gap='gap-15 mb-15 align-stretch column-tablet'>
+            <Panel margin='ptb-24 plr-30 full-width p-tablet-16'>
               <h3 className='mb-18'>Open Interest</h3>
               <ChartOpenInterest data={CHART_OPEN_INTEREST_DATA} />
             </Panel>
-            <Panel margin='ptb-24 plr-30 full-width'>
+            <Panel margin='ptb-24 plr-30 full-width p-tablet-16'>
               <h3 className='mb-18'>Trading Volumes</h3>
               <ChartTradingVolume data={CHART_TRADING_VOLUME_DATA} />
             </Panel>
           </Flex>
-          <Panel margin='ptb-24 plr-30 full-width'>
+          <Panel margin='ptb-24 plr-30 full-width p-tablet-16'>
             <h3 className='mb-18'>Max Pain</h3>
             <ChartMaxPain data={CHART_MAX_PAIN_ANY_TYPE} />
           </Panel>
