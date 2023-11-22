@@ -238,7 +238,10 @@ const COMPONENT_GROUPS = [
       {
         name: 'DatePicker',
         component: (
-          <DatePicker />
+          <Flex direction='row-space-around' margin='mb-32'>
+            <DatePicker />
+            <DatePicker type='range' />
+          </Flex>
         ),
         status: 'To Review',
       },

@@ -18,12 +18,13 @@ import 'react-day-picker/dist/style.css';
 
 // Types
 type DateProps = {
+  type?: string;
   start?: Date | undefined;
   end?: Date | undefined;
   disabled?: boolean;
 };
 
-const DatePicker = ({ start, end, disabled = false }: DateProps) => {
+const DatePicker = ({ type = 'single', start, end, disabled = false }: DateProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [startDay, setStartDay] = useState<Date | undefined>(start);
   const [tempStartDay, setTempStartDay] = useState<Date | undefined>(start);
@@ -71,30 +72,46 @@ const DatePicker = ({ start, end, disabled = false }: DateProps) => {
   };
 
   const handleApplyClick = () => {
-    if (startDay && endDay) {
-      setTempEndDay(endDay);
-      setTempStartDay(startDay);
-      setDateText(
-        <>
-          <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
-          {' - '}
-          <span dangerouslySetInnerHTML={{ __html: formatDate(endDay) }} />
-        </>
-      );
-    } else if (startDay && !endDay) {
-      setEndDay(startDay);
-      setTempEndDay(startDay);
-      setDateText(
-        <>
-          <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
-          {' - '}
-          <span dangerouslySetInnerHTML={{ __html: formatDate(endDay) }} />
-        </>
-      );
+    if (type == 'range') {
+      if (startDay && endDay) {
+        setTempEndDay(endDay);
+        setTempStartDay(startDay);
+        setDateText(
+          <>
+            <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+            {' - '}
+            <span dangerouslySetInnerHTML={{ __html: formatDate(endDay) }} />
+          </>
+        );
+      } else if (startDay && !endDay) {
+        setEndDay(startDay);
+        setTempEndDay(startDay);
+        setDateText(
+          <>
+            <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+            {' - '}
+            <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+          </>
+        );
+      } else {
+        setTempEndDay(endDay);
+        setTempStartDay(startDay);
+      }
     } else {
-      setTempEndDay(endDay);
-      setTempStartDay(startDay);
+      if (startDay) {
+        setTempEndDay(endDay);
+        setTempStartDay(startDay);
+        setDateText(
+          <>
+            <span dangerouslySetInnerHTML={{ __html: formatDate(startDay) }} />
+          </>
+        );
+      } else {
+        setTempEndDay(endDay);
+        setTempStartDay(startDay);
+      }
     }
+
     setIsDropdownOpen(false);
   };
 
@@ -115,7 +132,7 @@ const DatePicker = ({ start, end, disabled = false }: DateProps) => {
   return (
     <>
       <div
-        className={styles.datePickerContainer}
+        className={type == 'range' ? styles.dateRangePickerContainer : styles.dateSinglePickerContainer}
         onClick={() => handleDropdownClick()}
         ref={containerRef}
         role='button'
@@ -137,7 +154,7 @@ const DatePicker = ({ start, end, disabled = false }: DateProps) => {
             >
               <div className={styles.dateRangeContainer}>
                 <div className={styles.subContainer}>
-                  <p>From</p>
+                  <p className={type == 'single' ? styles.isHidden : ''}>From</p>
                   <DayPicker
                     className={`${styles.datePicker}`}
                     mode='single'
@@ -153,7 +170,7 @@ const DatePicker = ({ start, end, disabled = false }: DateProps) => {
                     }}
                   />
                 </div>
-                <div className={styles.subContainer}>
+                <div className={`${styles.subContainer} ${type == 'single' ? styles.isHidden : ''}`}>
                   <p>To</p>
                   <DayPicker
                     className={styles.datePicker}

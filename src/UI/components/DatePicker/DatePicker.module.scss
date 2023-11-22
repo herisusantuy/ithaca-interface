@@ -1,4 +1,4 @@
-.datePickerContainer {
+.dateRangePickerContainer {
   display: flex;
   align-items: center;
   padding: rem(7) rem(10);
@@ -12,6 +12,42 @@
   transition: $transition_all;
   position: relative;
   max-width: rem(188);
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: rem(12);
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
+    z-index: -1;
+    border: rem(0.5) solid transparent;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0) 80%) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+}
+
+.dateSinglePickerContainer {
+  display: flex;
+  align-items: center;
+  padding: rem(7) rem(10);
+  gap: rem(4);
+  border-radius: rem(12);
+  min-width: rem(100);
+  height: rem(34);
+  cursor: pointer;
+  justify-content: space-between;
+  background: var(--gray-rgba-40);
+  transition: $transition_all;
+  position: relative;
+  max-width: rem(110);
 
   &:before {
     content: '';
