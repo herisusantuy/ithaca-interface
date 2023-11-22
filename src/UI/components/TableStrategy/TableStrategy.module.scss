@@ -19,11 +19,11 @@
     @include font-size('text-xs', 'regular');
     display: flex;
     padding: 0;
-    width: calc(65% / 4);
+    width: calc(55% / 4);
 
     &:first-child {
       padding-left: rem(26);
-      width: 25%;
+      width: 35%;
     }
 
     &:nth-child(2),
@@ -91,16 +91,15 @@
   }
 
   .cell {
-    @include font-size('text-sm', 'regular');
+    @include font-size('text-xs', 'regular');
     font-family: $roboto;
     display: flex;
     z-index: 1;
     position: relative;
-    width: calc(65% / 4);
+    width: calc(55% / 4);
 
     &:first-child {
-      @include font-size('text-sm', 'medium');
-      width: 25%;
+      width: 35%;
     }
 
     &:nth-child(2),
