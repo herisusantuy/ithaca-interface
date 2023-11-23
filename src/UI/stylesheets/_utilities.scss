@@ -309,12 +309,20 @@
   @include font-size('text-xxs', 'regular');
 }
 
+.min-width-71 {
+  min-width: rem(71) !important;
+}
+
 .full-width {
   width: 100% !important;
 }
 
 .full-height {
   height: 100% !important;
+}
+
+.height-34 {
+  height: rem(34) !important;
 }
 
 .width-50 {
@@ -383,4 +391,12 @@
   @include breakpoint(tablet) {
     gap: rem(8) !important;
   }
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+.align-self-end {
+  align-self: flex-end !important;
 }
