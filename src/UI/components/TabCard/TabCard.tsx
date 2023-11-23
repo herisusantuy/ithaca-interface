@@ -15,16 +15,17 @@ type MainTab = {
 };
 
 type TabCardProps = {
+  className?: string;
   tabs: MainTab[];
   showInstructions: boolean;
   setShowInstructions: Dispatch<SetStateAction<boolean>>;
 };
 
-const TabCard = ({ tabs, showInstructions, setShowInstructions }: TabCardProps) => {
+const TabCard = ({ className, tabs, showInstructions, setShowInstructions }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className}`}>
       <div className={styles.leftPanel}>
         {tabs.map((tab: MainTab) => (
           <div
@@ -52,7 +53,7 @@ const TabCard = ({ tabs, showInstructions, setShowInstructions }: TabCardProps) 
             onChange={() => setShowInstructions(!showInstructions)}
           />
         </div>
-        <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
+        {getTradingStoryMapper(activeTab.contentId, showInstructions)}
       </div>
     </div>
   );

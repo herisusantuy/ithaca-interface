@@ -204,8 +204,6 @@ const ChartPayoff = (props: ChartDataProps) => {
               </div>
             </Flex>
           )}
-          <div className={styles.leftSide}></div>
-          <div className={styles.rightSide}></div>
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}
@@ -278,7 +276,15 @@ const ChartPayoff = (props: ChartDataProps) => {
                   position={{ x: cursorX - 50, y: 7 }}
                   wrapperStyle={{ width: 100 }}
                   cursor={<CustomCursor x={cursorX} y={xAxisPosition} height={height} />}
-                  content={<CustomTooltip x={cursorX} y={xAxisPosition} base={baseValue} setChangeVal={updateChange} height={height} />}
+                  content={
+                    <CustomTooltip
+                      x={cursorX}
+                      y={xAxisPosition}
+                      base={baseValue}
+                      setChangeVal={updateChange}
+                      height={height}
+                    />
+                  }
                 />
               )}
 

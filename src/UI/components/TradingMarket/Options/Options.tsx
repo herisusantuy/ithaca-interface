@@ -1,19 +1,29 @@
+// Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
-import Flex from '@/UI/layouts/Flex/Flex';
-import RadioButton from '../../RadioButton/RadioButton';
-import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import LogoUsdc from '../../Icons/LogoUsdc';
-import Input from '../../Input/Input';
 
-import styles from './Options.module.scss';
-import LogoEth from '../../Icons/LogoEth';
-import PriceLabel from '../../PriceLabel/PriceLabel';
-import Button from '../../Button/Button';
-import ChartPayoff from '../../ChartPayoff/ChartPayoff';
+// Components
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Input from '@/UI/components/Input/Input';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
+import Button from '@/UI/components/Button/Button';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import Greeks from '@/UI/components/Greeks/Greeks';
+
+// Layouts
+import Flex from '@/UI/layouts/Flex/Flex';
+
+// Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+
+// Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+
+// SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import {
   ClientConditionalOrder,
@@ -22,6 +32,9 @@ import {
   calculateNetPrice,
   createClientOrderId,
 } from '@ithaca-finance/sdk';
+
+// Styles
+import styles from './Options.module.scss';
 
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -77,12 +90,15 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     }
 
     const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
+
     const leg: Leg = {
       contractId: contract.contractId,
       quantity: `${size}`,
       side: buyOrSell,
     };
+
     const referencePrice = unitPrice ? getNumber(unitPrice) : contract.referencePrice;
+
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: calculateNetPrice([leg], [referencePrice], currencyPrecision.strike),
@@ -91,6 +107,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
 
     const payoffMap = estimateOrderPayoff([{ ...contract, ...leg, premium: referencePrice }]);
     setPayoffMap(payoffMap);
+
     if (!unitPrice) setUnitPrice(`${referencePrice}`);
 
     try {
@@ -102,6 +119,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         orderPayoff,
       });
     } catch (error) {
+      // Add toast
       console.error(`Order estimation for ${callOrPut} failed`, error);
     }
   };
@@ -111,6 +129,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
     } catch (error) {
+      // Add toast
       console.error('Failed to submit order', error);
     }
   };
@@ -132,22 +151,21 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   }, []);
 
   return (
-    <div>
+    <>
       <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
-        <div>
-          {!compact && <label className={styles.label}>Type</label>}
-          <RadioButton
-            size={compact ? 'compact' : 'regular'}
-            width={compact ? 120 : 160}
-            options={[
-              { option: 'Call', value: 'Call' },
-              { option: 'Put', value: 'Put' },
-            ]}
-            name={compact ? 'callOrPutCompact' : 'callOrPut'}
-            selectedOption={callOrPut}
-            onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
-          />
-        </div>
+        {!compact && <label className={styles.label}>Type</label>}
+        <RadioButton
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 120 : 160}
+          options={[
+            { option: 'Call', value: 'Call' },
+            { option: 'Put', value: 'Put' },
+          ]}
+          name={compact ? 'callOrPutCompact' : 'callOrPut'}
+          selectedOption={callOrPut}
+          onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+        />
+
         {!compact && (
           <>
             <div>
@@ -195,39 +213,23 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
             </div>
             <div>
               <label className={`${styles.textRight} ${styles.label}`}>Collateral</label>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  height: '60%',
-                }}
-              >
-                <PriceLabel icon={<LogoEth />} label={calcCollateral()} />
-              </div>
+              <PriceLabel icon={<LogoEth />} label={calcCollateral()} />
             </div>
             <div>
               <label className={`${styles.textRight} ${styles.label}`}>Premium</label>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  height: '60%',
-                }}
-              >
-                <PriceLabel
-                  icon={<LogoUsdc />}
-                  label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
-                />
-              </div>
+              <PriceLabel
+                icon={<LogoUsdc />}
+                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+              />
             </div>
-            <div style={{ alignSelf: 'flex-end', justifySelf: 'flex-end' }} onClick={handleSubmit}>
-              <Button size='sm' title='Click to submit to auction'>
-                Submit to Auction
-              </Button>
-            </div>
+            {/** Add disabled logic  */}
+            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
+              Submit to Auction
+            </Button>
           </>
         )}
       </Flex>
+
       <ChartPayoff
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
@@ -235,42 +237,9 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         showKeys={false}
         showPortial={!compact}
       />
-      {!compact && (
-        <div className={styles.greeksContainer}>
-          <h5 className={styles.greeksTitle}>Greeks</h5>
-          <div className={styles.greeks}>
-            <label>
-              <span>&Delta;</span>Delta
-            </label>
-            <div>38 {`<unit>`}</div>
-          </div>
-          <div className={styles.greeks}>
-            <label>
-              <span>&nu;</span>Vega
-            </label>
-            <div>38 {`<unit>`}</div>
-          </div>
-          <div className={styles.greeks}>
-            <label>
-              <span>&Gamma;</span>Gamma
-            </label>
-            <div>38 {`<unit>`}</div>
-          </div>
-          <div className={styles.greeks}>
-            <label>
-              <span>&theta;</span>Theta
-            </label>
-            <div>38 {`<unit>`}</div>
-          </div>
-          <div className={styles.greeks}>
-            <label>
-              <span>&Rho;</span>Rho
-            </label>
-            <div>38 {`<unit>`}</div>
-          </div>
-        </div>
-      )}
-    </div>
+
+      {!compact && <Greeks />}
+    </>
   );
 };
 
