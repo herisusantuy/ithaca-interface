@@ -132,6 +132,7 @@ const Index = () => {
           id: Math.floor(Math.random() * 1000),
           title: 'Transaction Sent',
           message: 'We have received your request',
+          type: 'info',
         },
         'top-right',
         'info'
@@ -142,6 +143,7 @@ const Index = () => {
           id: Math.floor(Math.random() * 1000),
           title: 'Transaction Failed',
           message: 'Transaction Failed, please try again.',
+          type: 'error',
         },
         'top-right',
         'error'
@@ -348,7 +350,7 @@ const Index = () => {
                       </Flex>
                     </>
                   </Modal>
-                  <Toast toastList={toastList} type={type} position={position} />
+                  <Toast toastList={toastList} position={position} />
                 </>
               }
               rightPanel={
