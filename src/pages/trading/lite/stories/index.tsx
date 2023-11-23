@@ -35,6 +35,7 @@ const Index = () => {
           </Flex>
           <TabCard
             className='mt-39'
+            tabClassName='ptb-15 plr-20'
             tabs={TRADING_STORIES_TABS}
             showInstructions={showInstructions}
             setShowInstructions={setShowInstructions}

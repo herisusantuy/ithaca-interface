@@ -25,13 +25,16 @@ type Props = {
   showCollateral?: boolean;
   summary?: OrderDetails;
   onSubmit: () => void;
+  className?: string;
 };
 
-const StorySummary = ({ showCollateral = false, summary, onSubmit }: Props) => {
+const StorySummary = ({ showCollateral = false, summary, onSubmit, className }: Props) => {
   const { currencyPrecision } = useAppStore();
 
+  const classes = `${styles.orderSummary} ${className || ''}`.trim();
+
   return (
-    <div className={styles.orderSummary}>
+    <div className={classes}>
       {showCollateral && (
         <div className={styles.summary}>
           <h5>Collateral Requirement</h5>
@@ -74,7 +77,7 @@ const StorySummary = ({ showCollateral = false, summary, onSubmit }: Props) => {
           <small>USDC</small>
         </div>
       </div>
-      <Button size='sm' title='Click to submit to auction' onClick={onSubmit}>
+      <Button size='lg' title='Click to submit to auction' onClick={onSubmit}>
         Submit to Auction
       </Button>
     </div>

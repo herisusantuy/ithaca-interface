@@ -202,7 +202,7 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
             Select Target Price <LogoEth />
           </div>
         )}
-        <Flex>
+        <Flex margin='display-inline-flex mb-7'>
           <Slider
             value={strike}
             min={strikes[0]}

@@ -13,6 +13,7 @@ import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import BetInstructions from '@/UI/components/Instructions/BetInstructions';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -20,6 +21,7 @@ import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { BET_OPTIONS } from '@/UI/constants/options';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -31,7 +33,6 @@ import {
   createClientOrderId,
   toPrecision,
 } from '@ithaca-finance/sdk';
-import LabeledInput from '../../LabeledInput/LabeledInput';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
@@ -58,6 +59,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     await handleStrikeChange(strike, betType === 'INSIDE', getNumber(capitalAtRisk));
   };
 
+  // Needs to be updated
   const handleTargetEarnChange = async (amount: string) => {
     const targetEarn = getNumberValue(amount);
     setTargetEarn(targetEarn);
@@ -225,7 +227,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       {!compact && showInstructions && <BetInstructions />}
 
       {compact && (
-        <Flex>
+        <Flex margin='display-inline-flex mb-7'>
           <Slider
             value={strike}
             min={strikes[0]}
@@ -246,10 +248,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
           width={compact ? 140 : 221}
-          options={[
-            { option: 'Inside Range', value: 'INSIDE' },
-            { option: 'Outside Range', value: 'OUTSIDE' },
-          ]}
+          options={BET_OPTIONS}
           selectedOption={insideOrOutside}
           name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
           onChange={betType => handleBetTypeChange(betType as 'INSIDE' | 'OUTSIDE')}
