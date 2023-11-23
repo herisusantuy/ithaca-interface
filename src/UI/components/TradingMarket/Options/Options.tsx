@@ -222,6 +222,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
             </div>
+            {/** Add disabled logic  */}
             <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
               Submit to Auction
             </Button>
