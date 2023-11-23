@@ -1,10 +1,14 @@
 // Packages
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 
+// Utils
+import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
+
+// Components
+import Toggle from '@/UI/components/Toggle/Toggle';
+
 // Styles
 import styles from './TabCard.module.scss';
-import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
-import Toggle from '../Toggle/Toggle';
 
 // Types
 type MainTab = {
