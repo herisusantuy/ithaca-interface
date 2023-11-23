@@ -53,7 +53,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions }: Tab
             onChange={() => setShowInstructions(!showInstructions)}
           />
         </div>
-        <div>{getTradingStoryMapper(activeTab.contentId, showInstructions)}</div>
+        {getTradingStoryMapper(activeTab.contentId, showInstructions)}
       </div>
     </div>
   );

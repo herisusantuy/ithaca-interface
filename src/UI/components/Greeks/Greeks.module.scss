@@ -1,0 +1,34 @@
+.container {
+  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 20, 'top+bottom');
+  display: flex;
+  align-items: center;
+  gap: rem(4);
+
+  h5 {
+    @include font-size('text-md', 'medium');
+    color: var(--white-60);
+    font-family: $lato;
+  }
+}
+
+.column {
+  flex: 1;
+  color: var(--white);
+
+  label {
+    @include spacing(margin, 4, 'bottom');
+    @include font-size('text-xs', 'regular');
+    display: flex;
+    align-items: center;
+    gap: rem(2);
+    color: var(--white-60);
+    font-family: $roboto;
+
+    span {
+      @include font-size('text-md', 'semi-bold');
+      color: var(--white-60);
+      font-family: $lato;
+    }
+  }
+}
