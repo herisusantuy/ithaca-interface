@@ -100,6 +100,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
   }, [strikeList, id]);
 
   useEffect(() => {
+    setSide(strategy.side)
+    handleSideChange(strategy.side)
+  }, [strategy.side]);
+
+  useEffect(() => {
     productTypes.Forward = [{
       option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
       value: 'CURRENT'

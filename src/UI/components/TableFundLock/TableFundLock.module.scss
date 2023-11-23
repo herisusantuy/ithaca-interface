@@ -138,3 +138,10 @@
 .isOpacity {
   opacity: 0.1;
 }
+
+
+.emptyTable {
+  @include font-size('text-xs', 'regular');
+  padding: rem(150) 0;
+  text-align: center;
+}

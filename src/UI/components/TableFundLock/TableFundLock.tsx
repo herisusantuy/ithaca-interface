@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps, TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
+import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/tableFundLock';
 
 // Utils
 import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
@@ -32,6 +32,8 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs';
 import { formatUnits } from 'viem';
 import { formatNumber } from '@/UI/utils/Numbers';
+import Loader from '../Loader/Loader';
+import Container from '@/UI/layouts/Container/Container';
 
 type FundlockHistory = {
   amount: bigint;
@@ -46,11 +48,12 @@ const TableFundLock = () => {
   const [filterHeader, setFilterHeader] = useState<string>('');
   const [direction, setDirection] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [currencyArray, setCurrencyArray] = useState<string[]>([]);
   const [currencyChecked, setCurrencyChecked] = useState<boolean>(false);
   const [auctionArray, setAuctionArray] = useState<string[]>([]);
   const [auctionChecked, setAuctionChecked] = useState<boolean>(false);
-  const [data, setData] = useState<TableFundLockDataProps[]>(TABLE_FUND_LOCK_DATA);
+  const [data, setData] = useState<TableFundLockDataProps[]>([]);
 
   const currencyRef = useRef<HTMLDivElement | null>(null);
   const auctionRef = useRef<HTMLDivElement | null>(null);
@@ -69,14 +72,13 @@ const TableFundLock = () => {
       const releases = convertToRows(res.releases, 'Release', walletAddresses);
       const withdrawals = convertToRows(res.withdrawalRequests, 'Withdraw', walletAddresses);
       setData([...deposits, ...releases, ...withdrawals]);
+      setLoading(false);
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  }, []);
+  }, [ithacaSDK, systemInfo]);
 
   const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
     return data.map(d => {
       const token = walletAddresses[d.token];
-      console.log(dayjs(d.blockTimestamp));
       return {
         orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,
@@ -118,9 +120,14 @@ const TableFundLock = () => {
   }, []);
 
   useEffect(() => {
-    let filterData = currencyFilter(data, currencyArray);
-    filterData = auctionFilter(filterData, auctionArray);
-    setSlicedData(filterData.slice(pageStart, pageEnd));
+    if (data.length) {
+      let filterData = currencyFilter(data, currencyArray);
+      filterData = auctionFilter(filterData, auctionArray);
+      setSlicedData(filterData.slice(pageStart, pageEnd));
+    }
+    else {
+      setSlicedData([])
+    }
   }, [data, currencyArray, pageEnd, pageStart, auctionArray]);
 
   useEscKey(() => {
@@ -329,21 +336,25 @@ const TableFundLock = () => {
               </div>
             </div>
           ))
-        ) : (
-          <p className={styles.emptyTable}>No results found</p>
-        )}
+          )  : isLoading ? (
+            <Container size='loader' margin='ptb-150'>
+              <Loader type='lg' />
+            </Container>
+          ) : (
+            <p className={styles.emptyTable}>No results found</p>
+          )}
       </div>
       {slicedData.length > 0 ? (
         <Flex direction='row-space-between' margin='mt-35'>
           <div></div>
           <Pagination
-            totalItems={data.length}
+            totalItems={data?.length || 0}
             itemsPerPage={pageLimit}
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
         </Flex>
-      ) : null}
+      )  : null }
       {!isAuthenticated && <DisconnectedWallet showButton={false} />}
     </>
   );
