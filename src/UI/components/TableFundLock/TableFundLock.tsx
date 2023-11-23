@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps, TABLE_FUND_LOCK_DATA } from '@/UI/constants/tableFundLock';
+import { TABLE_FUND_LOCK_HEADERS, TableFundLockDataProps } from '@/UI/constants/tableFundLock';
 
 // Utils
 import { AUCTION_LABEL, CURRENCY_PAIR_LABEL, FilterItemProps, renderDate } from '@/UI/utils/TableOrder';
@@ -79,7 +79,6 @@ const TableFundLock = () => {
   const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
     return data.map(d => {
       const token = walletAddresses[d.token];
-      console.log(dayjs(d.blockTimestamp));
       return {
         orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,
