@@ -27,7 +27,7 @@ const DASHBOARD_TABS = [
   {
     id: 'positions',
     label: 'Positions',
-    content: <TableOrder type={TABLE_TYPE.ORDER} cancelOrder={false} description={true} />,
+    content: <TableOrder type={TABLE_TYPE.ORDER} cancelOrder={false} description={false} />,
   },
   {
     id: 'tradeHistory',

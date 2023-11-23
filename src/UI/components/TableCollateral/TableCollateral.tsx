@@ -8,6 +8,7 @@ import Asset from '@/UI/components/Asset/Asset';
 // Styles
 import styles from './TableCollateral.module.scss';
 import { useAppStore } from '@/UI/lib/zustand/store';
+import { formatNumber } from '@/UI/utils/Numbers';
 
 // Types
 type CollateralTableProps = {
@@ -37,10 +38,10 @@ const TableCollateral = ({ collateralSummary, deposit, withdraw, faucet }: Colla
           <div className={styles.cell}>
             <Asset icon={collateralSummary[currency].currencyLogo} label={currency} />
           </div>
-          <div className={styles.cell}>{collateralSummary[currency].walletBalance}</div>
-          <div className={styles.cell}>{collateralSummary[currency].fundLockValue}</div>
-          <div className={styles.cell}>{collateralSummary[currency].settleValue}</div>
-          <div className={styles.cell}>{collateralSummary[currency].orderValue}</div>
+          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].walletBalance), 'string')}</div>
+          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].fundLockValue), 'string')}</div>
+          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].settleValue), 'string')}</div>
+          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].orderValue), 'string')}</div>
           <div className={styles.cell}>
             <Button
               title={`Click to deposit ${currency}`}
