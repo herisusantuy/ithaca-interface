@@ -1,6 +1,18 @@
-const LogoEth = () => {
+// Types
+type LogoEthProps = {
+  className?: string;
+};
+
+const LogoEth = ({ className }: LogoEthProps) => {
   return (
-    <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg
+      className={className}
+      width='16'
+      height='16'
+      viewBox='0 0 16 16'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
       <circle cx='8' cy='8' r='8' fill='#35333E' />
       <path
         d='M7.99961 3.05518L7.92969 3.27395V9.62161L7.99961 9.68587L11.1986 7.94419L7.99961 3.05518Z'
