@@ -7,25 +7,69 @@
 
 .leftPanel,
 .rightPanel {
-  border: rem(1) solid var(--panel-outline, rgba(255, 255, 255, 0.1));
-  background: var(--panel, linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%));
+  background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
   box-shadow:
-    2px 2px 4px 0px rgba(0, 0, 0, 0.15),
-    0px 0px 4px 0px rgba(43, 46, 58, 0.15) inset,
-    0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
+    rem(2) rem(2) rem(4) 0px rgba(0, 0, 0, 0.15),
+    0px 0px rem(4) 0px rgba(43, 46, 58, 0.15) inset,
+    0px 0px rem(15) 0px rgba(43, 46, 58, 0.15) inset;
   backdrop-filter: blur(rem(10));
   border-radius: rem(30);
+
+  &:before {
+    content: '';
+    position: absolute;
+    border-radius: rem(30);
+    top: -(rem(0.5));
+    bottom: -(rem(0.5));
+    right: -(rem(0.5));
+    left: -(rem(0.5));
+    z-index: -1;
+    border: rem(0.5) solid transparent;
+    background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0)) border-box;
+    opacity: 0.2;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+
+  &:after {
+    content: '';
+    background-image: url('../../../assets/noise.png');
+    background-repeat: repeat;
+    position: absolute;
+    opacity: 0.4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: rem(30);
+  }
+
+  > * {
+    z-index: 1;
+    position: relative;
+  }
 }
 
 .leftPanel {
   display: flex;
   flex-direction: column;
-  width: rem(512);
+  width: 36.78%;
+}
+
+.rightPanel {
+  @include spacing(padding, 42, 'left+right');
+  @include spacing(padding, 32, 'top+bottom');
+  flex: 1;
 }
 
 .tab {
   @include spacing(padding, 20, 'left+right');
-  @include spacing(padding, 5, 'top+bottom');
+  transition: $transition_all;
+  padding-top: rem(51);
+  padding-bottom: rem(51);
   flex: 1;
   display: flex;
   align-items: center;
@@ -45,8 +89,8 @@
 
   &:after {
     content: '';
-    height: rem(1);
-    background: var(--white-10);
+    height: rem(0.5);
+    background: #35333e;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -63,7 +107,8 @@
 }
 
 .isActive {
-  background: var(--Selected-fill, linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%));
+  background: linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%);
+  cursor: default;
 
   &:first-child {
     border-top-left-radius: rem(30);
@@ -77,13 +122,14 @@
 .tabInfo {
   display: flex;
   flex-direction: column;
-  width: rem(263);
+  gap: rem(10);
+  width: 60%;
 
   h3 {
+    @include font-size('text-md', 'semibold');
     color: var(--white);
     font-family: $lato;
-    @include spacing(margin, 10, 'bottom');
-    @include font-size('text-md', 'semibold');
+    margin-bottom: 0;
   }
 
   p {
@@ -91,19 +137,12 @@
     font-family: $lato;
     text-align: justify;
     color: var(--white-60);
-    line-height: 140%;
+    line-height: rem(16.8);
   }
 }
 
 .tabChart {
-  width: rem(193);
-}
-
-.rightPanel {
-  @include spacing(padding, 42, 'left+right');
-  @include spacing(padding, 32, 'top+bottom');
-  flex: 1;
-  height: rem(651);
+  width: 40%;
 }
 
 .rightPanelHeader {
