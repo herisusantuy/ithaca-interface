@@ -175,6 +175,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
               />
             </LabeledControl>
 
+            {/** Mising validation */}
             <LabeledControl label='Size'>
               <Input
                 type='number'
@@ -217,7 +218,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
               />
             </LabeledControl>
 
-            {/** Add disabled logic, add wrong network and not connected logic  */}
+            {/** Add disabled logic, add wrong network and not connected logic */}
             <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
               Submit to Auction
             </Button>
