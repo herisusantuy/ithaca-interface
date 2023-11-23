@@ -1,0 +1,9 @@
+.container {
+  label:first-child {
+    @include font-size('text-xs', 'regular');
+    @include spacing(margin, 8, 'bottom');
+    display: inline-flex;
+    color: var(--white-60);
+    font-family: $lato;
+  }
+}
