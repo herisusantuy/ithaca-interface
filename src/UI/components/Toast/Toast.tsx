@@ -6,14 +6,13 @@ import { ToastItemProp } from '@/UI/constants/toast';
 
 type ToastPropType = {
   toastList: ToastItemProp[];
-  position: string;
   autoDelete?: boolean;
   autoDeleteTime?: number;
-  type?: string;
+  position?: string
 };
 
 const Toast = (Props: ToastPropType) => {
-  const { toastList, position, autoDelete = true, autoDeleteTime = 3500, type = 'info' } = Props;
+  const { toastList, autoDelete = true, autoDeleteTime = 3500, position = 'top-right' } = Props;
   const [list, setList] = useState(toastList);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Toast = (Props: ToastPropType) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastList]);
 
-  const renderIcon = () => {
+  const renderIcon = (type: string) => {
     switch (type) {
       case 'info':
         return (
@@ -105,7 +104,7 @@ const Toast = (Props: ToastPropType) => {
               <Close />
             </button>
             <div className={styles.notificationBox}>
-              <div className={styles.notificationImage}>{renderIcon()}</div>
+              <div className={styles.notificationImage}>{renderIcon(toast.type)}</div>
               <div className={styles.notificationDetailContainer}>
                 <p className={styles.notificationTitle}>{toast.title}</p>
                 <p className={styles.notificationMessage}>{toast.message}</p>

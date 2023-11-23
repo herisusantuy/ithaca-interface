@@ -10,14 +10,12 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import { ToastItemProp, generateTestData } from '@/UI/constants/toast';
 
 const ToastTest = () => {
-  const [position, setPosition] = useState('top-right');
-  const [type, setType] = useState('success');
   const [toastList, setToastList] = useState<ToastItemProp[]>([]);
+  const [position, setPosition] = useState<string>('top-right');
 
   const showToast = (position: string, type: string = 'info') => {
-    setToastList([...toastList, ...generateTestData()]);
+    setToastList([...toastList, ...generateTestData(position, type)]);
     setPosition(position);
-    setType(type);
   };
 
   return (
@@ -39,7 +37,7 @@ const ToastTest = () => {
       <Button title='Click to perform action' onClick={() => showToast('bottom-left', 'success')} size='sm'>
         show Toast(bottom-left)
       </Button>
-      <Toast toastList={toastList} type={type} position={position} />
+      <Toast toastList={toastList} position={position} />
     </Flex>
   );
 };
