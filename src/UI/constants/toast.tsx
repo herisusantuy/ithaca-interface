@@ -6,9 +6,10 @@ export type ToastItemProp = {
     hyperLink: string;
     hyperText: string;
   };
+  type: string;
 };
 
-export const generateTestData = () => {
+export const generateTestData = (position: string = 'top-right', type: string = 'info') => {
   const result: ToastItemProp = {
     id: Math.floor(Math.random() * 1000),
     title: 'Transaction Confirmed',
@@ -17,6 +18,7 @@ export const generateTestData = () => {
       hyperLink: '#',
       hyperText: 'Check on Etherscan',
     },
+    type: type
   };
   const resultArray: ToastItemProp[] = [];
   resultArray.push(result);
