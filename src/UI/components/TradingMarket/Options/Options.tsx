@@ -119,6 +119,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         orderPayoff,
       });
     } catch (error) {
+      // Add toast
       console.error(`Order estimation for ${callOrPut} failed`, error);
     }
   };
@@ -128,6 +129,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
     } catch (error) {
+      // Add toast
       console.error('Failed to submit order', error);
     }
   };
