@@ -61,7 +61,7 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "SELL",
-                "size": 10,
+                "size": 1,
                 "strike": 0
             }
         ]
@@ -225,6 +225,87 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "side": "BUY",
                 "size": 1,
                 "strike": -1
+            }
+        ]
+    },{
+        "label": "Straddle",
+        "key": "straddle",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": "BUY",
+                "size": 1,
+                "strike": 0
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": "BUY",
+                "size": 1,
+                "strike": 0
+            }
+
+        ]
+    },
+    {
+        "label": "Strangle",
+        "key": "strangle",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": "BUY",
+                "size": 1,
+                "strike": 1
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": "BUY",
+                "size": 1,
+                "strike": -1
+            }
+
+        ]
+    },
+    {
+        "label": "Call Spread",
+        "key": "call-spread",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": "BUY",
+                "size": 1,
+                "strike": 1
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": "SELL",
+                "size": 1,
+                "strike": 2
+            }
+        ]
+    },
+    {
+        "label": "Butterfly",
+        "key": "butterfly",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": "SELL",
+                "size": 1,
+                "strike": 0
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": "SELL",
+                "size": 1,
+                "strike": 0
             }
         ]
     }
