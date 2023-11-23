@@ -2,6 +2,11 @@
   display: inline-flex !important;
 }
 
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -284,6 +289,10 @@
   padding-right: rem(30) !important;
 }
 
+.pl-18 {
+  padding-left: rem(18) !important;
+}
+
 .width-90 {
   width: 90px !important;
 }
@@ -333,6 +342,11 @@
 
 .fs-xxs {
   @include font-size('text-xxs', 'regular');
+}
+
+.fs-lato-md {
+  @include font-size('text-md', 'regular');
+  font-family: $lato;
 }
 
 .min-width-71 {
