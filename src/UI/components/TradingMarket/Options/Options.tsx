@@ -35,9 +35,6 @@ import {
   createClientOrderId,
 } from '@ithaca-finance/sdk';
 
-// Styles
-import styles from './Options.module.scss';
-
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
