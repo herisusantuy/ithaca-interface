@@ -3,12 +3,13 @@
   @include spacing(padding, 20, 'top+bottom');
   display: flex;
   align-items: center;
-  gap: rem(4);
+  gap: rem(24);
 
   h5 {
     @include font-size('text-md', 'medium');
     color: var(--white-60);
     font-family: $lato;
+    min-width: rem(100);
   }
 }
 
