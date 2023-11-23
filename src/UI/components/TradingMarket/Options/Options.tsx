@@ -12,12 +12,14 @@ import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
+import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { SIDE_OPTIONS, TYPE_OPTIONS } from '@/UI/constants/options';
 
 // Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
@@ -152,46 +154,40 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
 
   return (
     <>
-      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
-        {!compact && <label className={styles.label}>Type</label>}
-        <RadioButton
-          size={compact ? 'compact' : 'regular'}
-          width={compact ? 120 : 160}
-          options={[
-            { option: 'Call', value: 'Call' },
-            { option: 'Put', value: 'Put' },
-          ]}
-          name={compact ? 'callOrPutCompact' : 'callOrPut'}
-          selectedOption={callOrPut}
-          onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
-        />
-
+      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
         {!compact && (
           <>
-            <div>
-              <label className={styles.label}>Side</label>
+            <LabeledControl label='Type'>
               <RadioButton
-                options={[
-                  { option: '+', value: 'BUY' },
-                  { option: '-', value: 'SELL' },
-                ]}
+                size={compact ? 'compact' : 'regular'}
+                width={compact ? 120 : 160}
+                options={TYPE_OPTIONS}
+                name={compact ? 'callOrPutCompact' : 'callOrPut'}
+                selectedOption={callOrPut}
+                onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+              />
+            </LabeledControl>
+
+            <LabeledControl label='Side'>
+              <RadioButton
+                options={SIDE_OPTIONS}
                 name='buyOrSell'
                 orientation='vertical'
                 selectedOption={buyOrSell}
                 onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
               />
-            </div>
-            <div>
-              <label className={styles.label}>Size</label>
+            </LabeledControl>
+
+            <LabeledControl label='Size'>
               <Input
                 type='number'
                 icon={<LogoEth />}
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
-            </div>
-            <div>
-              <label className={styles.label}>Strike</label>
+            </LabeledControl>
+
+            <LabeledControl label='Strike'>
               <DropdownMenu
                 options={strikes}
                 iconEnd={<LogoUsdc />}
@@ -201,28 +197,29 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
                   handleStrikeChange(callOrPut, buyOrSell, getNumber(size), value);
                 }}
               />
-            </div>
-            <div>
-              <label className={styles.label}>Unit Price</label>
+            </LabeledControl>
+
+            <LabeledControl label='Unit Price'>
               <Input
                 type='number'
                 icon={<LogoUsdc />}
                 value={unitPrice}
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
-            </div>
-            <div>
-              <label className={`${styles.textRight} ${styles.label}`}>Collateral</label>
+            </LabeledControl>
+
+            <LabeledControl label='Collateral'>
               <PriceLabel icon={<LogoEth />} label={calcCollateral()} />
-            </div>
-            <div>
-              <label className={`${styles.textRight} ${styles.label}`}>Premium</label>
+            </LabeledControl>
+
+            <LabeledControl label='Premium'>
               <PriceLabel
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
-            </div>
-            {/** Add disabled logic  */}
+            </LabeledControl>
+
+            {/** Add disabled logic, add wrong network and not connected logic  */}
             <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
               Submit to Auction
             </Button>
