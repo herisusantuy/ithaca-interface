@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6);
+
+  p {
+    @include font-size('text-xs', 'regular');
+    display: flex;
+    color: var(--white-60);
+    font-style: italic;
+
+    & span span {
+      color: var(--white);
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: rem(15);
+
+  p {
+    font-style: normal;
+  }
+}

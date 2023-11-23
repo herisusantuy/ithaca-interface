@@ -1,15 +1,26 @@
+// Packages
 import React from 'react';
-import LogoUsdc from '../../Icons/LogoUsdc';
-import Button from '../../Button/Button';
-
-import styles from './StorySummary.module.scss';
-import Flex from '@/UI/layouts/Flex/Flex';
-import LogoEth from '../../Icons/LogoEth';
 import { OrderDetails } from '..';
-import { useAppStore } from '@/UI/lib/zustand/store';
-import { toPrecision } from '@ithaca-finance/sdk';
+
+// Components
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Button from '@/UI/components/Button/Button';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+
+// Layouts
+import Flex from '@/UI/layouts/Flex/Flex';
+
+// Utils
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 
+// SDK
+import { useAppStore } from '@/UI/lib/zustand/store';
+import { toPrecision } from '@ithaca-finance/sdk';
+
+// Styles
+import styles from './StorySummary.module.scss';
+
+// Types
 type Props = {
   showCollateral?: boolean;
   summary?: OrderDetails;

@@ -31,6 +31,7 @@ import {
   createClientOrderId,
   toPrecision,
 } from '@ithaca-finance/sdk';
+import LabeledInput from '../../LabeledInput/LabeledInput';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
@@ -208,9 +209,11 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   const getAPY = () => {
-    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) return '-%';
+    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) {
+      return <span>-%</span>;
+    }
     const apy = calculateAPY(`${currentExpiryDate}`, 'Bet', getNumber(capitalAtRisk), getNumber(targetEarn));
-    return `${apy}%`;
+    return <span>{`${apy}%`}</span>;
   };
 
   useEffect(() => {
@@ -254,57 +257,39 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       </Flex>
 
       {!compact && (
-        <Flex margin='mb-10'>
-          <Slider
-            value={strike}
-            min={strikes[0]}
-            max={strikes[strikes.length - 1]}
-            label={strikes.length}
-            step={100}
-            onChange={strike => {
-              setStrike(strike);
-              handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
-            }}
-            range
-          />
-        </Flex>
+        <Slider
+          value={strike}
+          min={strikes[0]}
+          max={strikes[strikes.length - 1]}
+          label={strikes.length}
+          step={100}
+          onChange={strike => {
+            setStrike(strike);
+            handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
+          }}
+          range
+        />
       )}
 
       {!compact && (
-        <div>
-          <div>
-            <Flex direction='row-center'>
-              <span>Bet</span>
-            </Flex>
-            <div>
-              <Input
-                type='number'
-                value={capitalAtRisk}
-                onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
-                icon={<LogoUsdc />}
-              />
-            </div>
-            <span />
-            <span>Capital At Risk</span>
-          </div>
-          <div>
-            <Flex direction='row-center'>
-              <span>Target Earn</span>
-            </Flex>
-            <div>
-              <Input
-                type='number'
-                value={targetEarn}
-                onChange={({ target }) => handleTargetEarnChange(target.value)}
-                icon={<LogoUsdc />}
-              />
-            </div>
-            <div>
-              <span>Expected Return</span>
-              <span>{getAPY()}</span>
-            </div>
-          </div>
-        </div>
+        <Flex gap='gap-36' margin='mt-13 mb-17'>
+          <LabeledInput label='Bet' lowerLabel='Capital At Risk' labelClassName='justify-end'>
+            <Input
+              type='number'
+              value={capitalAtRisk}
+              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+          </LabeledInput>
+          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return {getAPY()}</span>}>
+            <Input
+              type='number'
+              value={capitalAtRisk}
+              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+          </LabeledInput>
+        </Flex>
       )}
 
       <ChartPayoff
