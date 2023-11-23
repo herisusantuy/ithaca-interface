@@ -205,19 +205,20 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
               />
             </LabeledControl>
 
-            <LabeledControl label='Collateral'>
-              <PriceLabel icon={<LogoEth />} label={calcCollateral()} />
+            <LabeledControl label='Collateral' labelClassName='justify-end'>
+              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
-            <LabeledControl label='Premium'>
+            <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
+                className='height-34 min-width-71'
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
             </LabeledControl>
 
             {/** Add disabled logic, add wrong network and not connected logic  */}
-            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit}>
+            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
               Submit to Auction
             </Button>
           </>
