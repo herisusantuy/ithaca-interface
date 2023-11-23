@@ -23,9 +23,10 @@ type TabCardProps = {
   tabs: MainTab[];
   showInstructions: boolean;
   setShowInstructions: Dispatch<SetStateAction<boolean>>;
+  tabClassName?: string;
 };
 
-const TabCard = ({ className, tabs, showInstructions, setShowInstructions }: TabCardProps) => {
+const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabClassName }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
@@ -34,7 +35,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions }: Tab
         {tabs.map((tab: MainTab) => (
           <div
             key={tab.id}
-            className={`${styles.tab} ${activeTab.id === tab.id ? styles.isActive : ''}`}
+            className={`${styles.tab} ${activeTab.id === tab.id ? styles.isActive : ''} ${tabClassName}`}
             onClick={() => setActiveTab(tab)}
             role='button'
           >

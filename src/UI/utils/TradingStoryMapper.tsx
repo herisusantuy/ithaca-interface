@@ -1,6 +1,9 @@
+// Packages
 import React from 'react';
+
+// Components
 import { Barriers, Bet, BonusTwinWin, Earn, NoGainNoPayin, TradingStoriesProps } from '@/UI/components/TradingStories';
-import { DigitalOptions, Forwards, Options } from '../components/TradingMarket';
+import { DigitalOptions, Forwards, Options } from '@/UI/components/TradingMarket';
 
 const storyMap: {
   [key: string]: {

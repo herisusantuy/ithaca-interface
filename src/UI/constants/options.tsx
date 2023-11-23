@@ -18,3 +18,8 @@ export const SIDE_OPTIONS: OptionProps[] = [
   { option: '+', value: 'BUY' },
   { option: '-', value: 'SELL' },
 ];
+
+export const BET_OPTIONS: OptionProps[] = [
+  { option: 'Inside Range', value: 'INSIDE' },
+  { option: 'Outside Range', value: 'OUTSIDE' },
+];

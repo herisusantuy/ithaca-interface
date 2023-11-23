@@ -57,12 +57,14 @@
   display: flex;
   flex-direction: column;
   width: 36.78%;
+  min-width: 36.78%;
 }
 
 .rightPanel {
   @include spacing(padding, 42, 'left+right');
   @include spacing(padding, 32, 'top+bottom');
   width: 63.22%;
+  min-width: 63.22%;
 }
 
 .tab {
