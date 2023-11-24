@@ -16,3 +16,12 @@
     @include font-size('text-md', 'regular');
   }
 }
+
+.xs {
+  gap: rem(4);
+
+  .label {
+    font-family: $lato;
+    @include font-size('text-xs', 'regular');
+  }
+}

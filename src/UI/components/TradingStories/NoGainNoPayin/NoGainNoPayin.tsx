@@ -1,20 +1,33 @@
+// Packages
 import React, { useEffect, useState } from 'react';
-
-import styles from './NoGainNoPayin.module.scss';
-import LogoUsdc from '../../Icons/LogoUsdc';
-import ChartPayoff from '../../ChartPayoff/ChartPayoff';
 import { OrderDetails, TradingStoriesProps } from '..';
-import LogoEth from '../../Icons/LogoEth';
+
+// Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
-import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import Input from '../../Input/Input';
-import RadioButton from '../../RadioButton/RadioButton';
+
+// Components
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+import Input from '@/UI/components/Input/Input';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import NoGainNoPayinInstructions from '@/UI/components/Instructions/NoGainNoPayinInstructions';
+import Asset from '@/UI/components/Asset/Asset';
+import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+
+// Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+
+// Constants
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { TYPE_OPTIONS } from '@/UI/constants/options';
+
+// SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import StorySummary from '../StorySummary/StorySummary';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -24,14 +37,14 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
   const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
 
-  const [callOrPut, setCallOrPut] = useState<'CALL' | 'PUT'>('CALL');
+  const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
   const [priceReference, setPriceReference] = useState<string>(strikes[3].value);
   const [maxPotentialLoss, setMaxPotentialLoss] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const handleCallOrPutChange = async (callOrPut: 'CALL' | 'PUT') => {
+  const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
     if (!priceReference) return;
     await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
@@ -52,7 +65,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
 
   const handlePriceReferenceChange = async (
     priceReference: string,
-    callOrPut: 'CALL' | 'PUT',
+    callOrPut: 'Call' | 'Put',
     multiplier: number,
     maxPotentialLoss?: number
   ) => {
@@ -62,8 +75,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       return;
     }
 
-    const buyContracts = callOrPut === 'CALL' ? callContracts : putContracts;
-    const sellContracts = callOrPut === 'CALL' ? binaryCallContracts : binaryPutContracts;
+    const buyContracts = callOrPut === 'Call' ? callContracts : putContracts;
+    const sellContracts = callOrPut === 'Call' ? binaryCallContracts : binaryPutContracts;
     const buyContractId = buyContracts[priceReference].contractId;
     const sellContractId = sellContracts[priceReference].contractId;
     const buyContractRefPrice = buyContracts[priceReference].referencePrice;
@@ -118,6 +131,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         orderPayoff,
       });
     } catch (error) {
+      // Add toast
       console.error('Order estimation for No Gain, No Payin’ failed', error);
     }
   };
@@ -127,6 +141,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'No Gain, No Payin’');
     } catch (error) {
+      // Add toast
       console.error('Failed to submit order', error);
     }
   };
@@ -136,52 +151,25 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   }, []);
 
   return (
-    <div>
-      {!compact && showInstructions && (
-        <div className={`${styles.instructions} mb-20`}>
-          <div>
-            i. Select <LogoEth /> Price Reference.
-          </div>
-          <div>
-            ii. Select minimum Expected <LogoEth /> move from <LogoEth /> Price Reference.
-          </div>
-          <div className='ml-48'>
-            (maximum potential <LogoUsdc /> loss if <LogoEth /> Price at Expiry = <LogoEth /> Price Reference)
-          </div>
-          <div>
-            iii. Post minimum expected <LogoEth /> as collateral.
-          </div>
-          <div className='ml-24'>
-            - If <LogoEth /> Price at Expiry <LogoEth /> Price Reference , receive <LogoEth /> Price at Expiry .
-          </div>
-          <div className='ml-24'>
-            - If <LogoEth /> Price at Expiry <LogoEth /> Price Reference, receive collateral back.
-          </div>
-        </div>
-      )}
-      <Flex direction='column' margin={compact ? 'mb-10' : 'mb-14'} gap='gap-12'>
-        <Flex gap='gap-15'>
-          <div>
-            {!compact && <label className={styles.label}>Type</label>}
+    <>
+      {!compact && showInstructions && <NoGainNoPayinInstructions />}
+
+      <Flex direction='column' margin={compact ? 'mb-10' : 'mb-17'} gap='gap-12'>
+        <Flex gap='gap-15' margin='mt-19'>
+          <LabeledControl label='Type' labelClassName='mt-2'>
             <RadioButton
               size={compact ? 'compact' : 'regular'}
               width={compact ? 140 : 186}
-              options={[
-                { option: 'Call', value: 'CALL' },
-                { option: 'Put', value: 'PUT' },
-              ]}
+              options={TYPE_OPTIONS}
               selectedOption={callOrPut}
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
-              onChange={value => handleCallOrPutChange(value as 'CALL' | 'PUT')}
+              onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
             />
-          </div>
+          </LabeledControl>
+
           {!compact && (
             <>
-              <div>
-                <label className={styles.label}>
-                  <LogoEth />
-                  Price Reference
-                </label>
+              <LabeledControl label='Price Reference' icon={<LogoEth />}>
                 <DropdownMenu
                   options={strikes}
                   value={priceReference ? { name: priceReference, value: priceReference } : undefined}
@@ -190,67 +178,64 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                     handlePriceReferenceChange(value, callOrPut, getNumber(multiplier));
                   }}
                 />
-              </div>
-              <div>
-                <label className={styles.label}>Max Potential Loss</label>
+              </LabeledControl>
+
+              <LabeledControl label='Max Potential Loss'>
                 <Input
                   type='number'
                   value={maxPotentialLoss}
                   onChange={({ target }) => handleMaxPotentialLossChange(target.value)}
                 />
-              </div>
-              <div className={styles.priceReference}>
-                Price Reference + Min Upside | Max Loss
-                <div className={styles.amountWrapper}>
-                  <span className={styles.amount}>
-                    {priceReference &&
-                      !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                      getNumberFormat(
-                        toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
-                      )}
-                  </span>
-                  <LogoUsdc />
-                  <span className={styles.currency}>USDC</span>
-                </div>
-              </div>
+              </LabeledControl>
+
+              <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+                <p className='fs-sm'>Price Reference + Min Upside | Max Loss</p>
+                <span className='fs-md-bold color-white'>
+                  {priceReference &&
+                    !isInvalidNumber(getNumber(maxPotentialLoss)) &&
+                    getNumberFormat(
+                      toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
+                    )}
+                </span>
+                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+              </Flex>
             </>
           )}
         </Flex>
+
         {!compact && (
           <Flex gap='gap-15'>
-            <div>
-              <label className={styles.label}>Size (Multiplier)</label>
+            <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
-            </div>
-            <div className={styles.collateralWrapper}>
-              Collateral
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>
+            </LabeledControl>
+
+            <Flex direction='row-center' gap='gap-9' margin='mt-22'>
+              <p className='fs-sm min-width-60'>Collateral</p>
+              <Flex direction='row-center' gap='gap-4'>
+                <span className='fs-md-bold color-white'>
                   {!isInvalidNumber(getNumber(multiplier)) &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&
                     getNumberFormat(
                       toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike)
                     )}
                 </span>
-                <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
-              </div>
-            </div>
+                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+              </Flex>
+            </Flex>
           </Flex>
         )}
       </Flex>
-      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
-        <ChartPayoff
-          compact={compact}
-          chartData={payoffMap ?? CHART_FAKE_DATA}
-          height={chartHeight}
-          showKeys={false}
-          showPortial={!compact}
-        />
-      </div>
+
+      <ChartPayoff
+        compact={compact}
+        chartData={payoffMap ?? CHART_FAKE_DATA}
+        height={chartHeight}
+        showKeys={false}
+        showPortial={!compact}
+      />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
-    </div>
+    </>
   );
 };
 

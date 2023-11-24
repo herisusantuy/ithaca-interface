@@ -7,16 +7,19 @@ import styles from './LabeledControl.module.scss';
 // Types
 type LabeledControlProps = {
   label: string;
+  icon?: ReactNode;
   children: ReactNode;
   labelClassName?: string;
 };
 
-const LabeledControl = ({ label, children, labelClassName }: LabeledControlProps) => {
+const LabeledControl = ({ label, icon, children, labelClassName }: LabeledControlProps) => {
   const labelClass = `${labelClassName || ''}`.trim();
 
   return (
     <div className={styles.container}>
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {icon && icon} {label}
+      </label>
       {children}
     </div>
   );

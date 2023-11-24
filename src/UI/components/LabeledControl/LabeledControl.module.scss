@@ -5,6 +5,8 @@
     @include font-size('text-xs', 'regular');
     @include spacing(margin, 8, 'bottom');
     display: flex;
+    align-items: center;
+    gap: rem(4);
     color: var(--white-60);
     font-family: $lato;
   }
