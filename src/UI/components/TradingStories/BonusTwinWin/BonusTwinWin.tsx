@@ -14,6 +14,8 @@ import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusTwinWinInstructions';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import Asset from '@/UI/components/Asset/Asset';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -194,52 +196,40 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
       {!compact && (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>
           <Flex gap='gap-15'>
-            <div>
-              <label>Price Reference</label>
+            <LabeledControl label='Price Reference'>
               <DropdownMenu disabled options={[]} value={{ name: priceReference, value: priceReference }} />
-            </div>
-            <div>
-              <label>KO Barrier</label>
+            </LabeledControl>
+
+            <LabeledControl label='KO Barrier'>
               <DropdownMenu
                 options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
                 value={koBarrier ? { name: koBarrier, value: koBarrier } : undefined}
                 onChange={handleKOBarrierChange}
               />
-            </div>
-            <div>
-              <div>
-                <LogoEth />
-                Protection Cost Inclusive
-              </div>
-              <div>
-                <span>1740</span>
-                <LogoUsdc />
-                <span>USDC</span>
-              </div>
-            </div>
+            </LabeledControl>
+
+            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+              <LogoEth />
+              <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
+              <span className='fs-md-bold color-white mr-7'>1740</span>
+              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+            </Flex>
           </Flex>
 
           <Flex gap='gap-15'>
-            <div>
-              <label>Size (Multiplier)</label>
+            <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
-            </div>
-            <div>
-              Total Premium
-              <div>
-                <span>400</span>
-                <LogoUsdc />
-                <span>USDC</span>
-              </div>
-            </div>
-            <div>
-              Total Price
-              <div>
-                <span>{orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}</span>
-                <LogoUsdc />
-                <span>USDC</span>
-              </div>
-            </div>
+            </LabeledControl>
+            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+              <p className='fs-sm mr-6'>Total Premium</p>
+              <span className='fs-md-bold color-white'>400</span>
+              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+              <p className='fs-sm ml-19 mr-10'>Total Price</p>
+              <span className='fs-md-bold color-white'>
+                {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+              </span>
+              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+            </Flex>
           </Flex>
         </Flex>
       )}
