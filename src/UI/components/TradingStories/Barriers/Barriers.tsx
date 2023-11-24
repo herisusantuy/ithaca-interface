@@ -1,20 +1,32 @@
+// Packages
 import React, { useEffect, useState } from 'react';
-
-import styles from './Barriers.module.scss';
-import LogoUsdc from '../../Icons/LogoUsdc';
-import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { OrderDetails, TradingStoriesProps } from '..';
-import LogoEth from '../../Icons/LogoEth';
+
+// Components
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+import Input from '@/UI/components/Input/Input';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import BarrierInstructions from '@/UI/components/Instructions/BarrierInstructions';
+import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import BarrierDescription from '@/UI/components/Instructions/BarrierDescription';
+import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+
+// Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
-import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import Input from '../../Input/Input';
-import RadioButton from '../../RadioButton/RadioButton';
+
+// Constants
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { IN_OUT_OPTIONS, SIDE_OPTIONS, TYPE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
+
+// Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+
+// SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
-import StorySummary from '../StorySummary/StorySummary';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -42,6 +54,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     if (isValidStrike) strikeArr.push(currStrike);
     return strikeArr;
   }, []);
+
   const barrierStrikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
     const isValidStrike = strike
       ? upOrDown === 'UP'
@@ -141,27 +154,32 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyCallContract = callContracts[strike];
         const sellCallContract = callContracts[barrier];
         const sellBinaryCallContract = binaryCallContracts[barrier];
+
         const buyCallLeg: Leg = {
           contractId: buyCallContract.contractId,
           quantity: `${size}`,
           side: buyOrSell,
         };
+
         const sellCallLeg: Leg = {
           contractId: sellCallContract.contractId,
           quantity: `${size}`,
           side: buyOrSell === 'BUY' ? 'SELL' : 'BUY',
         };
+
         const sellBinaryCallLeg: Leg = {
           contractId: sellBinaryCallContract.contractId,
           quantity: `${size * (getNumber(barrier) - getNumber(strike))}`,
           side: buyOrSell === 'BUY' ? 'SELL' : 'BUY',
         };
+
         legs = [buyCallLeg, sellCallLeg, sellBinaryCallLeg];
         referencePrices = [
           buyCallContract.referencePrice,
           sellCallContract.referencePrice,
           sellBinaryCallContract.referencePrice,
         ];
+
         estimatePayoffData = [
           {
             ...buyCallContract,
@@ -189,11 +207,13 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           quantity: `${size}`,
           side: buyOrSell,
         };
+
         const buyBinaryPutLeg: Leg = {
           contractId: buyBinaryPutContract.contractId,
           quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
           side: buyOrSell,
         };
+
         legs = [buyPutLeg, buyBinaryPutLeg];
         referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
         estimatePayoffData = [
@@ -212,21 +232,25 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         const buyPutContract = putContracts[strike];
         const sellPutContract = putContracts[barrier];
         const sellBinaryPutContract = binaryPutContracts[barrier];
+
         const buyPutLeg: Leg = {
           contractId: buyPutContract.contractId,
           quantity: `${size}`,
           side: buyOrSell,
         };
+
         const sellPutLeg: Leg = {
           contractId: sellPutContract.contractId,
           quantity: `${size}`,
           side: buyOrSell === 'BUY' ? 'SELL' : 'BUY',
         };
+
         const sellBinaryPutLeg: Leg = {
           contractId: sellBinaryPutContract.contractId,
           quantity: `${size * (getNumber(strike) - getNumber(barrier))}`,
           side: buyOrSell === 'BUY' ? 'SELL' : 'BUY',
         };
+
         legs = [buyPutLeg, sellPutLeg, sellBinaryPutLeg];
         referencePrices = [
           buyPutContract.referencePrice,
@@ -274,6 +298,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         orderPayoff,
       });
     } catch (error) {
+      // Add toast
       console.error('Order estimation for barriers failed', error);
     }
   };
@@ -283,6 +308,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Barriers');
     } catch (error) {
+      // Add toast
       console.error('Failed to submit order', error);
     }
   };
@@ -292,49 +318,31 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   }, []);
 
   return (
-    <div>
-      {!compact && showInstructions && (
-        <div className={styles.instructions}>
-          <div>i. Select Desired Direction</div>
-          <div>
-            ii. Will <LogoEth /> move ‘a lot’? ( ‘Knock IN’ )
-          </div>
-          <div className='ml-14'>
-            Will <LogoEth /> move ‘not too much’? ( ‘Knock OUT’ )
-          </div>
-          <div>iii. Call | Put</div>
-        </div>
-      )}
+    <>
+      {!compact && showInstructions && <BarrierInstructions />}
       {compact ? (
         <Flex gap='gap-3' margin='mb-10'>
           <RadioButton
             size={compact ? 'compact' : 'regular'}
-            options={[
-              { option: '+', value: 'BUY' },
-              { option: '-', value: 'SELL' },
-            ]}
+            options={SIDE_OPTIONS}
             selectedOption={buyOrSell}
             name='buyOrSellCompact'
             orientation='vertical'
             onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
           />
+
           <RadioButton
             size={compact ? 'compact' : 'regular'}
-            options={[
-              { option: 'UP', value: 'UP' },
-              { option: 'DOWN', value: 'DOWN' },
-            ]}
+            options={UP_DOWN_OPTIONS}
             selectedOption={upOrDown}
             name='upOrDownCompact'
             orientation='vertical'
             onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
           />
+
           <RadioButton
             size={compact ? 'compact' : 'regular'}
-            options={[
-              { option: 'IN', value: 'IN' },
-              { option: 'OUT', value: 'OUT' },
-            ]}
+            options={IN_OUT_OPTIONS}
             selectedOption={inOrOut}
             name='inOrOutCompact'
             orientation='vertical'
@@ -343,16 +351,24 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         </Flex>
       ) : (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
-          <Flex gap='gap-10'>
-            <div>
-              <label className={styles.label}>Side</label>
+          <Flex direction='row-center' gap='gap-10'>
+            {/** Needs hooking up */}
+            <LabeledControl label='Type'>
+              <RadioButton
+                size={compact ? 'compact' : 'regular'}
+                width={compact ? 140 : 186}
+                options={TYPE_OPTIONS}
+                selectedOption={undefined}
+                name='type'
+                onChange={() => {}}
+              />
+            </LabeledControl>
+
+            <LabeledControl label='Side'>
               <Flex gap='gap-10'>
                 <RadioButton
                   width={42}
-                  options={[
-                    { option: '+', value: 'BUY' },
-                    { option: '-', value: 'SELL' },
-                  ]}
+                  options={SIDE_OPTIONS}
                   selectedOption={buyOrSell}
                   name='buyOrSell'
                   orientation='vertical'
@@ -360,98 +376,74 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                 />
                 <RadioButton
                   width={50}
-                  options={[
-                    { option: 'UP', value: 'UP' },
-                    { option: 'DOWN', value: 'DOWN' },
-                  ]}
+                  options={UP_DOWN_OPTIONS}
                   selectedOption={upOrDown}
                   name='upOrDown'
                   orientation='vertical'
                   onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
                 />
               </Flex>
-            </div>
-            <div>
-              <label className={styles.label}>Strike</label>
+            </LabeledControl>
+
+            <LabeledControl label='Strike'>
               <DropdownMenu
                 options={strikes.map(strike => ({ name: strike, value: strike }))}
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={handleStrikeChange}
               />
-            </div>
-            <div className={styles.collateralWrapper}>Knock</div>
-            <div className={styles.collateralWrapper}>
+            </LabeledControl>
+
+            <p className='mt-22'>Knock</p>
+
+            <div className='mt-22'>
               <RadioButton
                 width={50}
-                options={[
-                  { option: 'IN', value: 'IN' },
-                  { option: 'OUT', value: 'OUT' },
-                ]}
+                options={IN_OUT_OPTIONS}
                 selectedOption={inOrOut}
                 name='inOrOut'
                 orientation='vertical'
                 onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
               />
             </div>
-            <div className={styles.collateralWrapper}>@</div>
-            <div>
-              <label className={styles.label}>Barrier</label>
+
+            <p className='mt-22'>@</p>
+
+            <LabeledControl label='Barrier'>
               <DropdownMenu
                 options={barrierStrikes.map(strike => ({ name: strike, value: strike }))}
                 value={barrier ? { name: barrier, value: barrier } : undefined}
                 onChange={handleBarrierChange}
               />
-            </div>
-            <div>
-              <label className={styles.label}>Size</label>
+            </LabeledControl>
+
+            <LabeledControl label='Size'>
               <Input type='number' value={size} onChange={({ target }) => handleSizeChange(target.value)} />
-            </div>
+            </LabeledControl>
           </Flex>
-          <div className={styles.calculationWrapper}>
-            <div className={styles.calculation}>
-              Total Premium
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>
-                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
-                </span>
-                <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
-              </div>
-            </div>
-            <div className={styles.calculation}>
-              <span className={styles.italic}>Unit Price</span>
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>{unitPrice}</span>
-                <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
-              </div>
-            </div>
-          </div>
+
+          <Flex direction='row-center'>
+            <p className='fs-lato-sm mr-14'>Total Premium</p>
+            <p className='fs-md-bold mr-4'>{orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}</p>
+            <LogoUsdc />
+            <p className='ml-32 fs-lato-sm-italic mr-12'>Unit Price</p>
+            <p className='mr-4 fs-roboto-md-italic'>{unitPrice}</p>
+            <LogoUsdc />
+          </Flex>
         </Flex>
       )}
-      {!compact && showInstructions && (
-        <div className={`${styles.additionalInstructions} mb-16`}>
-          <div>
-            BUY UP and IN Call if <LogoEth /> will end up at expiry UP from the strike price and NOT INside {'<'} the
-            barrier, if not, premium lost.
-          </div>
-          <div>
-            ( Sell and earn premium if <LogoEth /> at expiry ends up below that strike or above the strike but still
-            below the barrier )
-          </div>
-        </div>
-      )}
-      <div className={!compact && !showInstructions ? 'mt-40' : ''}>
-        <ChartPayoff
-          compact={compact}
-          chartData={payoffMap ?? CHART_FAKE_DATA}
-          height={chartHeight}
-          showKeys={false}
-          showPortial={!compact}
-        />
-      </div>
+
+      {!compact && showInstructions && <BarrierDescription />}
+
+      <ChartPayoff
+        compact={compact}
+        chartData={payoffMap ?? CHART_FAKE_DATA}
+        height={chartHeight}
+        showKeys={false}
+        showPortial={!compact}
+      />
+
       {!compact && <StorySummary showCollateral summary={orderDetails} onSubmit={handleSubmit} />}
-    </div>
+    </>
   );
 };
 
