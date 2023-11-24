@@ -37,7 +37,7 @@ const NoGainNoPayinInstructions = () => {
       <p className='pl-18'>
         - If <LogoEth /> Price at Expiry
         <ChevronRightHighlighted />
-        <LogoEth className='ml-12' />
+        <LogoEth className='ml-6' />
         Price Reference <Add />
         <span className='flex-column-center'>
           <span className='color-white-30 hide-psuedo p-0'>min Upside</span>
@@ -52,7 +52,7 @@ const NoGainNoPayinInstructions = () => {
       </p>
       <p className='pl-18'>
         - If <LogoEth /> Price at Expiry <ChevronLeftHighlighted />
-        <LogoEth className='ml-12' />
+        <LogoEth className='ml-6' />
         Price Reference, receive collateral back.
       </p>
     </div>

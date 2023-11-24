@@ -1,7 +1,7 @@
 const ChevronLeftHighlighted = () => {
   return (
     <svg
-      className='width-12 height-25'
+      className='width-12 height-25 ml-6'
       width='12'
       height='25'
       viewBox='0 0 12 25'
