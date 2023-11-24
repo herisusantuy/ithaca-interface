@@ -31,7 +31,7 @@ import {
   createClientOrderId,
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
-import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
+import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 
 type PositionBuilderRowProps = {
   title: string;

@@ -10,7 +10,7 @@ import Remove from '@/UI/components/Icons/Remove';
 
 // Styles
 import styles from './TableStrategy.module.scss';
-import { PositionBuilderStrategy } from '@/pages/trading/pro/position-builder';
+import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import Dot from '../Dot/Dot';
 import { formatNumber } from '@/UI/utils/Numbers';
 

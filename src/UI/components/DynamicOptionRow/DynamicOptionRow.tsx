@@ -22,7 +22,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 // Styles
 import styles from './DynamicOptionRow.module.scss';
 import { StrategyLeg } from '@/UI/constants/prepackagedStrategies';
-import { DynamicOptionStrategy } from '@/pages/trading/pro/dynamic-option-strategies';
+import { DynamicOptionStrategy } from '@/pages/trading/dynamic-option-strategies';
 import { Leg } from '@ithaca-finance/sdk';
 import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
