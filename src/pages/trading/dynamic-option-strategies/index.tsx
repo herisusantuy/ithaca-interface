@@ -186,7 +186,7 @@ const Index = () => {
       <Main>
         <Container>
           <ReadyState>
-            <TradingLayout isLite={false} />
+            <TradingLayout/>
             <Sidebar
               leftPanel={
                 <>

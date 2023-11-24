@@ -1,6 +1,12 @@
 // Packages
 import { useState } from 'react';
 
+// Layout
+import Main from '@/UI/layouts/Main/Main';
+import Container from '@/UI/layouts/Container/Container';
+import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
+import Flex from '@/UI/layouts/Flex/Flex';
+
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 import Asset from '@/UI/components/Asset/Asset';
@@ -9,24 +15,18 @@ import LabelValue from '@/UI/components/LabelValue/LabelValue';
 import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
 import TabCard from '@/UI/components/TabCard/TabCard';
 
-// Layout
-import Main from '@/UI/layouts/Main/Main';
-import Container from '@/UI/layouts/Container/Container';
-import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
-import Flex from '@/UI/layouts/Flex/Flex';
-
 // Constants
-import { TRADING_MARKET_TABS } from '@/UI/constants/tabCard';
+import { TRADING_STORIES_TABS } from '@/UI/constants/tabCard';
 
 const Index = () => {
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   return (
     <>
       <Meta />
       <Main>
         <Container>
-          <TradingLayout isLite={true} />
+          <TradingLayout/>
           <Flex gap='gap-12'>
             <Asset icon={<LogoEth />} label='ETH' />
             <LabelValue label='Expiry Date' value='10Nov23' hasDropdown={true} />
@@ -35,7 +35,8 @@ const Index = () => {
           </Flex>
           <TabCard
             className='mt-39'
-            tabs={TRADING_MARKET_TABS}
+            tabClassName='ptb-15 plr-20'
+            tabs={TRADING_STORIES_TABS}
             showInstructions={showInstructions}
             setShowInstructions={setShowInstructions}
           />

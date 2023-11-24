@@ -14,22 +14,12 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/trading/pro/position-builder',
+        destination: '/trading/position-builder',
         permanent: true,
       },
       {
         source: '/trading',
-        destination: '/trading/pro/position-builder',
-        permanent: true,
-      },
-      {
-        source: '/trading/lite',
-        destination: '/trading/pro/position-builder',
-        permanent: true,
-      },
-      {
-        source: '/trading/pro',
-        destination: '/trading/pro/position-builder',
+        destination: '/trading/position-builder',
         permanent: true,
       },
     ];
