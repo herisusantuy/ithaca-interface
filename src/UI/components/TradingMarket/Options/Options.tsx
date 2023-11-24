@@ -13,6 +13,7 @@ import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -34,6 +35,7 @@ import {
   calculateNetPrice,
   createClientOrderId,
 } from '@ithaca-finance/sdk';
+import { ToastItemProp } from '@/UI/constants/toast';
 
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -48,6 +50,11 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  // Toast Status
+  const [position, setPosition] = useState('top-right');
+  const [type, setType] = useState('success');
+  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -123,10 +130,24 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     }
   };
 
+  const showToast = (newToast: ToastItemProp, position: string) => {
+    setToastList([...toastList, newToast]);
+    setPosition(position);
+  };
+
   const handleSubmit = async () => {
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
       // Add toast
       console.error('Failed to submit order', error);
@@ -225,7 +246,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
-
+      <Toast toastList={toastList} position={position} autoDeleteTime={500000} />
       <ChartPayoff
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
