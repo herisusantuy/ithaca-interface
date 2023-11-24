@@ -1,20 +1,30 @@
+// Packages
 import React, { useEffect, useState } from 'react';
-
-import styles from './BonusTwinWin.module.scss';
-import LogoUsdc from '../../Icons/LogoUsdc';
-import ChartPayoff from '../../ChartPayoff/ChartPayoff';
-import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { OrderDetails, TradingStoriesProps } from '..';
-import LogoEth from '../../Icons/LogoEth';
+
+// Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
-import DropdownMenu from '../../DropdownMenu/DropdownMenu';
-import Input from '../../Input/Input';
-import RadioButton from '../../RadioButton/RadioButton';
+
+// Components
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import LogoEth from '@/UI/components/Icons/LogoEth';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+import Input from '@/UI/components/Input/Input';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusTwinWinInstructions';
+import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+
+// Constants
+import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+
+// Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+
+// SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
-import StorySummary from '../StorySummary/StorySummary';
 
 const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
@@ -69,21 +79,25 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     const buyPutContract = putContracts[priceReference];
     const sellPutContract = putContracts[koBarrier];
     const sellBinaryPutContract = binaryPutContracts[koBarrier];
+
     const buyForwardLeg: Leg = {
       contractId: buyForwardContract.contractId,
       quantity: `${multiplier}`,
       side: 'BUY',
     };
+
     const buyPutLeg: Leg = {
       contractId: buyPutContract.contractId,
       quantity: `${isTwinWin ? 2 * multiplier : multiplier}`,
       side: 'BUY',
     };
+
     const sellPutLeg: Leg = {
       contractId: sellPutContract.contractId,
       quantity: `${isTwinWin ? 2 * multiplier : multiplier}`,
       side: 'SELL',
     };
+
     const sellBinaryPutLeg: Leg = {
       contractId: sellBinaryPutContract.contractId,
       quantity: `${isTwinWin ? 2 * multiplier * priceBarrierDiff : multiplier * priceBarrierDiff}`,
@@ -91,6 +105,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     };
 
     const legs = [buyForwardLeg, buyPutLeg, sellPutLeg, sellBinaryPutLeg];
+
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: calculateNetPrice(
@@ -139,6 +154,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
         orderPayoff,
       });
     } catch (error) {
+      // Add toast
       console.error(`Order estimation for ${bonusOrTwinWin} failed`, error);
     }
   };
@@ -148,6 +164,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, bonusOrTwinWin);
     } catch (error) {
+      // Add toast
       console.error('Failed to submit order', error);
     }
   };
@@ -157,7 +174,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
   }, []);
 
   return (
-    <div>
+    <>
       <Flex margin={compact ? 'mb-10' : 'mb-12'}>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
@@ -171,81 +188,72 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
           onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
         />
       </Flex>
-      {!compact && showInstructions && (
-        <div className={styles.instructions}>
-          <div>
-            i. Select <LogoEth /> Price Reference.
-          </div>
-          <div>
-            ii. Select desired <LogoEth /> Downside Protection Level.
-          </div>
-          <div>iii. Protection extinguished at Knock Out Barrier.</div>
-        </div>
-      )}
+
+      {!compact && showInstructions && <BonusTwinWinInstructions />}
+
       {!compact && (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>
           <Flex gap='gap-15'>
             <div>
-              <label className={styles.label}>Price Reference</label>
+              <label>Price Reference</label>
               <DropdownMenu disabled options={[]} value={{ name: priceReference, value: priceReference }} />
             </div>
             <div>
-              <label className={styles.label}>KO Barrier</label>
+              <label>KO Barrier</label>
               <DropdownMenu
                 options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
                 value={koBarrier ? { name: koBarrier, value: koBarrier } : undefined}
                 onChange={handleKOBarrierChange}
               />
             </div>
-            <div className={styles.collateralWrapper}>
-              <div className={styles.amountWrapper}>
+            <div>
+              <div>
                 <LogoEth />
                 Protection Cost Inclusive
               </div>
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>1740</span>
+              <div>
+                <span>1740</span>
                 <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
+                <span>USDC</span>
               </div>
             </div>
           </Flex>
+
           <Flex gap='gap-15'>
             <div>
-              <label className={styles.label}>Size (Multiplier)</label>
+              <label>Size (Multiplier)</label>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </div>
-            <div className={styles.collateralWrapper}>
+            <div>
               Total Premium
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>400</span>
+              <div>
+                <span>400</span>
                 <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
+                <span>USDC</span>
               </div>
             </div>
-            <div className={styles.collateralWrapper}>
+            <div>
               Total Price
-              <div className={styles.amountWrapper}>
-                <span className={styles.amount}>
-                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
-                </span>
+              <div>
+                <span>{orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}</span>
                 <LogoUsdc />
-                <span className={styles.currency}>USDC</span>
+                <span>USDC</span>
               </div>
             </div>
           </Flex>
         </Flex>
       )}
-      <div className={!compact && !showInstructions ? 'mt-24' : ''}>
-        <ChartPayoff
-          compact={compact}
-          chartData={payoffMap ?? CHART_FAKE_DATA}
-          height={chartHeight}
-          showKeys={false}
-          showPortial={!compact}
-        />
-      </div>
+
+      <ChartPayoff
+        compact={compact}
+        chartData={payoffMap ?? CHART_FAKE_DATA}
+        height={chartHeight}
+        showKeys={false}
+        showPortial={!compact}
+      />
+
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
-    </div>
+    </>
   );
 };
 
