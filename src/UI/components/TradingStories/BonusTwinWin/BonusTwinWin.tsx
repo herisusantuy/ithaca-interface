@@ -19,6 +19,7 @@ import Asset from '@/UI/components/Asset/Asset';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { BONUS_TWIN_WIN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
@@ -181,10 +182,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
         <RadioButton
           size={compact ? 'compact' : 'regular'}
           width={compact ? 140 : 186}
-          options={[
-            { option: 'Bonus', value: 'Bonus' },
-            { option: 'Twin-Win', value: 'Twin Win' },
-          ]}
+          options={BONUS_TWIN_WIN_OPTIONS}
           selectedOption={bonusOrTwinWin}
           name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
           onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}

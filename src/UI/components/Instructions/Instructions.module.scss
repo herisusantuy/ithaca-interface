@@ -72,3 +72,15 @@
     display: none;
   }
 }
+
+.description {
+  margin-bottom: rem(16);
+
+  p {
+    @include font-size('text-sm', 'regular');
+    display: flex;
+    align-items: center;
+    gap: rem(3);
+    color: var(--white-60);
+  }
+}

@@ -251,6 +251,10 @@
   margin-top: rem(40) !important;
 }
 
+.mr-4 {
+  margin-right: rem(4) !important;
+}
+
 .mr-6 {
   margin-right: rem(6) !important;
 }
@@ -261,6 +265,14 @@
 
 .mr-10 {
   margin-right: rem(10) !important;
+}
+
+.mr-12 {
+  margin-right: rem(12) !important;
+}
+
+.mr-14 {
+  margin-right: rem(14) !important;
 }
 
 .mr-50 {
@@ -291,13 +303,26 @@
   margin-left: rem(24) !important;
 }
 
+.ml-32 {
+  margin-left: rem(32) !important;
+}
+
 .ml-48 {
   margin-left: rem(48) !important;
+}
+
+.ml-54 {
+  margin-left: rem(54) !important;
 }
 
 .mtb-20 {
   margin-top: rem(20) !important;
   margin-bottom: rem(20) !important;
+}
+
+.mlr-6 {
+  margin-left: rem(6) !important;
+  margin-right: rem(6) !important;
 }
 
 .p-0 {
@@ -341,6 +366,10 @@
 .plr-30 {
   padding-left: rem(30) !important;
   padding-right: rem(30) !important;
+}
+
+.pl-14 {
+  padding-left: rem(14) !important;
 }
 
 .pl-54 {
@@ -418,6 +447,23 @@
 .fs-lato-md {
   @include font-size('text-md', 'regular');
   font-family: $lato;
+}
+
+.fs-lato-sm {
+  @include font-size('text-sm', 'regular');
+  font-family: $lato;
+}
+
+.fs-lato-sm-italic {
+  @include font-size('text-sm', 'regular');
+  font-family: $lato;
+  font-style: italic;
+}
+
+.fs-roboto-md-italic {
+  @include font-size('text-md', 'medium');
+  font-family: $roboto;
+  font-style: italic;
 }
 
 .min-width-71 {
