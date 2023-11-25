@@ -1,5 +1,5 @@
 // Packages
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, YAxis } from 'recharts';
 
 // Components
@@ -72,7 +72,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
-  const [gradient, setGradient] = useState();
+  const [gradient, setGradient] = useState<ReactElement>();
 
   const baseValue = 0;
   const colorArray = [
