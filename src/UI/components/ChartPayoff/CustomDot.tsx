@@ -12,7 +12,7 @@ type CustomDotProps = {
   dataSize: number;
   special: SpecialDotLabel[];
   index?: number;
-  compact?: number;
+  compact?: boolean;
   dataList: PayoffDataProps[];
   updatePosition: (val: number) => void;
   updatePnlLabelPosition: (val: number) => void;

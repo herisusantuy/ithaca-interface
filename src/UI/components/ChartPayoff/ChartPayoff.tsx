@@ -254,7 +254,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                 dot={
                     <CustomDot
                       base={baseValue}
-                      compact={compact}
+                      compact={compact || false}
                       dataSize={modifiedData.length}
                       special={breakPoints}
                       dataList={modifiedData}
