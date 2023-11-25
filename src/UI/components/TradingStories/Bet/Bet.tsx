@@ -292,6 +292,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       )}
 
       <ChartPayoff
+        // id='bet-chart'
+        id={`bet-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

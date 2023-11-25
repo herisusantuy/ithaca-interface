@@ -500,7 +500,7 @@ const COMPONENT_GROUPS = [
         name: 'ChartPayoff',
         component: (
           <Panel margin='p-30'>
-            <ChartPayoff chartData={CHART_FAKE_DATA} height={300} />
+            <ChartPayoff chartData={CHART_FAKE_DATA} height={300} id='example-chart' />
           </Panel>
         ),
         status: 'In Progress',
