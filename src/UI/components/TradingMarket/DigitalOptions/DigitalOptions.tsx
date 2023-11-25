@@ -222,8 +222,9 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
-
       <ChartPayoff
+        // id='digital-chart'
+        id={`digital-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

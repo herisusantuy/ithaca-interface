@@ -435,6 +435,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       {!compact && showInstructions && <BarrierDescription />}
 
       <ChartPayoff
+        // id='barriers-chart'
+        id={`barriers-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

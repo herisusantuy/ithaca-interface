@@ -233,6 +233,8 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
       )}
 
       <ChartPayoff
+        // id='bonus-chart'
+        id={`bonus-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

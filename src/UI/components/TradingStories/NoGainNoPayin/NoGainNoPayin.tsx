@@ -227,6 +227,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       </Flex>
 
       <ChartPayoff
+        id={`nogain-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

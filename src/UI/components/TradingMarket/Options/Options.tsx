@@ -227,6 +227,8 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
       </Flex>
 
       <ChartPayoff
+        // id='options-chart'
+        id={`options-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}
