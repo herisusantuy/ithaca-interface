@@ -13,7 +13,7 @@ type ToastPropType = {
 };
 
 const Toast = (Props: ToastPropType) => {
-  const { toastList, autoDelete = true, autoDeleteTime = 3500, position = 'top-right' } = Props;
+  const { toastList, autoDelete = true, autoDeleteTime = 35000, position = 'top-right' } = Props;
   const [list, setList] = useState(toastList);
   const [mounted, setMounted] = useState(false);
 

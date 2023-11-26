@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Packages
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
 
 // Layouts
@@ -17,7 +17,6 @@ import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
-import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -36,7 +35,7 @@ import {
   calculateNetPrice,
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
-import useToast from '@/UI/hooks/useToast';
+import { ToastCTX } from '@/UI/lib/context/ToastProvider';
 
 const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -52,7 +51,7 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const { toastList, position, showToast } = useToast();
+  const { showToast } = useContext(ToastCTX);
 
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
@@ -242,7 +241,6 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
-      <Toast toastList={toastList} position={position} />
       <ChartPayoff
         // id='digital-chart'
         id={`digital-chart${compact ? '-compact' : ''}`}
