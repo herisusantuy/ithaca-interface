@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export type ToastItemProp = {
   id: number;
   title: string;

@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, OrderPayoff, toPrecision } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -38,7 +39,7 @@ import styles from './position-builder.module.scss';
 import Modal from '@/UI/components/Modal/Modal';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Toast from '@/UI/components/Toast/Toast';
-import useToast from '@/UI/hooks/useToast';
+
 
 // Types
 export interface PositionBuilderStrategy {

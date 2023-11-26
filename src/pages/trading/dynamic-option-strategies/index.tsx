@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, OrderPayoff, toPrecision } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -24,6 +25,7 @@ import Container from '@/UI/layouts/Container/Container';
 import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Styles
 import styles from './dynamic-option-strategies.module.scss';
@@ -67,6 +69,7 @@ const Index = () => {
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
+  const { toastList, position, showToast } = useToast();
 
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
@@ -175,7 +178,25 @@ const Index = () => {
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -186,7 +207,7 @@ const Index = () => {
       <Main>
         <Container>
           <ReadyState>
-            <TradingLayout/>
+            <TradingLayout />
             <Sidebar
               leftPanel={
                 <>
@@ -232,8 +253,8 @@ const Index = () => {
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>
-                    {strategy.strategies.length ?
-                      (<>
+                    {strategy.strategies.length ? (
+                      <>
                         <div className={styles.parent}>
                           <>
                             {sections.map((section, index) => (
@@ -255,9 +276,17 @@ const Index = () => {
                             />
                           );
                         })}
-                      </>) : <div className={styles.strategiesPlaceholder}></div>}
+                      </>
+                    ) : (
+                      <div className={styles.strategiesPlaceholder}></div>
+                    )}
                     <div>
-                      <Button title='Click to add Position ' size='sm' variant='secondary' onClick={() => addPosition()}>
+                      <Button
+                        title='Click to add Position '
+                        size='sm'
+                        variant='secondary'
+                        onClick={() => addPosition()}
+                      >
                         <Plus /> Add Position
                       </Button>
                       {positionBuilderStrategies.length > 0 && (
@@ -275,27 +304,30 @@ const Index = () => {
                 </>
               }
               orderSummary={
-                <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
-                  collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
-                  collatarelUSDC={
-                    orderSummary
-                      ? formatNumber(
-                        toPrecision(
-                          orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                          currencyPrecision.strike
-                        ),
-                        'string'
-                      )
-                      : '-'
-                  }
-                  premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
-                  fee={1.5}
-                  submitAuction={() => {
-                    if (!orderSummary) return;
-                    submitToAuction(orderSummary.order, 'Position Builder');
-                  }}
-                />
+                <>
+                  <OrderSummary
+                    limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
+                    collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                    collatarelUSDC={
+                      orderSummary
+                        ? formatNumber(
+                            toPrecision(
+                              orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                              currencyPrecision.strike
+                            ),
+                            'string'
+                          )
+                        : '-'
+                    }
+                    premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
+                    fee={1.5}
+                    submitAuction={() => {
+                      if (!orderSummary) return;
+                      submitToAuction(orderSummary.order, 'Position Builder');
+                    }}
+                  />
+                  <Toast toastList={toastList} position={position} />
+                </>
               }
               rightPanel={
                 <>

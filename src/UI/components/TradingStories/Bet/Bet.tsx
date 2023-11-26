@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
@@ -14,6 +16,7 @@ import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySumma
 import BetInstructions from '@/UI/components/Instructions/BetInstructions';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -33,6 +36,7 @@ import {
   createClientOrderId,
   toPrecision,
 } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
@@ -47,6 +51,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const { toastList, position, showToast } = useToast();
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -204,8 +209,25 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Bet');
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -302,6 +324,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+
+      <Toast toastList={toastList} position={position} />
     </>
   );
 };

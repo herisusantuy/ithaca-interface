@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import { useEffect, useState } from 'react';
 

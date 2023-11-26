@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
@@ -16,6 +17,7 @@ import NoGainNoPayinInstructions from '@/UI/components/Instructions/NoGainNoPayi
 import Asset from '@/UI/components/Asset/Asset';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -28,6 +30,7 @@ import { TYPE_OPTIONS } from '@/UI/constants/options';
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -43,6 +46,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const { toastList, position, showToast } = useToast();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -140,8 +144,25 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'No Gain, No Payin’');
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -236,6 +257,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+
+      <Toast toastList={toastList} position={position} />
     </>
   );
 };
