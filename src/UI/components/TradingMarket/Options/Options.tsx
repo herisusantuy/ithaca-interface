@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
@@ -51,7 +52,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const {toastList, position, showToast} = useToast();
+  const { toastList, position, showToast } = useToast();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -122,11 +123,9 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         orderPayoff,
       });
     } catch (error) {
-      // Add toast
       console.error(`Order estimation for ${callOrPut} failed`, error);
     }
   };
-
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
@@ -142,7 +141,6 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         'top-right'
       );
     } catch (error) {
-      // Add toast
       showToast(
         {
           id: Math.floor(Math.random() * 1000),
@@ -150,7 +148,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           message: 'Transaction Failed, please try again.',
           type: 'error',
         },
-        'top-right',
+        'top-right'
       );
       console.error('Failed to submit order', error);
     }

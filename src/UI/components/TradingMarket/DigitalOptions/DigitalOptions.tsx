@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
@@ -119,7 +120,6 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
         orderPayoff,
       });
     } catch (error) {
-      // Add toast
       console.error(`Order estimation for ${binaryCallOrPut} failed`, error);
     }
   };
@@ -138,7 +138,6 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
         'top-right'
       );
     } catch (error) {
-      // Add toast
       showToast(
         {
           id: Math.floor(Math.random() * 1000),
