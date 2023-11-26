@@ -21,6 +21,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
+import ToastProvider from '@/UI/lib/context/ToastProvider';
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   return (
@@ -36,12 +37,14 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
           overlayBlur: 'small',
         })}
       >
-        <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
-          <Header />
-          <ReadyState>
-            <Component {...pageProps} />
-          </ReadyState>
-        </div>
+        <ToastProvider>
+          <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
+            <Header />
+            <ReadyState>
+              <Component {...pageProps} />
+            </ReadyState>
+          </div>
+        </ToastProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );
