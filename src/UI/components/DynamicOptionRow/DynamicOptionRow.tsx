@@ -104,6 +104,18 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     handleSideChange(strategy.side)
   }, [strategy.side]);
 
+
+  useEffect(() => {
+    setProduct(strategy.product)
+    handleProductChange(strategy.product, strategy.type)
+  }, [strategy.product]);
+
+
+  useEffect(() => {
+    setSize(strategy.size.toString())
+    handleSizeChange(strategy.size.toString())
+  }, [strategy.size]);
+
   useEffect(() => {
     productTypes.Forward = [{
       option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
@@ -115,10 +127,10 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     setProductTypes(productTypes)
   }, [currentExpiryDate])
 
-  const handleProductChange = (product: string) => {
+  const handleProductChange = (product: string, type?:string) => {
     setProduct(product);
     setTypeList(PRODUCT_TYPES[product]);
-    setType(PRODUCT_TYPES[product][0].value);
+    setType(type || PRODUCT_TYPES[product][0].value);
     setStrikeList({...getContractsByPayoff(product === 'Forward' ? 'Forward' : PRODUCT_TYPES[product][0].value)})
   };
 
