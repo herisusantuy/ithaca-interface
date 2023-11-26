@@ -88,7 +88,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
   const [typeList, setTypeList] = useState<ProductOption[]>(PRODUCT_TYPES[strategy.product]);
   const [type, setType] = useState(strategy.type);
   const [side, setSide] = useState<'BUY' | 'SELL'>(strategy.side);
-  const [size, setSize] = useState('100');
+  const [size, setSize] = useState(strategy.size.toString());
   const [strike, setStrike] = useState<string | undefined>(strategy.product === 'Forward' ? '-' : undefined);
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
