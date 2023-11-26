@@ -19,7 +19,6 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { ToastItemProp } from '@/UI/constants/toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -36,7 +35,7 @@ import {
 } from '@ithaca-finance/sdk';
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
-
+import useToast from '@/UI/hooks/useToast';
 
 const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
@@ -53,9 +52,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
-  // Toast Status
-  const [position, setPosition] = useState('top-right');
-  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
+
+  const { toastList, position, showToast } = useToast();
 
   const handleCurrentOrNextAuctionChange = async (currentOrNextAuction: 'CURRENT' | 'NEXT') => {
     setCurrentOrNextAuction(currentOrNextAuction);
@@ -77,11 +75,6 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     const unitPrice = getNumberValue(amount);
     setUnitPrice(unitPrice);
     await handleStrikeChange(currentOrNextAuction, buyOrSell, getNumber(size), unitPrice);
-  };
-
-  const showToast = (newToast: ToastItemProp, position: string) => {
-    setToastList([...toastList, newToast]);
-    setPosition(position);
   };
 
   const handleStrikeChange = async (

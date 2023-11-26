@@ -25,7 +25,6 @@ import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/U
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { DIGITAL_OPTIONS, SIDE_OPTIONS } from '@/UI/constants/options';
-import { ToastItemProp } from '@/UI/constants/toast';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -36,6 +35,7 @@ import {
   calculateNetPrice,
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -50,9 +50,8 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
-  // Toast Status
-  const [position, setPosition] = useState('top-right');
-  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
+
+  const { toastList, position, showToast } = useToast();
 
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
@@ -78,11 +77,6 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
     setUnitPrice(unitPrice);
     if (!strike) return;
     await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, unitPrice);
-  };
-
-  const showToast = (newToast: ToastItemProp, position: string) => {
-    setToastList([...toastList, newToast]);
-    setPosition(position);
   };
 
   const handleStrikeChange = async (
