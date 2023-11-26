@@ -16,6 +16,7 @@ import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -24,6 +25,7 @@ import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/U
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { DIGITAL_OPTIONS, SIDE_OPTIONS } from '@/UI/constants/options';
+import { ToastItemProp } from '@/UI/constants/toast';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -48,6 +50,9 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  // Toast Status
+  const [position, setPosition] = useState('top-right');
+  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
@@ -73,6 +78,11 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
     setUnitPrice(unitPrice);
     if (!strike) return;
     await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, unitPrice);
+  };
+
+  const showToast = (newToast: ToastItemProp, position: string) => {
+    setToastList([...toastList, newToast]);
+    setPosition(position);
   };
 
   const handleStrikeChange = async (
@@ -124,9 +134,26 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, binaryCallOrPut);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
       // Add toast
-      console.error('Failed to submit order', error);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
     }
   };
 
@@ -222,6 +249,7 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
+      <Toast toastList={toastList} position={position} />
       <ChartPayoff
         // id='digital-chart'
         id={`digital-chart${compact ? '-compact' : ''}`}

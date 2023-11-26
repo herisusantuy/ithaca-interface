@@ -15,9 +15,11 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
+import { ToastItemProp } from '@/UI/constants/toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -35,6 +37,7 @@ import {
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
 
+
 const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
     useAppStore();
@@ -50,6 +53,9 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  // Toast Status
+  const [position, setPosition] = useState('top-right');
+  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
   const handleCurrentOrNextAuctionChange = async (currentOrNextAuction: 'CURRENT' | 'NEXT') => {
     setCurrentOrNextAuction(currentOrNextAuction);
@@ -71,6 +77,11 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     const unitPrice = getNumberValue(amount);
     setUnitPrice(unitPrice);
     await handleStrikeChange(currentOrNextAuction, buyOrSell, getNumber(size), unitPrice);
+  };
+
+  const showToast = (newToast: ToastItemProp, position: string) => {
+    setToastList([...toastList, newToast]);
+    setPosition(position);
   };
 
   const handleStrikeChange = async (
@@ -119,8 +130,26 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Forward');
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      console.error('Failed to submit order', error);
+      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
     }
   };
 
@@ -209,6 +238,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
           </Button>
         </Flex>
       )}
+
+      <Toast toastList={toastList} position={position} />
 
       <ChartPayoff
         // id='forwards-chart'

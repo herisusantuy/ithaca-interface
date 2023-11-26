@@ -53,7 +53,6 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
 
   // Toast Status
   const [position, setPosition] = useState('top-right');
-  const [type, setType] = useState('success');
   const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
@@ -150,6 +149,15 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
       );
     } catch (error) {
       // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right',
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -246,7 +254,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
-      <Toast toastList={toastList} position={position} autoDeleteTime={500000} />
+      <Toast toastList={toastList} position={position} />
       <ChartPayoff
         // id='options-chart'
         id={`options-chart${compact ? '-compact' : ''}`}
