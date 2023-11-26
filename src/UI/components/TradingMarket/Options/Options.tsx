@@ -248,6 +248,8 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
       </Flex>
       <Toast toastList={toastList} position={position} autoDeleteTime={500000} />
       <ChartPayoff
+        // id='options-chart'
+        id={`options-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

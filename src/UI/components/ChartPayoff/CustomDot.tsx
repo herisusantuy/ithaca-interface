@@ -12,14 +12,14 @@ type CustomDotProps = {
   dataSize: number;
   special: SpecialDotLabel[];
   index?: number;
+  compact?: boolean;
   dataList: PayoffDataProps[];
   updatePosition: (val: number) => void;
   updatePnlLabelPosition: (val: number) => void;
 };
 
 const CustomDot = (props: CustomDotProps) => {
-  const { cx, cy, payload, special, index, dataList, updatePosition, updatePnlLabelPosition } = props;
-
+  const { cx, cy, payload, special, index, dataList, updatePosition, updatePnlLabelPosition, compact } = props;
   useEffect(() => {
     const minValue = Math.min(...dataList.map(i => i.value));
     if (payload?.value == minValue) {
@@ -33,14 +33,14 @@ const CustomDot = (props: CustomDotProps) => {
 
   const renderCircle = (idx: number) => {
     if (Number(payload?.value) === 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#fff' stroke='#fff' strokeWidth={1} key={idx} opacity={compact ? 0 : 1} />;
     }
 
     if (Number(payload?.value) > 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#5ee192' stroke='#5ee192' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#5ee192' stroke='#5ee192' strokeWidth={1} key={idx} opacity={compact ? 0 : 1} />;
     }
     if (Number(payload?.value) < 0) {
-      return <circle cx={cx} cy={cy} r={2} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} key={idx} />;
+      return <circle cx={cx} cy={cy} r={2} fill='#FF3F57' stroke='#FF3F57' strokeWidth={1} key={idx} opacity={compact ? 0 : 1} />;
     }
   };
 

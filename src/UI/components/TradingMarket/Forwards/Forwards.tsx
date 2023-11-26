@@ -211,6 +211,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
       )}
 
       <ChartPayoff
+        // id='forwards-chart'
+        id={`forwards-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

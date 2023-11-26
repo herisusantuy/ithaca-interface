@@ -187,7 +187,7 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             },
             {
                 "product": "Forward",
-                "type": "Forward",
+                "type": "CURRENT",
                 "side": "BUY",
                 "size": 1,
                 "strike": -1
@@ -221,7 +221,7 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             },
             {
                 "product": "Forward",
-                "type": "Forward",
+                "type": "CURRENT",
                 "side": "BUY",
                 "size": 1,
                 "strike": -1
