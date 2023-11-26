@@ -315,7 +315,7 @@ const Index = () => {
                     clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
-                    <ChartPayoff chartData={chartData} height={230} />
+                    <ChartPayoff chartData={chartData} height={230} id='riskless-chart' />
                   ) : (
                     <>
                       <h3>Payoff Diagram</h3>

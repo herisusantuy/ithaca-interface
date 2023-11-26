@@ -1,5 +1,5 @@
 // Packages
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, YAxis } from 'recharts';
 
 // Components
@@ -34,6 +34,7 @@ import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 type ChartDataProps = {
   chartData: PayoffMap[];
   height: number;
+  id: string;
   showKeys?: boolean;
   showPortial?: boolean;
   showUnlimited?: boolean;
@@ -50,7 +51,7 @@ import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id } = props;
 
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
@@ -61,7 +62,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
   const [modifiedData, setModifiedData] = useState<PayoffDataProps[]>([]);
-  const [off, setOff] = useState<number>(0);
+  const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
   const [key, setKey] = useState<string[]>(['total']);
@@ -71,6 +72,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [xAxisPosition, setXAxisPosition] = useState<number>(height - 30);
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
+  const [gradient, setGradient] = useState<ReactElement>();
 
   const baseValue = 0;
   const colorArray = [
@@ -147,7 +149,9 @@ const ChartPayoff = (props: ChartDataProps) => {
   }, [xAxisPosition]);
 
   useEffect(() => {
-    renderGradient();
+    if (typeof off === 'number') {
+      setGradient(showGradientTags(off, color, dashedColor, id));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off]);
   // mouse move handle events
@@ -175,10 +179,6 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const updateDashed = (val: KeyType) => {
     setDashed(val);
-  };
-
-  const renderGradient = () => {
-    return showGradientTags(off, color, dashedColor);
   };
 
   // const updateLabelPosition = (positionObj: LabelPositionProp) => {
@@ -210,13 +210,13 @@ const ChartPayoff = (props: ChartDataProps) => {
               onMouseMove={handleMouseMove}
               margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
             >
-              {renderGradient()}
+              {gradient}
 
               <YAxis type='number' domain={[domain.min, domain.max]} hide={true} />
 
               <Area
                 type='linear'
-                stroke='url(#lineGradient)'
+                stroke={`url(#lineGradient-${id})`}
                 strokeWidth='1'
                 dataKey='value'
                 fill='transparent'
@@ -225,7 +225,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
               <Area
                 type='linear'
-                stroke='url(#dashGradient)'
+                stroke={`url(#dashGradient-${id})`}
                 dataKey='dashValue'
                 strokeDasharray='3 3'
                 fill='transparent'
@@ -234,9 +234,9 @@ const ChartPayoff = (props: ChartDataProps) => {
 
               <Area
                 type='linear'
-                stroke='url(#lineGradient)'
+                stroke={`url(#lineGradient-${id})`}
                 dataKey='value'
-                fill='url(#fillGradient)'
+                fill={`url(#fillGradient-${id})`}
                 filter='url(#glow)'
                 label={
                   !compact && (
@@ -252,16 +252,15 @@ const ChartPayoff = (props: ChartDataProps) => {
                   )
                 }
                 dot={
-                  !compact && (
                     <CustomDot
                       base={baseValue}
+                      compact={compact || false}
                       dataSize={modifiedData.length}
                       special={breakPoints}
                       dataList={modifiedData}
                       updatePosition={updatePosition}
                       updatePnlLabelPosition={setPnlLabelPosition}
                     />
-                  )
                 }
                 activeDot={false}
               />

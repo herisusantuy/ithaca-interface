@@ -239,6 +239,8 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
       )}
 
       <ChartPayoff
+        // id='earn-chart'
+        id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={chartHeight}

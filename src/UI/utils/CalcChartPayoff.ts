@@ -31,7 +31,7 @@ const range = (start: number, stop: number, step: number = 10) =>
 
 const calculateRange = (legs: OptionLeg[]) => {
   const legsSorted = legs.map(leg => (leg.payoff === 'Forward' ? leg.premium : leg.economics?.strike || 1000)).sort();
-  return range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 10);
+  return range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 1);
 };
 
 export function estimateOrderPayoff(legs: OptionLeg[]): PayoffMap[] {
