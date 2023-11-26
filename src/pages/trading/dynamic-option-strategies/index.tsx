@@ -142,8 +142,12 @@ const Index = () => {
   const handleRemoveStrategy = (index: number) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies];
     newPositionBuilderStrategies.splice(index, 1);
-    strategy.strategies.splice(index, 1);
-    setStrategy({ ...strategy });
+    const newstrategies = [...strategy.strategies];
+    newstrategies.splice(index, 1);
+    setStrategy({
+      ...strategy,
+      strategies: newstrategies
+    });
     if (!newPositionBuilderStrategies.length) {
       setPositionBuilderStrategies([]);
       setOrderSummary(undefined);
@@ -162,14 +166,19 @@ const Index = () => {
   };
 
   const addPosition = () => {
-    strategy.strategies.push({
-      product: 'option',
-      type: 'Call',
-      side: 'BUY',
-      size: 1,
-      strike: 0,
+    setStrategy({
+      ...strategy,
+      strategies: [
+        ...strategy.strategies,
+        {
+          product: 'option',
+          type: 'Call',
+          side: 'BUY',
+          size: 1,
+          strike: 0,
+        }
+      ]
     });
-    setStrategy({ ...strategy });
   };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
@@ -186,7 +195,7 @@ const Index = () => {
       <Main>
         <Container>
           <ReadyState>
-            <TradingLayout/>
+            <TradingLayout />
             <Sidebar
               leftPanel={
                 <>
