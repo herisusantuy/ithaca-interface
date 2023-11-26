@@ -166,7 +166,7 @@ const Index = () => {
       product: 'option',
       type: 'Call',
       side: 'BUY',
-      size: 100,
+      size: 1,
       strike: 0,
     });
     setStrategy({ ...strategy });
