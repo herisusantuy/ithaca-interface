@@ -35,7 +35,7 @@ import {
   calculateNetPrice,
   createClientOrderId,
 } from '@ithaca-finance/sdk';
-import { ToastItemProp } from '@/UI/constants/toast';
+import useToast from '@/UI/hooks/useToast';
 
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -51,9 +51,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  // Toast Status
-  const [position, setPosition] = useState('top-right');
-  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
+  const {toastList, position, showToast} = useToast();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -129,10 +127,6 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     }
   };
 
-  const showToast = (newToast: ToastItemProp, position: string) => {
-    setToastList([...toastList, newToast]);
-    setPosition(position);
-  };
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
