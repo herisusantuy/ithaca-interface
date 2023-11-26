@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Packages
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
 import dayjs from 'dayjs';
 
@@ -16,6 +16,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -35,7 +36,7 @@ import {
 } from '@ithaca-finance/sdk';
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
-import { ToastCTX } from '@/UI/lib/context/ToastProvider';
+import useToast from '@/UI/hooks/useToast';
 
 const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
@@ -53,7 +54,7 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const {showToast} = useContext(ToastCTX);
+  const { toastList, position, showToast } = useToast();
 
   const handleCurrentOrNextAuctionChange = async (currentOrNextAuction: 'CURRENT' | 'NEXT') => {
     setCurrentOrNextAuction(currentOrNextAuction);
@@ -230,6 +231,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
           </Button>
         </Flex>
       )}
+
+      <Toast toastList={toastList} position={position} />
 
       <ChartPayoff
         // id='forwards-chart'

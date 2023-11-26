@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Packages
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
 
 // Components
@@ -14,6 +14,7 @@ import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -35,7 +36,7 @@ import {
   calculateNetPrice,
   createClientOrderId,
 } from '@ithaca-finance/sdk';
-import { ToastCTX } from '@/UI/lib/context/ToastProvider';
+import useToast from '@/UI/hooks/useToast';
 
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -51,7 +52,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
-  const {showToast} = useContext(ToastCTX);
+  const { toastList, position, showToast } = useToast();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -245,6 +246,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
+      <Toast toastList={toastList} position={position} />
       <ChartPayoff
         // id='options-chart'
         id={`options-chart${compact ? '-compact' : ''}`}
