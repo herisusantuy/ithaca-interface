@@ -42,6 +42,8 @@
 
 .tableWrapper {
   position: relative;
+  display: flex;
+  justify-content: center;
 
   svg {
     max-width: rem(328);
@@ -78,7 +80,6 @@
   color: var(--white-60);
   margin-left: 4px;
 }
-
 
 .amountLabel {
   @include font-size('text-sm', 'regular');
