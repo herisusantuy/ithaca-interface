@@ -56,23 +56,24 @@ const Header = ({ className }: HeaderProps) => {
   useEscKey(closeRewardsDropdown);
 
   return (
-    <header className={`${styles.header} ${className || ''}`}>
-      <div className={styles.container}>
-        <div className={styles.left}>
-          <Logo />
-          {!tabletBreakpoint && <Navigation />}
+    <>
+      <header className={`${styles.header} ${className || ''}`}>
+        <div className={styles.container}>
+          <div className={styles.left}>
+            <Logo />
+            {!tabletBreakpoint && <Navigation />}
+          </div>
+          <div className={styles.right}>
+            <Bell />
+            <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
+            <Wallet />
+            {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
+            {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
+          </div>
         </div>
-        <div className={styles.right}>
-          <Bell />
-          <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
-          <Wallet />
-          {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
-          {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
-        </div>
-      </div>
-      {/** TO DO: Move sliding nav into Main so it's not behind the content */}
+      </header>
       {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
-    </header>
+    </>
   );
 };
 
