@@ -9,6 +9,7 @@ import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
+import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
@@ -68,7 +69,7 @@ const Header = ({ className }: HeaderProps) => {
         </div>
       </div>
       {/** TO DO: Move sliding nav into Main so it's not behind the content */}
-      {/* {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />} */}
+      {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
     </header>
   );
 };

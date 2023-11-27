@@ -26,7 +26,7 @@ type NavigationProps = {
 const Navigation = ({ onClick }: NavigationProps) => {
   const [orderList, setOrderList] = useState<Order[]>([]);
   const router = useRouter();
-  const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
+  const { ithacaSDK, isAuthenticated } = useAppStore();
 
   const checkIsActivePath = (path: string) => {
     return path === '/' ? router.pathname === path : router.pathname.includes(path.split('/')[1]);
