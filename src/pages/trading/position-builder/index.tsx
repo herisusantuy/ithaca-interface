@@ -32,9 +32,6 @@ import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
-// Constants
-import { ToastItemProp } from '@/UI/constants/toast';
-
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { formatNumber, getNumber } from '@/UI/utils/Numbers';
