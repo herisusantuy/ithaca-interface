@@ -1,10 +1,9 @@
 // Packages
-import { useRef, useState } from 'react';
+import { useRef, useState, useContext } from 'react';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
 import Logo from '@/UI/components/Logo/Logo';
-import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
@@ -22,6 +21,9 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
+// Context
+import { NavCTX } from '@/UI/lib/provider/NavProvider';
+
 // Types
 type HeaderProps = {
   className?: string;
@@ -30,12 +32,7 @@ type HeaderProps = {
 const Header = ({ className }: HeaderProps) => {
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
-  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
-
-  const handleHamburgerClick = () => {
-    setIsHamburgerOpen(!isHamburgerOpen);
-    document.body.classList.toggle('is-active');
-  };
+  const { isHamburgerOpen, handleHamburgerClick } = useContext(NavCTX);
 
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const rewardsDropdownRef = useRef(null);
@@ -71,7 +68,7 @@ const Header = ({ className }: HeaderProps) => {
         </div>
       </div>
       {/** TO DO: Move sliding nav into Main so it's not behind the content */}
-      {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
+      {/* {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />} */}
     </header>
   );
 };

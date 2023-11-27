@@ -12,6 +12,7 @@ import { chains, appInfo, wagmiConfig } from '@/UI/utils/RainbowKit';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
+import NavProvider from '@/UI/lib/provider/NavProvider';
 
 // Layouts
 import Header from '@/UI/layouts/Header/Header';
@@ -36,12 +37,14 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
           overlayBlur: 'small',
         })}
       >
-        <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
-          <Header />
-          <ReadyState>
-            <Component {...pageProps} />
-          </ReadyState>
-        </div>
+        <NavProvider>
+          <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
+            <Header />
+            <ReadyState>
+              <Component {...pageProps} />
+            </ReadyState>
+          </div>
+        </NavProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

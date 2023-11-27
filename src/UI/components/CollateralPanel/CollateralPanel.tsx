@@ -17,6 +17,7 @@ import { getNumberValue } from '@/UI/utils/Numbers';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
+import useToast from '@/UI/hooks/useToast';
 
 // Components
 import Balance from '@/UI/components/Balance/Balance';
@@ -26,6 +27,7 @@ import Tabs from '@/UI/components/Tabs/Tabs';
 import Input from '@/UI/components/Input/Input';
 import TableCollateral from '@/UI/components/TableCollateral/TableCollateral';
 import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
+import Toast from '@/UI/components/Toast/Toast';
 
 const Modal = dynamic(() => import('@/UI/components/Modal/Modal'), {
   ssr: false,
@@ -47,6 +49,8 @@ const CollateralPanel = () => {
   const [modalAmount, setModalAmount] = useState('');
   const [modalTab, setModalTab] = useState<string>('deposit');
   const [transactionInProgress, setTransactionInProgress] = useState(false);
+
+  const { toastList, position, showToast } = useToast();
 
   useBalance({
     address,
@@ -92,7 +96,25 @@ const CollateralPanel = () => {
         args: [walletClient.account.address, parseUnits('100', systemInfo.tokenDecimals[currency])],
       });
       await publicClient.waitForTransactionReceipt({ hash });
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Faucet received',
+          message: 'We have received your Faucet',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Faucet Failed',
+          message: 'Faucet Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to claim faucet', error);
     }
   };
@@ -102,11 +124,16 @@ const CollateralPanel = () => {
     fetchFundlockState();
   }, [isAuthenticated, fetchFundlockState]);
 
+  const showModal = (type: string) => {
+    setModalTab(type);
+    setSelectedCurrency({ name: Object.keys(collateralSummary)[0], value: Object.keys(collateralSummary)[0] });
+  };
+
   return (
     <>
       <Panel margin='p-30 p-tablet-16'>
         <h3>Collateral</h3>
-        {/** TO DO: Missing success and failure toasts */}
+        <Toast toastList={toastList} position={position} />
         <TableCollateral
           collateralSummary={collateralSummary}
           deposit={(currency: string) => {
@@ -121,20 +148,27 @@ const CollateralPanel = () => {
         />
         {tabletBreakpoint && (
           <Flex direction='row-center' gap='gap-8' margin='mt-16'>
-            {/** TO DO: Add onClick handlers */}
             <Button
               title='Click to deposit'
               variant='secondary'
               size='sm'
               role='button'
-              onClick={() => {}}
+              onClick={() => showModal('deposit')}
               className='full-width'
             >
               Deposit
             </Button>
-            <Button title='Click to withdraw' size='sm' variant='primary' onClick={() => {}} className='full-width'>
+            <Button
+              title='Click to withdraw'
+              size='sm'
+              variant='primary'
+              onClick={() => showModal('withdraw')}
+              className='full-width'
+            >
               Withdraw
             </Button>
+
+            {/** TO DO(issue): Add onClick handlers for Faucet. In this here we have to use specific design for chossing the currency for this function.*/}
             <Button title='Click to faucet' size='sm' variant='primary' onClick={() => {}} className='full-width'>
               Faucet
             </Button>
