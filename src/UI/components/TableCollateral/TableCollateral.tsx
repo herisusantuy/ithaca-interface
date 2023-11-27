@@ -1,14 +1,18 @@
 // Constants
 import { CollateralSummary, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
 
+// Utils
+import { formatNumber } from '@/UI/utils/Numbers';
+
+// SDK
+import { useAppStore } from '@/UI/lib/zustand/store';
+
 // Components
 import Button from '@/UI/components/Button/Button';
 import Asset from '@/UI/components/Asset/Asset';
 
 // Styles
 import styles from './TableCollateral.module.scss';
-import { useAppStore } from '@/UI/lib/zustand/store';
-import { formatNumber } from '@/UI/utils/Numbers';
 
 // Types
 type CollateralTableProps = {

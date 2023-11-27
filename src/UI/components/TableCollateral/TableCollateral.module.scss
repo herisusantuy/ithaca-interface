@@ -9,6 +9,14 @@
     display: flex;
     align-items: center;
     gap: rem(50);
+
+    @include breakpoint(tablet) {
+      gap: rem(25);
+    }
+
+    @include breakpoint(mobile) {
+      gap: rem(5);
+    }
   }
 
   .header {
@@ -16,12 +24,31 @@
     color: var(--white-60);
     border-bottom: rem(1) solid var(--white-rgba-10);
 
+    @include breakpoint(tablet) {
+      align-items: flex-end;
+    }
+
     .cell {
       @include font-size('text-xs', 'regular');
       width: calc(100% / 6);
 
+      @include breakpoint(tablet) {
+        @include font-size('text-xxs', 'regular');
+        width: calc(100% / 5);
+      }
+
+      &:first-child {
+        @include breakpoint(mobile) {
+          width: 25%;
+        }
+      }
+
       &:last-child {
         width: calc(rem(248) + rem(80));
+
+        @include breakpoint(tablet) {
+          display: none;
+        }
       }
     }
   }
@@ -34,16 +61,32 @@
     p {
       @include font-size('text-md', 'medium');
       font-family: $roboto;
+
+      @include breakpoint(tablet) {
+        @include font-size('text-sm', 'regular');
+      }
+
+      @include breakpoint(mobile) {
+        @include font-size('text-xs', 'regular');
+      }
     }
   }
 
   .cell {
     @include font-size('text-md', 'regular');
     font-family: $roboto;
-    // flex: 1;
     align-items: center;
     justify-content: center;
     width: calc(100% / 6);
+
+    @include breakpoint(tablet) {
+      @include font-size('text-sm', 'regular');
+      width: calc(100% / 5);
+    }
+
+    @include breakpoint(mobile) {
+      @include font-size('text-xs', 'regular');
+    }
 
     &:nth-child(2),
     &:nth-child(3),
@@ -54,6 +97,10 @@
 
     &:first-child {
       justify-content: flex-start;
+
+      @include breakpoint(mobile) {
+        width: 25%;
+      }
     }
 
     &:last-child {
@@ -62,6 +109,11 @@
       align-items: center;
       gap: rem(8);
       width: auto;
+      width: calc(rem(248) + rem(80));
+
+      @include breakpoint(tablet) {
+        display: none;
+      }
     }
 
     svg {
