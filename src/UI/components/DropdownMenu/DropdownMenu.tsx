@@ -1,5 +1,6 @@
 // Packages
 import { useState, useRef, useEffect, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 // Components
 import Dropdown from '@/UI/components/Icons/Dropdown';
@@ -7,10 +8,11 @@ import Dropdown from '@/UI/components/Icons/Dropdown';
 // Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
+// Layouts
+import Flex from '@/UI/layouts/Flex/Flex';
+
 // Styles
 import styles from '@/UI/components/DropdownMenu/DropdownMenu.module.scss';
-import { createPortal } from 'react-dom';
-import Flex from '@/UI/layouts/Flex/Flex';
 
 // Types
 export type DropDownOption = {
@@ -29,6 +31,7 @@ type DropdownMenuProps = {
   iconStart?: ReactNode;
   iconEnd?: ReactNode;
   className?: string;
+  type?: string;
 };
 
 const DropdownMenu = ({
@@ -42,6 +45,7 @@ const DropdownMenu = ({
   iconStart,
   iconEnd,
   className,
+  type,
 }: DropdownMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
@@ -92,14 +96,14 @@ const DropdownMenu = ({
   };
 
   return (
-    <div className={`${styles.container} ${className || ''}`} ref={containerRef}>
+    <div className={`${styles.container} ${className || ''} ${type ? styles[type] : ''}`} ref={containerRef}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}
         </label>
       )}
       <div
-        style={width > 0 ? {minWidth: width + 'px'} : {}}
+        style={width > 0 ? { minWidth: width + 'px' } : {}}
         className={`${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}
         onClick={handleDropdownClick}
         role='button'

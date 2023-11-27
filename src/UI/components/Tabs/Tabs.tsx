@@ -4,6 +4,13 @@ import { ReactNode } from 'react';
 
 // Components
 import Button from '@/UI/components/Button/Button';
+import DropdownMenu, { DropDownOption } from '../DropdownMenu/DropdownMenu';
+
+// Constants
+import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+
+// Hooks
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Styles
 import styles from './Tabs.module.scss';
@@ -25,6 +32,7 @@ type TabsProps = {
 
 const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
   const router = useRouter();
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
   // Ensure tabs is defined and has at least one tab
   if (!tabs || tabs.length === 0) {
@@ -38,29 +46,59 @@ const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
 
   const buttonsClass = `${styles.buttons} ${className || ''}`;
 
+  // Transform tabs into dropdown options
+  const dropdownOptions: DropDownOption[] = tabs.map(tab => ({
+    name: tab.label,
+    value: tab.id,
+  }));
+
+  // Find the current active option
+  const activeOption = dropdownOptions.find(option => option.value === activeTab);
+
+  const handleDropdownChange = (value: string) => {
+    const selectedTab = tabs.find(tab => tab.id === value);
+    if (selectedTab) {
+      onChange?.(selectedTab.id);
+      if (selectedTab.path) {
+        router.push(selectedTab.path);
+      }
+    }
+  };
+
   return (
     <>
-      <div className={buttonsClass.trim()}>
-        {tabs.map(tab => (
-          <Button
-            key={tab.id}
-            onClick={e => {
-              e.stopPropagation();
-              onChange?.(tab.id);
-              if (tab.path) {
-                router.push(tab.path);
-              }
-            }}
-            className={getTabClass(tab.id)}
-            role='tab'
-            aria-selected={tab.id === activeTab}
-            aria-controls={`tab-panel-${tab.id}`}
-            title='Click to select tab'
-          >
-            {tab.label}
-          </Button>
-        ))}
-      </div>
+      {tabletBreakpoint ? (
+        <DropdownMenu
+          options={dropdownOptions}
+          value={activeOption}
+          onChange={value => handleDropdownChange(value)}
+          type='tablet'
+          className='mb-16'
+        />
+      ) : (
+        <div className={buttonsClass.trim()}>
+          {tabs.map(tab => (
+            <Button
+              key={tab.id}
+              onClick={e => {
+                e.stopPropagation();
+                onChange?.(tab.id);
+                if (tab.path) {
+                  router.push(tab.path);
+                }
+              }}
+              className={getTabClass(tab.id)}
+              role='tab'
+              aria-selected={tab.id === activeTab}
+              aria-controls={`tab-panel-${tab.id}`}
+              title='Click to select tab'
+            >
+              {tab.label}
+            </Button>
+          ))}
+        </div>
+      )}
+
       {tabs.map(
         tab =>
           tab.id === activeTab && (

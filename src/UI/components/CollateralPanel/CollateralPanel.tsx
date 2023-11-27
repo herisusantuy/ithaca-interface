@@ -7,12 +7,16 @@ import { parseAbi, parseUnits } from 'viem';
 // Constants
 import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { MODAL_TABS } from '@/UI/constants/tabs';
+import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Store
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
 import { getNumberValue } from '@/UI/utils/Numbers';
+
+// Hooks
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Components
 import Balance from '@/UI/components/Balance/Balance';
@@ -36,6 +40,7 @@ const CollateralPanel = () => {
   const { address } = useAccount();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
   const [collateralSummary, setCollateralSummary] = useState(TABLE_COLLATERAL_SUMMARY);
   const [selectedCurrency, setSelectedCurrency] = useState<{ name: string; value: string }>();
@@ -99,8 +104,9 @@ const CollateralPanel = () => {
 
   return (
     <>
-      <Panel margin='p-30'>
+      <Panel margin='p-30 p-tablet-16'>
         <h3>Collateral</h3>
+        {/** TO DO: Missing success and failure toasts */}
         <TableCollateral
           collateralSummary={collateralSummary}
           deposit={(currency: string) => {
@@ -113,6 +119,27 @@ const CollateralPanel = () => {
           }}
           faucet={currency => getFaucet(currency)}
         />
+        {tabletBreakpoint && (
+          <Flex direction='row-center' gap='gap-8' margin='mt-16'>
+            {/** TO DO: Add onClick handlers */}
+            <Button
+              title='Click to deposit'
+              variant='secondary'
+              size='sm'
+              role='button'
+              onClick={() => {}}
+              className='full-width'
+            >
+              Deposit
+            </Button>
+            <Button title='Click to withdraw' size='sm' variant='primary' onClick={() => {}} className='full-width'>
+              Withdraw
+            </Button>
+            <Button title='Click to faucet' size='sm' variant='primary' onClick={() => {}} className='full-width'>
+              Faucet
+            </Button>
+          </Flex>
+        )}
         {!address && <DisconnectedWallet />}
       </Panel>
       <Modal

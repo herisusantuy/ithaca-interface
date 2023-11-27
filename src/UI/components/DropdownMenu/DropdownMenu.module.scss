@@ -129,3 +129,27 @@
   align-items: center;
   gap: rem(2);
 }
+
+.tablet {
+  .dropdownContainer {
+    width: auto;
+    min-width: auto;
+  }
+
+  .input {
+    background: none;
+    border-radius: 0;
+    height: auto;
+    border-bottom: rem(1) solid var(--purple-30);
+    padding: 0 0 rem(8) 0;
+
+    span {
+      @include font-size('text-sm', 'semibold');
+      font-family: $lato;
+    }
+
+    &:before {
+      display: none;
+    }
+  }
+}
