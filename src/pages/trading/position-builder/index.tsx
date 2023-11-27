@@ -20,6 +20,9 @@ import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuild
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
+import Modal from '@/UI/components/Modal/Modal';
+import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
 import Main from '@/UI/layouts/Main/Main';
@@ -28,17 +31,16 @@ import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
+// Constants
+import { ToastItemProp } from '@/UI/constants/toast';
+
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import ReadyState from '@/UI/utils/ReadyState';
 import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
 import styles from './position-builder.module.scss';
-import Modal from '@/UI/components/Modal/Modal';
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
-import Toast from '@/UI/components/Toast/Toast';
-import { ToastItemProp } from '@/UI/constants/toast';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -67,6 +69,9 @@ const Index = () => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
   const [position, setPosition] = useState('top-right');
+  {
+    /** TO DO: type is declared but not used */
+  }
   const [type, setType] = useState('success');
   const [toastList, setToastList] = useState<ToastItemProp[]>([]);
 
@@ -164,7 +169,7 @@ const Index = () => {
       <Main>
         <Container>
           <ReadyState>
-            <TradingLayout/>
+            <TradingLayout />
             <Sidebar
               leftPanel={
                 <>
