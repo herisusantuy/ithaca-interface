@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styles from './Toast.module.scss';
 import Close from '@/UI/components/Icons/Close';
 import { ToastItemProp } from '@/UI/constants/toast';
+import { createPortal } from 'react-dom';
 
 type ToastPropType = {
   toastList: ToastItemProp[];
@@ -14,9 +15,11 @@ type ToastPropType = {
 const Toast = (Props: ToastPropType) => {
   const { toastList, autoDelete = true, autoDeleteTime = 3500, position = 'top-right' } = Props;
   const [list, setList] = useState(toastList);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setList([...toastList]);
+    setMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastList]);
 
@@ -96,7 +99,9 @@ const Toast = (Props: ToastPropType) => {
   };
 
   return (
-    <>
+    mounted &&
+    document.querySelector<HTMLElement>('#portal') &&
+    createPortal(
       <div className={`${styles.notificationContainer} ${renderPosition()}`}>
         {list.map((toast, i) => (
           <div key={i} className={`${styles.notification} ${styles.toast} ${renderPosition()}`}>
@@ -128,8 +133,8 @@ const Toast = (Props: ToastPropType) => {
             </div>
           </div>
         ))}
-      </div>
-    </>
+      </div>,
+      document.querySelector<HTMLElement>('#portal') as HTMLElement)
   );
 };
 

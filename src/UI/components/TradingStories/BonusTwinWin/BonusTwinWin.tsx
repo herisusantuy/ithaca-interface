@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
@@ -16,6 +17,7 @@ import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusTwinWinI
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Asset from '@/UI/components/Asset/Asset';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -28,6 +30,7 @@ import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
@@ -45,6 +48,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const { toastList, position, showToast } = useToast();
 
   const handleBonusOrTwinWinChange = async (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
@@ -166,8 +170,25 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, bonusOrTwinWin);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -243,6 +264,8 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+
+      <Toast toastList={toastList} position={position} />
     </>
   );
 };

@@ -1,5 +1,5 @@
 // Packages
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 // Constants
 import { TRADING_TABS_ITEMS } from '@/UI/constants/tabs';

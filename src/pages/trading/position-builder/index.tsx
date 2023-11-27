@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, OrderPayoff, toPrecision } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -30,9 +31,6 @@ import Container from '@/UI/layouts/Container/Container';
 import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
-
-// Constants
-import { ToastItemProp } from '@/UI/constants/toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -68,13 +66,7 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  const [position, setPosition] = useState('top-right');
-  {
-    /** TO DO: type is declared but not used */
-  }
-  const [type, setType] = useState('success');
-  const [toastList, setToastList] = useState<ToastItemProp[]>([]);
-
+  const {toastList, position, showToast} = useToast();
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
@@ -140,7 +132,6 @@ const Index = () => {
           type: 'info',
         },
         'top-right',
-        'info'
       );
     } catch (error) {
       showToast(
@@ -151,16 +142,9 @@ const Index = () => {
           type: 'error',
         },
         'top-right',
-        'error'
       );
       console.error('Failed to submit order', error);
     }
-  };
-
-  const showToast = (newToast: ToastItemProp, position: string, type: string = 'info') => {
-    setToastList([...toastList, newToast]);
-    setPosition(position);
-    setType(type);
   };
 
   return (

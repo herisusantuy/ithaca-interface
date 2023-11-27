@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
@@ -13,6 +14,7 @@ import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -34,6 +36,7 @@ import {
   calculateNetPrice,
   createClientOrderId,
 } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -48,6 +51,8 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  const { toastList, position, showToast } = useToast();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -118,7 +123,6 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
         orderPayoff,
       });
     } catch (error) {
-      // Add toast
       console.error(`Order estimation for ${callOrPut} failed`, error);
     }
   };
@@ -127,8 +131,25 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -225,7 +246,7 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
           </>
         )}
       </Flex>
-
+      <Toast toastList={toastList} position={position} />
       <ChartPayoff
         // id='options-chart'
         id={`options-chart${compact ? '-compact' : ''}`}

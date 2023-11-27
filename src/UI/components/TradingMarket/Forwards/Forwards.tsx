@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
@@ -15,6 +16,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -34,6 +36,7 @@ import {
 } from '@ithaca-finance/sdk';
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
+import useToast from '@/UI/hooks/useToast';
 
 const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
@@ -50,6 +53,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  const { toastList, position, showToast } = useToast();
 
   const handleCurrentOrNextAuctionChange = async (currentOrNextAuction: 'CURRENT' | 'NEXT') => {
     setCurrentOrNextAuction(currentOrNextAuction);
@@ -119,8 +124,25 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Forward');
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      console.error('Failed to submit order', error);
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
     }
   };
 
@@ -209,6 +231,8 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
           </Button>
         </Flex>
       )}
+
+      <Toast toastList={toastList} position={position} />
 
       <ChartPayoff
         // id='forwards-chart'

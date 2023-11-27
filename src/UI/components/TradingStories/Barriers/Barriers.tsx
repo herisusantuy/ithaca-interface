@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
@@ -12,6 +13,7 @@ import BarrierInstructions from '@/UI/components/Instructions/BarrierInstruction
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import BarrierDescription from '@/UI/components/Instructions/BarrierDescription';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
+import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -27,6 +29,7 @@ import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartP
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import useToast from '@/UI/hooks/useToast';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
@@ -44,6 +47,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+
+  const { toastList, position, showToast } = useToast();
 
   const strikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
     const isValidStrike = barrier
@@ -307,8 +312,25 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Barriers');
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Sent',
+          message: 'We have received your request',
+          type: 'info',
+        },
+        'top-right'
+      );
     } catch (error) {
-      // Add toast
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: 'Transaction Failed',
+          message: 'Transaction Failed, please try again.',
+          type: 'error',
+        },
+        'top-right'
+      );
       console.error('Failed to submit order', error);
     }
   };
@@ -433,6 +455,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       )}
 
       {!compact && showInstructions && <BarrierDescription />}
+
+      <Toast toastList={toastList} position={position} />
 
       <ChartPayoff
         // id='barriers-chart'
