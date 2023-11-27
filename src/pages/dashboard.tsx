@@ -50,7 +50,7 @@ const Dashboard = () => {
       <Main>
         <Container>
           <CollateralPanel />
-          <Panel margin='p-30 mt-15'>
+          <Panel margin='p-30 mt-15 p-tablet-16'>
             <Tabs tabs={DASHBOARD_TABS} activeTab={dashboardTab} onChange={setDashboardTab} />
           </Panel>
         </Container>
