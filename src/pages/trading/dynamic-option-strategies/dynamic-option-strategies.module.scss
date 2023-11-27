@@ -8,7 +8,7 @@
   margin-top: 24px;
   color: var(--white);
   & p {
-    color: var( --white-rgba-20);
+    color: var(--white-rgba-20);
   }
 }
 
@@ -42,6 +42,12 @@
 
 .tableWrapper {
   min-height: 200px;
+  display: flex;
+  justify-content: center;
+
+  svg {
+    max-width: rem(328);
+  }
 }
 
 .dropDownWrapper {
@@ -53,7 +59,6 @@
   margin-top: 10px;
   margin-right: 12px;
 }
-
 
 .parent {
   display: grid;
@@ -95,7 +100,6 @@
     left: rem(176);
   }
 }
-
 
 .title {
   grid-area: 1 / 1 / 2 / 2;

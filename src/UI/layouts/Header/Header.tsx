@@ -70,6 +70,7 @@ const Header = ({ className }: HeaderProps) => {
           {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
         </div>
       </div>
+      {/** TO DO: Move sliding nav into Main so it's not behind the content */}
       {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
     </header>
   );

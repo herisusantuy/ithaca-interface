@@ -10,6 +10,11 @@
   color: var(--white);
   border-width: rem(0);
 
+  @include breakpoint(tablet) {
+    @include font-size('text-xs', 'bold');
+    padding: rem(5) rem(10) !important;
+  }
+
   &:before {
     background: linear-gradient(var(--white-10) 0%, rgba(94, 225, 146, 0) 100%) !important;
   }
@@ -25,6 +30,10 @@
   border-radius: rem(16);
   position: relative;
 
+  @include breakpoint(tablet) {
+    border-radius: rem(14);
+  }
+
   &:before {
     content: '';
     display: block;
@@ -36,6 +45,10 @@
     left: -(rem(0.5));
     z-index: -1;
     background: linear-gradient(var(--green-30) 0%, rgba(94, 225, 146, 0) 100%);
+
+    @include breakpoint(tablet) {
+      border-radius: rem(14);
+    }
   }
 }
 

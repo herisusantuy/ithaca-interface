@@ -35,6 +35,8 @@ const Navigation = ({ onClick }: NavigationProps) => {
         >
           {nav.displayText}
           {nav.displayText === 'More' && <ChevronDown />}
+          {/** TO DO: If user has open orders show the number in the badge, else hide the badge */}
+          {nav.displayText === 'Dashboard' && <span className={styles.badge}>2</span>}
         </Link>
       ))}
     </nav>

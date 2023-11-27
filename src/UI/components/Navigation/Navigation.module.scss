@@ -28,5 +28,22 @@
     @include font-size('text-sm', 'semibold');
     cursor: default;
     color: var(--white);
+
+    @include breakpoint(tablet) {
+      @include font-size('text-lg', 'semibold');
+    }
   }
+}
+
+.badge {
+  @include font-size('text-xxs', 'bold');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: rem(16);
+  width: rem(16);
+  border-radius: 50%;
+  background: rgba(94, 225, 146, 0.42);
+  color: var(--green-30);
+  font-family: $lato;
 }

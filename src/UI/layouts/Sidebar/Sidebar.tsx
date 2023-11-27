@@ -1,9 +1,6 @@
 // Packages
 import { ReactNode } from 'react';
 
-// Components
-import Panel from '@/UI/layouts/Panel/Panel';
-
 // Styles
 import styles from './Sidebar.module.scss';
 
@@ -21,7 +18,7 @@ const Sidebar = ({ leftPanel, rightPanel, orderSummary }: SidebarProps) => {
         {leftPanel}
         <div className={styles.orderSummary}>{orderSummary}</div>
       </div>
-      <Panel margin='p-20 width-50 box-shadow-panel'>{rightPanel}</Panel>
+      <div className={styles.rightPanel}>{rightPanel}</div>
     </div>
   );
 };
