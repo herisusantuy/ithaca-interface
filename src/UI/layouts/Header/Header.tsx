@@ -1,15 +1,15 @@
 // Packages
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState } from 'react';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
 import Logo from '@/UI/components/Logo/Logo';
+import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
 import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
-import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
@@ -22,9 +22,6 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
-// Context
-import { NavCTX } from '@/UI/lib/provider/NavProvider';
-
 // Types
 type HeaderProps = {
   className?: string;
@@ -33,7 +30,12 @@ type HeaderProps = {
 const Header = ({ className }: HeaderProps) => {
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
-  const { isHamburgerOpen, handleHamburgerClick } = useContext(NavCTX);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+
+  const handleHamburgerClick = () => {
+    setIsHamburgerOpen(!isHamburgerOpen);
+    document.body.classList.toggle('is-active');
+  };
 
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const rewardsDropdownRef = useRef(null);
