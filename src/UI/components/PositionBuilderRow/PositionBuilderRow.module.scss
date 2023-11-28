@@ -25,3 +25,13 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.side p {
+  left: rem(10);
+}
+
+.size p,
+.strike p,
+.unitPrice p {
+  left: rem(8);
+}
