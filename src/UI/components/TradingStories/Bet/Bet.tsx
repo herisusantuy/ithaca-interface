@@ -244,9 +244,17 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     handleCapitalAtRiskChange('100');
   }, []);
 
+  useEffect(() => {
+    renderInstruction();
+  }, [insideOrOutside]);
+
+  const renderInstruction = () => {
+    return <>{!compact && showInstructions && <BetInstructions type={insideOrOutside} />}</>;
+  };
+
   return (
     <>
-      {!compact && showInstructions && <BetInstructions />}
+      {renderInstruction()}
 
       {compact && (
         <Flex margin='display-inline-flex mb-7'>

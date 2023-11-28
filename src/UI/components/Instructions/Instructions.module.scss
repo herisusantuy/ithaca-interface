@@ -16,7 +16,7 @@
     line-height: rem(25.2);
 
     &:first-child {
-      margin-bottom: rem(3);
+      margin-bottom: rem(0);
     }
   }
 
@@ -27,7 +27,6 @@
 
     p {
       text-align: center;
-      line-height: rem(14);
     }
 
     &:before,

@@ -219,7 +219,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
               <DropdownMenu disabled options={[]} value={{ name: priceReference, value: priceReference }} />
             </LabeledControl>
 
-            <LabeledControl label='KO Barrier'>
+            <LabeledControl label='KO Barrier' labelClassName='hide-visibility'>
               <DropdownMenu
                 options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
                 value={koBarrier ? { name: koBarrier, value: koBarrier } : undefined}
@@ -228,6 +228,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
             </LabeledControl>
 
             <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+              <p className='color-white-60 fs-xs mr-10'>KO Barrier</p>
               <LogoEth />
               <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
               <span className='fs-md-bold color-white mr-7'>1740</span>

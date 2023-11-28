@@ -20,7 +20,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { IN_OUT_OPTIONS, SIDE_OPTIONS, TYPE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
+import { BARRIER_OPTIONS, IN_OUT_OPTIONS, SIDE_OPTIONS, TYPE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
@@ -339,9 +339,21 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     handleSizeChange('100');
   }, []);
 
+  useEffect(() => {
+    renderInstruction();
+  }, [buyOrSell])
+
+  const renderInstruction = () => {
+    return (
+      <>
+        {!compact && showInstructions && <BarrierInstructions type={ buyOrSell } />}
+      </>
+    )
+  }
+
   return (
     <>
-      {!compact && showInstructions && <BarrierInstructions />}
+      {renderInstruction()}
       {compact ? (
         <Flex gap='gap-3' margin='mb-10'>
           <RadioButton
@@ -379,10 +391,10 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               <RadioButton
                 size={compact ? 'compact' : 'regular'}
                 width={compact ? 140 : 186}
-                options={TYPE_OPTIONS}
-                selectedOption={undefined}
+                options={BARRIER_OPTIONS}
+                selectedOption={buyOrSell}
                 name='type'
-                onChange={() => {}}
+                onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
               />
             </LabeledControl>
 

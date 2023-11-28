@@ -4,14 +4,18 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 // Styles
 import styles from './Instructions.module.scss';
 
-const BarrierInstructions = () => {
+type BarrierDescriptionProps = {
+  type? : string
+}
+
+const BarrierInstructions = ({type = 'BUY'} : BarrierDescriptionProps) => {
   return (
     <div className={styles.container}>
       <p>
         i. Select Desired Direction{' '}
         <span>
           <p>
-            UP <br /> DOWN
+            {type == 'BUY' ? 'UP' : 'DOWN'}
           </p>
         </span>
       </p>
@@ -23,15 +27,15 @@ const BarrierInstructions = () => {
         Will <LogoEth /> move &lsquo;not too much&rsquo;? ( &lsquo;Knock OUT&rsquo; )
       </p>
       <p>
-        iii. <span className='hide-psuedo color-white p-0'>Call</span> |
-        <span className='hide-psuedo color-white-30 p-0'>Put</span>
+        iii. <span className={type == 'BUY' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Call</span> |
+        <span className={type == 'SELL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Put</span>
         <span className='flex-column-center mlr-6'>
-          <span className='color-white hide-psuedo p-0'>Buy</span>
-          <span className='color-white-30 hide-psuedo p-0'>Sell</span>
+          <span className={type == 'BUY' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Buy</span>
+          <span className={type == 'SELL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Sell</span>
         </span>
         <span className='flex-column-center mr-6'>
-          <span className='color-white hide-psuedo p-0'>Up</span>
-          <span className='color-white-30 hide-psuedo p-0'>Down</span>
+          <span className={type == 'BUY' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Up</span>
+          <span className={type == 'SELL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Down</span>
         </span>
         <span className='flex-column-center mr-6'>
           <span className='color-white hide-psuedo p-0'>Knocks In ( effective )</span>
