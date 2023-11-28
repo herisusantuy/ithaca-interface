@@ -51,20 +51,21 @@
 }
 
 .dropDownWrapper {
-  width: 150px;
+  width: rem(150);
 }
 
 .prePackagedTitle {
+  @include font-size('text-xs', 'regular');
   color: var(--white);
-  margin-top: 10px;
-  margin-right: 12px;
+  margin-top: rem(10);
+  margin-right: rem(12);
 }
 
 .parent {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: 1fr;
-  grid-column-gap: 12px;
+  grid-column-gap: rem(12);
   align-items: center;
 
   p {
@@ -72,7 +73,6 @@
     color: var(--white-60);
     font-family: $lato;
     position: relative;
-    // top: 40px;
     z-index: 9;
   }
 
