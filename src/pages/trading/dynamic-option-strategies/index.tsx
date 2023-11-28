@@ -81,8 +81,8 @@ const Index = () => {
     { name: 'Side', style: styles.side },
     { name: 'Size', style: styles.size },
     { name: 'Strike', style: styles.strike },
-    { name: 'Price Per Leg', style: styles.unitPrice },
-    { name: '', style: styles.action },
+    { name: 'Unit Price', style: styles.unitPrice },
+    { name: 'IV', style: styles.action },
   ];
   const handleStrategyChange = (strat: string) => {
     const newStrategy = STRATEGIES.find(s => s.key === strat) as PrepackagedStrategy;
