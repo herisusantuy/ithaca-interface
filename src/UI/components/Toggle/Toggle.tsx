@@ -11,9 +11,17 @@ type ToggleProps = {
   defaultState?: 'left' | 'right';
   onChange?: (state: 'left' | 'right') => void;
   size?: string;
+  rightLabelClass?: string;
 };
 
-const Toggle = ({ size, leftLabel = '', rightLabel = '', defaultState = 'left', onChange }: ToggleProps) => {
+const Toggle = ({
+  size,
+  leftLabel = '',
+  rightLabel = '',
+  defaultState = 'left',
+  onChange,
+  rightLabelClass,
+}: ToggleProps) => {
   // Toggle state
   const [state, setState] = useState(defaultState);
 
@@ -33,7 +41,7 @@ const Toggle = ({ size, leftLabel = '', rightLabel = '', defaultState = 'left', 
       <div className={getSwitchStyle()}>
         <div className={styles.slider}></div>
       </div>
-      {rightLabel && <p>{rightLabel}</p>}
+      {rightLabel && <p className={rightLabelClass}>{rightLabel}</p>}
     </div>
   );
 };

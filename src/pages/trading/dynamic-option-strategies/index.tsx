@@ -10,6 +10,14 @@ import useToast from '@/UI/hooks/useToast';
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
 
+// Constants
+import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
+
+// Utils
+import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
+import ReadyState from '@/UI/utils/ReadyState';
+
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 import LabelValue from '@/UI/components/LabelValue/LabelValue';
@@ -18,6 +26,12 @@ import Asset from '@/UI/components/Asset/Asset';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
+import Button from '@/UI/components/Button/Button';
+import Plus from '@/UI/components/Icons/Plus';
+import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
+import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
+import DynamicOptionRow from '@/UI/components/DynamicOptionRow/DynamicOptionRow';
+import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 
 // Layouts
 import Main from '@/UI/layouts/Main/Main';
@@ -29,19 +43,9 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Styles
 import styles from './dynamic-option-strategies.module.scss';
+import Toggle from '@/UI/components/Toggle/Toggle';
 
 // Types
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
-import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import ReadyState from '@/UI/utils/ReadyState';
-import DynamicOptionRow from '@/UI/components/DynamicOptionRow/DynamicOptionRow';
-import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
-import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
-import Button from '@/UI/components/Button/Button';
-import Plus from '@/UI/components/Icons/Plus';
-import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
-
 export interface DynamicOptionStrategy {
   leg: Leg;
   referencePrice: number;
@@ -149,7 +153,7 @@ const Index = () => {
     newstrategies.splice(index, 1);
     setStrategy({
       ...strategy,
-      strategies: newstrategies
+      strategies: newstrategies,
     });
     if (!newPositionBuilderStrategies.length) {
       setPositionBuilderStrategies([]);
@@ -179,8 +183,8 @@ const Index = () => {
           side: 'BUY',
           size: 1,
           strike: 0,
-        }
-      ]
+        },
+      ],
     });
   };
 
@@ -243,22 +247,25 @@ const Index = () => {
                   <h3>Dynamic Option Strategy</h3>
                   <div className='mb-24'>
                     <Flex>
-                      <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
-                      <div className={styles.dropDownWrapper}>
-                        <DropdownMenu
-                          value={{
-                            name: strategy.label,
-                            value: strategy.key,
-                          }}
-                          options={STRATEGIES.map(strat => {
-                            return {
-                              name: strat.label,
-                              value: strat.key,
-                            };
-                          })}
-                          onChange={option => handleStrategyChange(option)}
-                        />
-                      </div>
+                      <Flex>
+                        <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
+                        <div className={styles.dropDownWrapper}>
+                          <DropdownMenu
+                            value={{
+                              name: strategy.label,
+                              value: strategy.key,
+                            }}
+                            options={STRATEGIES.map(strat => {
+                              return {
+                                name: strat.label,
+                                value: strat.key,
+                              };
+                            })}
+                            onChange={option => handleStrategyChange(option)}
+                          />
+                        </div>
+                      </Flex>
+                      <Toggle size='sm' rightLabel='Link' rightLabelClass='link-icon' />
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>
