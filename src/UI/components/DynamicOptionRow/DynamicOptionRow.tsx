@@ -215,18 +215,18 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     const size = getNumberValue(amount);
     setSize(size);
     sizeChange(Number(size));
-    if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-    const leg = {
-      contractId: strikeList[strike].contractId,
-      quantity: size,
-      side,
-    } as Leg;
-    updateStrategy({
-      leg,
-      referencePrice: getNumber(unitPrice),
-      payoff: product === 'Forward' ? 'Forward': type,
-      strike,
-    });
+    // if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
+    // const leg = {
+    //   contractId: strikeList[strike].contractId,
+    //   quantity: size,
+    //   side,
+    // } as Leg;
+    // updateStrategy({
+    //   leg,
+    //   referencePrice: getNumber(unitPrice),
+    //   payoff: product === 'Forward' ? 'Forward': type,
+    //   strike,
+    // });
   };
 
   const handleStrikeChange = (strike: string) => {

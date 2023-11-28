@@ -1,5 +1,5 @@
 // Packages
-import { ChangeEvent, ReactNode, useState } from 'react';
+import { ChangeEvent, ReactNode } from 'react';
 
 // Utils
 import { preventScrollOnNumberInput } from '@/UI/utils/Input';

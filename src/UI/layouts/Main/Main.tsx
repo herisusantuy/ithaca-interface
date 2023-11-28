@@ -1,9 +1,3 @@
-// Packages
-import { useContext } from 'react';
-
-// Components
-import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
-
 // Styles
 import styles from './Main.module.scss';
 
