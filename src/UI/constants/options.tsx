@@ -4,6 +4,11 @@ type OptionProps = {
   value: string;
 };
 
+export const BARRIER_OPTIONS: OptionProps[] = [
+  { option: 'Call', value: 'BUY' },
+  { option: 'Put', value: 'SELL' },
+];
+
 export const TYPE_OPTIONS: OptionProps[] = [
   { option: 'Call', value: 'Call' },
   { option: 'Put', value: 'Put' },
