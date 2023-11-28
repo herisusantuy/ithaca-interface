@@ -24,20 +24,15 @@ import Panel from '@/UI/layouts/Panel/Panel';
 
 // Styles
 import styles from './PositionBuilderRow.module.scss';
-import {
-  ClientConditionalOrder,
-  Leg,
-  calculateNetPrice,
-  createClientOrderId,
-  calcCollateralRequirement,
-} from '@ithaca-finance/sdk';
+
+// SDK
+import { Leg, calculateNetPrice, calcCollateralRequirement } from '@ithaca-finance/sdk';
 import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 
 type PositionBuilderRowProps = {
   title: string;
   options: { option: string | ReactNode; value: string }[];
   addStrategy: (strategy: PositionBuilderStrategy) => void;
-  submitAuction: (order: ClientConditionalOrder) => void;
 };
 
 type SectionType = {
@@ -45,7 +40,7 @@ type SectionType = {
   style: string;
 };
 
-const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: PositionBuilderRowProps) => {
+const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowProps) => {
   // Store
   const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
     useAppStore();
@@ -64,6 +59,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
     { name: 'Size', style: styles.size },
     { name: 'Strike', style: styles.strike },
     { name: 'Unit Price', style: styles.unitPrice },
+    { name: 'IV', style: styles.iv },
     { name: 'Collateral', style: styles.collateral },
     { name: 'Premium', style: styles.premium },
   ];
@@ -105,12 +101,15 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
       leg.contractId = forwardContracts[strike].contractId;
     }
-    return formatNumber(calcCollateralRequirement(
-      leg,
-      title === 'Forwards' ? 'Forward' : payoff,
-      getNumber(strike),
-      currencyPrecision.strike
-    ), 'string');
+    return formatNumber(
+      calcCollateralRequirement(
+        leg,
+        title === 'Forwards' ? 'Forward' : payoff,
+        getNumber(strike),
+        currencyPrecision.strike
+      ),
+      'string'
+    );
   };
 
   const calcPremium = () => {
@@ -153,7 +152,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               selectedOption={payoff}
               name={`${title}-payoff`}
               onChange={handlePayoffChange}
-              width={170}
+              width={`100%`}
             />
           </div>
           <div className={styles.side}>
@@ -198,6 +197,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}
             />
           </div>
+          <div className={`${styles.iv} color-white`}>-</div>
           <div className={styles.collateral}>
             <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
           </div>
@@ -205,7 +205,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
             <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />
           </div>
           <div className={styles.action}>
-            <Flex gap='gap-5'>
+            <Flex gap='gap-5' direction='justify-end'>
               <Button
                 size='sm'
                 title='Click to add to Strategy'
@@ -234,33 +234,6 @@ const PositionBuilderRow = ({ title, options, addStrategy, submitAuction }: Posi
               >
                 <Plus />
                 Strategy
-              </Button>
-              <Button
-                size='sm'
-                title='Click to add to submit to auction'
-                disabled={!(unitPrice && size && strike)}
-                variant='primary'
-                onClick={() => {
-                  if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-                  const leg = {
-                    contractId: contracts[strike].contractId,
-                    quantity: size,
-                    side,
-                  } as Leg;
-                  if (title === 'Forwards') {
-                    const expiry =
-                      payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
-                    const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-                    leg.contractId = forwardContracts[strike].contractId;
-                  }
-                  submitAuction({
-                    clientOrderId: createClientOrderId(),
-                    totalNetPrice: calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike),
-                    legs: [leg],
-                  });
-                }}
-              >
-                Submit to Auction
               </Button>
             </Flex>
           </div>
