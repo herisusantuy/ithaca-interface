@@ -72,9 +72,6 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
   if (min >= 0) {
     return 0;
   }
-  if (max - Math.abs(min) == 0) {
-    return 0;
-  }
   return max / (max - min);
 };
 
@@ -107,7 +104,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
             <stop offset='0%' stopColor={color} stopOpacity={1} />
           </>) : ''}
         {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={color} stopOpacity={1} />: ''}
-        {off !== 1 && off !== 0 ? <stop offset={off} stopColor='#fff' stopOpacity={1} /> : ''}
+        <stop offset={off === 1? 0 : off} stopColor='#fff' stopOpacity={1} />
         {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor='#FF3F57' stopOpacity={1} />: ''}
         {off !== 0 ? (
           <>
