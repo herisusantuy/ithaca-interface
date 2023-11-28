@@ -66,7 +66,8 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  const {toastList, position, showToast} = useToast();
+  const { toastList, position, showToast } = useToast();
+
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
@@ -131,7 +132,7 @@ const Index = () => {
           message: 'We have received your request',
           type: 'info',
         },
-        'top-right',
+        'top-right'
       );
     } catch (error) {
       showToast(
@@ -141,7 +142,7 @@ const Index = () => {
           message: 'Transaction Failed, please try again.',
           type: 'error',
         },
-        'top-right',
+        'top-right'
       );
       console.error('Failed to submit order', error);
     }
@@ -195,13 +196,6 @@ const Index = () => {
                       { option: 'Put', value: 'Put' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => {
-                      setAuctionSubmission({
-                        order,
-                        type: 'Options',
-                      });
-                      setSubmitModal(true);
-                    }}
                   />
                   <PositionBuilderRow
                     title='Digital Options'
@@ -210,13 +204,6 @@ const Index = () => {
                       { option: 'Put', value: 'BinaryPut' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => {
-                      setAuctionSubmission({
-                        order,
-                        type: 'Digital Options',
-                      });
-                      setSubmitModal(true);
-                    }}
                   />
                   <PositionBuilderRow
                     title='Forwards'
@@ -228,13 +215,6 @@ const Index = () => {
                       { option: 'Next Auction', value: 'Forward (Next Auction)' },
                     ]}
                     addStrategy={handleAddStrategy}
-                    submitAuction={(order: ClientConditionalOrder) => {
-                      setAuctionSubmission({
-                        order,
-                        type: 'Forward',
-                      });
-                      setSubmitModal(true);
-                    }}
                   />
                 </>
               }

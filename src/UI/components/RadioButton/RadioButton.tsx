@@ -11,7 +11,7 @@ type RadioButtonProps = {
   disabled?: boolean;
   orientation?: 'horizontal' | 'vertical';
   onChange?: (value: string) => void;
-  width?: number;
+  width?: number | string;
   size?: 'compact' | 'regular';
 };
 
@@ -51,7 +51,7 @@ const RadioButton = ({
       className={`${size === 'compact' ? styles.radioButtonCompact : styles.radioButton} ${
         orientation === 'vertical' ? styles.vertical : ''
       }`}
-      style={width > 0 ? { width: width + 'px' } : {}}
+      style={width > '0' ? { width: width + 'px' } : {}}
     >
       {renderOptions(options)}
     </div>
