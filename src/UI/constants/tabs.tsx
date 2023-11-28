@@ -42,14 +42,14 @@ export const TABS: Tab[] = [
 
 export const TRADING_TABS_ITEMS: Tab[] = [
   {
-    id: 'dynamic-option-strategies',
-    path: '/trading/dynamic-option-strategies',
-    label: 'Dynamic Option Strategies',
-  },
-  {
     id: 'position-builder',
     path: '/trading/position-builder',
     label: 'Position Builder',
+  },
+  {
+    id: 'dynamic-option-strategies',
+    path: '/trading/dynamic-option-strategies',
+    label: 'Dynamic Option Strategies',
   },
   {
     id: 'market',

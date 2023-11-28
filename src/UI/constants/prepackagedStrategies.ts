@@ -7,12 +7,18 @@ export type PrepackagedStrategy = {
 export type StrategyLeg = {
     product: string,
     type: string,
-    side: 'BUY' | 'SELL',
+    side: SIDE,
     size: number,
-    strike: number
+    strike: number,
+    linked: boolean
 }
 
-export const STRATEGIES: PrepackagedStrategy[] = [
+export enum SIDE {
+    BUY = 'BUY',
+    SELL = 'SELL'
+}
+
+export const STRUCTURED_STRATEGIES: PrepackagedStrategy[] = [
     {
         "label": "Bet",
         "key": "bet",
@@ -20,16 +26,18 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 2
+                "strike": 2,
+                "linked": true
             }
         ]
     },
@@ -40,123 +48,32 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             {
                 "product": "option",
                 "type": "Put",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     },
     {
-        "label": "No Gain no Pain",
+        "label": "No Gain, No Payin'",
         "key": "no-gain-no-pain",
         "strategies": [
             {
                 "product": "option",
                 "type": "Call",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0
-            }
-        ]
-    },
-    {
-        "label": "Up n In Call",
-        "key": "up-n-in-call",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "BUY",
-                "size": 1,
-                "strike": 0
-            },
-            {
-                "product": "digital-option",
-                "type": "BinaryCall",
-                "side": "BUY",
-                "size": 200,
-                "strike": 0
-            }
-        ]
-    },
-    {
-        "label": "Up n Out Call",
-        "key": "up-n-out-call",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "BUY",
-                "size": 1,
-                "strike": -2
-            },
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "SELL",
-                "size": 1,
-                "strike": 0
-            },
-            {
-                "product": "digital-option",
-                "type": "BinaryCall",
-                "side": "SELL",
-                "size": 200,
-                "strike": 0
-            }
-        ]
-    },
-    {
-        "label": "Down In Put",
-        "key": "down-in-put",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Put",
-                "side": "BUY",
-                "size": 1,
-                "strike": -3
-            },
-            {
-                "product": "digital-option",
-                "type": "BinaryPut",
-                "side": "BUY",
-                "size": 200,
-                "strike": -3
-            }
-        ]
-    },
-    {
-        "label": "Down Out Put",
-        "key": "down-out-put",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Put",
-                "side": "BUY",
-                "size": 1,
-                "strike": -1
-            },
-            {
-                "product": "option",
-                "type": "Put",
-                "side": "SELL",
-                "size": 1,
-                "strike": -3
-            },
-            {
-                "product": "digital-option",
-                "type": "BinaryPut",
-                "side": "SELL",
-                "size": 200,
-                "strike": -3
+                "strike": 0,
+                "linked": true
             }
         ]
     },
@@ -167,108 +84,182 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             {
                 "product": "option",
                 "type": "Put",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 200,
-                "strike": -3
+                "strike": -3,
+                "linked": false
             },
             {
                 "product": "Forward",
                 "type": "CURRENT",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             }
         ]
     },
     {
-        "label": "Twin Win",
+        "label": "Twin-Win",
         "key": "twin-win",
         "strategies": [
             {
                 "product": "option",
                 "type": "Put",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 2,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 2,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
-                "side": "SELL",
+                "side": SIDE.SELL,
                 "size": 400,
-                "strike": -3
+                "strike": -3,
+                "linked": false
             },
             {
                 "product": "Forward",
                 "type": "CURRENT",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": false
             }
-        ]
-    },{
-        "label": "Straddle",
-        "key": "straddle",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "BUY",
-                "size": 1,
-                "strike": 0
-            },
-            {
-                "product": "option",
-                "type": "Put",
-                "side": "BUY",
-                "size": 1,
-                "strike": 0
-            }
-
         ]
     },
     {
-        "label": "Strangle",
-        "key": "strangle",
+        "label": "Up & In Call",
+        "key": "up-n-in-call",
         "strategies": [
             {
                 "product": "option",
                 "type": "Call",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 1
+                "strike": 0,
+                "linked": false
+            },
+            {
+                "product": "digital-option",
+                "type": "BinaryCall",
+                "side": SIDE.BUY,
+                "size": 200,
+                "strike": 0,
+                "linked": false
+            }
+        ]
+    },
+    {
+        "label": "Up & Out Call",
+        "key": "up-n-out-call",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": -2,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "digital-option",
+                "type": "BinaryCall",
+                "side": SIDE.SELL,
+                "size": 200,
+                "strike": 0,
+                "linked": false
+            }
+        ]
+    },
+    {
+        "label": "Down & In Put",
+        "key": "down-in-put",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": -3,
+                "linked": false
+            },
+            {
+                "product": "digital-option",
+                "type": "BinaryPut",
+                "side": SIDE.BUY,
+                "size": 200,
+                "strike": -3,
+                "linked": false
+            }
+        ]
+    },
+    {
+        "label": "Down & Out Put",
+        "key": "down-out-put",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
-                "side": "BUY",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": -1
+                "strike": -3,
+                "linked": true
+            },
+            {
+                "product": "digital-option",
+                "type": "BinaryPut",
+                "side": SIDE.SELL,
+                "size": 200,
+                "strike": -3,
+                "linked": false
             }
-
         ]
-    },
+    }
+];
+
+export const LINEAR_STRATEGIES = [
     {
         "label": "Call Spread",
         "key": "call-spread",
@@ -276,36 +267,262 @@ export const STRATEGIES: PrepackagedStrategy[] = [
             {
                 "product": "option",
                 "type": "Call",
-                "side": "BUY",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 1
-            },
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "SELL",
-                "size": 1,
-                "strike": 2
-            }
-        ]
-    },
-    {
-        "label": "Butterfly",
-        "key": "butterfly",
-        "strategies": [
-            {
-                "product": "option",
-                "type": "Call",
-                "side": "SELL",
-                "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
-                "side": "SELL",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    }, {
+        "label": "Put Spread",
+        "key": "put-spread",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    }, {
+        "label": "Risk Reversal",
+        "key": "risk-reversal",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    }, {
+        "label": "Call Ladder",
+        "key": "call-ladder",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    }, {
+        "label": "Put Ladder",
+        "key": "put-ladder",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    }, {
+        "label": "Straddles",
+        "key": "straddles",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+
+        ]
+    },
+    {
+        "label": "Strangles",
+        "key": "strangles",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": -1,
+                "linked": true
+            }
+
+        ]
+    },
+    {
+        "label": "Call Condor",
+        "key": "call-condor",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 2,
+                "linked": true
+            }
+        ]
+    },
+    {
+        "label": "Put Condor",
+        "key": "put-condor",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 2,
+                "linked": true
+            }
+        ]
+    },
+    {
+        "label": "Iron Condor",
+        "key": "iron-condor",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 2,
+                "linked": true
+            }
+        ]
+    },
+    {
+        "label": "Call Butterfly",
+        "key": "call-butterfly",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            }
+        ]
+    },
+    {
+        "label": "Put Butterfly",
+        "key": "put-butterfly",
+        "strategies": [
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 0,
+                "linked": true
             }
         ]
     }

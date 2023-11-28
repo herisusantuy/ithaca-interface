@@ -11,7 +11,7 @@ import useToast from '@/UI/hooks/useToast';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Constants
-import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
+import { PrepackagedStrategy, LINEAR_STRATEGIES, STRUCTURED_STRATEGIES, SIDE } from '@/UI/constants/prepackagedStrategies';
 
 // Utils
 import { formatNumber, getNumber } from '@/UI/utils/Numbers';
@@ -69,11 +69,14 @@ const Index = () => {
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
   const [chartData, setChartData] = useState<PayoffMap[]>();
-  const [strategy, setStrategy] = useState(STRATEGIES[0]);
+  const [strategy, setStrategy] = useState(LINEAR_STRATEGIES[0]);
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
   const { toastList, position, showToast } = useToast();
+  const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map((s) => s.size));
+  const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
+  const [strategyType, setSetStrategyType] = useState<'LINEAR'|'STRUCTURED'>('LINEAR');
 
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
@@ -84,11 +87,14 @@ const Index = () => {
     { name: 'Unit Price', style: styles.unitPrice },
     { name: 'IV', style: styles.action },
   ];
-  const handleStrategyChange = (strat: string) => {
-    const newStrategy = STRATEGIES.find(s => s.key === strat) as PrepackagedStrategy;
+  const handleStrategyChange = (strat: string, type: 'LINEAR' | 'STRUCTURED') => {
+    const newStrategy = (type === 'LINEAR' ? LINEAR_STRATEGIES : STRUCTURED_STRATEGIES).find(s => s.key === strat) as PrepackagedStrategy;
+    setSetStrategyType(type);
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
+    setSharedSize(Array(newStrategy.strategies.length).fill('1'));
+    setLinkToggle('right');
     setStrategy({
       label: newStrategy?.label,
       key: newStrategy?.key,
@@ -146,6 +152,36 @@ const Index = () => {
     getPositionBuilderSummary(positionBuilderStrategies);
   };
 
+  const handleLinkChange = (isLinked: boolean, index: number) => {
+    if (isLinked) {
+      const otherLinked = strategy.strategies.reduce((arr,s, index) => {
+        if (s.linked) {
+          arr.push(index);
+        }
+        return arr
+      }, [] as number[]);
+      if (otherLinked.length) {
+        const largest = Math.max.apply(null, otherLinked.map((i) => sharedSize[i]))        
+        const sizes = [...sharedSize];
+        sizes[index] = largest;
+        setSharedSize([...sizes]);
+        const newStrat = positionBuilderStrategies[index];
+        newStrat.leg.quantity = `${largest}`;
+        positionBuilderStrategies[index] = newStrat;
+        setPositionBuilderStrategies(positionBuilderStrategies);
+        getPositionBuilderSummary(positionBuilderStrategies);
+      }
+      if (otherLinked.length + 1 === strategy.strategies.length) {
+        setLinkToggle('right');
+      }
+    }
+    else {
+      setLinkToggle('left')
+    }
+    strategy.strategies[index].linked = isLinked;
+    setStrategy({...strategy});
+  };
+
   const handleRemoveStrategy = (index: number) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies];
     newPositionBuilderStrategies.splice(index, 1);
@@ -180,9 +216,10 @@ const Index = () => {
         {
           product: 'option',
           type: 'Call',
-          side: 'BUY',
+          side: SIDE.BUY,
           size: 1,
           strike: 0,
+          linked: true
         },
       ],
     });
@@ -248,24 +285,72 @@ const Index = () => {
                   <div className='mb-24'>
                     <Flex>
                       <Flex>
-                        <div className={styles.prePackagedTitle}>Pre-Packaged Strategy</div>
+                        <div className={styles.prePackagedTitle}>Linear Combinations</div>
                         <div className={styles.dropDownWrapper}>
                           <DropdownMenu
-                            value={{
+                            value={strategyType === 'LINEAR' ? {
                               name: strategy.label,
                               value: strategy.key,
+                            } : {
+                              name: '-',
+                              value: ''
                             }}
-                            options={STRATEGIES.map(strat => {
+                            options={LINEAR_STRATEGIES.map(strat => {
                               return {
                                 name: strat.label,
                                 value: strat.key,
                               };
                             })}
-                            onChange={option => handleStrategyChange(option)}
+                            onChange={option => handleStrategyChange(option, 'LINEAR')}
+                          />
+                        </div>
+                        <div className={styles.prePackagedTitle}>Structured Products</div>
+                        <div className={styles.dropDownWrapper}>
+                          <DropdownMenu
+                            value={strategyType === 'STRUCTURED' ? {
+                              name: strategy.label,
+                              value: strategy.key,
+                            } : {
+                              name: '-',
+                              value: ''
+                            }}
+                            options={STRUCTURED_STRATEGIES.map(strat => {
+                              return {
+                                name: strat.label,
+                                value: strat.key,
+                              };
+                            })}
+                            onChange={option => handleStrategyChange(option, 'STRUCTURED')}
                           />
                         </div>
                       </Flex>
-                      <Toggle size='sm' rightLabel='Link' rightLabelClass='link-icon' />
+                      <Toggle defaultState={linkToggle} size='sm' rightLabel='Link' rightLabelClass='link-icon' onChange={(side) => {
+                          const newStrats = strategy.strategies.map((s) => {
+                            return {
+                              ...s,
+                              linked: side === 'right'
+                            }
+                          });
+                          setStrategy({...strategy,
+                          strategies: newStrats})
+                          if (side === 'right') {
+                              const largest = Math.max.apply(null,  sharedSize);
+                              setSharedSize(Array(newStrats.length).fill(largest));
+                              const strats = positionBuilderStrategies.map((s) => {
+                                const leg = {
+                                  ...s.leg,
+                                  quantity: `${largest}` as `${number}`
+                                };
+                                return {
+                                  ...s,
+                                  leg
+                                }
+                              });
+                              setPositionBuilderStrategies([...strats]);
+                              getPositionBuilderSummary([...strats]);
+                            }
+                          }
+                      }/>
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>
@@ -287,6 +372,43 @@ const Index = () => {
                               id={`strategy-${index}-${strategy.key}`}
                               key={`strategy-${index}`}
                               strategy={strat}
+                              linked={strat.linked}
+                              sizeChange={(size:number) => {
+                                if (strat.linked) {
+                                  const sizes = strategy.strategies.map((s, index) => 
+                                    s.linked ? size :  sharedSize[index]
+                                  )
+                                  setSharedSize([...sizes]);
+                                  const strats = positionBuilderStrategies.map((s, i) => {
+                                    const st = strategy.strategies[i];
+                                    return {
+                                      ...s,
+                                      leg: {
+                                        ...s.leg,
+                                        quantity: st.linked ? `${size}` as `${number}` : s.leg.quantity
+                                      }
+                                    }
+                                  });
+                                  setPositionBuilderStrategies(strats);
+                                  getPositionBuilderSummary([...strats]);
+                                }
+                                else {
+                                  const sizes = [...sharedSize];
+                                  sizes[index] = size;
+                                  setSharedSize([...sizes]);
+                                  positionBuilderStrategies[index] = {
+                                    ...positionBuilderStrategies[index],
+                                    leg: {
+                                      ...positionBuilderStrategies[index].leg,
+                                      quantity: `${size}`
+                                    }
+                                  };
+                                  setPositionBuilderStrategies(positionBuilderStrategies);
+                                  getPositionBuilderSummary(positionBuilderStrategies);
+                                }
+                              }}
+                              sharedSize={sharedSize[index].toString()}
+                              linkChange={(isLinked) => handleLinkChange(isLinked, index)}
                               updateStrategy={strat => handleStrategyUpdate(strat, index)}
                               removeStrategy={() => handleRemoveStrategy(index)}
                             />
