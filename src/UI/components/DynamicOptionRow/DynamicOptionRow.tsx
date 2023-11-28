@@ -34,6 +34,10 @@ type DynamicOptionRowProps = {
   updateStrategy: (strategy: DynamicOptionStrategy) => void;
   removeStrategy: () => void;
   id: string;
+  linked: boolean;
+  linkChange: (isLinked: boolean) => void;
+  sharedSize: string;
+  sizeChange: (size: number) => void;
 };
 
 const PRODUCT_OPTIONS: ProductOption[] = [{
@@ -78,7 +82,7 @@ type ProductOption = {
   value: string
 }
 
-const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: DynamicOptionRowProps) => {
+const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkChange, linked, sharedSize, sizeChange }: DynamicOptionRowProps) => {
   // Store
   const { getContractsByPayoff, spotPrices, currentExpiryDate } =
     useAppStore();
@@ -99,6 +103,12 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikeList, id]);
+
+  useEffect(() => {
+    if (linked) {
+      setSize(sharedSize)
+    }
+  }, [sharedSize, linked])
 
   useEffect(() => {
     setSide(strategy.side)
@@ -204,18 +214,19 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
   const handleSizeChange = (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
-    if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
-    const leg = {
-      contractId: strikeList[strike].contractId,
-      quantity: size,
-      side,
-    } as Leg;
-    updateStrategy({
-      leg,
-      referencePrice: getNumber(unitPrice),
-      payoff: product === 'Forward' ? 'Forward': type,
-      strike,
-    });
+    sizeChange(Number(size));
+    // if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
+    // const leg = {
+    //   contractId: strikeList[strike].contractId,
+    //   quantity: size,
+    //   side,
+    // } as Leg;
+    // updateStrategy({
+    //   leg,
+    //   referencePrice: getNumber(unitPrice),
+    //   payoff: product === 'Forward' ? 'Forward': type,
+    //   strike,
+    // });
   };
 
   const handleStrikeChange = (strike: string) => {
@@ -272,6 +283,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy }: Dyna
           </div>
           <div className={styles.size}>
             <Input
+              canLink={true}
+              isLinked={linked}
+              onLink={(link) => {
+                linkChange(link);
+              }}
               type='number'
               value={size}
               width={110}

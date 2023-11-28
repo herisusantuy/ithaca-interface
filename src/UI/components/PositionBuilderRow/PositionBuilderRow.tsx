@@ -52,6 +52,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const [strike, setStrike] = useState<string | undefined>(title === 'Forwards' ? '-' : undefined);
   const contracts = getContractsByPayoff(title === 'Forwards' ? 'Forward' : payoff);
   const [unitPrice, setUnitPrice] = useState(title === 'Forwards' ? `${contracts['-'].referencePrice}` : '');
+  const [volatility] = useState('-');
 
   // Sections
   const sections: SectionType[] = [
@@ -197,7 +198,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}
             />
           </div>
-          <div className={`${styles.iv} color-white`}>-</div>
+          <div className={`${styles.iv} color-white`}>{volatility}</div>
           <div className={styles.collateral}>
             <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
           </div>

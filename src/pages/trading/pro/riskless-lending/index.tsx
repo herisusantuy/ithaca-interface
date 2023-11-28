@@ -34,7 +34,7 @@ import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
-import { PrepackagedStrategy, STRATEGIES } from '@/UI/constants/prepackagedStrategies';
+import { PrepackagedStrategy, LINEAR_STRATEGIES, SIDE } from '@/UI/constants/prepackagedStrategies';
 import Button from '@/UI/components/Button/Button';
 import Plus from '@/UI/components/Icons/Plus';
 import RisklessLendingRow from '@/UI/components/RisklessLendingRow/RisklessLendingRow';
@@ -65,13 +65,13 @@ const Index = () => {
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
   const [chartData, setChartData] = useState<PayoffMap[]>();
-  const [strategy, setStrategy] = useState(STRATEGIES[0]);
+  const [strategy, setStrategy] = useState<PrepackagedStrategy>(LINEAR_STRATEGIES[0]);
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
 
   const handleStrategyChange = (strat: string) => {
-    const newStrategy = STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
+    const newStrategy = LINEAR_STRATEGIES.find((s) => s.key === strat) as PrepackagedStrategy;
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
@@ -167,9 +167,10 @@ const Index = () => {
       {
         product: "option",
         type: "Call",
-        side: "BUY",
-        size: 100,
-        strike: 0
+        side: SIDE.BUY,
+        size: 1,
+        strike: 0,
+        linked: false
       }));
     setStrategy({ ...strategy });
   }
@@ -222,7 +223,7 @@ const Index = () => {
                             name: strategy.label,
                             value: strategy.key
                           }}
-                          options={STRATEGIES.map((strat) => {
+                          options={LINEAR_STRATEGIES.map((strat) => {
                             return {
                               name: strat.label,
                               value: strat.key

@@ -12,9 +12,6 @@ import ChevronDown from '@/UI/components/Icons/ChevronDown';
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
 
-// SDK
-import { Order } from '@ithaca-finance/sdk';
-
 // Styles
 import styles from './Navigation.module.scss';
 
@@ -24,7 +21,8 @@ type NavigationProps = {
 };
 
 const Navigation = ({ onClick }: NavigationProps) => {
-  const [orderList, setOrderList] = useState<Order[]>([]);
+  const [orderList, setOrderList] = useState<string[]>(['','']);
+  // const [orderList, setOrderList] = useState<Order[]>([]);
   const router = useRouter();
   const { ithacaSDK, isAuthenticated } = useAppStore();
 
