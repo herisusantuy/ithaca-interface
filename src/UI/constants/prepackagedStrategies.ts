@@ -9,7 +9,8 @@ export type StrategyLeg = {
     type: string,
     side: 'BUY' | 'SELL',
     size: number,
-    strike: number
+    strike: number,
+    linked: boolean
 }
 
 export const STRATEGIES: PrepackagedStrategy[] = [
@@ -22,14 +23,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "BinaryCall",
                 "side": "BUY",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "SELL",
                 "size": 1,
-                "strike": 2
+                "strike": 2,
+                "linked": true
             }
         ]
     },
@@ -42,7 +45,8 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Put",
                 "side": "SELL",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     },
@@ -55,14 +59,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "SELL",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     },
@@ -75,14 +81,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "BUY",
                 "size": 200,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     },
@@ -95,21 +103,24 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": -2
+                "strike": -2,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Call",
                 "side": "SELL",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryCall",
                 "side": "SELL",
                 "size": 200,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     },
@@ -122,14 +133,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Put",
                 "side": "BUY",
                 "size": 1,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
                 "side": "BUY",
                 "size": 200,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             }
         ]
     },
@@ -142,21 +155,24 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Put",
                 "side": "BUY",
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "SELL",
                 "size": 1,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
                 "side": "SELL",
                 "size": 200,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             }
         ]
     },
@@ -169,28 +185,32 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Put",
                 "side": "BUY",
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "SELL",
                 "size": 1,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
                 "side": "SELL",
                 "size": 200,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "Forward",
                 "type": "CURRENT",
                 "side": "BUY",
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             }
         ]
     },
@@ -203,28 +223,32 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Put",
                 "side": "BUY",
                 "size": 2,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "SELL",
                 "size": 2,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "digital-option",
                 "type": "BinaryPut",
                 "side": "SELL",
                 "size": 400,
-                "strike": -3
+                "strike": -3,
+                "linked": true
             },
             {
                 "product": "Forward",
                 "type": "CURRENT",
                 "side": "BUY",
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             }
         ]
     },{
@@ -236,14 +260,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "BUY",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
 
         ]
@@ -257,14 +283,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": 1
+                "strike": 1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "BUY",
                 "size": 1,
-                "strike": -1
+                "strike": -1,
+                "linked": true
             }
 
         ]
@@ -278,14 +306,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "BUY",
                 "size": 1,
-                "strike": 1
+                "strike": 1,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Call",
                 "side": "SELL",
                 "size": 1,
-                "strike": 2
+                "strike": 2,
+                "linked": true
             }
         ]
     },
@@ -298,14 +328,16 @@ export const STRATEGIES: PrepackagedStrategy[] = [
                 "type": "Call",
                 "side": "SELL",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": "SELL",
                 "size": 1,
-                "strike": 0
+                "strike": 0,
+                "linked": true
             }
         ]
     }

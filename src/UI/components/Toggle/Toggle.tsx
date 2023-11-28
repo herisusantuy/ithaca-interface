@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Styles
 import styles from './Toggle.module.scss';
@@ -31,6 +31,10 @@ const Toggle = ({
     setState(newState);
     if (onChange) onChange(newState);
   };
+
+  useEffect(() => {
+    setState(defaultState);
+  }, [defaultState])
 
   // Get switch styles from toggle state
   const getSwitchStyle = () => (state === 'right' ? `${styles.switch} ${styles.isActive}` : styles.switch);

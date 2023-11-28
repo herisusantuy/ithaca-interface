@@ -74,6 +74,8 @@ const Index = () => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
   const { toastList, position, showToast } = useToast();
+  const [sharedSize, setSharedSize] = useState(STRATEGIES[0].strategies.map((s) => s.size));
+  const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
 
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
@@ -89,6 +91,8 @@ const Index = () => {
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
+    setSharedSize(Array(newStrategy.strategies.length).fill('1'));
+    setLinkToggle('right');
     setStrategy({
       label: newStrategy?.label,
       key: newStrategy?.key,
@@ -146,6 +150,36 @@ const Index = () => {
     getPositionBuilderSummary(positionBuilderStrategies);
   };
 
+  const handleLinkChange = (isLinked: boolean, index: number) => {
+    if (isLinked) {
+      const otherLinked = strategy.strategies.reduce((arr,s, index) => {
+        if (s.linked) {
+          arr.push(index);
+        }
+        return arr
+      }, [] as number[]);
+      if (otherLinked.length) {
+        const largest = Math.max.apply(null, otherLinked.map((i) => sharedSize[i]))        
+        const sizes = [...sharedSize];
+        sizes[index] = largest;
+        setSharedSize([...sizes]);
+        const newStrat = positionBuilderStrategies[index];
+        newStrat.leg.quantity = `${largest}`;
+        positionBuilderStrategies[index] = newStrat;
+        setPositionBuilderStrategies(positionBuilderStrategies);
+        getPositionBuilderSummary(positionBuilderStrategies);
+      }
+      if (otherLinked.length + 1 === strategy.strategies.length) {
+        setLinkToggle('right');
+      }
+    }
+    else {
+      setLinkToggle('left')
+    }
+    strategy.strategies[index].linked = isLinked;
+    setStrategy({...strategy});
+  };
+
   const handleRemoveStrategy = (index: number) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies];
     newPositionBuilderStrategies.splice(index, 1);
@@ -183,6 +217,7 @@ const Index = () => {
           side: 'BUY',
           size: 1,
           strike: 0,
+          linked: true
         },
       ],
     });
@@ -265,7 +300,33 @@ const Index = () => {
                           />
                         </div>
                       </Flex>
-                      <Toggle size='sm' rightLabel='Link' rightLabelClass='link-icon' />
+                      <Toggle defaultState={linkToggle} size='sm' rightLabel='Link' rightLabelClass='link-icon' onChange={(side) => {
+                          const newStrats = strategy.strategies.map((s) => {
+                            return {
+                              ...s,
+                              linked: side === 'right'
+                            }
+                          });
+                          setStrategy({...strategy,
+                          strategies: newStrats})
+                          if (side === 'right') {
+                              const largest = Math.max.apply(null,  sharedSize);
+                              setSharedSize(Array(newStrats.length).fill(largest));
+                              const strats = positionBuilderStrategies.map((s) => {
+                                const leg = {
+                                  ...s.leg,
+                                  quantity: `${largest}` as `${number}`
+                                };
+                                return {
+                                  ...s,
+                                  leg
+                                }
+                              });
+                              setPositionBuilderStrategies([...strats]);
+                              getPositionBuilderSummary([...strats]);
+                            }
+                          }
+                      }/>
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>
@@ -287,6 +348,22 @@ const Index = () => {
                               id={`strategy-${index}-${strategy.key}`}
                               key={`strategy-${index}`}
                               strategy={strat}
+                              linked={strat.linked}
+                              sizeChange={(size:number) => {
+                                if (strat.linked) {
+                                  const sizes = strategy.strategies.map((s, index) => 
+                                    s.linked ? size :  sharedSize[index]
+                                  )
+                                  setSharedSize([...sizes]);
+                                }
+                                else {
+                                  const sizes = [...sharedSize];
+                                  sizes[index] = size;
+                                  setSharedSize([...sizes]);
+                                }
+                              }}
+                              sharedSize={sharedSize[index].toString()}
+                              linkChange={(isLinked) => handleLinkChange(isLinked, index)}
                               updateStrategy={strat => handleStrategyUpdate(strat, index)}
                               removeStrategy={() => handleRemoveStrategy(index)}
                             />
