@@ -269,15 +269,15 @@ export const LINEAR_STRATEGIES = [
                 "type": "Call",
                 "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0,
+                "strike": 1,
                 "linked": true
             },
             {
                 "product": "option",
-                "type": "Put",
-                "side": SIDE.BUY,
+                "type": "Call",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0,
+                "strike": 2,
                 "linked": true
             }
 
@@ -288,7 +288,7 @@ export const LINEAR_STRATEGIES = [
         "strategies": [
             {
                 "product": "option",
-                "type": "Call",
+                "type": "Put",
                 "side": SIDE.BUY,
                 "size": 1,
                 "strike": 0,
@@ -297,9 +297,9 @@ export const LINEAR_STRATEGIES = [
             {
                 "product": "option",
                 "type": "Put",
-                "side": SIDE.BUY,
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0,
+                "strike": -1,
                 "linked": true
             }
 
@@ -313,15 +313,15 @@ export const LINEAR_STRATEGIES = [
                 "type": "Call",
                 "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0,
+                "strike": 1,
                 "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
-                "side": SIDE.BUY,
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0,
+                "strike": -1,
                 "linked": true
             }
 
@@ -335,15 +335,23 @@ export const LINEAR_STRATEGIES = [
                 "type": "Call",
                 "side": SIDE.BUY,
                 "size": 1,
+                "strike": -1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
                 "strike": 0,
                 "linked": true
             },
             {
                 "product": "option",
-                "type": "Put",
-                "side": SIDE.BUY,
+                "type": "Call",
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0,
+                "strike": 1,
                 "linked": true
             }
 
@@ -354,8 +362,16 @@ export const LINEAR_STRATEGIES = [
         "strategies": [
             {
                 "product": "option",
-                "type": "Call",
+                "type": "Put",
                 "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
                 "size": 1,
                 "strike": 0,
                 "linked": true
@@ -363,12 +379,11 @@ export const LINEAR_STRATEGIES = [
             {
                 "product": "option",
                 "type": "Put",
-                "side": SIDE.BUY,
+                "side": SIDE.SELL,
                 "size": 1,
-                "strike": 0,
+                "strike": -1,
                 "linked": true
             }
-
         ]
     }, {
         "label": "Straddles",
@@ -425,13 +440,29 @@ export const LINEAR_STRATEGIES = [
                 "type": "Call",
                 "side": SIDE.BUY,
                 "size": 1,
-                "strike": 1,
+                "strike": -2,
                 "linked": true
             },
             {
                 "product": "option",
                 "type": "Call",
                 "side": SIDE.SELL,
+                "size": 1,
+                "strike": -1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
                 "size": 1,
                 "strike": 2,
                 "linked": true
@@ -444,16 +475,32 @@ export const LINEAR_STRATEGIES = [
         "strategies": [
             {
                 "product": "option",
-                "type": "Call",
+                "type": "Put",
                 "side": SIDE.BUY,
+                "size": 1,
+                "strike": -2,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": -1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
                 "size": 1,
                 "strike": 1,
                 "linked": true
             },
             {
                 "product": "option",
-                "type": "Call",
-                "side": SIDE.SELL,
+                "type": "Put",
+                "side": SIDE.BUY,
                 "size": 1,
                 "strike": 2,
                 "linked": true
@@ -466,10 +513,18 @@ export const LINEAR_STRATEGIES = [
         "strategies": [
             {
                 "product": "option",
-                "type": "Call",
+                "type": "Put",
                 "side": SIDE.BUY,
                 "size": 1,
-                "strike": 1,
+                "strike": -2,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": -1,
                 "linked": true
             },
             {
@@ -477,9 +532,18 @@ export const LINEAR_STRATEGIES = [
                 "type": "Call",
                 "side": SIDE.SELL,
                 "size": 1,
+                "strike": 1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.BUY,
+                "size": 1,
                 "strike": 2,
                 "linked": true
             }
+
         ]
     },
     {
@@ -489,17 +553,25 @@ export const LINEAR_STRATEGIES = [
             {
                 "product": "option",
                 "type": "Call",
-                "side": SIDE.SELL,
+                "side": SIDE.BUY,
                 "size": 1,
+                "strike": -1,
+                "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Call",
+                "side": SIDE.SELL,
+                "size": 2,
                 "strike": 0,
                 "linked": true
             },
             {
                 "product": "option",
-                "type": "Put",
-                "side": SIDE.SELL,
+                "type": "Call",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0,
+                "strike": 1,
                 "linked": true
             }
         ]
@@ -510,20 +582,29 @@ export const LINEAR_STRATEGIES = [
         "strategies": [
             {
                 "product": "option",
-                "type": "Call",
-                "side": SIDE.SELL,
+                "type": "Put",
+                "side": SIDE.BUY,
                 "size": 1,
-                "strike": 0,
+                "strike": -1,
                 "linked": true
             },
             {
                 "product": "option",
                 "type": "Put",
                 "side": SIDE.SELL,
-                "size": 1,
+                "size": 2,
                 "strike": 0,
                 "linked": true
+            },
+            {
+                "product": "option",
+                "type": "Put",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 1,
+                "linked": true
             }
+
         ]
     }
 ];

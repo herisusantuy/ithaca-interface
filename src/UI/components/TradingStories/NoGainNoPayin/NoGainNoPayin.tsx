@@ -171,9 +171,13 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     handleMultiplierChange('100');
   }, []);
 
+  const renderInstruction = () => {
+    return <>{!compact && showInstructions && <NoGainNoPayinInstructions type={callOrPut} />}</>;
+  };
+
   return (
     <>
-      {!compact && showInstructions && <NoGainNoPayinInstructions />}
+      {renderInstruction()}
 
       <Flex direction='column' margin={compact ? 'mb-10' : 'mb-17'} gap='gap-12'>
         <Flex gap='gap-15' margin='mt-19'>

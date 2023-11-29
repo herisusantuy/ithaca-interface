@@ -9,7 +9,11 @@ import ChevronLeftHighlighted from '@/UI/components/Icons/ChevronLeftHighlighted
 // Styles
 import styles from './Instructions.module.scss';
 
-const NoGainNoPayinInstructions = () => {
+type NoGainNoPayinInstructionsProps = {
+  type?: string;
+};
+
+const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsProps) => {
   return (
     <div className={styles.container}>
       <p>
@@ -18,8 +22,12 @@ const NoGainNoPayinInstructions = () => {
       <p>
         ii. Select minimum Expected <LogoEth />
         <span className='flex-column-center'>
-          <span className='color-white hide-psuedo p-0'>Upside</span>
-          <span className='color-white-30 hide-psuedo p-0'>Downside</span>
+          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+            Upside
+          </span>
+          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+            Downside
+          </span>
         </span>
         move from <LogoEth /> Price Reference.
       </p>
@@ -29,8 +37,12 @@ const NoGainNoPayinInstructions = () => {
       <p>
         iii. Post minimum expected <LogoEth className='ml-10' />
         <span className='flex-column-center'>
-          <span className='color-white hide-psuedo p-0'>Upside</span>
-          <span className='color-white-30 hide-psuedo p-0'>Downside</span>
+          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+            Upside
+          </span>
+          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+            Downside
+          </span>
         </span>
         as collateral.
       </p>

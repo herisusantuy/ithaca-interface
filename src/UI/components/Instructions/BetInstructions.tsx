@@ -4,24 +4,24 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 // Styles
 import styles from './Instructions.module.scss';
 
-const BetInstructions = () => {
+type BetInstructionType = {
+  type?: string;
+};
+
+const BetInstructions = ({ type = 'INSIDE' }: BetInstructionType) => {
   return (
     <div className={styles.container}>
       <p>
         Bet & Earn Return if <LogoEth /> at Expiry
         <span>
-          <p>
-            Inside <br /> Outside
-          </p>
+          <p>{type == 'INSIDE' ? 'Inside' : 'Outside'}</p>
         </span>
         Range.
       </p>
       <p>
         i. Bet on
         <span>
-          <p>
-            Inside <br /> Outside
-          </p>
+          <p>{type == 'INSIDE' ? 'Inside' : 'Outside'}</p>
         </span>
         Range; Capital at Risk.
       </p>
@@ -30,9 +30,7 @@ const BetInstructions = () => {
       <p>
         iv. Expected Return reflects the probability of at Expiry{' '}
         <span>
-          <p>
-            Inside <br /> Outside
-          </p>
+          <p>{type == 'INSIDE' ? 'Inside' : 'Outside'}</p>
         </span>
         Range.
       </p>
