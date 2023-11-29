@@ -12,11 +12,6 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     displayText: 'Trading',
   },
   {
-    path: '/analytics',
-    titleKey: 'Click to visit analytics',
-    displayText: 'Analytics',
-  },
-  {
     path: '/dashboard',
     titleKey: 'Click to visit dashboard',
     displayText: 'Dashboard',
@@ -26,14 +21,19 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     titleKey: 'Click to visit leaderboard',
     displayText: 'Leaderboard',
   },
+  {
+    path: '/analytics',
+    titleKey: 'Click to visit analytics',
+    displayText: 'Analytics',
+  },
   // {
   //   path: '#',
   //   titleKey: 'Click to view more',
   //   displayText: 'More',
   // },
-  {
-    path: '/components',
-    titleKey: 'Click to visit components',
-    displayText: 'Components',
-  },
+  // {
+  //   path: '/components',
+  //   titleKey: 'Click to visit components',
+  //   displayText: 'Components',
+  // },
 ];
