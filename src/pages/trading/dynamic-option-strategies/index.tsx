@@ -93,7 +93,7 @@ const Index = () => {
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
-    setSharedSize(Array(newStrategy.strategies.length).fill('1'));
+    setSharedSize(newStrategy.strategies.map((s) => s.size));
     setLinkToggle('right');
     setStrategy({
       label: newStrategy?.label,
@@ -187,6 +187,9 @@ const Index = () => {
     newPositionBuilderStrategies.splice(index, 1);
     const newstrategies = [...strategy.strategies];
     newstrategies.splice(index, 1);
+    const shared = [...sharedSize];
+    shared.splice(index, 1);
+    setSharedSize([...shared])
     setStrategy({
       ...strategy,
       strategies: newstrategies,
@@ -205,10 +208,23 @@ const Index = () => {
     setPositionBuilderStrategies([]);
     setOrderSummary(undefined);
     setChartData(undefined);
+    setSharedSize([]);
     setStrategy({ ...strategy, strategies: [] });
   };
 
   const addPosition = () => {
+    let size = 1;
+    if (strategy.strategies.length) {
+      const test = strategy.strategies.reduce((arr, s, i)=> {
+        if (s.linked) {
+          arr.push(sharedSize[i])
+        }
+        return arr;
+      }, [] as number[]);
+      if (test.length) {
+        size = Math.max.apply(null, test);
+      }
+    }
     setStrategy({
       ...strategy,
       strategies: [
@@ -217,12 +233,13 @@ const Index = () => {
           product: 'option',
           type: 'Call',
           side: SIDE.BUY,
-          size: 1,
+          size: size || 1,
           strike: 0,
           linked: true
         },
       ],
     });
+    setSharedSize([...sharedSize,size || 1])
   };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
