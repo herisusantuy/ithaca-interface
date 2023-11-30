@@ -1,0 +1,117 @@
+$completedColor: rgba(94, 225, 146, 1);
+.wrapper {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  h1 {
+    font-weight: 400;
+  }
+}
+
+.mainPanel {
+  padding: 26px 36px;
+
+  @include breakpoint(tablet) {
+    padding: 24px 16px;
+  }
+
+  p {
+    font-family: $lato;
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+}
+
+.programChecklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: #fff;
+
+  @include breakpoint(tablet) {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    gap: 8px 24px;
+  }
+}
+
+.listIcon {
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemName {
+  flex: 1;
+}
+
+.completedBtn {
+  border-color: $completedColor;
+  color: $completedColor;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  @include breakpoint(tablet) {
+    grid-column: span 2;
+    grid-row: 2;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 6px;
+  }
+  > button {
+    min-width: 138px;
+    font-size: 12px;
+  }
+}
+
+.completedTxt {
+  font-family: $lato;
+  color: $completedColor;
+  @include breakpoint(tablet) {
+    font-size: 12px;
+    text-align: right;
+    margin-right: 12px;
+  }
+}
+
+.regerralCodeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  p {
+    color: #fff;
+    font-family: $lato;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  }
+  button {
+    font-size: 12px;
+    max-width: 138px;
+    width: 138px;
+  }
+}
+
+.isConnected {
+  color: $completedColor;
+}
