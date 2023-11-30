@@ -27,12 +27,16 @@ export const getNumberFormat = (value: string | number, type: string = 'int') =>
 };
 
 export const formatNumber = (value: number, type: string) => {
+  let isNeg = false;
+  if (value < 0) {
+    isNeg = true;
+  }
   if (!value) return '-'
-  if (value > 1000000000) {
+  if (value*(isNeg ? -1: 1) > 1000000000) {
     return (value / 1000000000).toFixed(6) + 'b';
-  } else if (value > 1000000) {
+  } else if (value*(isNeg ? -1: 1) > 1000000) {
     return (value / 1000000).toFixed(3) + 'm';
-  } else if (value > 1000) {
+  } else if (value*(isNeg ? -1: 1) > 1000) {
     return (value / 1000).toFixed(1) + 'k';
   } else {
     return type == 'int' ? Math.round(value)?.toString() : Number(value)?.toFixed(1)?.toString();

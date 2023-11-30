@@ -26,8 +26,11 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import styles from './PositionBuilderRow.module.scss';
 
 // SDK
-import { Leg, calculateNetPrice, calcCollateralRequirement } from '@ithaca-finance/sdk';
+import { Leg, calculateNetPrice, calcCollateralRequirement, IthacaSDK } from '@ithaca-finance/sdk';
 import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration)
 
 type PositionBuilderRowProps = {
   title: string;
@@ -42,7 +45,7 @@ type SectionType = {
 
 const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowProps) => {
   // Store
-  const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
+  const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK } =
     useAppStore();
 
   // State
@@ -128,6 +131,22 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
   };
 
+  const calcIv = () => {
+    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
+    const current = dayjs();
+    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
+    const diff = expiry.diff(current)
+    const params = {
+      rate: 0,
+      price: unitPrice,
+      strike: strike,
+      time: dayjs.duration(diff).asYears(),
+      isCall: payoff === 'Call',
+      underlying:currentSpotPrice
+    }
+    return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
+  }
+
   return (
     <>
       <div className={styles.parent}>
@@ -198,7 +217,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}
             />
           </div>
-          <div className={`${styles.iv} color-white`}>{volatility}</div>
+          <div className={`${styles.iv} color-white`}>{title === 'Options' ? calcIv() : ''}</div>
           <div className={styles.collateral}>
             <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
           </div>

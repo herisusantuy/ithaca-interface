@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: 1fr;
-  grid-column-gap: 8px;
+  grid-column-gap: 6px;
   align-items: center;
 
   p {
@@ -67,8 +67,15 @@
   grid-area: 1 / 7 / 2 / 8;
 }
 
-.action {
+.iv {
   grid-area: 1 / 8 / 2 / 9;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 20px;
+}
+
+.action {
+  grid-area: 1 / 9 / 2 / 10;
   width: rem(30);
   height: rem(34);
 }

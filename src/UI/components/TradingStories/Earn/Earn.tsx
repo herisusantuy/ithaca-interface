@@ -16,7 +16,6 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import Input from '@/UI/components/Input/Input';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
-import EarnInstructions from '@/UI/components/Instructions/EarnInstructions';
 import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
