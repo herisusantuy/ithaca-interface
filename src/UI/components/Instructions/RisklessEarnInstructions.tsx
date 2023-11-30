@@ -1,19 +1,17 @@
 // Components
-import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import ArrowRight from '@/UI/components/Icons/ArrowRight';
-import ChevronLeft from '@/UI/components/Icons/ChevronLeft';
-import ChevronRight from '@/UI/components/Icons/ChevronRight';
-import Add from '@/UI/components/Icons/Add';
-
-// Styles
-import styles from './Instructions.module.scss';
-import Minus from '../Icons/Minus';
 import CurlyBracketDown from '../Icons/CurlyBracketDown';
 import CurlyBracketLeft from '../Icons/CurlyBracketLeft';
 import CurlyBracketRight from '../Icons/CurlyBracketRight';
 import SquareBracketLeft from '../Icons/SquareBracketLeft';
 import SquareBracketRight from '../Icons/SquareBracketRight';
+
+// Styles
+import styles from './Instructions.module.scss';
+import Minus from '../Icons/Minus';
+
+// Packages
 import dayjs from 'dayjs';
 
 type props = {

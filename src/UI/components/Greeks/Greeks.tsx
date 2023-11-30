@@ -1,5 +1,5 @@
 // Constants
-import { GreekSymbolType, GREEK_SYMBOLS } from '@/UI/constants/greeks';
+import { GREEK_SYMBOLS } from '@/UI/constants/greeks';
 
 // Styles
 import styles from './Greeks.module.scss';
