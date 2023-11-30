@@ -18,7 +18,7 @@ type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];
   removeRow: (index: number) => void;
   clearAll: () => void;
-  hideClear: boolean;
+  hideClear?: boolean;
 };
 
 const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: StrategyTableProps) => {
