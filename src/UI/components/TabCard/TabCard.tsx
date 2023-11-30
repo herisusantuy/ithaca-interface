@@ -1,5 +1,5 @@
 // Packages
-import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 
 // Utils
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
@@ -9,6 +9,7 @@ import Toggle from '@/UI/components/Toggle/Toggle';
 
 // Styles
 import styles from './TabCard.module.scss';
+import RadioButton from '../RadioButton/RadioButton';
 
 // Types
 type MainTab = {
@@ -16,6 +17,10 @@ type MainTab = {
   title: string;
   description: ReactNode;
   contentId: string;
+  radioOptions?: {
+    option: string;
+    value: string;
+  }[]
 };
 
 type TabCardProps = {
@@ -28,7 +33,13 @@ type TabCardProps = {
 
 const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabClassName }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [radioChosen, setRadioChosen] = useState(activeTab.radioOptions && activeTab.radioOptions[0].value || '');
+  console.log(activeTab.radioOptions && activeTab.radioOptions[0].value)
+  console.log(radioChosen)
 
+  useEffect(() => {
+    setRadioChosen(activeTab.radioOptions && activeTab.radioOptions[0].value || '')
+  }, [activeTab.radioOptions])
   return (
     <div className={`${styles.container} ${className}`}>
       <div className={styles.leftPanel}>
@@ -50,15 +61,23 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
 
       <div className={styles.rightPanel}>
         <div className={styles.rightPanelHeader}>
-          <h2>{activeTab.title}</h2>
-          <Toggle
-            size='sm'
-            defaultState={showInstructions ? 'right' : 'left'}
-            rightLabel='Show Instructions'
-            onChange={() => setShowInstructions(!showInstructions)}
-          />
+          {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ?<h2>{activeTab.title}</h2> : <RadioButton
+              options={activeTab.radioOptions || []}
+              selectedOption={radioChosen}
+              name={`${activeTab.id}-type`}
+              onChange={setRadioChosen}
+              width={170}
+            />}
+            <div className={styles.toggleWrapper}>
+              <Toggle
+                size='sm'
+                defaultState={showInstructions ? 'right' : 'left'}
+                rightLabel='Show Instructions'
+                onChange={() => setShowInstructions(!showInstructions)}
+              />
+              </div>
         </div>
-        {getTradingStoryMapper(activeTab.contentId, showInstructions)}
+        {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}
       </div>
     </div>
   );

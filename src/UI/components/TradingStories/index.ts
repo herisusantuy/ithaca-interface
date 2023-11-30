@@ -4,6 +4,7 @@ export interface TradingStoriesProps {
   showInstructions: boolean;
   compact: boolean;
   chartHeight: number;
+  radioChosen?: string;
 }
 
 export interface OrderDetails {

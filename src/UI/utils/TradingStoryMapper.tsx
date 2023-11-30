@@ -39,13 +39,14 @@ const storyMap: {
   },
 };
 
-export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false) => {
+export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false, radioChosen?: string) => {
   if (!storyMap[contentId]) return null;
   const { component: Component, height } = storyMap[contentId];
   return (
     <Component
       showInstructions={showInstructions}
       compact={compact}
+      radioChosen={radioChosen}
       chartHeight={
         compact ? height.compact : showInstructions ? height.normal.withInstructions : height.normal.withoutInstructions
       }
