@@ -27,15 +27,15 @@ const storyMap: {
   },
   optionsChart: {
     component: Options,
-    height: { compact: 93, normal: { withInstructions: 379, withoutInstructions: 379 } },
+    height: { compact: 93, normal: { withInstructions: 318, withoutInstructions: 379 } },
   },
   digitalOptionsChart: {
     component: DigitalOptions,
-    height: { compact: 104, normal: { withInstructions: 379, withoutInstructions: 379 } },
+    height: { compact: 104, normal: { withInstructions: 294, withoutInstructions: 379 } },
   },
   forwardsChart: {
     component: Forwards,
-    height: { compact: 120, normal: { withInstructions: 300, withoutInstructions: 426 } },
+    height: { compact: 120, normal: { withInstructions: 318, withoutInstructions: 426 } },
   },
 };
 

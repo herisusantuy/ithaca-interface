@@ -25,7 +25,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
     id: 'forwards',
     title: 'Forwards',
     description:
-      'A Forward is a contract where the user agrees to buy or sell an asset at a fixed price and date in the future. Gain or loss depends on the difference between the agreed price and the market price at expiry.',
+      'A Forward is a contract where the user agrees to buy or sell an asset at a fixed price and date in the future. Gain or loss depends on the difference between the agreed price and the market price at expiry.',
     contentId: 'forwardsChart',
   },
 ];
