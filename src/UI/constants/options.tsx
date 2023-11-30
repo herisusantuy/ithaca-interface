@@ -5,8 +5,8 @@ type OptionProps = {
 };
 
 export const BARRIER_OPTIONS: OptionProps[] = [
-  { option: 'Call', value: 'BUY' },
-  { option: 'Put', value: 'SELL' },
+  { option: 'Call', value: 'CALL' },
+  { option: 'Put', value: 'PUT' },
 ];
 
 export const TYPE_OPTIONS: OptionProps[] = [
@@ -32,6 +32,12 @@ export const BET_OPTIONS: OptionProps[] = [
 export const BONUS_TWIN_WIN_OPTIONS: OptionProps[] = [
   { option: 'Bonus', value: 'Bonus' },
   { option: 'Twin-Win', value: 'Twin Win' },
+];
+
+
+export const RISKY_RISKLESS_EARN_OPTIONS: OptionProps[] = [
+  { option: 'Risky Earn', value: 'Risky Earn' },
+  { option: 'RiskLess Earn', value: 'Riskless Earn' },
 ];
 
 export const UP_DOWN_OPTIONS: OptionProps[] = [

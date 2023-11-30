@@ -12,7 +12,7 @@ const storyMap: {
   };
 } = {
   betChart: { component: Bet, height: { compact: 71, normal: { withInstructions: 170, withoutInstructions: 286 } } },
-  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 205, withoutInstructions: 300 } } },
+  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 271, withoutInstructions: 390 } } },
   noGainNoPayinChart: {
     component: NoGainNoPayin,
     height: { compact: 75, normal: { withInstructions: 178, withoutInstructions: 312 } },

@@ -26,7 +26,7 @@ import Panel from '@/UI/layouts/Panel/Panel';
 import styles from './PositionBuilderRow.module.scss';
 
 // SDK
-import { Leg, calculateNetPrice, calcCollateralRequirement, IthacaSDK } from '@ithaca-finance/sdk';
+import { Leg, calculateNetPrice, calcCollateralRequirement } from '@ithaca-finance/sdk';
 import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -55,7 +55,6 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const [strike, setStrike] = useState<string | undefined>(title === 'Forwards' ? '-' : undefined);
   const contracts = getContractsByPayoff(title === 'Forwards' ? 'Forward' : payoff);
   const [unitPrice, setUnitPrice] = useState(title === 'Forwards' ? `${contracts['-'].referencePrice}` : '');
-  const [volatility] = useState('-');
 
   // Sections
   const sections: SectionType[] = [

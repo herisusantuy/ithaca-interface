@@ -38,9 +38,12 @@ import {
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import OptionInstructions from '../../Instructions/OptionDescription';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration)
 
 const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, currentSpotPrice } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
@@ -50,6 +53,8 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const [size, setSize] = useState('');
   const [strike, setStrike] = useState<string>(strikes[4].value);
   const [unitPrice, setUnitPrice] = useState('');
+  const [iv, setIv] = useState(0);
+  const [greeks, setGreeks] = useState();
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
@@ -93,6 +98,8 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       setPayoffMap(undefined);
       return;
     }
+
+    calcIv(unitPrice || '', strike, callOrPut);
 
     const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
 
@@ -154,6 +161,31 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       console.error('Failed to submit order', error);
     }
   };
+
+  const calcIv = (unitPrice: string, strike: string, callOrPut: string) => {
+    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
+    const current = dayjs();
+    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
+    const diff = expiry.diff(current)
+    const params = {
+      rate: 0,
+      price: unitPrice,
+      strike: strike,
+      time: dayjs.duration(diff).asYears(),
+      isCall: callOrPut === 'Call',
+      underlying:currentSpotPrice
+    }
+    const sigma = (ithacaSDK.calculation.calcSigma(params))
+    setIv(sigma*100);
+    setGreeks(ithacaSDK.calculation.calcOption({
+      rate: 0,
+      sigma,
+      strike,
+      time: dayjs.duration(diff).asYears(),
+      isCall:callOrPut === 'Call',
+      underlying: currentSpotPrice
+    }));
+  }
 
   const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';
@@ -237,8 +269,12 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               />
             </LabeledControl>
 
+            <LabeledControl label='IV' labelClassName='justify-end'>
+              <PriceLabel className='height-34 min-width-71' icon='' label={calcCollateral()} />
+            </LabeledControl>
+
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
+              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={iv.toFixed(1) + ' %'} />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
@@ -267,7 +303,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         showPortial={!compact}
       />
 
-      {!compact && <Greeks />}
+      {!compact && <Greeks greeks={greeks}/>}
     </>
   );
 };
