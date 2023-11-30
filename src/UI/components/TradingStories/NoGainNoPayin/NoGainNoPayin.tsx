@@ -205,7 +205,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-              <LabeledControl label='Max Potential Loss'>
+              <LabeledControl label={`${callOrPut === 'Call' ? 'Min' : 'Max'} Potential Loss`}>
                 <Input
                   type='number'
                   value={maxPotentialLoss}
@@ -214,7 +214,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               </LabeledControl>
 
               <Flex direction='row-center' gap='gap-4' margin='mt-22'>
-                <p className='fs-sm'>Price Reference + Min Upside | Max Loss</p>
+                <p className='fs-sm'>Price Reference + {callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'}</p>
                 <span className='fs-md-bold color-white'>
                   {priceReference &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&

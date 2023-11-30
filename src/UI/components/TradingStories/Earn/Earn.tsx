@@ -40,9 +40,10 @@ import useToast from '@/UI/hooks/useToast';
 import RiskyEarnInstructions from '../../Instructions/RiskyEarnInstructions';
 import RisklessEarnInstructions from '../../Instructions/RisklessEarnInstructions';
 import RadioButton from '../../RadioButton/RadioButton';
+import { RISKY_RISKLESS_EARN_OPTIONS } from '@/UI/constants/options';
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff,  } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
 
@@ -55,12 +56,17 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     return strikeArr;
   }, []);
 
+  const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>(radioChosen as 'Risky Earn' || 'Riskless Earn');
   const [strike, setStrike] = useState({ min: strikes[0], max: strikes[0] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
+
+  const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
+    setRiskyOrRiskless(option)
+  }
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -220,18 +226,18 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   return (
     <>
-      {!compact && showInstructions && (radioChosen ==='risky-earn' ? <RiskyEarnInstructions /> : <RisklessEarnInstructions/>)}
+      {!compact && showInstructions && (radioChosen ==='Risky Earn' ? <RiskyEarnInstructions /> : <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()}/>)}
 
-      <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
-        {/* <RadioButton
-          size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 221}
-          options={BET_OPTIONS}
-          selectedOption={insideOrOutside}
-          name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
-          onChange={betType => handleBetTypeChange(betType as 'INSIDE' | 'OUTSIDE')}
-        /> */}
-      </Flex>
+      {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
+      <RadioButton
+        size={compact ? 'compact' : 'regular'}
+        width={compact ? 140 : 186}
+        options={RISKY_RISKLESS_EARN_OPTIONS}
+        selectedOption={riskyOrRiskless}
+        name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
+        onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
+      />
+    </Flex>}
 
       {!compact && (
         <h3 className='flex-row gap-4 fs-lato-md mb-12'>
@@ -279,7 +285,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={chartHeight}
+        height={!compact && showInstructions && radioChosen === 'Riskless Earn' ? 112: chartHeight}
         showKeys={false}
         showPortial={!compact}
       />

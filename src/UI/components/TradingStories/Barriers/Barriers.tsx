@@ -38,6 +38,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
 
+  const [type, setType] = useState<'CALL' | 'PUT'>('CALL')
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [upOrDown, setUpOrDown] = useState<'UP' | 'DOWN'>('UP');
   const [inOrOut, setInOrOut] = useState<'IN' | 'OUT'>('IN');
@@ -69,6 +70,12 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     if (isValidStrike) strikeArr.push(currStrike);
     return strikeArr;
   }, []);
+
+  const handleTypeChange = async (type: 'CALL' | 'PUT') => {
+    setType(type);
+    // if (!strike || !barrier) return;
+    // prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+  };
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
@@ -346,7 +353,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const renderInstruction = () => {
     return (
       <>
-        {!compact && showInstructions && <BarrierInstructions type={ buyOrSell } />}
+        {!compact && showInstructions && 
+        <BarrierInstructions side={buyOrSell} upOrDown={upOrDown} inOrOut={inOrOut} payoff={type} />}
       </>
     )
   }
@@ -392,9 +400,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                 size={compact ? 'compact' : 'regular'}
                 width={compact ? 140 : 186}
                 options={BARRIER_OPTIONS}
-                selectedOption={buyOrSell}
+                selectedOption={type}
                 name='type'
-                onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
+                onChange={value => handleTypeChange(value as 'CALL' | 'PUT')}
               />
             </LabeledControl>
 

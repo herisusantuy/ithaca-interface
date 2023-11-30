@@ -62,11 +62,12 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
       <div className={styles.rightPanel}>
         <div className={styles.rightPanelHeader}>
           {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ?<h2>{activeTab.title}</h2> : <RadioButton
+              size='large'
               options={activeTab.radioOptions || []}
               selectedOption={radioChosen}
               name={`${activeTab.id}-type`}
               onChange={setRadioChosen}
-              width={170}
+              width={300}
             />}
             <div className={styles.toggleWrapper}>
               <Toggle

@@ -187,7 +187,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     const payoffMap = estimateOrderPayoff([
       { ...minContract, ...legMin, premium: minContract.referencePrice },
       { ...maxContract, ...legMax, premium: maxContract.referencePrice },
-    ]);
+    ], {
+      min: strikes[0] - 50,
+      max: strikes[strikes.length -1] +50
+    });
     setPayoffMap(payoffMap);
     setTargetEarn(quantity);
 

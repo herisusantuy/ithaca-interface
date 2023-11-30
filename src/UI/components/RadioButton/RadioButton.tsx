@@ -12,7 +12,7 @@ type RadioButtonProps = {
   orientation?: 'horizontal' | 'vertical';
   onChange?: (value: string) => void;
   width?: number | string;
-  size?: 'compact' | 'regular';
+  size?: 'compact' | 'regular' | 'large';
 };
 
 const RadioButton = ({
@@ -28,7 +28,7 @@ const RadioButton = ({
   const renderOptions = (optionList: { option: string | ReactNode; value: string }[]) => {
     return optionList.map(option => {
       return (
-        <div key={`${name}${option.value}`} className={size === 'compact' ? styles.optionCompact : styles.option}>
+        <div key={`${name}${option.value}`} className={size === 'compact' ? styles.optionCompact : size === 'large' ? styles.optionLarge : styles.option}>
           <input
             type='radio'
             id={`${name}${option.value}`}
@@ -48,7 +48,7 @@ const RadioButton = ({
 
   return (
     <div
-      className={`${size === 'compact' ? styles.radioButtonCompact : styles.radioButton} ${
+      className={`${size === 'compact' ? styles.radioButtonCompact : size === 'large' ? styles.radioButtonLarge : styles.radioButton} ${
         orientation === 'vertical' ? styles.vertical : ''
       }`}
       style={width > '0' ? { width: width + 'px' } : {}}

@@ -27,9 +27,7 @@ const RiskyEarnInstructions = () => {
         <LogoUsdc />
         Return.
       </p>
-      <p>iii.</p>
-      <p className='pl-18'>
-        - If at expiry <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth /> <Add />
+      <p>iii. - If at expiry <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth /> <Add />
         Return in <LogoUsdc /> .
       </p>
       <p className='pl-18'>

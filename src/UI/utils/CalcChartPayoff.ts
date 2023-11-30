@@ -22,6 +22,11 @@ export type LabelPositionProp = {
   offset: number;
 }
 
+export type CustomRange = {
+  min: number,
+  max: number
+}
+
 export type PayoffMap = Record<string, number>;
 
 const range = (start: number, stop: number, step: number = 10) =>
@@ -29,12 +34,12 @@ const range = (start: number, stop: number, step: number = 10) =>
     .fill(start)
     .map((x, y) => x + y * step);
 
-const calculateRange = (legs: OptionLeg[]) => {
+const calculateRange = (legs: OptionLeg[], customRange?: CustomRange) => {
   const legsSorted = legs.map(leg => (leg.payoff === 'Forward' ? leg.premium : leg.economics?.strike || 1000)).sort();
-  return range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 1);
+  return customRange ? range(customRange.min, customRange.max, 1) : range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 1);
 };
 
-export function estimateOrderPayoff(legs: OptionLeg[]): PayoffMap[] {
+export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange ): PayoffMap[] {
   const payoffFunctions = {
     Call: (price: number, strike: number) => Math.max(0, price - strike),
     Put: (price: number, strike: number) => Math.max(0, strike - price),
@@ -43,7 +48,7 @@ export function estimateOrderPayoff(legs: OptionLeg[]): PayoffMap[] {
     Forward: (price: number, strike: number) => price - strike,
   };
 
-  const prices = calculateRange(legs);
+  const prices = calculateRange(legs, customRange);
 
   const payoffs = prices.map(price => {
     const payoff: PayoffMap = { x: price, total: 0 };
