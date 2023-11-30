@@ -37,8 +37,9 @@ import {
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
-const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
+const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
@@ -166,8 +167,17 @@ const DigitalOptions = ({ compact, chartHeight }: TradingStoriesProps) => {
     handleSizeChange('100');
   }, []);
 
+  const renderInstruction = () => {
+    return (
+      <>
+        {!compact && showInstructions && <DigitalInstructions/>}
+      </>
+    )
+  }
+
   return (
     <>
+      {renderInstruction()}
       <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
         {!compact && (
           <>

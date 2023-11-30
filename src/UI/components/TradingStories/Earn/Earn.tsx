@@ -38,8 +38,11 @@ import {
   toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import RiskyEarnInstructions from '../../Instructions/RiskyEarnInstructions';
+import RisklessEarnInstructions from '../../Instructions/RisklessEarnInstructions';
+import RadioButton from '../../RadioButton/RadioButton';
 
-const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
@@ -218,7 +221,18 @@ const Earn = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =
 
   return (
     <>
-      {!compact && showInstructions && <EarnInstructions />}
+      {!compact && showInstructions && (radioChosen ==='risky-earn' ? <RiskyEarnInstructions /> : <RisklessEarnInstructions/>)}
+
+      <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
+        {/* <RadioButton
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 140 : 221}
+          options={BET_OPTIONS}
+          selectedOption={insideOrOutside}
+          name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
+          onChange={betType => handleBetTypeChange(betType as 'INSIDE' | 'OUTSIDE')}
+        /> */}
+      </Flex>
 
       {!compact && (
         <h3 className='flex-row gap-4 fs-lato-md mb-12'>

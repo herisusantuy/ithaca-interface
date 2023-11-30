@@ -4,7 +4,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 // Styles
 import styles from './Instructions.module.scss';
 
-const BonusTwinWinInstructions = () => {
+const BonusInstructions = () => {
   return (
     <div className={styles.container}>
       <p>
@@ -18,4 +18,4 @@ const BonusTwinWinInstructions = () => {
   );
 };
 
-export default BonusTwinWinInstructions;
+export default BonusInstructions;

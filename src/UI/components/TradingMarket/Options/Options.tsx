@@ -37,8 +37,9 @@ import {
   createClientOrderId,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import OptionInstructions from '../../Instructions/OptionDescription';
 
-const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
+const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
@@ -170,8 +171,17 @@ const Options = ({ compact, chartHeight }: TradingStoriesProps) => {
     handleSizeChange('100');
   }, []);
 
+  const renderInstruction = () => {
+    return (
+      <>
+        {!compact && showInstructions && <OptionInstructions/>}
+      </>
+    )
+  }
+
   return (
     <>
+      {renderInstruction()}
       <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
         {!compact && (
           <>

@@ -4,6 +4,10 @@ type Tab = {
   title: string;
   description: string;
   contentId: string;
+  radioOptions?: {
+    option: string;
+    value: string;
+  }[]
 };
 
 export const TRADING_MARKET_TABS: Tab[] = [
@@ -25,7 +29,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
     id: 'forwards',
     title: 'Forwards',
     description:
-      'A Forward is a contract where the user agrees to buy or sell an asset at a fixed price and date in the future. Gain or loss depends on the difference between the agreed price and the market price at expiry.',
+      'A Forward is a contract where the user agrees to buy or sell an asset at a fixed price and date in the future. Gain or loss depends on the difference between the agreed price and the market price at expiry.',
     contentId: 'forwardsChart',
   },
 ];
@@ -40,9 +44,16 @@ export const TRADING_STORIES_TABS: Tab[] = [
   },
   {
     id: 'earn',
-    title: 'Earn',
+    title: 'Risky Earn | Riskless Earn',
     description: 'Earn risky yield on your capital at risk. Define an asset price target.',
     contentId: 'earnChart',
+    radioOptions: [{
+      option: 'Risky Earn',
+      value: 'risky-earn'
+    },{
+      option: 'Riskless Earn',
+      value: 'riskless-earn'
+    }]
   },
   {
     id: 'noGainNoPayin',
@@ -55,6 +66,13 @@ export const TRADING_STORIES_TABS: Tab[] = [
     title: 'Bonus | Twin-Win',
     description: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
     contentId: 'bonusTwinWinChart',
+    radioOptions: [{
+      option: 'Bonus',
+      value: 'Bonus'
+    },{
+      option: 'Twin-Win',
+      value: 'Twin Win'
+    }]
   },
   {
     id: 'barriers',

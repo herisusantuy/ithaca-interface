@@ -13,7 +13,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusTwinWinInstructions';
+import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusInstructions';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Asset from '@/UI/components/Asset/Asset';
@@ -31,8 +31,10 @@ import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
+import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 
-const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus' }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
@@ -43,12 +45,18 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
   }, []);
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
-  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>('Bonus');
+  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
   const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[3]);
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
+
+  useEffect(() => {
+    if (radioChosen) {
+      handleBonusOrTwinWinChange(radioChosen as 'Bonus' | 'Twin Win')
+    }
+  }, [radioChosen])
 
   const handleBonusOrTwinWinChange = async (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
@@ -199,18 +207,18 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight }: TradingStories
 
   return (
     <>
-      <Flex margin={compact ? 'mb-10' : 'mb-12'}>
-        <RadioButton
-          size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 186}
-          options={BONUS_TWIN_WIN_OPTIONS}
-          selectedOption={bonusOrTwinWin}
-          name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
-          onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
-        />
-      </Flex>
+    {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
+      <RadioButton
+        size={compact ? 'compact' : 'regular'}
+        width={compact ? 140 : 186}
+        options={BONUS_TWIN_WIN_OPTIONS}
+        selectedOption={bonusOrTwinWin}
+        name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
+        onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
+      />
+    </Flex>}
 
-      {!compact && showInstructions && <BonusTwinWinInstructions />}
+      {!compact && showInstructions && (bonusOrTwinWin === 'Bonus' ?<BonusInstructions /> : <TwinWinInstructions/>)}
 
       {!compact && (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>

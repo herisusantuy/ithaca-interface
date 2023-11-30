@@ -37,8 +37,9 @@ import {
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
 import useToast from '@/UI/hooks/useToast';
+import ForwardInstructions from '../../Instructions/ForwardInstructions';
 
-const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
+const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
     useAppStore();
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
@@ -162,8 +163,18 @@ const Forwards = ({ compact, chartHeight }: TradingStoriesProps) => {
     handleSizeChange('100');
   }, []);
 
+
+  const renderInstruction = () => {
+    return (
+      <>
+        {!compact && showInstructions && <ForwardInstructions/>}
+      </>
+    )
+  }
+
   return (
     <>
+    {renderInstruction()}
       {!compact && (
         <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
           <LabeledControl label='Type'>

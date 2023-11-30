@@ -27,25 +27,26 @@ const storyMap: {
   },
   optionsChart: {
     component: Options,
-    height: { compact: 93, normal: { withInstructions: 379, withoutInstructions: 379 } },
+    height: { compact: 93, normal: { withInstructions: 318, withoutInstructions: 379 } },
   },
   digitalOptionsChart: {
     component: DigitalOptions,
-    height: { compact: 104, normal: { withInstructions: 379, withoutInstructions: 379 } },
+    height: { compact: 104, normal: { withInstructions: 294, withoutInstructions: 379 } },
   },
   forwardsChart: {
     component: Forwards,
-    height: { compact: 120, normal: { withInstructions: 300, withoutInstructions: 426 } },
+    height: { compact: 120, normal: { withInstructions: 318, withoutInstructions: 426 } },
   },
 };
 
-export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false) => {
+export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false, radioChosen?: string) => {
   if (!storyMap[contentId]) return null;
   const { component: Component, height } = storyMap[contentId];
   return (
     <Component
       showInstructions={showInstructions}
       compact={compact}
+      radioChosen={radioChosen}
       chartHeight={
         compact ? height.compact : showInstructions ? height.normal.withInstructions : height.normal.withoutInstructions
       }
