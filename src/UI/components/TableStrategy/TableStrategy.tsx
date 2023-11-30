@@ -18,9 +18,10 @@ type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];
   removeRow: (index: number) => void;
   clearAll: () => void;
+  hideClear: boolean;
 };
 
-const TableStrategy = ({ strategies, removeRow, clearAll }: StrategyTableProps) => {
+const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: StrategyTableProps) => {
   return (
     <>
       <div className={styles.table}>
@@ -46,17 +47,17 @@ const TableStrategy = ({ strategies, removeRow, clearAll }: StrategyTableProps) 
               <div className={styles.cell}>{strategy.leg.quantity}</div>
               <div className={styles.cell}>{formatNumber(Number(strategy.strike), 'string')}</div>
               <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
-              <div className={styles.cell}>
+              {!hideClear && <div className={styles.cell}>
                 <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
                   <Remove />
                 </Button>
-              </div>
+              </div>}
             </div>
           ))
         ) : (
           <div className={styles.emptyContainer}>Please add a strategy.</div>
         )}
-        {strategies.length > 0 && (
+        {strategies.length > 0 && !hideClear && (
           <Button title='Click to clear all' onClick={clearAll} variant='clear'>
             Clear All
           </Button>

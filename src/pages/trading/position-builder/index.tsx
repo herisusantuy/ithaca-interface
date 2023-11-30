@@ -39,6 +39,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
 import styles from './position-builder.module.scss';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -226,12 +227,12 @@ const Index = () => {
                     collatarelUSDC={
                       orderSummary
                         ? formatNumber(
-                            toPrecision(
-                              orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                              currencyPrecision.strike
-                            ),
-                            'string'
-                          )
+                          toPrecision(
+                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                            currencyPrecision.strike
+                          ),
+                          'string'
+                        )
                         : '-'
                     }
                     premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
@@ -259,6 +260,44 @@ const Index = () => {
                     }}
                   >
                     <>
+                      {positionBuilderStrategies.length > 1 &&
+                        positionBuilderStrategies.findIndex((p) => p.payoff !== 'Call' &&
+                          p.payoff !== 'Put') === -1 &&
+                        <RadioButton
+                          options={[{
+                            option: 'Multi-Price Portfolio Dominance',
+                            value: 'Multi-Price Portfolio Dominance'
+                          }, {
+                            option: 'Clearing',
+                            value: 'Clearing'
+                          }]}
+                          selectedOption={'Multi-Price Portfolio Dominance'}
+                          name={`order-radio`}
+                          onChange={()  => {}}
+                          width={440}
+                        />
+                      }
+                      <TableStrategy
+                        strategies={positionBuilderStrategies}
+                        hideClear={true}
+                        clearAll={() => {
+                          setPositionBuilderStrategies([]);
+                          setOrderSummary(undefined);
+                          setChartData(undefined);
+                        }}
+                        removeRow={(index: number) => {
+                          const newPositionBuilderStrategies = [...positionBuilderStrategies];
+                          newPositionBuilderStrategies.splice(index, 1);
+                          if (!newPositionBuilderStrategies.length) {
+                            setPositionBuilderStrategies([]);
+                            setOrderSummary(undefined);
+                            setChartData(undefined);
+                          } else {
+                            setPositionBuilderStrategies(newPositionBuilderStrategies);
+                            getPositionBuilderSummary(newPositionBuilderStrategies);
+                          }
+                        }}
+                      />
                       <div className={styles.divider}></div>
                       <Flex margin='mb-14'>
                         <h5 className='flexGrow'>Order Limit</h5>
@@ -284,13 +323,13 @@ const Index = () => {
                             <span className={styles.amountLabel}>
                               {orderSummary
                                 ? formatNumber(
-                                    toPrecision(
-                                      orderSummary.orderLock.numeraireAmount -
-                                        getNumber(orderSummary.order.totalNetPrice),
-                                      currencyPrecision.strike
-                                    ),
-                                    'string'
-                                  )
+                                  toPrecision(
+                                    orderSummary.orderLock.numeraireAmount -
+                                    getNumber(orderSummary.order.totalNetPrice),
+                                    currencyPrecision.strike
+                                  ),
+                                  'string'
+                                )
                                 : '-'}
                             </span>{' '}
                             <LogoUsdc />
