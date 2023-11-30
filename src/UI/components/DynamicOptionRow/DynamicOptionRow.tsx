@@ -28,6 +28,8 @@ import { Leg } from '@ithaca-finance/sdk';
 import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration)
 
 type DynamicOptionRowProps = {
   strategy: StrategyLeg
@@ -84,7 +86,7 @@ type ProductOption = {
 
 const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkChange, linked, sharedSize, sizeChange }: DynamicOptionRowProps) => {
   // Store
-  const { getContractsByPayoff, spotPrices, currentExpiryDate } =
+  const { getContractsByPayoff, spotPrices, currentExpiryDate, currentSpotPrice, ithacaSDK } =
     useAppStore();
 
   // State
@@ -247,6 +249,22 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     });
   };
 
+  const calcIv = () => {
+    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
+    const current = dayjs();
+    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
+    const diff = expiry.diff(current)
+    const params = {
+      rate: 0,
+      price: unitPrice,
+      strike: strike,
+      time: dayjs.duration(diff).asYears(),
+      isCall: type === 'Call',
+      underlying:currentSpotPrice
+    }
+    return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
+  }
+
   return (
     <>
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
@@ -290,7 +308,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               }}
               type='number'
               value={size}
-              width={110}
+              width={105}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
@@ -311,7 +329,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             <Input
               type='number'
               value={unitPrice}
-              width={110}
+              width={105}
               icon={<LogoUsdc />}
               onChange={({ target }) => {
                 if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(target.value))) return;
@@ -330,6 +348,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               }
             />
           </div>
+          <div className={`${styles.iv} color-white`}>{product === 'option' ? calcIv() : ''}</div>
           <div className={styles.action}>
             <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
               <Remove />

@@ -13,7 +13,6 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import BonusTwinWinInstructions from '@/UI/components/Instructions/BonusInstructions';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Asset from '@/UI/components/Asset/Asset';
