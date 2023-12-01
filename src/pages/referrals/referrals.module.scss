@@ -1,6 +1,6 @@
-$completedColor: rgba(94, 225, 146, 1);
+
 .wrapper {
-  margin-top: 16px;
+  @include spacing('margin', 16, 'top');
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,29 +12,29 @@ $completedColor: rgba(94, 225, 146, 1);
 }
 
 .mainPanel {
-  padding: 36px 52px 24px 52px;
+  padding: rem(36) rem(52) rem(24) rem(52);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   @include breakpoint(tablet) {
-    padding: 24px 16px;
+    padding: rem(24) rem(16);
   }
 
   p {
     font-family: $lato;
-    font-size: 18px;
-    margin-bottom: 32px;
+    font-size: rem(18);
+    margin-bottom: rem(32);
   }
   a {
-    font-size: 24px;
+    font-size: rem(24);
     font-weight: 700;
-    color: #fff;
-    margin-bottom: 36px;
+    color: var(--white);
+    margin-bottom: rem(36);
     text-decoration: underline;
   }
   button {
-    min-width: 124px;
-    font-size: 12px;
+    min-width: rem(124);
+    font-size: rem(12);
   }
 }

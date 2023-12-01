@@ -14,6 +14,7 @@ import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { useAccount } from 'wagmi';
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
+import TwitterAuth, { TwitterAuthChildProps } from '@/UI/components/TwitterAuth/TwitterAuth';
 
 const PointsProgram = () => {
   const [actionsPerformed, setActionsPerformed] = useState({
@@ -103,9 +104,13 @@ const PointsProgram = () => {
                   </div>
                   <div className={styles.buttonContainer}>
                     <ActionCompleted action={actionsPerformed.twitter} />
-                    <Button title='' disabled={!actionsPerformed.wallet}>
-                      <>Follow</>
-                    </Button>
+                    <TwitterAuth>
+                      {({ onStart }) => (
+                        <Button title='' disabled={!actionsPerformed.wallet} onClick={onStart}>
+                          <>Follow</>
+                        </Button>
+                      )}
+                    </TwitterAuth>
                   </div>
                 </li>
                 {/* Join Discord */}
