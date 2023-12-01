@@ -180,8 +180,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       {renderInstruction()}
 
       <Flex direction='column' margin={compact ? 'mb-10' : 'mb-17'} gap='gap-12'>
-        <Flex gap='gap-15' margin='mt-19'>
-          <LabeledControl label='Type' labelClassName='mt-2'>
+        <Flex gap='gap-15' margin={compact ? '' : 'mt-17'}>
+          {!compact && <LabeledControl label='Type' labelClassName='mt-2'>
             <RadioButton
               size={compact ? 'compact' : 'regular'}
               width={compact ? 140 : 186}
@@ -190,7 +190,15 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
               onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
             />
-          </LabeledControl>
+          </LabeledControl>}
+          {compact && <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 140 : 186}
+            options={TYPE_OPTIONS}
+            selectedOption={callOrPut}
+            name={compact ? 'callOrPutCompact' : 'callOrPut'}
+            onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+          />}
 
           {!compact && (
             <>
@@ -205,7 +213,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-              <LabeledControl label={`${callOrPut === 'Call' ? 'Min' : 'Max'} Potential Loss`}>
+              <LabeledControl label={`${callOrPut === 'Put' ? 'Min' : 'Max'} Potential Loss`}>
                 <Input
                   type='number'
                   value={maxPotentialLoss}

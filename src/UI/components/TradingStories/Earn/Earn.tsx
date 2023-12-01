@@ -56,7 +56,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     return strikeArr;
   }, []);
 
-  const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>(radioChosen as 'Risky Earn' || 'Riskless Earn');
+  const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
   const [strike, setStrike] = useState({ min: strikes[0], max: strikes[0] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
@@ -65,6 +65,8 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const { toastList, position, showToast } = useToast();
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
+    // console.log(option)
+    console.log(riskyOrRiskless)
     setRiskyOrRiskless(option)
   }
 
@@ -244,7 +246,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           Select Target Price <LogoEth />
         </h3>
       )}
-      <Flex margin='display-inline-flex mb-7'>
+      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='display-inline-flex mb-7'>
         <Slider
           value={strike}
           min={strikes[0]}
@@ -257,7 +259,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
             handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
           }}
         />
-      </Flex>
+      </Flex> : '' }
 
       {!compact && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>

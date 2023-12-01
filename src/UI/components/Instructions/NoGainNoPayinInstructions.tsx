@@ -52,10 +52,10 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
         <LogoEth className='ml-6' />
         Price Reference <Add />
         <span className='flex-column-center'>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Upside
           </span>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             maxDownside
           </span>
         </span>

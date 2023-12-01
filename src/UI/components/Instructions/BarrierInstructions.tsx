@@ -4,21 +4,20 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 // Styles
 import styles from './Instructions.module.scss';
 
-type BarrierDescriptionProps = {
-  side: string,
-  payoff: string,
-  upOrDown: string,
-  inOrOut: string
+type BarrierInscriptionProps = {
+  inOrOut: string,
+  buyOrSell: string,
+  upOrDown: string
 }
 
-const BarrierInstructions = ({side, payoff, upOrDown, inOrOut} : BarrierDescriptionProps) => {
+const BarrierInstructions = ({inOrOut, buyOrSell, upOrDown} : BarrierInscriptionProps) => {
   return (
     <div className={styles.container}>
       <p>
         i. Select Desired Direction{' '}
         <span className='flex-column-center mr-6'>
-          <span className={upOrDown == 'UP' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>UP</span>
-          <span className={upOrDown == 'DOWN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>DOWN</span>
+          <span className={upOrDown == 'UP' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Up</span>
+          <span className={upOrDown == 'DOWN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Down</span>
         </span>
       </p>
       <p>
@@ -29,19 +28,19 @@ const BarrierInstructions = ({side, payoff, upOrDown, inOrOut} : BarrierDescript
         Will <LogoEth /> move &lsquo;not too much&rsquo;? ( &lsquo;Knock OUT&rsquo; )
       </p>
       <p>
-        iii. <span className={payoff == 'CALL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Call</span> |
-        <span className={payoff == 'PUT' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Put</span>
+        iii. <span className={upOrDown == 'UP' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Call</span> |
+        <span className={upOrDown == 'DOWN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Put</span>
         <span className='flex-column-center mlr-6'>
-          <span className={side == 'BUY' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Buy</span>
-          <span className={side == 'SELL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Sell</span>
+          <span className={buyOrSell == 'BUY' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Buy</span>
+          <span className={buyOrSell == 'SELL' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Sell</span>
         </span>
         <span className='flex-column-center mr-6'>
-          <span className={upOrDown == 'UP' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>UP</span>
-          <span className={upOrDown == 'DOWN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>DOWN</span>
+          <span className={upOrDown == 'UP' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Up</span>
+          <span className={upOrDown == 'DOWN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Down</span>
         </span>
         <span className='flex-column-center mr-6'>
           <span className={inOrOut == 'IN' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Knocks In ( effective )</span>
-          <span className={inOrOut == 'OUT' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Knocks Out ( extinguished )</span>
+          <span className={inOrOut == 'OUT' ? 'hide-psuedo color-white p-0' : 'hide-psuedo color-white-30 p-0'}>Knocks Out ( extinguished )wn</span>
         </span>
         <span className='flex-column-center hide-psuedo p-0'>
           <p>
