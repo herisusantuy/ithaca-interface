@@ -102,9 +102,9 @@ const Index = () => {
     setStrategy({...{
       label: newStrategy?.label,
       key: newStrategy?.key,
-      strategies: [
-        ...newStrategy?.strategies
-      ],
+      strategies: newStrategy ? [
+        ...newStrategy.strategies
+      ] : [],
     }});
   };
 

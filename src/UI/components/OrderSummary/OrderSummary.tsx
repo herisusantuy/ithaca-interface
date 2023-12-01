@@ -13,7 +13,7 @@ import Wallet from '../Wallet/Wallet';
 import Warning from '../Icons/Warning';
 import ArrowUpRight from '../Icons/ArrowUpRight';
 import { useCallback, useEffect, useState } from 'react';
-import { formatUnits, parseUnits } from 'viem';
+import { parseUnits } from 'viem';
 import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
 import { useAccount, useBalance, usePublicClient } from 'wagmi';
@@ -37,10 +37,6 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
   const publicClient = usePublicClient();
   const { address } = useAccount();
   const [modalOpen, setModalOpen] = useState(false);
-  const [balance, setBalance] = useState({
-    'WETH': 0,
-    'USDC': 0
-  });
   const [collateralSummary, setCollateralSummary] = useState(TABLE_COLLATERAL_SUMMARY);
   const [selectedCurrency, setSelectedCurrency] = useState<{ name: string; value: string }>({
     name:'USDC',
@@ -73,12 +69,9 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
     },
   });
 
-  useEffect(() => {
-    fetchFundlockState();
-  }, [])
 
   const fetchFundlockState = useCallback(async () => {
-    // if (isAuthenticated) return;
+    if (!isAuthenticated) return;
     const fundlockState = await ithacaSDK.client.fundLockState();
     const fundlockWETH = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'WETH')];
     const fundlockUSDC = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'USDC')];
@@ -86,7 +79,11 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
       ['WETH']: { ...summary['WETH'], ...fundlockWETH },
       ['USDC']: { ...summary['USDC'], ...fundlockUSDC },
     }));
-  }, [ithacaSDK, balance]);
+  }, [ithacaSDK, isAuthenticated]);
+
+  useEffect(() => {
+    fetchFundlockState();
+  }, [fetchFundlockState]);
 
   return (
     <Panel margin='br-20 p-20 mt-125'>

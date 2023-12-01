@@ -4,14 +4,13 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { formatNumber, getNumber } from '@/UI/utils/Numbers';
 import { toPrecision } from '@ithaca-finance/sdk';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import Button from '../Button/Button';
 import LogoEth from '../Icons/LogoEth';
 import LogoUsdc from '../Icons/LogoUsdc';
 import SliderLeft from '../Icons/SliderLeft';
 import SliderRight from '../Icons/SliderRight';
 import Modal from '../Modal/Modal';
-import RadioButton from '../RadioButton/RadioButton';
 import TableStrategy from '../TableStrategy/TableStrategy';
 import Toggle from '../Toggle/Toggle';
 
@@ -20,7 +19,7 @@ import styles from './SubmitModal.module.scss';
 
 type SubmitModalProps = {
   isOpen: boolean;
-  submitOrder: (auctionSubmission: any) => void;
+  submitOrder: (auctionSubmission: AuctionSubmission) => void;
   auctionSubmission?: AuctionSubmission;
   closeModal: (close: boolean) => void;
   positionBuilderStrategies: PositionBuilderStrategy[];

@@ -21,8 +21,6 @@ import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuild
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
-import Modal from '@/UI/components/Modal/Modal';
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
@@ -39,7 +37,6 @@ import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
 import styles from './position-builder.module.scss';
-import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Types
