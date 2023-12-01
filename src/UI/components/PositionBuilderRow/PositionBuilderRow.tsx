@@ -62,7 +62,6 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     { name: 'Size', style: styles.size },
     { name: 'Strike', style: styles.strike },
     { name: 'Unit Price', style: styles.unitPrice },
-    { name: 'IV', style: styles.iv },
     { name: 'Collateral', style: styles.collateral },
     { name: 'Premium', style: styles.premium },
   ];
@@ -190,8 +189,9 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             <Input
               type='number'
               value={size}
-              width={85}
+              width={105}
               icon={<LogoEth />}
+              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
           </div>
@@ -210,13 +210,13 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
           <div className={styles.unitPrice}>
             <Input
               type='number'
-              width={85}
+              width={90}
+              footerText={title === 'Options' ? `IV ${calcIv()}` : undefined}
               value={unitPrice}
               icon={<LogoUsdc />}
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}
             />
           </div>
-          <div className={`${styles.iv} color-white`}>{title === 'Options' ? calcIv() : ''}</div>
           <div className={styles.collateral}>
             <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
           </div>

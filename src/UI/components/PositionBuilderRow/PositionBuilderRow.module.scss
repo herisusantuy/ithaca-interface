@@ -1,6 +1,6 @@
 .parent {
   display: grid;
-  grid-template-columns: 22.163% 4.544% 9.42% 11.636% 9.42% 4.211% 9% 9% 13%;
+  grid-template-columns: 22.163% 4.544% 11.636% 11.636% 9.42% 10.5% 10.5% 13%;
   grid-template-rows: 1fr;
   grid-column-gap: rem(8);
   align-items: center;
@@ -13,12 +13,13 @@
     z-index: 6;
   }
 
-  button {
-    width: rem(114);
+  .action {
+      button {
+      width: rem(114);
+    }
   }
 }
 
-.iv,
 .collateral,
 .premium,
 .action {

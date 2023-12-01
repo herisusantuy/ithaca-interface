@@ -15,7 +15,6 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Toast from '@/UI/components/Toast/Toast';
 

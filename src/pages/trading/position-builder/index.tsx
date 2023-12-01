@@ -21,8 +21,6 @@ import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuild
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
-import Modal from '@/UI/components/Modal/Modal';
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Toast from '@/UI/components/Toast/Toast';
 
 // Layouts
@@ -39,7 +37,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
 import styles from './position-builder.module.scss';
-import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -49,13 +47,13 @@ export interface PositionBuilderStrategy {
   strike: string;
 }
 
-type OrderSummary = {
+export type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
   orderPayoff: OrderPayoff;
 };
 
-type AuctionSubmission = {
+export type AuctionSubmission = {
   type: string;
   order: ClientConditionalOrder;
 };
@@ -235,7 +233,7 @@ const Index = () => {
                         )
                         : '-'
                     }
-                    premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
+                    premium={orderSummary?.order.totalNetPrice}
                     fee={1.5}
                     submitAuction={() => {
                       if (orderSummary?.order) {
@@ -247,117 +245,18 @@ const Index = () => {
                       }
                     }}
                   />
-                  <Modal
-                    title='Submit to Auction'
+                  <SubmitModal
                     isOpen={submitModal}
-                    onCloseModal={() => setSubmitModal(false)}
-                    // isLoading={transactionInProgress}
-                    onSubmitOrder={async () => {
+                    closeModal={(val) => setSubmitModal(val)}
+                    submitOrder={() => {
                       if (!auctionSubmission) return;
                       submitToAuction(auctionSubmission.order, auctionSubmission.type);
                       setAuctionSubmission(undefined);
                       setSubmitModal(false);
                     }}
-                  >
-                    <>
-                      {positionBuilderStrategies.length > 1 &&
-                        positionBuilderStrategies.findIndex((p) => p.payoff !== 'Call' &&
-                          p.payoff !== 'Put') === -1 &&
-                        <RadioButton
-                          options={[{
-                            option: 'Multi-Price Portfolio Dominance',
-                            value: 'Multi-Price Portfolio Dominance'
-                          }, {
-                            option: 'Clearing',
-                            value: 'Clearing'
-                          }]}
-                          selectedOption={'Multi-Price Portfolio Dominance'}
-                          name={`order-radio`}
-                          onChange={()  => {}}
-                          width={440}
-                        />
-                      }
-                      <TableStrategy
-                        strategies={positionBuilderStrategies}
-                        hideClear={true}
-                        clearAll={() => {
-                          setPositionBuilderStrategies([]);
-                          setOrderSummary(undefined);
-                          setChartData(undefined);
-                        }}
-                        removeRow={(index: number) => {
-                          const newPositionBuilderStrategies = [...positionBuilderStrategies];
-                          newPositionBuilderStrategies.splice(index, 1);
-                          if (!newPositionBuilderStrategies.length) {
-                            setPositionBuilderStrategies([]);
-                            setOrderSummary(undefined);
-                            setChartData(undefined);
-                          } else {
-                            setPositionBuilderStrategies(newPositionBuilderStrategies);
-                            getPositionBuilderSummary(newPositionBuilderStrategies);
-                          }
-                        }}
-                      />
-                      <div className={styles.divider}></div>
-                      <Flex margin='mb-14'>
-                        <h5 className='flexGrow'>Order Limit</h5>
-                        <div>
-                          <span className={styles.amountLabel}>
-                            {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
-                          </span>
-                          <LogoUsdc />
-                          <span className={styles.currencyLabel}>USDC</span>
-                        </div>
-                      </Flex>
-                      <Flex margin='mb-14'>
-                        <h5 className='flexGrow'>Collateral Requirement</h5>
-                        <div>
-                          <div>
-                            <span className={styles.amountLabel}>
-                              {orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
-                            </span>
-                            <LogoEth />
-                            <span className={styles.currencyLabel}>WETH</span>
-                          </div>
-                          <div>
-                            <span className={styles.amountLabel}>
-                              {orderSummary
-                                ? formatNumber(
-                                  toPrecision(
-                                    orderSummary.orderLock.numeraireAmount -
-                                    getNumber(orderSummary.order.totalNetPrice),
-                                    currencyPrecision.strike
-                                  ),
-                                  'string'
-                                )
-                                : '-'}
-                            </span>{' '}
-                            <LogoUsdc />
-                            <span className={styles.currencyLabel}>USDC</span>
-                          </div>
-                        </div>
-                      </Flex>
-                      <Flex margin='mb-14'>
-                        <h5 className='flexGrow color-white'>Total Premium</h5>
-                        <div>
-                          <span className={styles.amountLabel}>
-                            {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
-                          </span>
-                          <LogoUsdc />
-                          <span className={styles.currencyLabel}>USDC</span>
-                        </div>
-                      </Flex>
-                      <div className={styles.divider}></div>
-                      <Flex margin='mb-14'>
-                        <h5 className='flexGrow'>Platform Fee</h5>
-                        <div>
-                          <span className={styles.amountLabel}>1.5</span>
-                          <LogoUsdc />
-                          <span className={styles.currencyLabel}>USDC</span>
-                        </div>
-                      </Flex>
-                    </>
-                  </Modal>
+                    auctionSubmission={auctionSubmission}
+                    positionBuilderStrategies={positionBuilderStrategies}
+                    orderSummary={orderSummary}/>
                   <Toast toastList={toastList} position={position} />
                 </>
               }

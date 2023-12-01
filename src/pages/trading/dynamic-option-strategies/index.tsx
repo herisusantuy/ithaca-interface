@@ -44,6 +44,8 @@ import Toast from '@/UI/components/Toast/Toast';
 // Styles
 import styles from './dynamic-option-strategies.module.scss';
 import Toggle from '@/UI/components/Toggle/Toggle';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import { AuctionSubmission } from '../position-builder';
 
 // Types
 export interface DynamicOptionStrategy {
@@ -69,11 +71,13 @@ const Index = () => {
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>();
   const [chartData, setChartData] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [strategy, setStrategy] = useState(LINEAR_STRATEGIES[0]);
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
     useAppStore();
   const { toastList, position, showToast } = useToast();
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
   const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map((s) => s.size));
   const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
   const [strategyType, setSetStrategyType] = useState<'LINEAR'|'STRUCTURED'>('LINEAR');
@@ -85,21 +89,23 @@ const Index = () => {
     { name: 'Size', style: styles.size },
     { name: 'Strike', style: styles.strike },
     { name: 'Unit Price', style: styles.unitPrice },
-    { name: 'IV', style: styles.action },
   ];
   const handleStrategyChange = (strat: string, type: 'LINEAR' | 'STRUCTURED') => {
     const newStrategy = (type === 'LINEAR' ? LINEAR_STRATEGIES : STRUCTURED_STRATEGIES).find(s => s.key === strat) as PrepackagedStrategy;
+    if (newStrategy.key === strategy.key) return;
     setSetStrategyType(type);
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
     setSharedSize(newStrategy.strategies.map((s) => s.size));
     setLinkToggle('right');
-    setStrategy({
+    setStrategy({...{
       label: newStrategy?.label,
       key: newStrategy?.key,
-      strategies: newStrategy?.strategies,
-    });
+      strategies: newStrategy ? [
+        ...newStrategy.strategies
+      ] : [],
+    }});
   };
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: DynamicOptionStrategy[]) => {
@@ -387,7 +393,7 @@ const Index = () => {
                           return (
                             <DynamicOptionRow
                               id={`strategy-${index}-${strategy.key}`}
-                              key={`strategy-${index}`}
+                              key={`strategy-${index}-${strategy.key}`}
                               strategy={strat}
                               linked={strat.linked}
                               sizeChange={(size:number) => {
@@ -474,13 +480,29 @@ const Index = () => {
                           )
                         : '-'
                     }
-                    premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
+                    premium={orderSummary?.order.totalNetPrice}
                     fee={1.5}
                     submitAuction={() => {
                       if (!orderSummary) return;
-                      submitToAuction(orderSummary.order, 'Position Builder');
+                      setSubmitModal(true);
+                      setAuctionSubmission({
+                        order: orderSummary?.order,
+                        type: 'Position Builder',
+                      });
                     }}
                   />
+                  <SubmitModal
+                    isOpen={submitModal}
+                    closeModal={(val) => setSubmitModal(val)}
+                    submitOrder={() => {
+                      if (!auctionSubmission) return;
+                      submitToAuction(auctionSubmission.order, auctionSubmission.type);
+                      setAuctionSubmission(undefined);
+                      setSubmitModal(false);
+                    }}
+                    auctionSubmission={auctionSubmission}
+                    positionBuilderStrategies={positionBuilderStrategies}
+                    orderSummary={orderSummary}/>
                   <Toast toastList={toastList} position={position} />
                 </>
               }

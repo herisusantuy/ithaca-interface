@@ -86,3 +86,21 @@
   @include font-size('text-xxs', 'regular');
   color: var(--red-20);
 }
+
+.incrementButton {
+  height: 15px;
+  button {
+    height: 15px !important;
+  }
+}
+
+.incrementWrapper {
+  width: 10px;
+  margin-top: -4px;
+}
+
+.footer {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--white-60);
+}

@@ -27,6 +27,8 @@
   padding: rem(10) rem(16) !important;
   color: var(--white);
   border-width: rem(0);
+  white-space: nowrap;
+  cursor: pointer;
   border-radius: rem(16);
   position: relative;
 
@@ -59,6 +61,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
+  cursor: pointer;
   gap: 14px;
   padding: rem(7) rem(16) !important;
   color: var(--white);
