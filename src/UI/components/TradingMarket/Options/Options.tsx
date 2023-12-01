@@ -269,9 +269,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               />
             </LabeledControl>
 
-            <LabeledControl label='IV' labelClassName='justify-end'>
+            {/* <LabeledControl label='IV' labelClassName='justify-end'>
               <PriceLabel className='height-34 min-width-71' icon='' label={calcCollateral()} />
-            </LabeledControl>
+            </LabeledControl> */}
 
             <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={iv.toFixed(1) + ' %'} />

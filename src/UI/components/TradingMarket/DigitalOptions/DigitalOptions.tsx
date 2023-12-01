@@ -263,7 +263,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         showPortial={!compact}
       />
 
-      {!compact && <Greeks />}
+      {/* {!compact && <Greeks />} */}
     </>
   );
 };

@@ -45,8 +45,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const strikes = Object.keys(binaryPutContracts).map(strike => parseFloat(strike));
 
-  const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('OUTSIDE');
-  const [strike, setStrike] = useState({ min: strikes[0], max: strikes[5] });
+  const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('INSIDE');
+  const [strike, setStrike] = useState({ min: strikes[2], max: strikes[strikes.length -3] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
