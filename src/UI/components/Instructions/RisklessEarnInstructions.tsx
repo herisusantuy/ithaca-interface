@@ -96,7 +96,7 @@ const RisklessEarnInstructions = ({ currentExpiry }: props) => {
               <span className='hide-psuedo p-0'>Forward Strike - (Call - Put)</span>
             </span>
             <div className={styles.curlyDown}><CurlyBracketDown /></div>
-            <span className={`hide-psuedo fs-roboto-md-italic`}>Capital</span>
+            <span className={`hide-psuedo fs-lato-sm-italic`}>Capital</span>
           </span>
           <p className={`${styles.risklessPay} ${styles.italic} ml-36`}><LogoUsdc /> Now,</p>
           <span className='flex-column-center flex-start hide-psuedo p-0 mb-24'>
