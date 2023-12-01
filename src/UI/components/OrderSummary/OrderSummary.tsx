@@ -120,7 +120,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
           <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>
             Submit to Auction
           </Button> : <div className={styles.walletStyles}><Wallet/></div>}
-          {premium > collateralSummary['USDC'].fundLockValue && <div className={styles.balanceWarning}>
+          {Number(premium) > collateralSummary['USDC'].fundLockValue && <div className={styles.balanceWarning}>
             <Warning/> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight/>
           </div>}
         </Flex>
