@@ -262,7 +262,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       isCall: type === 'Call',
       underlying:currentSpotPrice
     }
-    return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
+    return (ithacaSDK.calculation.calcSigma(params)*100).toFixed(1) + '%'
   }
 
   return (
@@ -306,7 +306,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               onLink={(link) => {
                 linkChange(link);
               }}
+              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               type='number'
+              
               value={size}
               width={105}
               icon={<LogoEth />}
@@ -331,6 +333,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               value={unitPrice}
               width={105}
               icon={<LogoUsdc />}
+              footerText={product === 'option' ? `IV ${calcIv()}` : undefined}
               onChange={({ target }) => {
                 if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(target.value))) return;
                 const leg = {
@@ -348,7 +351,6 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               }
             />
           </div>
-          <div className={`${styles.iv} color-white`}>{product === 'option' ? calcIv() : ''}</div>
           <div className={styles.action}>
             <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
               <Remove />

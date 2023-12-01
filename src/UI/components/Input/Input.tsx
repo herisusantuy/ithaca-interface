@@ -19,10 +19,12 @@ type InputProps = {
   type?: 'text' | 'number';
   id?: string;
   hasError?: boolean;
+  footerText?: string;
   errorMessage?: string;
   className?: string;
   containerClassName?: string;
   onLink?: (linked: boolean) => void;
+  increment?: (direction: 'UP' | 'DOWN') => void;
   isLinked?: boolean;
   canLink?: boolean;
 };
@@ -32,8 +34,12 @@ import styles from './Input.module.scss';
 import Link from '../Icons/Link';
 import Button from '../Button/Button';
 import UnLink from '../Icons/UnLink';
+import ChevronUp from '../Icons/ChevronUp';
+import ChevronDown from '../Icons/ChevronDown';
+import Flex from '@/UI/layouts/Flex/Flex';
 
 const Input = ({
+  increment,
   onChange,
   value,
   icon,
@@ -49,7 +55,8 @@ const Input = ({
   containerClassName,
   isLinked,
   canLink,
-  onLink
+  onLink,
+  footerText
 }: InputProps) => {
   const inputClass = hasError ? `${styles.input} ${styles.error}` : styles.input;
   return (
@@ -61,22 +68,49 @@ const Input = ({
       )}
       <div className={`${styles.container} ${containerClassName || ''}`}
         style={width > 0 ? { width: width + 'px' } : {}}>
-        {canLink && <Button title='Click to link' variant='icon' size='sm' onClick={()=> {
+        {canLink && <Button title='Click to link' variant='icon' size='sm' onClick={() => {
           onLink && onLink(!isLinked);
         }}>
-          {isLinked ? <Link /> : <UnLink/>}
+          {isLinked ? <Link /> : <UnLink />}
         </Button>}
-        <input
-          id={id}
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          inputMode={type === 'number' ? 'decimal' : undefined}
-          onChange={onChange}
-          onWheel={type === 'number' ? preventScrollOnNumberInput : undefined}
-          disabled={disabled}
-        />
-        {icon && icon}
+        <Flex direction='column'>
+          <Flex>
+            <input
+              id={id}
+              type={type}
+              value={value}
+              placeholder={placeholder}
+              inputMode={type === 'number' ? 'decimal' : undefined}
+              onChange={onChange}
+              onWheel={type === 'number' ? preventScrollOnNumberInput : undefined}
+              disabled={disabled}
+            />
+            {icon && icon}
+          </Flex>
+          {footerText && <div className={styles.footer}>{footerText}</div>}
+        </Flex>
+        {increment &&
+          <div className={styles.incrementWrapper}>
+            <Flex direction='column'>
+              <div className={styles.incrementButton}>
+                <Button
+                  title='up'
+                  onClick={() => increment && increment('UP')}
+                  variant='icon'>
+                  <ChevronUp />
+                </Button>
+              </div>
+              <div className={styles.incrementButton}>
+                <Button
+                  title='up'
+                  onClick={() => increment && increment('DOWN')}
+                  variant='icon'>
+                  <ChevronDown />
+                </Button>
+              </div>
+            </Flex>
+          </div>
+        }
       </div>
       {hasError && errorMessage && (
         <div className={styles.errorMessage}>

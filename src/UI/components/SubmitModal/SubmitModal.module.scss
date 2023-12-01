@@ -1,0 +1,13 @@
+.confirmButton {
+  color: var(--white);
+  height: rem(34);
+  width: 100%;
+  margin-bottom: rem(24);
+}
+
+.toggleWrapper {
+  display: flex;
+  justify-content: right;
+  margin-right: -70px;
+  margin-bottom: 10px;
+}

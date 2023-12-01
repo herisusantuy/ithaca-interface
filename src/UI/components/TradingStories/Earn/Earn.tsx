@@ -57,7 +57,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   }, []);
 
   const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
-  const [strike, setStrike] = useState({ min: strikes[0], max: strikes[0] });
+  const [strike, setStrike] = useState({ min: strikes[Math.ceil(strikes.length/2)-1], max: strikes[Math.ceil(strikes.length/2)-1] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();

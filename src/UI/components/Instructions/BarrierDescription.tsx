@@ -1,6 +1,5 @@
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
-import ChevronLeft from '@/UI/components/Icons/ChevronLeft';
 
 // Styles
 import styles from './Instructions.module.scss';

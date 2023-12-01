@@ -36,12 +36,13 @@ type ModalProps = {
   children: React.ReactNode;
   title: string;
   onCloseModal: () => void;
-  onSubmitOrder: () => void;
+  onSubmitOrder?: () => void;
   isLoading?: boolean;
   isOpen: boolean;
+  hideFooter?: boolean;
 };
 
-const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen }: ModalProps) => {
+const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen, hideFooter }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
@@ -86,7 +87,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
           </Button>
         </div>
         <div className={styles.modalContent}>{children}</div>
-        <div className={styles.modalFooter}>
+        {!hideFooter && onSubmitOrder ? <div className={styles.modalFooter}>
           <Button
             className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
             onClick={onSubmitOrder}
@@ -94,7 +95,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
           >
             {isLoading ? <Loader /> : 'Confirm'}
           </Button>
-        </div>
+        </div> : ''}
       </motion.div>
     </motion.div>
   );

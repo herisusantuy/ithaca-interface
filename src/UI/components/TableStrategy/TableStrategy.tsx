@@ -16,8 +16,8 @@ import { formatNumber } from '@/UI/utils/Numbers';
 
 type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];
-  removeRow: (index: number) => void;
-  clearAll: () => void;
+  removeRow?: (index: number) => void;
+  clearAll?: () => void;
   hideClear?: boolean;
 };
 
@@ -48,7 +48,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: Str
               <div className={styles.cell}>{formatNumber(Number(strategy.strike), 'string')}</div>
               <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
               {!hideClear && <div className={styles.cell}>
-                <Button title='Click to remove row' variant='icon' onClick={() => removeRow(idx)}>
+                <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
                   <Remove />
                 </Button>
               </div>}
