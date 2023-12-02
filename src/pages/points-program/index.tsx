@@ -14,7 +14,7 @@ import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { useAccount } from 'wagmi';
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import TwitterAuth, { TwitterAuthChildProps } from '@/UI/components/TwitterAuth/TwitterAuth';
+import TwitterAuth from '@/UI/components/TwitterAuth/TwitterAuth';
 
 const PointsProgram = () => {
   const [actionsPerformed, setActionsPerformed] = useState({
@@ -39,12 +39,9 @@ const PointsProgram = () => {
     },
   });
 
-  const ActionCompleted = useCallback(
-    ({ action }: { action: boolean }) => {
-      return action ? <span className={styles.completedTxt}>+ points earned</span> : <></>;
-    },
-    [actionsPerformed]
-  );
+  const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
+    return action ? <span className={styles.completedTxt}>+ points earned</span> : <></>;
+  }, []);
   return (
     <>
       <Meta />

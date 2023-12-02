@@ -15,7 +15,7 @@ import TableReferralsLeaderBoard from '@/UI/components/TableReferralsLeaderBoard
 import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
 import Card2 from '@/UI/components/Card/Card2';
 const Referrals = () => {
-  const { toastList, position, showToast } = useToast();
+  const { toastList, showToast } = useToast();
   const REFERRALS_TABS = [
     {
       id: 'referralCode',

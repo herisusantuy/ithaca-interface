@@ -1,4 +1,3 @@
-import Button from '@/UI/components/Button/Button';
 import React, { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
@@ -24,7 +23,7 @@ const requestTwitterAuthToken = async (code: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization' : `Basic ${process.env.NEXT_PUBLIC_TWITTER_AUTHORIZATION_TOKEN}`
+      Authorization: `Basic ${process.env.NEXT_PUBLIC_TWITTER_AUTHORIZATION_TOKEN}`,
     },
     body: data,
   };
@@ -38,9 +37,8 @@ const requestTwitterAuthToken = async (code: string) => {
 
     const responseData = await response.json();
     return responseData;
-  } catch (error: any) {
-    console.error('Error:', error.message);
-    return error;
+  } catch {
+    return undefined;
   }
 };
 
@@ -57,7 +55,7 @@ const TwitterAuth: React.FC<TwitterAuthProps> = ({ children }) => {
         console.log('Token Result => ', result);
       })();
     }
-  }, [code, state]);
+  }, [code, state, router]);
 
   const onStart = () => {
     const url =
