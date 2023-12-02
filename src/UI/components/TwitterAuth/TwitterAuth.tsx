@@ -24,7 +24,7 @@ const requestTwitterAuthToken = async (code: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization' : 'Basic AAAAAAAAAAAAAAAAAAAAAI4lrQEAAAAAAJ9oTNrHL7o5Y65cvZjKg6PZgsk%3DUxI2LmT2OxwYnxnMrqwc9l6KuU4d1EYVvFLAkCzspm0mqX5wvm'
+      'Authorization' : `Basic ${process.env.NEXT_PUBLIC_TWITTER_AUTHORIZATION_TOKEN}`
     },
     body: data,
   };
