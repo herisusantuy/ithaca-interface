@@ -11,6 +11,9 @@ import styles from './referrals.module.scss';
 import Tabs from '@/UI/components/Tabs/Tabs';
 import useToast from '@/UI/hooks/useToast';
 import Toast from '@/UI/components/Toast/Toast';
+import TableReferralsLeaderBoard from '@/UI/components/TableReferralsLeaderBoard/TableReferralsLeaderBoard';
+import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
+import Card2 from '@/UI/components/Card/Card2';
 const Referrals = () => {
   const { toastList, position, showToast } = useToast();
   const REFERRALS_TABS = [
@@ -18,39 +21,49 @@ const Referrals = () => {
       id: 'referralCode',
       label: 'Referral Code',
       content: (
-        <Panel margin={styles.mainPanel}>
-          <p>Your referral link to share:</p>
-          <a href='https://ithaca.domain/E1BAC' target='_blank'>
-            https://ithaca.domain/E1BAC
-          </a>
-          <Button
-            variant='secondary'
-            title=''
-            onClick={() => {
-              navigator.clipboard.writeText('https://ithaca.domain/E1BAC');
-              showToast(
-                {
-                  id: Math.floor(Math.random() * 1000),
-                  title: 'Copied',
-                  message: 'https://ithaca.domain/E1BAC',
-                  type: 'success',
-                },
-                'top-right'
-              );
-            }}
-          >
-            Copy Link
-          </Button>
-        </Panel>
+        <div className={styles.referralPanel}>
+          <Panel margin={styles.mainPanel}>
+            <p>Your referral link to share:</p>
+            <a href='https://ithaca.domain/E1BAC' target='_blank'>
+              https://ithaca.domain/E1BAC
+            </a>
+            <Button
+              variant='secondary'
+              title=''
+              onClick={() => {
+                navigator.clipboard.writeText('https://ithaca.domain/E1BAC');
+                showToast(
+                  {
+                    id: Math.floor(Math.random() * 1000),
+                    title: 'Copied',
+                    message: 'https://ithaca.domain/E1BAC',
+                    type: 'success',
+                  },
+                  'top-right'
+                );
+              }}
+            >
+              Copy Link
+            </Button>
+          </Panel>
+        </div>
       ),
     },
     {
       id: 'leaderBoard',
       label: 'Leaderboard',
+
       content: (
-        <Panel margin={styles.mainPanel}>
-          <p>Leaderboard</p>
-        </Panel>
+        <div className={styles.leaderBoardPanel}>
+          <div className={styles.leaderBoardCardsContainer}>
+            <Card2 label='Your Current Ranking' value={1024} />
+            <Card2 label='Invited' value={50} />
+            <Card2 label='Accepted Invites' value={8} />
+          </div>
+          <Panel margin='p-30 p-tablet-16'>
+            <TableReferralsLeaderBoard data={TABLE_REFERRALS_LEADERBOARD_DATA} />
+          </Panel>
+        </div>
       ),
     },
   ];
@@ -62,7 +75,14 @@ const Referrals = () => {
         <Container>
           <div className={styles.wrapper}>
             <h1>Referrals</h1>
-            <Tabs tabs={REFERRALS_TABS} activeTab={activeTab} onChange={setActiveTab} />
+            <div className={styles.tabsContainer}>
+              <Tabs
+                tabs={REFERRALS_TABS}
+                activeTab={activeTab}
+                onChange={setActiveTab}
+                className={styles.referralsTab}
+              />
+            </div>
           </div>
         </Container>
       </Main>

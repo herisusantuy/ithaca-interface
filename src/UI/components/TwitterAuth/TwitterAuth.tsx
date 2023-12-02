@@ -24,7 +24,7 @@ const requestTwitterAuthToken = async (code: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization' : 'Basic AAAAAAAAAAAAAAAAAAAAAI4lrQEAAAAA%2BWr%2BiIYAuE3QsmTvWkRCX12zH4Y%3DQ9NRpxlsRjl4SAK90hpRA8MffU45OXxKQL3m8A1b3xjX8YkCl2'
+      'Authorization' : 'Basic AAAAAAAAAAAAAAAAAAAAAI4lrQEAAAAAAJ9oTNrHL7o5Y65cvZjKg6PZgsk%3DUxI2LmT2OxwYnxnMrqwc9l6KuU4d1EYVvFLAkCzspm0mqX5wvm'
     },
     body: data,
   };

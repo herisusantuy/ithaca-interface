@@ -110,3 +110,20 @@
     font-family: $lato;
   }
 }
+
+.data2 {
+  p {
+    font-family: $lato;
+    color: var(--white);
+  }
+  p:first-child {
+    font-size: rem(14);
+    font-weight: 400;
+    margin-bottom: rem(16);
+  }
+  p:last-child {
+    font-family: $lato;
+    font-size: rem(24);
+    font-weight: 600;
+  }
+}

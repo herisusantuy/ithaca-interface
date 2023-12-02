@@ -1,10 +1,12 @@
-
 .wrapper {
   @include spacing('margin', 16, 'top');
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  max-width: rem(1040);
 
   h1 {
     font-weight: 400;
@@ -37,4 +39,25 @@
     min-width: rem(124);
     font-size: rem(12);
   }
+}
+
+.tabsContainer {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.referralsTab {
+  align-self: center;
+}
+
+.referralPanel {
+  display: flex;
+  justify-content: center;
+}
+
+.leaderBoardCardsContainer {
+  display: flex;
+  gap: rem(16);
+  @include spacing('margin', 16, 'bottom');
 }
