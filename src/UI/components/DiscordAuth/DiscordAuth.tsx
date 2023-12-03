@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { DiscordUser } from '@/UI/constants/discordAuth';
 
 interface DiscordAuthProps {
   children?: (renderProps: DiscordAuthChildProps) => ReactNode;
@@ -14,7 +15,7 @@ export interface DiscordAuthChildProps {
 
 const redirectURL = () => window.location.origin + window.location.pathname;
 
-const fetchDiscordUser = async (accessToken: string): Promise<any> => {
+const fetchDiscordUser = async (accessToken: string): Promise<DiscordUser> => {
   const apiUrl = 'https://discord.com/api/users/@me';
 
   try {
