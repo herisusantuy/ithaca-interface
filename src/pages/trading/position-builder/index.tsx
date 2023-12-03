@@ -50,7 +50,6 @@ export interface PositionBuilderStrategy {
 export type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
-  orderPayoff: OrderPayoff;
 };
 
 export type AuctionSubmission = {
@@ -104,11 +103,9 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderSummary({
         order,
-        orderLock,
-        orderPayoff,
+        orderLock
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);

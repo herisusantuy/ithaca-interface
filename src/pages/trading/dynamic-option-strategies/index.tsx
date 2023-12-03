@@ -58,7 +58,6 @@ export interface DynamicOptionStrategy {
 type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
-  orderPayoff: OrderPayoff;
 };
 
 type SectionType = {
@@ -141,11 +140,9 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderSummary({
         order,
-        orderLock,
-        orderPayoff,
+        orderLock
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
@@ -296,6 +293,8 @@ const Index = () => {
                         setOrderSummary(undefined);
                         setPositionBuilderStrategies([]);
                         setChartData(undefined);
+                        setSharedSize([]);
+                        setStrategy({ ...strategy, strategies: [] });
                         setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
                       }}
                       value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
@@ -327,7 +326,7 @@ const Index = () => {
                             onChange={option => handleStrategyChange(option, 'LINEAR')}
                           />
                         </div>
-                        <div className={styles.prePackagedTitle}>Structured Products</div>
+                        <div className={`${styles.prePackagedTitle} ml-32`}>Structured Products</div>
                         <div className={styles.dropDownWrapper}>
                           <DropdownMenu
                             value={strategyType === 'STRUCTURED' ? {

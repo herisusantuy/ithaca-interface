@@ -19,7 +19,7 @@ type TableDescriptionProps = {
   possibleReleaseY: number;
   postOptimisationX: number;
   postOptimisationY: number;
-  totalCollateral: number;
+  // totalCollateral: number;
 };
 
 const TableDescription = ({
@@ -27,7 +27,7 @@ const TableDescription = ({
   possibleReleaseY,
   postOptimisationX,
   postOptimisationY,
-  totalCollateral,
+  // totalCollateral,
 }: TableDescriptionProps) => {
   const rows = [
     {
@@ -38,16 +38,12 @@ const TableDescription = ({
       ] as ValueWithIcon[],
     },
     {
-      label: 'Expected Collateral Value Post Execution Collateral Optimisation: ',
+      label: 'Expected Collateral Value Post Execution Collateral Optimization: ',
       values: [
         { value: postOptimisationX, Icon: LogoEth },
         { value: postOptimisationY, Icon: LogoUsdc },
       ] as ValueWithIcon[],
-    },
-    {
-      label: 'Total Collateral: ',
-      values: [{ value: totalCollateral }],
-    },
+    }
   ];
 
   return (

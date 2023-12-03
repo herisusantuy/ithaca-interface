@@ -124,11 +124,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       console.error(`Order estimation for ${callOrPut} failed`, error);

@@ -33,13 +33,13 @@ type OrderSummaryProps = {
 };
 
 const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee, submitAuction }: OrderSummaryProps) => {
-  const {isAuthenticated, ithacaSDK, systemInfo} = useAppStore();
+  const { isAuthenticated, ithacaSDK, systemInfo } = useAppStore();
   const publicClient = usePublicClient();
   const { address } = useAccount();
   const [modalOpen, setModalOpen] = useState(false);
   const [collateralSummary, setCollateralSummary] = useState(TABLE_COLLATERAL_SUMMARY);
   const [selectedCurrency, setSelectedCurrency] = useState<{ name: string; value: string }>({
-    name:'USDC',
+    name: 'USDC',
     value: 'USDC'
   });
   const [modalAmount, setModalAmount] = useState('');
@@ -72,13 +72,18 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
 
   const fetchFundlockState = useCallback(async () => {
     if (!isAuthenticated) return;
-    const fundlockState = await ithacaSDK.client.fundLockState();
-    const fundlockWETH = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'WETH')];
-    const fundlockUSDC = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'USDC')];
-    setCollateralSummary(summary => ({
-      ['WETH']: { ...summary['WETH'], ...fundlockWETH },
-      ['USDC']: { ...summary['USDC'], ...fundlockUSDC },
-    }));
+    try {
+      const fundlockState = await ithacaSDK.client.fundLockState();
+      const fundlockWETH = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'WETH')];
+      const fundlockUSDC = fundlockState[fundlockState.findIndex(fundlock => fundlock.currency === 'USDC')];
+      setCollateralSummary(summary => ({
+        ['WETH']: { ...summary['WETH'], ...fundlockWETH },
+        ['USDC']: { ...summary['USDC'], ...fundlockUSDC },
+      }));
+    }
+    catch (e) {
+      console.log(e)
+    }
   }, [ithacaSDK, isAuthenticated]);
 
   useEffect(() => {
@@ -95,33 +100,33 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
             <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
-          <Flex direction='column' gap='gap-6'>
-            <h5>Collateral Requirement</h5>
-            <Flex gap='gap-10'>
-              <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
-              <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
-            </Flex>
-          </Flex>
-          <Flex direction='column' gap='gap-6'>
-            <h5 className='color-white'>Total Premium</h5>
-            <CurrencyDisplay amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'} symbol={<LogoUsdc />} currency='USDC' />
-          </Flex>
-        <div className={styles.platformWrapper}>
         <Flex direction='column' gap='gap-6'>
-          <h5 className='fs-xxs'>Platform Fee</h5>
-          <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' size='sm' />
+          <h5>Collateral Requirement</h5>
+          <Flex gap='gap-10'>
+            <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
+            <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
+          </Flex>
         </Flex>
+        <Flex direction='column' gap='gap-6'>
+          <h5 className='color-white'>Total Premium</h5>
+          <CurrencyDisplay amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'} symbol={<LogoUsdc />} currency='USDC' />
+        </Flex>
+        <div className={styles.platformWrapper}>
+          <Flex direction='column' gap='gap-6'>
+            <h5 className='fs-xxs'>Platform Fee</h5>
+            <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' size='sm' />
+          </Flex>
         </div>
         <Flex direction='column'>
-          {isAuthenticated ? Number(premium) > collateralSummary['USDC'].fundLockValue ? 
-          <Button size='lg' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
-            Deposit
-          </Button> :
-          <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>
-            Submit to Auction
-          </Button> : <div className={styles.walletStyles}><Wallet/></div>}
+          {Number(premium) >= collateralSummary['USDC'].fundLockValue ?
+            <Button size='lg' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
+              Deposit
+            </Button> :
+            <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>
+              Submit to Auction
+            </Button>}
           {Number(premium) > collateralSummary['USDC'].fundLockValue && <div className={styles.balanceWarning}>
-            <Warning/> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight/>
+            <Warning /> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight />
           </div>}
         </Flex>
       </Flex>
@@ -144,9 +149,9 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
           }
           setModalAmount('');
           setSelectedCurrency({
-              name: 'USDC',
-              value: 'USDC',
-            });
+            name: 'USDC',
+            value: 'USDC',
+          });
           setTransactionInProgress(false);
         }}
       >

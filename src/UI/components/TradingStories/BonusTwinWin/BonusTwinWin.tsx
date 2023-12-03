@@ -38,10 +38,10 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
-  const barrierStrikes = Object.keys(putContracts).reduce<string[]>((strikes, currStrike) => {
+  const barrierStrikes = putContracts ? Object.keys(putContracts).reduce<string[]>((strikes, currStrike) => {
     if (parseFloat(currStrike) < currentSpotPrice) strikes.push(currStrike);
     return strikes;
-  }, []);
+  }, []) : [];
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
@@ -161,11 +161,9 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast

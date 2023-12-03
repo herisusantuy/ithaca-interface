@@ -12,6 +12,8 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Styles
 import styles from './LabelValue.module.scss';
+import LogoUsdc from '../Icons/LogoUsdc';
+import DropdownOutlined from '../Icons/DropdownOutlined';
 
 // Types
 type LabelValueProps = {
@@ -102,7 +104,7 @@ const LabelValue = ({
       </div>
       {hasDropdown && (
         <div onClick={toggleDropdown} className={`${styles.dropdown} ${isDropdownOpen ? styles.isActive : ''}`}>
-          <Dropdown />
+          <DropdownOutlined />
           {isDropdownOpen && renderDropdownOptions()}
         </div>
       )}

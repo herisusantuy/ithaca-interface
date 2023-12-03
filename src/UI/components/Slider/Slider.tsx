@@ -19,13 +19,14 @@ type SliderProps = {
   max: number;
   step?: number;
   range?: boolean;
+  extended?: boolean;
   label?: number;
   showLabel?: boolean;
   title?: string;
   onChange?: (value: ValueProps) => void;
 };
 
-const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange }: SliderProps) => {
+const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange, extended = false }: SliderProps) => {
   const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
   const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
   const [minPos, setMinPos] = useState<number>(0);
@@ -163,6 +164,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
       <div className={styles.sliderEffect} onClick={event => getValuePosition(event)}></div>
       <div className={styles.controlWrapper} onClick={event => getValuePosition(event)} ref={controlWrapperRef}>
         <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
+        {extended &&<div className={styles.railExtend}></div>}
         <div className={styles.rail}>
           <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
         </div>

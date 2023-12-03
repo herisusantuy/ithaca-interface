@@ -39,6 +39,16 @@ const calculateRange = (legs: OptionLeg[], customRange?: CustomRange) => {
   return customRange ? range(customRange.min, customRange.max, 1) : range(legsSorted[0] - 500, legsSorted[legsSorted.length - 1] + 500, 1);
 };
 
+const payoffMap = {
+  Call: 'C',
+  Put: 'P',
+  BinaryCall: 'BC',
+  BinaryPut: 'BP',
+  Forward: 'F'
+}
+
+type PAYOFF_TYPE = 'Call' | 'Put' | 'BinaryCall' | 'BinaryPut' | 'Forward';
+
 export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange ): PayoffMap[] {
   const payoffFunctions = {
     Call: (price: number, strike: number) => Math.max(0, price - strike),
@@ -52,12 +62,12 @@ export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange
 
   const payoffs = prices.map(price => {
     const payoff: PayoffMap = { x: price, total: 0 };
-    legs.forEach((leg) => {
+    legs.forEach((leg,index) => {
       const side = leg.side === 'BUY' ? 1 : -1;
       const premium = leg.payoff !== 'Forward' ? -leg.premium * side : 0;
       const intrinsicValue =
         side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, leg.economics.strike || 0) + premium;
-      const label = `${leg.side == 'BUY' ? '+' : '-'}${leg.payoff} @ ${leg.economics.strike}`
+      const label = `${payoffMap[leg.payoff as PAYOFF_TYPE]}@${index}`
       payoff[label] = intrinsicValue * parseInt(leg.quantity);
       payoff.total += intrinsicValue * parseInt(leg.quantity);
     });

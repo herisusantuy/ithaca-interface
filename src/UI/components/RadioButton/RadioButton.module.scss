@@ -125,7 +125,7 @@
   background: var(--gray-rgba-40);
   position: relative;
   border-radius: rem(5);
-  height: rem(15);
+  height: rem(18);
 
   &:before {
     content: '';
@@ -151,7 +151,7 @@
     flex-direction: column;
     gap: 0;
     min-width: rem(30);
-    height: rem(30);
+    height: rem(34);
 
     label {
       @include spacing(padding, 3, 'top+bottom');
@@ -159,8 +159,8 @@
       min-width: 0;
 
       svg {
-        height: rem(16);
-        width: rem(16);
+        height: rem(10);
+        width: rem(9);
       }
     }
   }
@@ -180,7 +180,7 @@
   }
 
   label {
-    font-size: rem(7);
+    font-size: rem(9);
     line-height: normal;
     font-weight: 500;
     @include spacing(padding, 2, 'top+bottom');

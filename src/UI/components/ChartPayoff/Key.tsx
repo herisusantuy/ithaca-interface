@@ -43,12 +43,12 @@ const Key = (props: KeysProps) => {
       'leg16',
     ];
 
-    keys.map(item => {
+    keys.map((item, index) => {
       if (item == 'total') {
         const keyObj: KeyType = { label: 'total', type: 'leg16' };
         keyArray.push(keyObj);
       } else {
-        const type: DotTypes = dotArray.find(key => key === item) || 'leg1';
+        const type: DotTypes = dotArray[index-1] || 'leg1';
         const keyObj: KeyType = { label: item, type: type };
         keyArray.push(keyObj);
       }
@@ -71,7 +71,6 @@ const Key = (props: KeysProps) => {
   const showDashedLine = (key: KeyType) => {
     onDashed(key);
   };
-
   return (
     <div className={styles.container}>
       {keyMap.map((key, index) => (

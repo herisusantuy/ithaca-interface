@@ -60,6 +60,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import styles from './TableOrder.module.scss';
 import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
+import DropdownOutlined from '../Icons/DropdownOutlined';
 
 // Types
 type TableOrderProps = {
@@ -534,7 +535,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       title='Click to expand dropdown'
                       className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
                     >
-                      <Dropdown />
+                      <DropdownOutlined />
                     </Button>
                   </div>
                   <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
@@ -592,7 +593,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             possibleReleaseY={20}
             postOptimisationX={8}
             postOptimisationY={18}
-            totalCollateral={30}
+            // totalCollateral={30}
           />
         ) : (
           <div />

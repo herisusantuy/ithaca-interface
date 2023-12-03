@@ -1,6 +1,9 @@
+import Minus from "../components/Icons/Minus";
+import Plus from "../components/Icons/Plus";
+
 // Types
 type OptionProps = {
-  option: string;
+  option: ReactNode;
   value: string;
 };
 
@@ -20,8 +23,8 @@ export const DIGITAL_OPTIONS: OptionProps[] = [
 ];
 
 export const SIDE_OPTIONS: OptionProps[] = [
-  { option: '+', value: 'BUY' },
-  { option: '-', value: 'SELL' },
+  { option: <Plus/>, value: 'BUY' },
+  { option: <Minus/>, value: 'SELL' },
 ];
 
 export const BET_OPTIONS: OptionProps[] = [
