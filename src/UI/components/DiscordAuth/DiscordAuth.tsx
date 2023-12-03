@@ -14,29 +14,6 @@ export interface DiscordAuthChildProps {
 
 const redirectURL = () => window.location.origin + window.location.pathname;
 
-const readAccessTokenFromUrl = () => {
-  const router = useRouter();
-
-  // Get the fragment identifier (values after the #)
-  const fragment: string | undefined = router.asPath.split('#')[1];
-
-  if (fragment) {
-    // Split the fragment into key-value pairs
-    const keyValuePairs: string[] = fragment.split('&');
-
-    // Create an object to store the key-value pairs
-    const queryParams: Record<string, string> = {};
-
-    // Loop through the key-value pairs and store them in the object
-    for (const pair of keyValuePairs) {
-      const [key, value] = pair.split('=');
-      queryParams[key] = value;
-    }
-    return queryParams;
-  }
-  return null;
-};
-
 const fetchDiscordUser = async (accessToken: string): Promise<any> => {
   const apiUrl = 'https://discord.com/api/users/@me';
 
@@ -96,7 +73,7 @@ const DiscordAuth: React.FC<DiscordAuthProps> = ({ children, onConnected }) => {
         router.replace(newUrl, undefined, { shallow: true });
       }
     })();
-  }, [router.asPath]);
+  }, [router, router.asPath, onConnected]);
 
   const onStart = () => {
     const url =
