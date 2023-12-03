@@ -1,9 +1,6 @@
 // Packages
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 
-// Components
-import Dropdown from '@/UI/components/Icons/Dropdown';
-
 // Constants
 import { ExpiryDateOptions, EXPIRY_DATE_OPTIONS } from '@/UI/constants/expiryDate';
 
@@ -12,7 +9,6 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Styles
 import styles from './LabelValue.module.scss';
-import LogoUsdc from '../Icons/LogoUsdc';
 import DropdownOutlined from '../Icons/DropdownOutlined';
 
 // Types

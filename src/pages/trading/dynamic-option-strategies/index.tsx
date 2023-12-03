@@ -3,7 +3,7 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 
 // SDK
-import { ClientConditionalOrder, Leg, OrderLock, OrderPayoff, toPrecision } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 

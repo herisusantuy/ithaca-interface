@@ -65,8 +65,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const { toastList, position, showToast } = useToast();
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
-    // console.log(option)
-    console.log(riskyOrRiskless)
     setRiskyOrRiskless(option)
   }
 

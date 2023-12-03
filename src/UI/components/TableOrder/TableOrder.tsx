@@ -43,7 +43,6 @@ import Pagination from '@/UI/components/Pagination/Pagination';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
-import Dropdown from '@/UI/components/Icons/Dropdown';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 import Modal from '@/UI/components/Modal/Modal';
 import Summary from '@/UI/components/Summary/Summary';
@@ -125,7 +124,6 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   };
 
   const positionsDataToRows = (res: Position[]) => {
-    console.log(res);
     setData(
       res.map(row => {
         const contract = unFilteredContractList.find(c => c.contractId === row.contractId);

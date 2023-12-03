@@ -115,7 +115,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       legs: [legMin, legMax],
     } as ClientConditionalOrder;
     const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
-    console.log(strikeDiff)
     const payoffMap = estimateOrderPayoff([
       { ...minContract, ...legMin, premium: minContract.referencePrice },
       { ...maxContract, ...legMax, premium: maxContract.referencePrice },

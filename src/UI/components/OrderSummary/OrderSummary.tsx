@@ -9,7 +9,6 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
 import styles from './OrderSummary.module.scss';
 import { useAppStore } from '@/UI/lib/zustand/store';
-import Wallet from '../Wallet/Wallet';
 import Warning from '../Icons/Warning';
 import ArrowUpRight from '../Icons/ArrowUpRight';
 import { useCallback, useEffect, useState } from 'react';

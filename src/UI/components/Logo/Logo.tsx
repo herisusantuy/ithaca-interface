@@ -1,6 +1,5 @@
 // Packages
 import Image from 'next/image';
-import Link from 'next/link';
 import LogoText from '../../../public/LogoText.png';
 
 const Logo = () => {
