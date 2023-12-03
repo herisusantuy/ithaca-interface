@@ -1,16 +1,16 @@
 export interface DiscordUser {
   id: string;
   username: string;
-  avatar: any;
+  avatar: string;
   discriminator: string;
   public_flags: number;
   premium_type: number;
   flags: number;
-  banner: any;
-  accent_color: any;
+  banner: string;
+  accent_color: string;
   global_name: string;
-  avatar_decoration_data: any;
-  banner_color: any;
+  avatar_decoration_data: string;
+  banner_color: string;
   mfa_enabled: boolean;
   locale: string;
 }
