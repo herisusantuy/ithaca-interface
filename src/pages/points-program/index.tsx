@@ -15,6 +15,7 @@ import { useAccount } from 'wagmi';
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import TwitterAuth from '@/UI/components/TwitterAuth/TwitterAuth';
+import DiscordAuth from '@/UI/components/DiscordAuth/DiscordAuth';
 
 const PointsProgram = () => {
   const [actionsPerformed, setActionsPerformed] = useState({
@@ -26,16 +27,16 @@ const PointsProgram = () => {
 
   useAccount({
     onConnect: () => {
-      setActionsPerformed({
-        ...actionsPerformed,
+      setActionsPerformed(state => ({
+        ...state,
         wallet: true,
-      });
+      }));
     },
     onDisconnect: () => {
-      setActionsPerformed({
-        ...actionsPerformed,
+      setActionsPerformed(state => ({
+        ...state,
         wallet: false,
-      });
+      }));
     },
   });
 
@@ -111,20 +112,39 @@ const PointsProgram = () => {
                   </div>
                 </li>
                 {/* Join Discord */}
-                <li className={styles.listItem}>
-                  <div className={styles.listIcon}>
-                    <DiscordIcon />
-                  </div>
-                  <div className={`${styles.itemName} ${actionsPerformed.discord ? styles.isConnected : ''}`}>
-                    Join Ithaca Discord
-                  </div>
-                  <div className={styles.buttonContainer}>
-                    <ActionCompleted action={actionsPerformed.discord} />
-                    <Button title='' disabled={!actionsPerformed.wallet}>
-                      <>Join</>
-                    </Button>
-                  </div>
-                </li>
+                <DiscordAuth
+                  onConnected={() => {
+                    setActionsPerformed(state => ({
+                      ...state,
+                      discord: true,
+                    }));
+                  }}
+                >
+                  {({ onStart, userName, isConnected }) => {
+                    return (
+                      <li className={styles.listItem}>
+                        <div className={styles.listIcon}>
+                          <DiscordIcon />
+                        </div>
+                        <div className={`${styles.itemName} ${actionsPerformed.discord ? styles.isConnected : ''}`}>
+                          {userName && isConnected ? `${userName} Connected` : 'Join Ithaca Discord'}
+                        </div>
+                        <div className={styles.buttonContainer}>
+                          <ActionCompleted action={actionsPerformed.discord} />
+                          {isConnected ? (
+                            <Button title='Completed' variant='outline' className={styles.completedBtn}>
+                              <>Completed</>
+                            </Button>
+                          ) : (
+                            <Button title='' disabled={!actionsPerformed.wallet} onClick={onStart}>
+                              <>Join</>
+                            </Button>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  }}
+                </DiscordAuth>
                 {/* Join Telegram */}
                 <li className={styles.listItem}>
                   <div className={styles.listIcon}>

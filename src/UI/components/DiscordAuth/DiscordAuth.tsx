@@ -1,0 +1,113 @@
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+interface DiscordAuthProps {
+  children?: (renderProps: DiscordAuthChildProps) => ReactNode;
+  onConnected: () => void;
+}
+
+export interface DiscordAuthChildProps {
+  onStart: () => void;
+  userName: string;
+  isConnected: boolean;
+}
+
+const redirectURL = () => window.location.origin + window.location.pathname;
+
+const readAccessTokenFromUrl = () => {
+  const router = useRouter();
+
+  // Get the fragment identifier (values after the #)
+  const fragment: string | undefined = router.asPath.split('#')[1];
+
+  if (fragment) {
+    // Split the fragment into key-value pairs
+    const keyValuePairs: string[] = fragment.split('&');
+
+    // Create an object to store the key-value pairs
+    const queryParams: Record<string, string> = {};
+
+    // Loop through the key-value pairs and store them in the object
+    for (const pair of keyValuePairs) {
+      const [key, value] = pair.split('=');
+      queryParams[key] = value;
+    }
+    return queryParams;
+  }
+  return null;
+};
+
+const fetchDiscordUser = async (accessToken: string): Promise<any> => {
+  const apiUrl = 'https://discord.com/api/users/@me';
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+};
+
+const DiscordAuth: React.FC<DiscordAuthProps> = ({ children, onConnected }) => {
+  const router = useRouter();
+  const [userName, setUserName] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  useEffect(() => {
+    // Get the fragment identifier (values after the #)
+    const fragment: string | undefined = router.asPath.split('#')[1];
+    (async () => {
+      if (fragment) {
+        // Split the fragment into key-value pairs
+        const keyValuePairs: string[] = fragment.split('&');
+
+        // Create an object to store the key-value pairs
+        const queryParams: Record<string, string> = {};
+
+        // Loop through the key-value pairs and store them in the object
+        for (const pair of keyValuePairs) {
+          const [key, value] = pair.split('=');
+          queryParams[key] = value;
+        }
+
+        localStorage.setItem('discordAccessToken', queryParams.accessToken);
+        const user = await fetchDiscordUser(queryParams.access_token);
+        console.log('Discord User => ', user);
+        if (user) {
+          setUserName(user.username);
+          setIsConnected(true);
+          onConnected();
+        } else {
+          setIsConnected(false);
+        }
+        // Remove the hash from the URL
+        const newUrl = router.asPath.replace(`#${fragment}`, '');
+        router.replace(newUrl, undefined, { shallow: true });
+      }
+    })();
+  }, [router.asPath]);
+
+  const onStart = () => {
+    const url =
+      process.env.NEXT_PUBLIC_DISCORD_OAUTH_IMPLICIT_GRANT_URL?.replace('{redirect_uri}', redirectURL())?.replace(
+        '{client_id}',
+        `${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}`
+      ) || '';
+    window.location.href = url;
+  };
+
+  return <>{children && children({ onStart, userName, isConnected })}</>;
+};
+
+export default DiscordAuth;
