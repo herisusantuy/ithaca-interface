@@ -1,5 +1,6 @@
 import Minus from "../components/Icons/Minus";
 import Plus from "../components/Icons/Plus";
+import { ReactNode } from 'react';
 
 // Types
 type OptionProps = {
