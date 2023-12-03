@@ -114,10 +114,10 @@ const DropdownMenu = ({
             <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           </Flex>
           <div className={styles.iconEnd}>
+              {iconEnd && iconEnd}
             <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
               <Dropdown />
             </div>
-            {iconEnd && iconEnd}
           </div>
         </div>
         {mounted &&

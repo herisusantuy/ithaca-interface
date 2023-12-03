@@ -38,10 +38,10 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
-  const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
+  const strikes = callContracts ? Object.keys(callContracts).map(strike => ({ name: strike, value: strike })) : [];
 
   const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
-  const [priceReference, setPriceReference] = useState<string>(strikes[3].value);
+  const [priceReference, setPriceReference] = useState<string>(strikes.length ? strikes[3].value : '0');
   const [maxPotentialLoss, setMaxPotentialLoss] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -128,11 +128,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 
 // SDK
-import { ClientConditionalOrder, Leg, OrderLock, OrderPayoff, toPrecision } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
 import { calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
 
 // Lib
@@ -52,7 +52,6 @@ export interface DynamicOptionStrategy {
 type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
-  orderPayoff: OrderPayoff;
 };
 
 type SectionType = {
@@ -122,11 +121,9 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderSummary({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);

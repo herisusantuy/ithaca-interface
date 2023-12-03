@@ -43,10 +43,10 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
-  const strikes = Object.keys(binaryPutContracts).map(strike => parseFloat(strike));
+  const strikes = binaryPutContracts ? Object.keys(binaryPutContracts).map(strike => parseFloat(strike)) : [];
 
   const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('INSIDE');
-  const [strike, setStrike] = useState({ min: strikes[2], max: strikes[strikes.length -3] });
+  const [strike, setStrike] = useState({ min: strikes[strikes.length > 4 ? 2 : 0], max: strikes[strikes.length > 2 ? strikes.length -3 : 0] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -64,75 +64,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     await handleStrikeChange(strike, betType === 'INSIDE', getNumber(capitalAtRisk));
   };
 
-  // Needs to be updated
-  const handleTargetEarnChange = async (amount: string) => {
-    const targetEarn = getNumberValue(amount);
-    setTargetEarn(targetEarn);
-    if (isInvalidNumber(getNumber(targetEarn))) {
-      setCapitalAtRisk('');
-      setOrderDetails(undefined);
-      setPayoffMap(undefined);
-      return;
-    }
-
-    const inRange = insideOrOutside === 'INSIDE';
-    const isBelowSpot = strike.min < currentSpotPrice && strike.max < currentSpotPrice;
-
-    const minContract = !inRange
-      ? binaryPutContracts[strike.min]
-      : isBelowSpot
-      ? binaryPutContracts[strike.max]
-      : binaryCallContracts[strike.min];
-    const maxContract = !inRange
-      ? binaryCallContracts[strike.max]
-      : isBelowSpot
-      ? binaryPutContracts[strike.min]
-      : binaryCallContracts[strike.max];
-
-    const legMin: Leg = {
-      contractId: minContract.contractId,
-      quantity: targetEarn as `${number}`,
-      side: 'BUY',
-    };
-    const legMax: Leg = {
-      contractId: maxContract.contractId,
-      quantity: targetEarn as `${number}`,
-      side: !inRange ? 'BUY' : 'SELL',
-    };
-
-    const totalNetPrice = calculateNetPrice(
-      [legMin, legMax],
-      [minContract.referencePrice, maxContract.referencePrice],
-      currencyPrecision.strike
-    );
-    const size = toPrecision(getNumber(targetEarn) * getNumber(totalNetPrice), currencyPrecision.strike);
-
-    const order = {
-      clientOrderId: createClientOrderId(),
-      totalNetPrice,
-      legs: [legMin, legMax],
-    } as ClientConditionalOrder;
-
-    const payoffMap = estimateOrderPayoff([
-      { ...minContract, ...legMin, premium: minContract.referencePrice },
-      { ...maxContract, ...legMax, premium: maxContract.referencePrice },
-    ]);
-    setPayoffMap(payoffMap);
-    setCapitalAtRisk(`${size}`);
-
-    try {
-      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
-      setOrderDetails({
-        order,
-        orderLock,
-        orderPayoff,
-      });
-    } catch (error) {
-      // Add toast
-      console.error('Order estimation for bet failed', error);
-    }
-  };
 
   const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number) => {
     if (isInvalidNumber(capitalAtRisk)) {
@@ -183,24 +114,22 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       totalNetPrice: capitalAtRisk.toFixed(currencyPrecision.strike),
       legs: [legMin, legMax],
     } as ClientConditionalOrder;
-
+    const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
     const payoffMap = estimateOrderPayoff([
       { ...minContract, ...legMin, premium: minContract.referencePrice },
       { ...maxContract, ...legMax, premium: maxContract.referencePrice },
     ], {
-      min: strikes[0] - 50,
-      max: strikes[strikes.length -1] +50
+      min: strikes[0] - strikeDiff,
+      max: strikes[strikes.length -1] +strikeDiff
     });
     setPayoffMap(payoffMap);
     setTargetEarn(quantity);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast
@@ -291,6 +220,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       {!compact && (
         <Slider
           value={strike}
+          extended={true}
           min={strikes[0]}
           max={strikes[strikes.length - 1]}
           label={strikes.length}

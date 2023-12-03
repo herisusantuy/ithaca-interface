@@ -85,7 +85,7 @@ const Input = ({
               onWheel={type === 'number' ? preventScrollOnNumberInput : undefined}
               disabled={disabled}
             />
-            {icon && icon}
+            {icon && <div className='mt-2'>{icon}</div>}
           </Flex>
           {footerText && <div className={styles.footer}>{footerText}</div>}
         </Flex>

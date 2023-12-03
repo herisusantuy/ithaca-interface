@@ -43,7 +43,6 @@ import Pagination from '@/UI/components/Pagination/Pagination';
 import TableDescription from '@/UI/components/TableDescription/TableDescription';
 import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
-import Dropdown from '@/UI/components/Icons/Dropdown';
 import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
 import Modal from '@/UI/components/Modal/Modal';
 import Summary from '@/UI/components/Summary/Summary';
@@ -60,6 +59,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import styles from './TableOrder.module.scss';
 import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
+import DropdownOutlined from '../Icons/DropdownOutlined';
 
 // Types
 type TableOrderProps = {
@@ -124,7 +124,6 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   };
 
   const positionsDataToRows = (res: Position[]) => {
-    console.log(res);
     setData(
       res.map(row => {
         const contract = unFilteredContractList.find(c => c.contractId === row.contractId);
@@ -534,7 +533,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       title='Click to expand dropdown'
                       className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
                     >
-                      <Dropdown />
+                      <DropdownOutlined />
                     </Button>
                   </div>
                   <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
@@ -592,7 +591,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             possibleReleaseY={20}
             postOptimisationX={8}
             postOptimisationY={18}
-            totalCollateral={30}
+            // totalCollateral={30}
           />
         ) : (
           <div />

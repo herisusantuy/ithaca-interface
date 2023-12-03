@@ -1,4 +1,4 @@
-import { ClientConditionalOrder, OrderLock, OrderPayoff } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, OrderLock } from '@ithaca-finance/sdk';
 
 export interface TradingStoriesProps {
   showInstructions: boolean;
@@ -10,7 +10,6 @@ export interface TradingStoriesProps {
 export interface OrderDetails {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
-  orderPayoff: OrderPayoff;
 }
 
 export { default as Bet } from './Bet/Bet';

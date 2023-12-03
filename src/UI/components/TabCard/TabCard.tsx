@@ -34,8 +34,6 @@ type TabCardProps = {
 const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabClassName }: TabCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [radioChosen, setRadioChosen] = useState(activeTab.radioOptions && activeTab.radioOptions[0].value || '');
-  console.log(activeTab.radioOptions && activeTab.radioOptions[0].value)
-  console.log(radioChosen)
 
   useEffect(() => {
     setRadioChosen(activeTab.radioOptions && activeTab.radioOptions[0].value || '')

@@ -453,7 +453,7 @@ const COMPONENT_GROUPS = [
             possibleReleaseY={20}
             postOptimisationX={8}
             postOptimisationY={18}
-            totalCollateral={30}
+            // totalCollateral={30}
           />
         ),
         status: 'Approved',

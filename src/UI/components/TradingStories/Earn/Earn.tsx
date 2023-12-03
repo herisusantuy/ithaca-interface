@@ -49,12 +49,12 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   const [currency, setCurrency] = useState('WETH');
 
-  const strikes = Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
+  const strikes = callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
     const isValidStrike =
       currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
     if (isValidStrike) strikeArr.push(parseFloat(currStrike));
     return strikeArr;
-  }, []);
+  }, []): [];
 
   const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
   const [strike, setStrike] = useState({ min: strikes[Math.ceil(strikes.length/2)-1], max: strikes[Math.ceil(strikes.length/2)-1] });
@@ -65,8 +65,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const { toastList, position, showToast } = useToast();
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
-    // console.log(option)
-    console.log(riskyOrRiskless)
     setRiskyOrRiskless(option)
   }
 
@@ -122,11 +120,9 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast
@@ -173,11 +169,9 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast

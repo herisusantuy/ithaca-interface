@@ -866,7 +866,7 @@ export const makingChartData = (data: any[], key: string, dashed: string) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getLegs = (data: any[]) => {
-  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item));
+  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item)).map((k) => k.split('@')[0]);
   return keys;
 };
 

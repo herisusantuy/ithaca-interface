@@ -22,7 +22,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: calc(100% - rem(50));
+  margin: auto;
   height: rem(30);
 }
 
@@ -88,9 +89,20 @@
   }
 }
 
+.railExtend {
+  position: absolute;
+  width: calc(100% + rem(50));
+  top: 50%;
+  left: rem(-25);
+  transform: translateY(-50%);
+  height: rem(1.5);
+  border-radius: rem(4);
+  background-color: var(--white-30);
+}
+
 .rail {
   position: absolute;
-  width: 100%;
+  width: calc(100%);
   top: 50%;
   transform: translateY(-50%);
   height: rem(1.5);

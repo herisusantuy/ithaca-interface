@@ -50,7 +50,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const { toastList, position, showToast } = useToast();
 
-  const strikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+  const strikes = callContracts ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
     const isValidStrike = barrier
       ? upOrDown === 'UP'
         ? parseFloat(currStrike) < parseFloat(barrier)
@@ -58,9 +58,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       : true;
     if (isValidStrike) strikeArr.push(currStrike);
     return strikeArr;
-  }, []);
+  }, []) : [];
 
-  const barrierStrikes = Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+  const barrierStrikes = callContracts ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
     const isValidStrike = strike
       ? upOrDown === 'UP'
         ? parseFloat(currStrike) > parseFloat(strike)
@@ -68,7 +68,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       : true;
     if (isValidStrike) strikeArr.push(currStrike);
     return strikeArr;
-  }, []);
+  }, []) : [];
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
@@ -296,11 +296,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      const orderPayoff = await ithacaSDK.calculation.estimateOrderPayoff(order);
       setOrderDetails({
         order,
         orderLock,
-        orderPayoff,
       });
     } catch (error) {
       // Add toast
