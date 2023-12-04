@@ -131,7 +131,7 @@ $breakpoints: (
 // Mixin for breakpoints
 @mixin breakpoint($point) {
   @if map-has-key($breakpoints, $point) {
-    @media (max-width: map-get($breakpoints, $point)) {
+    @media (min-width: map-get($breakpoints, $point)) {
       @content;
     }
   } @else {

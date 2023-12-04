@@ -20,6 +20,7 @@ import Input from '../Input/Input';
 import Balance from '../Balance/Balance';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
+import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
 type OrderSummaryProps = {
@@ -43,6 +44,8 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
   });
   const [modalAmount, setModalAmount] = useState('');
   const [transactionInProgress, setTransactionInProgress] = useState(false);
+  
+  const device = useDevice()
 
   useBalance({
     address,
@@ -90,7 +93,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
   }, [fetchFundlockState]);
 
   return (
-    <Panel margin='br-20 p-20 mt-125'>
+    <Panel margin={`'br-20 p-20 ${ (device === 'desktop') ? 'mt-125' : 'mt-16' }`}>
       <Flex direction='row-space-between' gap='gap-6'>
         <h3 className='mb-0 full-width'>Order Summary</h3>
         <div className={styles.orderWrapper}>

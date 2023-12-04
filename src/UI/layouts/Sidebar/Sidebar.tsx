@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 // Styles
 import styles from './Sidebar.module.scss';
+import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
 type SidebarProps = {
@@ -12,13 +13,20 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ leftPanel, rightPanel, orderSummary }: SidebarProps) => {
+
+  const device = useDevice()
   return (
     <div className={styles.container}>
       <div className={styles.leftPanel}>
         {leftPanel}
-        <div className={styles.orderSummary}>{orderSummary}</div>
+        {(device !== 'desktop') && <div className={styles.rightPanel}>{rightPanel}</div> } 
+        {(device === 'desktop') && <div className={styles.orderSummary}>{orderSummary}</div> } 
+        {(device !== 'desktop') && <div className={styles.orderSummary}>{orderSummary}</div> } 
       </div>
-      <div className={styles.rightPanel}>{rightPanel}</div>
+      {(device === 'desktop') && (
+        <div className={styles.rightPanel}>{rightPanel}</div>
+      )}
+      
     </div>
   );
 };
