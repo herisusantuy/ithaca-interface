@@ -4,7 +4,10 @@
   width: 100%;
 
   @include breakpoint(tablet) {
-    @include spacing(padding, 16, 'left+right');
+    width: rem(663);
+  }
+  @include breakpoint(desktop) {
+    width: rem(1400);
   }
 
   &.sm {

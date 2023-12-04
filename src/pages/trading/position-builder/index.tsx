@@ -38,6 +38,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 // Styles
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -65,6 +66,8 @@ const Index = () => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
   const { toastList, position, showToast } = useToast();
+
+  const device = useDevice()
 
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =

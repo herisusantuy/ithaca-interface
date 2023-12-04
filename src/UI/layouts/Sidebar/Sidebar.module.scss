@@ -11,8 +11,11 @@
 }
 
 .leftPanel {
-  width: calc(66.23% - rem(7.5));
-  min-width: calc(66.23% - rem(7.5));
+  width: 100%;
+  @include breakpoint(desktop) {
+    width: calc(66.23% - rem(7.5));
+    min-width: calc(66.23% - rem(7.5));
+  }
 }
 
 .rightPanel {
@@ -21,8 +24,6 @@
   position: relative;
   border-radius: rem(30);
   padding: rem(20);
-  width: calc(33.77% - rem(7.5));
-  min-width: calc(33.77% - rem(7.5));
   box-shadow:
     rem(2) rem(2) rem(4) 0px rgba(0, 0, 0, 0.15),
     0px 0px rem(4) 0px rgba(43, 46, 58, 0.15) inset,
@@ -30,6 +31,11 @@
 
   @include breakpoint(tablet) {
     border-radius: rem(20);
+  }
+
+  @include breakpoint(desktop) {
+    width: calc(33.77% - rem(7.5));
+    min-width: calc(33.77% - rem(7.5));
   }
 
   &:before {
