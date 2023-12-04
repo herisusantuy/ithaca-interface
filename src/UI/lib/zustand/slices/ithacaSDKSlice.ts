@@ -51,13 +51,12 @@ export interface IthacaSDKSlice {
 export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => ({
   isLoading: true,
   isAuthenticated: false,
-  ithacaSDK: IthacaSDK.init({
-    network: IthacaNetwork.ARBITRUM_GOERLI,
-    publicClient: createPublicClient({
-      chain: arbitrumGoerli,
-      transport: http(),
-    }),
-  }),
+  ithacaSDK: new IthacaSDK(
+    IthacaNetwork.ARBITRUM_GOERLI,
+    undefined,
+    undefined,
+    "https://api.salt.develop.ithacanoemon.tech/api/v1"
+  ),
   systemInfo: {
     chainId: 0,
     fundlockAddress: '' as `0x${string}`,
@@ -83,11 +82,12 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   referencePrices: [],
   spotPrices: {},
   initIthacaSDK: async (publicClient, walletClient) => {
-    const ithacaSDK = IthacaSDK.init({
-      network: IthacaNetwork.ARBITRUM_GOERLI,
-      publicClient,
+    const ithacaSDK = new IthacaSDK(
+      IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
-    });
+      undefined,
+      "https://api.salt.develop.ithacanoemon.tech/api/v1"
+    );
     if (walletClient) {
       const ithacaSession = localStorage.getItem('ithaca.session');
       if (ithacaSession) {
