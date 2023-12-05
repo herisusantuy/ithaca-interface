@@ -7,9 +7,9 @@
 .flex--row {
   flex-direction: row;
 
-  @include breakpoint(tablet) {
-    flex-direction: column;
-  }
+  // @include breakpoint(tablet) {
+  //   flex-direction: column;
+  // }
 }
 
 .flex--row-center {

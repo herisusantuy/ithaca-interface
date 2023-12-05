@@ -213,3 +213,10 @@
     background: rgba(0, 0, 0, 0.5);
   }
 }
+
+@media screen and (min-width: $tablet) and (max-width: $desktop){
+  .btn--primary {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}

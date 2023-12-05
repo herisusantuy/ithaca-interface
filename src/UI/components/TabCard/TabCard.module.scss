@@ -170,3 +170,46 @@
     width: unset;
   }
 }
+
+@media screen and (min-width: $tablet) and (max-width: $desktop) {
+  .dropDownPanel{
+    background: #1C2028;
+    border-radius: 1.875rem;
+    border: 1px solid #cccccc61;
+    padding-right: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: .3s all;
+    .tab{
+      background-color: transparent;
+      &::after{
+        display: none;
+      }
+    }
+  }
+  .container {
+    flex-direction: column;
+    
+  }
+  .rightPanel{
+    width: 100%;
+    background: #1C2028;
+    border: 1px solid #cccccc61;
+    padding: 2rem 1.2rem;
+  }
+  .openStoriesDropdown{
+    position: absolute;
+    top: 4rem;
+    right: 1rem;
+    background-color: transparent;
+    width: 16px;
+    height: 16px;
+    border: none;
+    background-color: #35333E;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+}
