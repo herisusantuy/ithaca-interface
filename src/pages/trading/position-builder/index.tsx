@@ -1,6 +1,5 @@
 // Packages
 import { useState } from 'react';
-import dayjs from 'dayjs';
 
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
@@ -12,12 +11,7 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Components
 import Meta from '@/UI/components/Meta/Meta';
-import LabelValue from '@/UI/components/LabelValue/LabelValue';
-import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Asset from '@/UI/components/Asset/Asset';
-import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
@@ -27,7 +21,6 @@ import Toast from '@/UI/components/Toast/Toast';
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
-import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
 // Utils
@@ -38,8 +31,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 // Styles
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
-import { useDevice } from '@/UI/hooks/useDevice';
-import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import { MainInfo } from './MainInfo';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -59,11 +51,6 @@ export type AuctionSubmission = {
   order: ClientConditionalOrder;
 };
 
-export type ProductOption = {
-  option: string;
-  value: string;
-}
-
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
@@ -71,26 +58,10 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  const [product, setProduct] = useState<string>('options')
-  const device = useDevice()
   const { toastList, position, showToast } = useToast();
 
-  const PRODUCT_OPTIONS: ProductOption[] = [{
-    option: 'Options',
-    value: 'options'
-  }, {
-    option: 'Digital Options',
-    value: 'digital-options'
-  }, {
-    option: 'Forwards',
-    value: 'forwards'
-  }];
-  const handleProductChange = (product: string) => { 
-    setProduct(product)
-  }
-
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } =
     useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
@@ -135,12 +106,6 @@ const Index = () => {
     }
   };
 
-  const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
-    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
-    setPositionBuilderStrategies(newPositionBuilderStrategies);
-    getPositionBuilderSummary(newPositionBuilderStrategies);
-  };
-
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
@@ -167,84 +132,7 @@ const Index = () => {
     }
   };
 
-  const renderOptions = () => {
-    return (device === 'desktop') ? (
-    <>
-      <PositionBuilderRow
-        title='Options'
-        options={[
-          { option: 'Call', value: 'Call' },
-          { option: 'Put', value: 'Put' },
-        ]}
-        addStrategy={handleAddStrategy}
-      />
-      <PositionBuilderRow
-        title='Digital Options'
-        options={[
-          { option: 'Call', value: 'BinaryCall' },
-          { option: 'Put', value: 'BinaryPut' },
-        ]}
-        addStrategy={handleAddStrategy}
-      />
-      <PositionBuilderRow
-        title='Forwards'
-        options={[
-          {
-            option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
-            value: 'Forward',
-          },
-          { option: 'Next Auction', value: 'Forward (Next Auction)' },
-        ]}
-        addStrategy={handleAddStrategy}
-      />
-    </>
-    ) :
-    (
-      <>
-      <div className={`mb-16 ${styles.options}`}>
-        <RadioButton
-          options={PRODUCT_OPTIONS}
-          selectedOption={product}
-          name={`${product}-product`}
-          onChange={handleProductChange}
-        />
-      </div>
-        <div className= {(product === 'options') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
-          <PositionBuilderRow
-            title='Options'
-            options={[
-              { option: 'Call', value: 'Call' },
-              { option: 'Put', value: 'Put' },
-            ]}
-            addStrategy={handleAddStrategy}
-          />
-          </div>
-          <div className= {(product === 'digital-options') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
-          <PositionBuilderRow
-            title='Digital Options'
-            options={[
-              { option: 'Call', value: 'BinaryCall' },
-              { option: 'Put', value: 'BinaryPut' },
-            ]}
-            addStrategy={handleAddStrategy}
-          />
-          </div>
-          <div className= {(product === 'forwards') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
-          <PositionBuilderRow
-            title='Forwards'
-            options={[
-              {
-                option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
-                value: 'Forward',
-              },
-              { option: 'Next Auction', value: 'Forward (Next Auction)' },
-            ]}
-            addStrategy={handleAddStrategy}
-          />
-          </div>
-      </>
-    )
-  }
+  
   return (
     <>
       <Meta />
@@ -254,50 +142,13 @@ const Index = () => {
             <TradingLayout />
             <Sidebar
               leftPanel={
-                <>
-                  <Flex gap={ (device !== 'phone') ? 'gap-12' : 'gap-0' } margin='mb-24'>
-                    <div className={styles.currency__info}>
-                      <Asset icon={<LogoEth />} label='ETH' />
-                    </div>
-                    <div className={styles.currency__info}>
-                      <LabelValue
-                        label='Expiry Date'
-                        valueList={expiryList.map(date => ({
-                          label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                          value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                        }))}
-                        onChange={value => {
-                          setOrderSummary(undefined);
-                          setPositionBuilderStrategies([]);
-                          setChartData(undefined);
-                          setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
-                        }}
-                        value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
-                        hasDropdown={true}
-                      />
-                    </div>
-                    <div className={styles.currency__info}>
-                      <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    </div>
-                    <div className={styles.currency__info}>
-                      <LabelValue
-                        label='Last Auction Price'
-                        value='1629'
-                        subValue={
-                          <>
-                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
-                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
-                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
-                          </>
-                        }
-                      />
-                    </div>
-                  </Flex>
-                  <h3>Position Builder</h3>
-                  
-                  { renderOptions() }
-
-                </>
+                <MainInfo 
+                  setOrderSummary 
+                  positionBuilderStrategies
+                  setPositionBuilderStrategies
+                  getPositionBuilderSummary
+                  setChartData 
+                />
               }
               orderSummary={
                 <>
