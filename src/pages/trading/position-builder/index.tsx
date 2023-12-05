@@ -39,6 +39,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import { useDevice } from '@/UI/hooks/useDevice';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -58,6 +59,11 @@ export type AuctionSubmission = {
   order: ClientConditionalOrder;
 };
 
+export type ProductOption = {
+  option: string;
+  value: string;
+}
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
@@ -65,9 +71,23 @@ const Index = () => {
   const [chartData, setChartData] = useState<PayoffMap[]>();
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [product, setProduct] = useState<string>('options')
+  const device = useDevice()
   const { toastList, position, showToast } = useToast();
 
-  const device = useDevice()
+  const PRODUCT_OPTIONS: ProductOption[] = [{
+    option: 'Options',
+    value: 'options'
+  }, {
+    option: 'Digital Options',
+    value: 'digital-options'
+  }, {
+    option: 'Forwards',
+    value: 'forwards'
+  }];
+  const handleProductChange = (product: string) => { 
+    setProduct(product)
+  }
 
   // Store
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
@@ -147,6 +167,86 @@ const Index = () => {
     }
   };
 
+  const renderOptions = () => {
+    
+    return (device === 'desktop') ? (
+    <>
+      <PositionBuilderRow
+        title='Options'
+        options={[
+          { option: 'Call', value: 'Call' },
+          { option: 'Put', value: 'Put' },
+        ]}
+        addStrategy={handleAddStrategy}
+      />
+      <PositionBuilderRow
+        title='Digital Options'
+        options={[
+          { option: 'Call', value: 'BinaryCall' },
+          { option: 'Put', value: 'BinaryPut' },
+        ]}
+        addStrategy={handleAddStrategy}
+      />
+      <PositionBuilderRow
+        title='Forwards'
+        options={[
+          {
+            option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
+            value: 'Forward',
+          },
+          { option: 'Next Auction', value: 'Forward (Next Auction)' },
+        ]}
+        addStrategy={handleAddStrategy}
+      />
+    </>
+    ) :
+    (
+      <>
+      <div className={`mb-16 ${styles.options}`}>
+        <RadioButton
+          options={PRODUCT_OPTIONS}
+          selectedOption={product}
+          name={`${product}-product`}
+          onChange={handleProductChange}
+        />
+      </div>
+      { 
+        (product === 'options') ? (
+          <PositionBuilderRow
+            title='Options'
+            options={[
+              { option: 'Call', value: 'Call' },
+              { option: 'Put', value: 'Put' },
+            ]}
+            addStrategy={handleAddStrategy}
+          />
+        ) :
+        (product === 'digital-options') ? (
+          <PositionBuilderRow
+            title='Digital Options'
+            options={[
+              { option: 'Call', value: 'BinaryCall' },
+              { option: 'Put', value: 'BinaryPut' },
+            ]}
+            addStrategy={handleAddStrategy}
+          />
+        ) : (
+          <PositionBuilderRow
+            title='Forwards'
+            options={[
+              {
+                option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
+                value: 'Forward',
+              },
+              { option: 'Next Auction', value: 'Forward (Next Auction)' },
+            ]}
+            addStrategy={handleAddStrategy}
+          />
+        )
+      }
+      </>
+    )
+  }
   return (
     <>
       <Meta />
@@ -196,33 +296,9 @@ const Index = () => {
                     </div>
                   </Flex>
                   <h3>Position Builder</h3>
-                  <PositionBuilderRow
-                    title='Options'
-                    options={[
-                      { option: 'Call', value: 'Call' },
-                      { option: 'Put', value: 'Put' },
-                    ]}
-                    addStrategy={handleAddStrategy}
-                  />
-                  <PositionBuilderRow
-                    title='Digital Options'
-                    options={[
-                      { option: 'Call', value: 'BinaryCall' },
-                      { option: 'Put', value: 'BinaryPut' },
-                    ]}
-                    addStrategy={handleAddStrategy}
-                  />
-                  <PositionBuilderRow
-                    title='Forwards'
-                    options={[
-                      {
-                        option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: 'Forward',
-                      },
-                      { option: 'Next Auction', value: 'Forward (Next Auction)' },
-                    ]}
-                    addStrategy={handleAddStrategy}
-                  />
+                  
+                  { renderOptions() }
+
                 </>
               }
               orderSummary={

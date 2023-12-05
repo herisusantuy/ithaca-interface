@@ -151,11 +151,11 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const renderValues = () => (
     <>
       <div className={styles.collateral}>
-        { (device !== 'desktop') && <p className="subtitle">Collateral</p> }
+        { (device !== 'desktop') && <p className="subtitle subtitle--side">Collateral</p> }
         <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
       </div>
       <div className={styles.premium}>
-        { (device !== 'desktop') && <p className="subtitle">Premium</p> }
+        { (device !== 'desktop') && <p className="subtitle  subtitle--side">Premium</p> }
         <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />
       </div>
     </>
