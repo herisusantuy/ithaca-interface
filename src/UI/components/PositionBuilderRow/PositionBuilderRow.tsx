@@ -47,7 +47,7 @@ type SectionType = {
 const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowProps) => {
   // Store
   const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK } =
-    useAppStore();
+  useAppStore();
 
   // State
   const [payoff, setPayoff] = useState(options[0].value);
@@ -70,7 +70,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const device = useDevice()
 
   const handlePayoffChange = (payoff: string) => {
-    setPayoff(payoff);
+  setPayoff(payoff);
     if (title === 'Forwards') {
       setStrike('-');
       setUnitPrice(`${contracts['-'].referencePrice}`);
@@ -97,14 +97,14 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';
     const leg = {
-      contractId: contracts[strike].contractId,
+      contractId: contracts[strike]?.contractId,
       quantity: size,
       side,
     };
     if (title === 'Forwards') {
       const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[strike].contractId;
+      leg.contractId = forwardContracts[strike]?.contractId;
     }
     return formatNumber(
       calcCollateralRequirement(
@@ -120,14 +120,14 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const calcPremium = () => {
     if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return '-';
     const leg = {
-      contractId: contracts[strike].contractId,
+      contractId: contracts[strike]?.contractId,
       quantity: size,
       side,
     };
     if (title === 'Forwards') {
       const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
       const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[strike].contractId;
+      leg.contractId = forwardContracts[strike]?.contractId;
     }
     return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
   };
@@ -265,7 +265,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
                   } as Leg;
                   if (title === 'Forwards') {
                     const expiry =
-                      payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
+                    payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
                     const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
                     leg.contractId = forwardContracts[strike].contractId;
                   }
