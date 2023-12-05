@@ -26,7 +26,9 @@ const RadioButton = ({
   size = 'regular',
 }: RadioButtonProps) => {
   const renderOptions = (optionList: { option: string | ReactNode; value: string }[]) => {
+
     return optionList.map(option => {
+      console.log("Options", option.value, selectedOption)
       return (
         <div key={`${name}${option.value}`} className={size === 'compact' ? styles.optionCompact : size === 'large' ? styles.optionLarge : styles.option}>
           <input
