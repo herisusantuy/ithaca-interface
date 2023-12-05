@@ -12,9 +12,15 @@ export type SpecialDotLabel = {
   x: number;
 };
 
+
+export type KeyOption = {
+  option: string;
+  value: string;
+}
+
 export type KeyType = {
   type: DotTypes;
-  label: string;
+  label: KeyOption;
 };
 
 // Payoff chart dummy data
@@ -61,14 +67,14 @@ export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [
   },
 ];
 
-export const KEY_DATA: KeyType[] = [
-  { type: 'White' as DotTypes, label: 'total' },
-  { type: 'Put' as DotTypes, label: 'leg1' },
-  { type: 'BinaryCall' as DotTypes, label: 'leg2' },
-  { type: 'BinaryPut' as DotTypes, label: 'leg3' },
-  { type: 'Forward (Next Auction)' as DotTypes, label: 'leg4' },
-  { type: 'Call' as DotTypes, label: 'leg5' },
-];
+// export const KEY_DATA: KeyType[] = [
+//   { type: 'White' as DotTypes, label: 'total' },
+//   { type: 'Put' as DotTypes, label: 'leg1' },
+//   { type: 'BinaryCall' as DotTypes, label: 'leg2' },
+//   { type: 'BinaryPut' as DotTypes, label: 'leg3' },
+//   { type: 'Forward (Next Auction)' as DotTypes, label: 'leg4' },
+//   { type: 'Call' as DotTypes, label: 'leg5' },
+// ];
 
 export const CHART_FAKE_DATA = [
   { x: 1300, total: 40000, leg1: 0, leg2: 20000, leg3: 20000, leg4: 0, leg5: 0 },

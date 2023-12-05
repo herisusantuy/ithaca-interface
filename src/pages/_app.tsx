@@ -21,8 +21,49 @@ import ReadyState from '@/UI/utils/ReadyState';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
+import Toast from '@/UI/components/Toast/Toast';
+import useToast from '@/UI/hooks/useToast';
+
+const STATUS_MAP: Record<string, string> = {
+  'NEW': 'info',
+  'FILLED': 'success',
+  'REJECTED': 'error',
+  'CANCEL_REJECTED': 'error'
+};
+
+const TITLE_MAP: Record<string, string> = {
+  'NEW': 'Transaction Sent',
+  'FILLED': 'Transaction Confirmed',
+  'REJECTED': 'Transaction Failed',
+  'CANCEL_REJECTED': 'Transaction Failed'
+};
+
+const MESSAGE_MAP: Record<string, string> = {
+  'NEW': 'We have received your request',
+  'FILLED': 'Position details will be updated shortly',
+  'REJECTED': 'Transaction Failed, please try again',
+  'CANCEL_REJECTED': 'Transaction Failed, please try again'
+};
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
+  const { toastList, showToast } = useToast();
+
+  const {newToast} = useAppStore();
+
+  useEffect(() => {
+    if (newToast) {
+      showToast(
+        {
+          id: Math.floor(Math.random() * 1000),
+          title: TITLE_MAP[newToast.orderStatus],
+          message: MESSAGE_MAP[newToast.orderStatus],
+          type: STATUS_MAP[newToast.orderStatus]
+        },
+        'top-right'
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newToast])
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
@@ -37,6 +78,7 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
         })}
       >
         <div className={`${LATO.className} ${ROBOTO.className} appWrapper`}>
+          <Toast toastList={toastList} position={'top-right'} />
           <Header />
           <ReadyState>
             <Component {...pageProps} />
@@ -49,7 +91,11 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 
 function App({ Component, pageProps, router }: AppProps) {
   const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol } = useAppStore();
-  getTimeNextAuction(nextAuction.milliseconds, fetchNextAuction, fetchSpotPrices);
+
+  useEffect(() => {
+    getTimeNextAuction(nextAuction.milliseconds || 0, fetchNextAuction, fetchSpotPrices);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[nextAuction]);
 
   useEffect(() => {
     initIthacaProtocol();
