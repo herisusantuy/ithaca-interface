@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DiscordUser } from '@/UI/constants/discordAuth';
+import joinGuild from './DiscordAuth.service';
 
 interface DiscordAuthProps {
   children?: (renderProps: DiscordAuthChildProps) => ReactNode;
@@ -16,7 +17,7 @@ export interface DiscordAuthChildProps {
 const redirectURL = () => window.location.origin + window.location.pathname;
 
 const fetchDiscordUser = async (accessToken: string): Promise<DiscordUser> => {
-  const apiUrl = 'https://discord.com/api/users/@me';
+  const apiUrl = 'https://discord.com/api/v10/users/@me';
 
   try {
     const response = await fetch(apiUrl, {
@@ -61,7 +62,12 @@ const DiscordAuth: React.FC<DiscordAuthProps> = ({ children, onConnected }) => {
 
         localStorage.setItem('discordAccessToken', queryParams.accessToken);
         const user = await fetchDiscordUser(queryParams.access_token);
+        const memberId = '730670802009194516';
+        const guildId = '1181417822308536340';
+        const accessToken = queryParams.access_token;
+        const guildMember = await joinGuild(memberId, guildId, accessToken);
         console.log('Discord User => ', user);
+        console.log('Guild member => ', guildMember);
         if (user) {
           setUserName(user.username);
           setIsConnected(true);
