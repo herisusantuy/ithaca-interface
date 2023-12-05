@@ -168,7 +168,6 @@ const Index = () => {
   };
 
   const renderOptions = () => {
-    
     return (device === 'desktop') ? (
     <>
       <PositionBuilderRow
@@ -210,8 +209,7 @@ const Index = () => {
           onChange={handleProductChange}
         />
       </div>
-      { 
-        (product === 'options') ? (
+        <div className= {(product === 'options') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
           <PositionBuilderRow
             title='Options'
             options={[
@@ -220,8 +218,8 @@ const Index = () => {
             ]}
             addStrategy={handleAddStrategy}
           />
-        ) :
-        (product === 'digital-options') ? (
+          </div>
+          <div className= {(product === 'digital-options') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
           <PositionBuilderRow
             title='Digital Options'
             options={[
@@ -230,7 +228,8 @@ const Index = () => {
             ]}
             addStrategy={handleAddStrategy}
           />
-        ) : (
+          </div>
+          <div className= {(product === 'forwards') ? `${styles.option} ${styles.option__active}` : `${styles.option}`}>
           <PositionBuilderRow
             title='Forwards'
             options={[
@@ -242,8 +241,7 @@ const Index = () => {
             ]}
             addStrategy={handleAddStrategy}
           />
-        )
-      }
+          </div>
       </>
     )
   }
