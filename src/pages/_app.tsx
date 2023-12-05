@@ -62,6 +62,7 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
         'top-right'
       );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newToast])
   return (
     <WagmiConfig config={wagmiConfig}>
@@ -89,11 +90,12 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { fetchNextAuction, fetchSpotPrices, initIthacaProtocol } = useAppStore();
+  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol } = useAppStore();
 
   useEffect(() => {
-    getTimeNextAuction(0, fetchNextAuction, fetchSpotPrices);
-  },[]);
+    getTimeNextAuction(nextAuction.milliseconds || 0, fetchNextAuction, fetchSpotPrices);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[nextAuction]);
 
   useEffect(() => {
     initIthacaProtocol();

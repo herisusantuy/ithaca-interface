@@ -4,7 +4,6 @@ import styles from './Toast.module.scss';
 import Close from '@/UI/components/Icons/Close';
 import { ToastItemProp } from '@/UI/constants/toast';
 import { createPortal } from 'react-dom';
-import { useAppStore } from '@/UI/lib/zustand/store';
 
 type ToastPropType = {
   toastList: ToastItemProp[];

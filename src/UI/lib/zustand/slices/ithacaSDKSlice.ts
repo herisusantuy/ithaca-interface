@@ -1,8 +1,6 @@
 import { StateCreator } from 'zustand';
 import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
-import { createPublicClient, http } from 'viem';
-import { arbitrumGoerli } from 'viem/chains';
 import { PublicClient, WalletClient } from 'wagmi';
 
 export interface AuctionTimes {

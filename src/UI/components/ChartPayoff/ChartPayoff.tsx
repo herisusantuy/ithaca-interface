@@ -28,7 +28,7 @@ import {
   showGradientTags,
 } from '@/UI/utils/ChartUtil';
 import { LabelPositionProp, PayoffMap } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import { getNumberFormat } from '@/UI/utils/Numbers';
 
 // Types
 type ChartDataProps = {
@@ -141,7 +141,7 @@ const ChartPayoff = (props: ChartDataProps) => {
         value: 'total'
       })
     }
-  }, [key])
+  }, [key, selectedLeg])
 
   // Update chartData and updating graph
   useEffect(() => {
