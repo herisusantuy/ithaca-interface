@@ -1,6 +1,5 @@
 // Packages
 import { useState } from 'react';
-import dayjs from 'dayjs';
 
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
@@ -20,10 +19,6 @@ import ReadyState from '@/UI/utils/ReadyState';
 
 // Components
 import Meta from '@/UI/components/Meta/Meta';
-import LabelValue from '@/UI/components/LabelValue/LabelValue';
-import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Asset from '@/UI/components/Asset/Asset';
-import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import Button from '@/UI/components/Button/Button';
@@ -46,6 +41,7 @@ import styles from './dynamic-option-strategies.module.scss';
 import Toggle from '@/UI/components/Toggle/Toggle';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import { AuctionSubmission } from '../position-builder';
+import { Currency } from '@/UI/components/Currency';
 
 // Types
 export interface DynamicOptionStrategy {
@@ -73,7 +69,7 @@ const Index = () => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [strategy, setStrategy] = useState(LINEAR_STRATEGIES[0]);
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } =
     useAppStore();
   const { toastList, position, showToast } = useToast();
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
@@ -281,28 +277,11 @@ const Index = () => {
             <Sidebar
               leftPanel={
                 <>
-                  <Flex gap='gap-12' margin='mb-24'>
-                    <Asset icon={<LogoEth />} label='ETH' />
-                    <LabelValue
-                      label='Expiry Date'
-                      valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                      }))}
-                      onChange={value => {
-                        setOrderSummary(undefined);
-                        setPositionBuilderStrategies([]);
-                        setChartData(undefined);
-                        setSharedSize([]);
-                        setStrategy({ ...strategy, strategies: [] });
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
-                      }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
-                      hasDropdown={true}
-                    />
-                    <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
-                  </Flex>
+                  <Currency
+                    setOrderSummary
+                    setChartData
+                    setPositionBuilderStrategies
+                  />
                   <h3>Dynamic Option Strategy</h3>
                   <div className='mb-24'>
                     <Flex>
