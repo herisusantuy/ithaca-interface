@@ -241,7 +241,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoEth />}
-                footerText={`IV ${iv.toFixed(1)}%`}
+                
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -263,6 +263,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoUsdc />}
+                footerText={`IV ${iv.toFixed(1)}%`}
                 value={unitPrice}
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
