@@ -90,34 +90,32 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     const yearDiff = dayjs.duration(expiry.diff(current)).asYears();
     const APY = (Number(earn)/Number(risk) -1)/yearDiff;
     if (isInvalidNumber(getNumber(earn)) || isInvalidNumber(getNumber(risk))) return;
-    const contracts = currency === 'WETH' ? callContracts : putContracts;
-    const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
-      const isValidStrike =
-        currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
-      if (isValidStrike) contractDetails[strike] = contracts[strike];
-      return contractDetails;
-    }, {});
-
     const closest = Object.keys(callContracts).reduce((prev, curr) => {
       return (Math.abs(Number(curr) - currentSpotPrice) < Math.abs(prev - currentSpotPrice) ? Number(curr) : prev);
     }, 0);
 
-    const leg = {
-      contractId: filteredContracts[strike.max].contractId,
-      // quantity: (Number(earn)/strike.max).toString(),
-      quantity: earn,
+    const leg = [{
+      contractId: callContracts[closest].contractId,
+      quantity: (Number(earn)/strike.max).toFixed(2).toString(),
+      // quantity: earn,
       side: 'SELL',
-    } as Leg;
+    },{
+      contractId: putContracts[closest].contractId,
+      quantity: (Number(earn)/strike.max).toFixed(2).toString(),
+      // quantity: earn,
+      side: 'BUY',
+    }];
 
     const order = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: getNumber((Number(earn)-Number(risk)).toString()).toFixed(currencyPrecision.strike),
-      legs: [leg],
+      legs: leg,
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
     const payoffMap = estimateOrderPayoff([
-      { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
+      { ...callContracts[closest], ...leg[0], premium: callContracts[closest].referencePrice },
+      { ...putContracts[closest], ...leg[1], premium: putContracts[closest].referencePrice }
     ]);
     setPayoffMap(payoffMap);
 

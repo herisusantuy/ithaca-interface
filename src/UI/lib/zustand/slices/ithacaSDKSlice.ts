@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import dayjs from 'dayjs';
-import { Contract, IthacaNetwork, IthacaSDK, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
+import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { createPublicClient, http } from 'viem';
 import { arbitrumGoerli } from 'viem/chains';
 import { PublicClient, WalletClient } from 'wagmi';
@@ -39,6 +39,8 @@ export interface IthacaSDKSlice {
   expiryList: number[];
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
+  toastNotifications: Omit<Order, "collateral">[];
+  newToast?:  Omit<Order, "collateral">
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
@@ -81,13 +83,31 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   expiryList: [],
   referencePrices: [],
   spotPrices: {},
+  toastNotifications: [],
+  newToast: undefined,
   initIthacaSDK: async (publicClient, walletClient) => {
     const ithacaSDK = new IthacaSDK(
       IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
-      undefined,
+      {
+        onClose: (ev: CloseEvent) => { 
+          console.log(ev)
+         },
+        onError: (ev: Event) => { 
+          console.log(ev)
+         },
+        onMessage: (payload: Omit<Order, "collateral">) => { 
+          set({newToast: payload});
+          set({toastNotifications: [...get().toastNotifications, payload]})
+         },
+        onOpen: (ev: Event) => { 
+          console.log(ev)
+         }
+      },
+      // undefined,
       "https://api.salt.develop.ithacanoemon.tech/api/v1"
     );
+    
     if (walletClient) {
       const ithacaSession = localStorage.getItem('ithaca.session');
       if (ithacaSession) {

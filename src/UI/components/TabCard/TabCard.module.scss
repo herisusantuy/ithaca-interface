@@ -70,8 +70,8 @@
 .tab {
   @include spacing(padding, 20, 'left+right');
   transition: $transition_all;
-  padding-top: rem(51);
-  padding-bottom: rem(51);
+  padding-top: rem(30);
+  padding-bottom: rem(30);
   flex: 1;
   display: flex;
   align-items: center;

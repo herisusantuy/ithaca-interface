@@ -4,6 +4,7 @@ import styles from './Toast.module.scss';
 import Close from '@/UI/components/Icons/Close';
 import { ToastItemProp } from '@/UI/constants/toast';
 import { createPortal } from 'react-dom';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 type ToastPropType = {
   toastList: ToastItemProp[];
@@ -16,7 +17,7 @@ const Toast = (Props: ToastPropType) => {
   const { toastList, autoDelete = true, autoDeleteTime = 3500, position = 'top-right' } = Props;
   const [list, setList] = useState(toastList);
   const [mounted, setMounted] = useState(false);
-
+  
   useEffect(() => {
     setList([...toastList]);
     setMounted(true);
@@ -99,7 +100,7 @@ const Toast = (Props: ToastPropType) => {
   };
 
   return (
-    mounted &&
+    <>{mounted &&
     document.querySelector<HTMLElement>('#portal') &&
     createPortal(
       <div className={`${styles.notificationContainer} ${renderPosition()}`}>
@@ -134,7 +135,7 @@ const Toast = (Props: ToastPropType) => {
           </div>
         ))}
       </div>,
-      document.querySelector<HTMLElement>('#portal') as HTMLElement)
+      document.querySelector<HTMLElement>('#portal') as HTMLElement)}</>
   );
 };
 
