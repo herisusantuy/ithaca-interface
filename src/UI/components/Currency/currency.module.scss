@@ -1,0 +1,7 @@
+.currency__info {
+  display: flex;
+  width: 50%;
+  @include breakpoint(tablet) {
+    width: auto;
+  }
+}
