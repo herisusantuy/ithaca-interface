@@ -157,35 +157,43 @@ const Index = () => {
             <Sidebar
               leftPanel={
                 <>
-                  <Flex gap='gap-12' margin='mb-24'>
-                    <Asset icon={<LogoEth />} label='ETH' />
-                    <LabelValue
-                      label='Expiry Date'
-                      valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                      }))}
-                      onChange={value => {
-                        setOrderSummary(undefined);
-                        setPositionBuilderStrategies([]);
-                        setChartData(undefined);
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
-                      }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
-                      hasDropdown={true}
-                    />
-                    <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    <LabelValue
-                      label='Last Auction Price'
-                      value='1629'
-                      subValue={
-                        <>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
-                        </>
-                      }
-                    />
+                  <Flex gap={ (device !== 'phone') ? 'gap-12' : 'gap-0' } margin='mb-24'>
+                    <div className={styles.currency__info}>
+                      <Asset icon={<LogoEth />} label='ETH' />
+                    </div>
+                    <div className={styles.currency__info}>
+                      <LabelValue
+                        label='Expiry Date'
+                        valueList={expiryList.map(date => ({
+                          label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                          value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
+                        }))}
+                        onChange={value => {
+                          setOrderSummary(undefined);
+                          setPositionBuilderStrategies([]);
+                          setChartData(undefined);
+                          setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
+                        }}
+                        value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
+                        hasDropdown={true}
+                      />
+                    </div>
+                    <div className={styles.currency__info}>
+                      <LabelValue label='Next Auction' value={<CountdownTimer />} />
+                    </div>
+                    <div className={styles.currency__info}>
+                      <LabelValue
+                        label='Last Auction Price'
+                        value='1629'
+                        subValue={
+                          <>
+                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
+                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
+                            <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
+                          </>
+                        }
+                      />
+                    </div>
                   </Flex>
                   <h3>Position Builder</h3>
                   <PositionBuilderRow
