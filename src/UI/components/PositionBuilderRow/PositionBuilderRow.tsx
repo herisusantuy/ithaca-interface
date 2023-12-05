@@ -30,6 +30,7 @@ import { Leg, calculateNetPrice, calcCollateralRequirement } from '@ithaca-finan
 import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { useDevice } from '@/UI/hooks/useDevice';
 dayjs.extend(duration)
 
 type PositionBuilderRowProps = {
@@ -65,6 +66,8 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     { name: 'Collateral', style: styles.collateral },
     { name: 'Premium', style: styles.premium },
   ];
+
+  const device = useDevice()
 
   const handlePayoffChange = (payoff: string) => {
     setPayoff(payoff);
@@ -145,26 +148,44 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
   }
 
+  const renderValues = () => (
+    <>
+      <div className={styles.collateral}>
+        { (device !== 'desktop') && <p className="subtitle">Collateral</p> }
+        <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
+      </div>
+      <div className={styles.premium}>
+        { (device !== 'desktop') && <p className="subtitle">Premium</p> }
+        <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />
+      </div>
+    </>
+  )
+
   return (
     <>
+        {(device === 'desktop') && (
       <div className={styles.parent}>
-        <div className={styles.title}>
-          <h4>{title}</h4>
+        <>  
+          <div className={styles.title}>
+            <h4>{title}</h4>
+          </div>
+          {title === 'Options' && (
+            <>
+              {sections.map((section, index) => (
+                <div key={index} className={section.style}>
+                  <p>{section.name}</p>
+                </div>
+              ))}
+              <div className={styles.action}></div>
+            </>
+          )}
+        </>
         </div>
-        {title === 'Options' && (
-          <>
-            {sections.map((section, index) => (
-              <div key={index} className={section.style}>
-                <p>{section.name}</p>
-              </div>
-            ))}
-            <div className={styles.action}></div>
-          </>
-        )}
-      </div>
+      )}
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
+            { (device !== 'desktop') && <p className="subtitle">Type</p> }
             <RadioButton
               options={options}
               selectedOption={payoff}
@@ -174,6 +195,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             />
           </div>
           <div className={styles.side}>
+            { (device !== 'desktop') && <p className="subtitle">Side</p> }
             <RadioButton
               options={[
                 { option: <Plus />, value: 'BUY' },
@@ -186,10 +208,10 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             />
           </div>
           <div className={styles.size}>
+            { (device !== 'desktop') && <p className="subtitle">Size</p> }
             <Input
               type='number'
               value={size}
-              width={105}
               icon={<LogoEth />}
               increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               onChange={({ target }) => handleSizeChange(target.value)}
@@ -197,32 +219,36 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
           </div>
           <div className={styles.strike}>
             {title !== 'Forwards' ? (
-              <DropdownMenu
-                value={strike ? { name: strike, value: strike } : undefined}
-                options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))}
-                iconEnd={<LogoUsdc />}
-                onChange={option => handleStrikeChange(option)}
-              />
+              <>
+                { (device !== 'desktop') && <p className="subtitle">Strike</p> }
+                <DropdownMenu
+                  value={strike ? { name: strike, value: strike } : undefined}
+                  options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))}
+                  iconEnd={<LogoUsdc />}
+                  onChange={option => handleStrikeChange(option)}
+                />
+              </>
             ) : (
               <div className={styles.forwardPlaceholder} />
             )}
           </div>
           <div className={styles.unitPrice}>
+            { (device !== 'desktop') && <p className="subtitle">Unit Price</p> }
             <Input
               type='number'
-              width={90}
               footerText={title === 'Options' ? `IV ${calcIv()}` : undefined}
               value={unitPrice}
               icon={<LogoUsdc />}
               onChange={({ target }) => setUnitPrice(getNumberValue(target.value))}
             />
           </div>
-          <div className={styles.collateral}>
-            <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
-          </div>
-          <div className={styles.premium}>
-            <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />
-          </div>
+          {
+            (device === 'tablet') ?
+              <div className={styles.value}>
+                { renderValues() }
+              </div> :
+              renderValues()
+          }
           <div className={styles.action}>
             <Flex gap='gap-5' direction='justify-end'>
               <Button
