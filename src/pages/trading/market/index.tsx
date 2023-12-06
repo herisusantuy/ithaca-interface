@@ -46,7 +46,7 @@ const Index = () => {
               hasDropdown={true}
             />
             <LabelValue label='Next Auction' value={<CountdownTimer />} />
-            <LabelValue
+            {/* <LabelValue
               label='Last Auction Price'
               value='1629'
               subValue={
@@ -56,7 +56,7 @@ const Index = () => {
                   <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
                 </>
               }
-            />
+            /> */}
           </Flex>
           <TabCard
             className='mt-39'

@@ -69,9 +69,9 @@ const TableFundLock = () => {
         },
         {} as Record<string, string>
       );
-      const deposits = convertToRows(res.deposits, 'Deposit', walletAddresses);
-      const releases = convertToRows(res.releases, 'Release', walletAddresses);
-      const withdrawals = convertToRows(res.withdrawalRequests, 'Withdraw', walletAddresses);
+      const deposits = convertToRows(res?.deposits || [], 'Deposit', walletAddresses);
+      const releases = convertToRows(res?.releases || [], 'Release', walletAddresses);
+      const withdrawals = convertToRows(res?.withdrawalRequests || [], 'Withdraw', walletAddresses);
       setData([...deposits, ...releases, ...withdrawals]);
       setLoading(false);
     });
