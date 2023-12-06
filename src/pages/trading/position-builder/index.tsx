@@ -98,6 +98,7 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      console.log("🚀 ~ file: index.tsx:101 ~ getPositionBuilderSummary ~ orderLock:", orderLock, order)
       setOrderSummary({
         order,
         orderLock
@@ -108,7 +109,6 @@ const Index = () => {
   };
   const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
-    console.log("🚀 ~ file: index.tsx:111 ~ handleAddStrategy ~ newPositionBuilderStrategies:", newPositionBuilderStrategies)
     setPositionBuilderStrategies(newPositionBuilderStrategies);
     getPositionBuilderSummary(newPositionBuilderStrategies);
   };
