@@ -135,7 +135,11 @@ const ChartPayoff = (props: ChartDataProps) => {
   }, [chartData]);
 
   useEffect(() => {
-    if (selectedLeg.value !== 'total' && key.findIndex((k) => { k.value === selectedLeg.value }) === -1) {
+    const keyIndex = key.findIndex((k) => {
+      return k.value === selectedLeg.value
+    }
+    )
+    if (selectedLeg.value !== 'total' && keyIndex === -1) {
       setSelectedLeg({
         option: 'Total',
         value: 'total'
