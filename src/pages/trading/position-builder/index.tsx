@@ -106,6 +106,12 @@ const Index = () => {
       console.error('Order estimation for position builder failed', error);
     }
   };
+  const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
+    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
+    console.log("🚀 ~ file: index.tsx:111 ~ handleAddStrategy ~ newPositionBuilderStrategies:", newPositionBuilderStrategies)
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    getPositionBuilderSummary(newPositionBuilderStrategies);
+  };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
@@ -149,10 +155,8 @@ const Index = () => {
                     setChartData
                     setPositionBuilderStrategies
                   />
-                  <MainInfo 
-                    positionBuilderStrategies
-                    setPositionBuilderStrategies
-                    getPositionBuilderSummary
+                  <MainInfo
+                    handleAddStrategy = {handleAddStrategy}
                   />
                 </>
               }
