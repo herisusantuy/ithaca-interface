@@ -301,7 +301,7 @@ const Index = () => {
                       hasDropdown={true}
                     />
                     <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' />
+                    {/* <LabelValue label='Last Auction Price' value='1629' subValue='10Oct23 13:23' /> */}
                   </Flex>
                   <h3>Dynamic Option Strategy</h3>
                   <div className='mb-24'>

@@ -46,7 +46,7 @@ const Index = () => {
               hasDropdown={true}
             />
             <LabelValue label='Next Auction' value={<CountdownTimer />} />
-            <LabelValue
+            {/* <LabelValue
               label='Last Auction Price'
               value='1629'
               subValue={
@@ -57,7 +57,7 @@ const Index = () => {
                 </>
               }
             />
-          </Flex>
+          </Flex> */}
           <TabCard
             className='mt-39'
             tabClassName='ptb-15 plr-20'
