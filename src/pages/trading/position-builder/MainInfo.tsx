@@ -20,10 +20,8 @@ export interface PositionBuilderStrategy {
   payoff: string;
   strike: string;
 }
-export const MainInfo = ({
-  positionBuilderStrategies, 
-  setPositionBuilderStrategies, 
-  getPositionBuilderSummary, 
+export const MainInfo = ({ 
+  handleAddStrategy, 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
   const [product, setProduct] = useState<string>('options')
@@ -43,11 +41,7 @@ export const MainInfo = ({
   }
   const { currentExpiryDate } = useAppStore();
 
-  const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
-    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
-    setPositionBuilderStrategies(newPositionBuilderStrategies);
-    getPositionBuilderSummary(newPositionBuilderStrategies);
-  };
+  
 
   const renderOptions = () => {
     return (device === 'desktop') ? (
