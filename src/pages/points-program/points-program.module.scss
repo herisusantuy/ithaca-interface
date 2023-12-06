@@ -1,4 +1,3 @@
-
 .wrapper {
   @include spacing('margin', 16, 'top');
   display: flex;
@@ -12,8 +11,8 @@
 }
 
 .mainPanel {
-  padding: rem(26) rem(36);
-  
+  padding: rem(26) rem(36) rem(60) rem(36);
+
   @include breakpoint(tablet) {
     padding: rem(24) rem(16);
   }
@@ -49,7 +48,7 @@
 
 .listIcon {
   border-radius: 50%;
-  background-color: rgba(var(--white), 0.1);
+  background-color: var(--white-rgba-10);
   height: rem(50);
   width: rem(50);
   display: flex;

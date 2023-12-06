@@ -13,36 +13,93 @@ import DiscordIcon from '@/UI/components/Icons/Discord';
 import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { useAccount } from 'wagmi';
 import { useState, useCallback } from 'react';
-import Link from 'next/link';
-import TwitterAuth from '@/UI/components/TwitterAuth/TwitterAuth';
-import DiscordAuth from '@/UI/components/DiscordAuth/DiscordAuth';
+import { useAppStore } from '@/UI/lib/zustand/store';
+import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
 
+const TWITTER_LINK = 'https://twitter.com/ithacaprotocol';
+const DISCORD_LINK = 'https://discord.gg/ithacaprotocol';
+const TELEGRAM_LINK = 'https://t.me/+E7KmlGwmxmtkOWU1';
+
+type PointProgramActions = Record<keyof typeof PointsProgramAccountsEnum, boolean>;
 const PointsProgram = () => {
-  const [actionsPerformed, setActionsPerformed] = useState({
-    wallet: false,
-    twitter: false,
-    discord: false,
-    telegram: false,
+  const { ithacaSDK } = useAppStore();
+
+  const [actionsPerformed, setActionsPerformed] = useState<PointProgramActions>({
+    WALLET: false,
+    TWITTER: false,
+    DISCORD: false,
+    TELEGRAM: false,
   });
 
   useAccount({
     onConnect: () => {
       setActionsPerformed(state => ({
         ...state,
-        wallet: true,
+        WALLET: true,
       }));
     },
     onDisconnect: () => {
       setActionsPerformed(state => ({
         ...state,
-        wallet: false,
+        WALLET: false,
       }));
     },
   });
 
+  const openUrl = (url: string) => {
+    window.open(url, '_blank');
+  };
+
+  const addAccountData = async (account: PointsProgramAccountsEnum, userName: string): Promise<boolean> => {
+    try {
+      await ithacaSDK.points.addAccountData(account, userName);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleTwitterClick = async () => {
+    openUrl(TWITTER_LINK);
+    const flag = await addAccountData(PointsProgramAccountsEnum.TWITTER, 'ithacaUser');
+    setActionsPerformed(state => ({ ...state, TWITTER: flag }));
+  };
+
+  const handleDiscordClick = async () => {
+    openUrl(DISCORD_LINK);
+    const flag = await addAccountData(PointsProgramAccountsEnum.DISCORD, 'ithacaUser');
+    setActionsPerformed(state => ({ ...state, DISCORD: flag }));
+  };
+
+  const handleTelegramClick = async () => {
+    openUrl(TELEGRAM_LINK);
+    const flag = await addAccountData(PointsProgramAccountsEnum.TELEGRAM, 'ithacaUser');
+    setActionsPerformed(state => ({ ...state, TELEGRAM: flag }));
+  };
+
   const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
     return action ? <span className={styles.completedTxt}>+ points earned</span> : <></>;
   }, []);
+
+  const ActionButton = useCallback(
+    ({ action, text, onBtnClick }: { action: boolean; text: string; onBtnClick: () => void }) => {
+      if (action) {
+        return (
+          <Button title='Completed' variant='outline' className={styles.completedBtn}>
+            <>Completed</>
+          </Button>
+        );
+      } else {
+        return (
+          <Button title='' disabled={!actionsPerformed.WALLET} onClick={onBtnClick}>
+            {text}
+          </Button>
+        );
+      }
+    },
+    [actionsPerformed]
+  );
+
   return (
     <>
       <Meta />
@@ -58,11 +115,11 @@ const PointsProgram = () => {
                   <div className={styles.listIcon}>
                     <WalletIcon />
                   </div>
-                  <div className={`${styles.itemName} ${actionsPerformed.wallet ? styles.isConnected : ''}`}>
+                  <div className={`${styles.itemName} ${actionsPerformed.WALLET ? styles.isConnected : ''}`}>
                     Connect your wallet
                   </div>
                   <div className={styles.buttonContainer}>
-                    <ActionCompleted action={actionsPerformed.wallet} />
+                    <ActionCompleted action={actionsPerformed.WALLET} />
                     <ConnectButton.Custom>
                       {({ account, chain, openConnectModal, authenticationStatus, mounted }) => {
                         const ready = mounted && authenticationStatus !== 'loading';
@@ -97,80 +154,41 @@ const PointsProgram = () => {
                   <div className={styles.listIcon}>
                     <TwitterIcon />
                   </div>
-                  <div className={`${styles.itemName} ${actionsPerformed.twitter ? styles.isConnected : ''}`}>
+                  <div className={`${styles.itemName} ${actionsPerformed.TWITTER ? styles.isConnected : ''}`}>
                     Follow Ithaca on X (Twitter)
                   </div>
                   <div className={styles.buttonContainer}>
-                    <ActionCompleted action={actionsPerformed.twitter} />
-                    <TwitterAuth>
-                      {({ onStart }) => (
-                        <Button title='' disabled={!actionsPerformed.wallet} onClick={onStart}>
-                          <>Follow</>
-                        </Button>
-                      )}
-                    </TwitterAuth>
+                    <ActionCompleted action={actionsPerformed.TWITTER} />
+                    <ActionButton action={actionsPerformed.TWITTER} text='Follow' onBtnClick={handleTwitterClick} />
                   </div>
                 </li>
                 {/* Join Discord */}
-                <DiscordAuth
-                  onConnected={() => {
-                    setActionsPerformed(state => ({
-                      ...state,
-                      discord: true,
-                    }));
-                  }}
-                >
-                  {({ onStart, userName, isConnected }) => {
-                    return (
-                      <li className={styles.listItem}>
-                        <div className={styles.listIcon}>
-                          <DiscordIcon />
-                        </div>
-                        <div className={`${styles.itemName} ${actionsPerformed.discord ? styles.isConnected : ''}`}>
-                          {userName && isConnected ? `${userName} Connected` : 'Join Ithaca Discord'}
-                        </div>
-                        <div className={styles.buttonContainer}>
-                          <ActionCompleted action={actionsPerformed.discord} />
-                          {isConnected ? (
-                            <Button title='Completed' variant='outline' className={styles.completedBtn}>
-                              <>Completed</>
-                            </Button>
-                          ) : (
-                            <Button title='' disabled={!actionsPerformed.wallet} onClick={onStart}>
-                              <>Join</>
-                            </Button>
-                          )}
-                        </div>
-                      </li>
-                    );
-                  }}
-                </DiscordAuth>
+                <li className={styles.listItem}>
+                  <div className={styles.listIcon}>
+                    <DiscordIcon />
+                  </div>
+                  <div className={`${styles.itemName} ${actionsPerformed.DISCORD ? styles.isConnected : ''}`}>
+                    Join Ithaca Discord
+                  </div>
+                  <div className={styles.buttonContainer}>
+                    <ActionCompleted action={actionsPerformed.DISCORD} />
+                    <ActionButton action={actionsPerformed.DISCORD} text='Join' onBtnClick={handleDiscordClick} />
+                  </div>
+                </li>
                 {/* Join Telegram */}
                 <li className={styles.listItem}>
                   <div className={styles.listIcon}>
                     <TelegramIcon />
                   </div>
-                  <div className={`${styles.itemName} ${actionsPerformed.telegram ? styles.isConnected : ''}`}>
-                    Join Ithaca TG
+                  <div className={`${styles.itemName} ${actionsPerformed.TELEGRAM ? styles.isConnected : ''}`}>
+                    Join Ithaca Telegram
                   </div>
                   <div className={styles.buttonContainer}>
-                    <ActionCompleted action={actionsPerformed.telegram} />
-                    <Button title='' disabled={!actionsPerformed.wallet}>
-                      Join
-                    </Button>
+                    <ActionCompleted action={actionsPerformed.TELEGRAM} />
+                    <ActionButton action={actionsPerformed.TELEGRAM} text='Join' onBtnClick={handleTelegramClick} />
                   </div>
                 </li>
               </ul>
-              {actionsPerformed.wallet && (
-                <div className={styles.regerralCodeContainer}>
-                  <p>Registration successful thank you joining the Ithaca Points Program.</p>
-                  <Link href='/referrals'>
-                    <Button title='Reveal Referral Code' variant='secondary'>
-                      Reveal Referral Code
-                    </Button>
-                  </Link>
-                </div>
-              )}
             </Panel>
           </div>
         </Container>
