@@ -40,9 +40,6 @@ export const MainInfo = ({
     setProduct(product)
   }
   const { currentExpiryDate } = useAppStore();
-
-  
-
   const renderOptions = () => {
     return (device === 'desktop') ? (
     <>
