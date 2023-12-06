@@ -78,7 +78,7 @@ const PointsProgram = () => {
   };
 
   const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
-    return action ? <span className={styles.completedTxt}>+ points earned</span> : <></>;
+    return action ? <span className={styles.completedTxt}>+ Points Earned</span> : <></>;
   }, []);
 
   const ActionButton = useCallback(
@@ -116,7 +116,7 @@ const PointsProgram = () => {
                     <WalletIcon />
                   </div>
                   <div className={`${styles.itemName} ${actionsPerformed.WALLET ? styles.isConnected : ''}`}>
-                    Connect your wallet
+                    Connect Your Wallet
                   </div>
                   <div className={styles.buttonContainer}>
                     <ActionCompleted action={actionsPerformed.WALLET} />
