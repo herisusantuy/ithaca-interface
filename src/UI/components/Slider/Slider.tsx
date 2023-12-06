@@ -3,6 +3,7 @@ import { useEffect, useState, ChangeEvent, useRef } from 'react';
 
 // Utils
 import { checkValidMinMaxValue, generateLabelList, stepArray } from '@/UI/utils/SliderUtil';
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
 
 //Style
 import styles from './Slider.module.scss';
@@ -27,6 +28,9 @@ type SliderProps = {
 };
 
 const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange, extended = false }: SliderProps) => {
+  
+  const lastSegment = useLastUrlSegment()
+
   const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
   const [maxValue, setMaxValue] = useState<number>(value ? value.max : min);
   const [minPos, setMinPos] = useState<number>(0);
@@ -140,7 +144,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
   };
 
   return (
-    <div className={showLabel ? styles.container : styles.containerNoLabels}>
+    <div className={`slider--${lastSegment} ${showLabel ? styles.container : styles.containerNoLabels}`}>
       <div className={styles.inputWrapper}>
         <input
           className={`${styles.input} ${!range ? styles.hide : ''}`}
@@ -171,7 +175,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
         <div className={styles.control} style={{ left: `${maxPos}%` }} />
       </div>
 
-      <div className={`${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
+      <div className={`labelContainer--${lastSegment} ${styles.labelContainer} ${!showLabel ? styles.hide : ''}`}>
         {labelList.map((item: number, idx: number) => {
           return (
             <div

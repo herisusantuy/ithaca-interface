@@ -214,7 +214,7 @@
   }
 }
 
-@media screen and (min-width: $tablet) and (max-width: $desktop){
+@media (max-width: $desktop){
   .btn--primary {
     width: 100%;
     margin-top: 0.5rem;

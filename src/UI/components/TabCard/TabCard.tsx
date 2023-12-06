@@ -4,6 +4,7 @@ import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 
 // Utils
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
 import { useDevice } from '@/UI/hooks/useDevice';
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
 
 // Components
 import Toggle from '@/UI/components/Toggle/Toggle';
@@ -37,6 +38,7 @@ type TabCardProps = {
 const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabClassName }: TabCardProps) => {
 
   const device = useDevice()
+  const lastSegment = useLastUrlSegment()
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [radioChosen, setRadioChosen] = useState(activeTab.radioOptions && activeTab.radioOptions[0].value || '');
@@ -47,13 +49,13 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
     setRadioChosen(activeTab.radioOptions && activeTab.radioOptions[0].value || '')
     const options = tabs.filter(tab => tab.id !== activeTab.id);
     setOpenOptions(options)
-  }, [activeTab.radioOptions])
+  }, [activeTab])
 
   useEffect(() => {
   }, [openOptions, activeDropdown])
 
   return (
-    <div className={`${styles.container} ${className}`}>
+    <div className={`tabCard--${lastSegment} ${styles.container} ${className}`}>
       {
         device !== 'desktop'
           ?
@@ -73,8 +75,8 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             tabClassName={tabClassName}
           />
       }
-      <div className={styles.rightPanel}>
-        <div className={styles.rightPanelHeader}>
+      <div className={`tabCard--${activeTab.id} ${styles.rightPanel}`}>
+        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader}`}>
           {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? <h2>{activeTab.title}</h2> : <RadioButton
             size='large'
             options={activeTab.radioOptions || []}

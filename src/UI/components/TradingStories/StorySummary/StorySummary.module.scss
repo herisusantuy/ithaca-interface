@@ -46,7 +46,7 @@
   gap: rem(4);
 }
 
-@media screen and (min-width: $tablet) and (max-width: $desktop){
+@media (max-width: $desktop){
   .orderSummary{
     flex-wrap: wrap;
     flex-direction: column;

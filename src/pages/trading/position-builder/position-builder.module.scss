@@ -86,3 +86,11 @@
   color: var(--white);
   margin-right: 4px;
 }
+
+.option {
+  display: none;
+}
+
+.option__active {
+  display: initial;
+}

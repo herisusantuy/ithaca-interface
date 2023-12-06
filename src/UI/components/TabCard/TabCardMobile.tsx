@@ -30,7 +30,7 @@ const TabCardMobile = (
   return (
     <div style={{ maxHeight: activeDropdown ? '3000px' : '151px' }} className={styles.dropDownPanel}>
       {
-        <div className={`${styles.tab} ${tabClassName}`}>
+        <div className={`tab--${activeTab.id} ${styles.tab} ${tabClassName}`}>
           <div className={styles.tabInfo}>
             <h3>{activeTab.title}</h3>
             <p>{activeTab.description}</p>
@@ -41,7 +41,7 @@ const TabCardMobile = (
       {openOptions.map((tab: MainTab) => (
         <div
           key={tab.id}
-          className={`${styles.tab} ${tabClassName}`}
+          className={`tab--${tab.id} ${styles.tab} ${tabClassName}`}
           onClick={() => { setActiveTab(tab), setActiveDropdown(false) }}
         >
           <div className={styles.tabInfo}>

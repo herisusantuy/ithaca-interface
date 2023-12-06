@@ -1,11 +1,12 @@
-.orderWrapper {
-    margin-right: rem(40);
-}
-
 .platformWrapper {
     margin-left: auto;
     margin-right: rem(8);
     white-space: nowrap;
+    width: 100%;
+    @include breakpoint (desktop) {
+        margin-left: 0;
+        width: auto;
+    }
 }
 
 .balanceWarning {
@@ -34,5 +35,14 @@
         &:before {
             border-radius: rem(20) !important;
         }
+    }
+}
+
+.orderWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    @include breakpoint (desktop) {
+        width: auto;
     }
 }

@@ -194,7 +194,7 @@ const ChartPayoff = (props: ChartDataProps) => {
         <>
           {!compact && (
             <Flex direction='row-space-between' margin='mb-10 mt-15'>
-              <h3 className='mb-0'>Payoff Diagram</h3>
+              <h3 className='mb-0 mt-12'>Payoff Diagram</h3>
               <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
                 <h3>Potential P&L:</h3>
                 <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>

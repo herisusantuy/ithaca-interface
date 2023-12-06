@@ -169,33 +169,60 @@
   div {
     width: unset;
   }
-}
+} 
 
-@media screen and (min-width: $tablet) and (max-width: $desktop) {
+@media (max-width: $desktop) {
+  .tabInfo {
+    h3{
+      font-size: 0.875rem;
+    }
+    p{
+      font-size: 0.625rem;
+      line-height: 0.75rem;
+    }
+  }
+  .tabInfo{
+    width: 75%;
+  }
+  .tabChart {
+    width: 25%;
+  }
   .dropDownPanel{
     background: #1C2028;
     border-radius: 1.875rem;
     border: 1px solid #cccccc61;
-    padding-right: 2rem;
     position: relative;
     overflow: hidden;
     transition: .3s all;
     .tab{
       background-color: transparent;
+      gap: 3rem;
+      padding-right: 3rem !important;
+      height: 151px;
       &::after{
         display: none;
+      }
+      &:first-child{
+        background: linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%);
       }
     }
   }
   .container {
     flex-direction: column;
-    
   }
   .rightPanel{
     width: 100%;
     background: #1C2028;
     border: 1px solid #cccccc61;
     padding: 2rem 1.2rem;
+    .rightPanelHeader {
+      h2 {
+        font-size: 1rem
+      }
+      p{
+        font-size: 0.625rem;
+      }
+    } 
   }
   .openStoriesDropdown{
     position: absolute;
@@ -211,5 +238,29 @@
     align-items: center;
     justify-content: center;
     padding: 0;
+  }
+}
+
+@media (max-width: $mobile) {
+  .dropDownPanel {
+    background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
+    box-shadow: 0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15), 0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset, 0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
+    -webkit-backdrop-filter: blur(0.625rem);
+    backdrop-filter: blur(0.625rem);
+    .tab{
+      gap: 1rem;
+      .tabInfo{
+        width: 60%;
+      }
+      .tabChart{
+        width: 40%;
+      }
+    }
+  }
+  .rightPanel{
+    background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
+    box-shadow: 0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15), 0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset, 0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
+    -webkit-backdrop-filter: blur(0.625rem);
+    backdrop-filter: blur(0.625rem);
   }
 }
