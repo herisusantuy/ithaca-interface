@@ -1,4 +1,4 @@
-import { PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
+import { KeyOption, PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
 export const isIncrementing = (arr: PayoffDataProps[]) => {
   let result = true;
@@ -75,23 +75,24 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
   return max / (max - min);
 };
 
-export const showGradientTags = (off: number, color: string, dashedColor: string, id: string) => {
+export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string) => {
   return (
     <defs>
       {/* Area gradient */}
+      {selectedLeg === 'total' &&
       <linearGradient id={`fillGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
         {off !== 1 ? (
           <>
-            <stop offset='0%' stopColor={color} stopOpacity={0.2} />
+            <stop offset='0%' stopColor='#4bb475' stopOpacity={0.2} />
           </>) : ''}
-        {off !== 1 ? <stop offset={off === 0? 1 : off} stopColor={color} stopOpacity={0} />: ''}
+        {off !== 1 ? <stop offset={off === 0? 1 : off} stopColor='#4bb475' stopOpacity={0} />: ''}
         {off !== 1 && off !== 0 ? <stop offset={off} stopColor='#8884d8' stopOpacity={0} /> : ''}
         {off !== 0 ? <stop offset={off === 1? 0 : off} stopColor='#FF3F57' stopOpacity={0} />: ''}
         {off !== 0 ? (
           <>
             <stop offset='100%' stopColor='#FF3F57' stopOpacity={0.3} />
           </>) : ''}
-      </linearGradient>
+      </linearGradient>}
 
       <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
         <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
@@ -101,14 +102,14 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
       <linearGradient id={`lineGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
         {off !== 1 ? (
           <>
-            <stop offset='0%' stopColor={color} stopOpacity={1} />
+            <stop offset='0%' stopColor={selectedLeg === 'total' ? '#4bb475' : color} stopOpacity={1} />
           </>) : ''}
-        {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={color} stopOpacity={1} />: ''}
-        <stop offset={off === 1? 0 : off} stopColor='#fff' stopOpacity={1} />
-        {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor='#FF3F57' stopOpacity={1} />: ''}
+        {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={selectedLeg === 'total' ? '#4bb475' : color}  stopOpacity={1} />: ''}
+        <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} />
+        {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />: ''}
         {off !== 0 ? (
           <>
-            <stop offset='100%' stopColor='#FF3F57' stopOpacity={1} />
+            <stop offset='100%' stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />
           </>) : ''}
       </linearGradient>
 
@@ -843,10 +844,10 @@ export const offsetLimitStudiedValue = (data: PayoffDataProps[]) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const makingChartData = (data: any[], key: string, dashed: string) => {
+export const makingChartData = (data: any[], key: KeyOption, dashed: KeyOption) => {
   const result: PayoffDataProps[] = data.map(item => ({
-    value: Math.round(item[key]),
-    dashValue: dashed != '' ? item[dashed] : undefined,
+    value: Math.round(item[key.value]),
+    dashValue: dashed.value != '' ? item[dashed.value] : undefined,
     x: item['x'],
   }));
 
@@ -866,7 +867,12 @@ export const makingChartData = (data: any[], key: string, dashed: string) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getLegs = (data: any[]) => {
-  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item)).map((k) => k.split('@')[0]);
+  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item)).map((k) => {
+    return {
+      option: k.split('@')[0],
+      value: k
+    }
+  });
   return keys;
 };
 

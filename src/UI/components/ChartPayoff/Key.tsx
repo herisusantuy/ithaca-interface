@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // constants
-import { KeyType } from '@/UI/constants/charts/charts';
+import { KeyOption, KeyType } from '@/UI/constants/charts/charts';
 
 // Components
 import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
@@ -11,7 +11,7 @@ import Dot, { DotTypes } from '@/UI/components/Dot/Dot';
 import styles from './ChartPayoff.module.scss';
 
 type KeysProps = {
-  keys: string[];
+  keys: KeyOption[];
   onChange?: (key: KeyType) => void;
   onDashed: (key: KeyType) => void;
 };
@@ -20,7 +20,10 @@ const Key = (props: KeysProps) => {
   const { keys, onChange, onDashed } = props;
   const [keyMap, setKeyMap] = useState<KeyType[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selected, setSelected] = useState<KeyType>({ label: 'Total', type: 'leg16' });
+  const [selected, setSelected] = useState<KeyType>({ label: {
+    option: 'Total',
+    value: 'total'
+  }, type: 'leg16' });
 
   useEffect(() => {
     const keyArray: KeyType[] = [];
@@ -44,8 +47,11 @@ const Key = (props: KeysProps) => {
     ];
 
     keys.map((item, index) => {
-      if (item == 'total') {
-        const keyObj: KeyType = { label: 'total', type: 'leg16' };
+      if (item.value == 'total') {
+        const keyObj: KeyType = { label: {
+          option: 'Total',
+          value: 'total'
+        }, type: 'leg16' };
         keyArray.push(keyObj);
       } else {
         const type: DotTypes = dotArray[index-1] || 'leg1';
@@ -58,8 +64,8 @@ const Key = (props: KeysProps) => {
   }, [keys]);
 
   // Add class to total item
-  const getBadgeClass = (label: string): string => {
-    return label === selected.label ? styles.badge : '';
+  const getBadgeClass = (label: KeyOption): string => {
+    return label.value === selected.label.value ? styles.badge : '';
   };
 
   // Change Label
@@ -77,12 +83,17 @@ const Key = (props: KeysProps) => {
         <div
           key={index}
           className={`${styles.key} ${getBadgeClass(key.label)}`}
-          onClick={() => updateChange(key)}
+          onClick={() => {
+            setSelected(key)
+            updateChange(key)}}
           onMouseEnter={() => showDashedLine(key)}
-          onMouseLeave={() => showDashedLine({ label: '', type: 'leg16' })}
+          onMouseLeave={() => showDashedLine({ label: {
+            option: '',
+            value: ''
+          }, type: 'leg16' })}
         >
           <Dot type={key.type} />
-          <p>{key.label == 'total' ? 'Total' : key.label}</p>
+          <p>{key.label.option}</p>
         </div>
       ))}
     </div>

@@ -16,7 +16,7 @@ const Toast = (Props: ToastPropType) => {
   const { toastList, autoDelete = true, autoDeleteTime = 3500, position = 'top-right' } = Props;
   const [list, setList] = useState(toastList);
   const [mounted, setMounted] = useState(false);
-
+  
   useEffect(() => {
     setList([...toastList]);
     setMounted(true);
@@ -99,7 +99,7 @@ const Toast = (Props: ToastPropType) => {
   };
 
   return (
-    mounted &&
+    <>{mounted &&
     document.querySelector<HTMLElement>('#portal') &&
     createPortal(
       <div className={`${styles.notificationContainer} ${renderPosition()}`}>
@@ -134,7 +134,7 @@ const Toast = (Props: ToastPropType) => {
           </div>
         ))}
       </div>,
-      document.querySelector<HTMLElement>('#portal') as HTMLElement)
+      document.querySelector<HTMLElement>('#portal') as HTMLElement)}</>
   );
 };
 
