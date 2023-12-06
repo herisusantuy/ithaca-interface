@@ -29,8 +29,8 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
   {
     path: '/points-program',
     titleKey: 'Click to visit points program',
-    displayText: 'Points-Program'
-  }
+    displayText: 'Points',
+  },
   // {
   //   path: '#',
   //   titleKey: 'Click to view more',
