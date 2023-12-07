@@ -12,9 +12,11 @@ import TwitterIcon from '@/UI/components/Icons/Twitter';
 import DiscordIcon from '@/UI/components/Icons/Discord';
 import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { useAccount } from 'wagmi';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
+import Link from 'next/link';
+import { AuthClient } from '@ithaca-finance/sdk';
 
 const TWITTER_LINK = 'https://twitter.com/ithacaprotocol';
 const DISCORD_LINK = 'https://discord.gg/ithacaprotocol';
@@ -22,7 +24,7 @@ const TELEGRAM_LINK = 'https://t.me/+E7KmlGwmxmtkOWU1';
 
 type PointProgramActions = Record<keyof typeof PointsProgramAccountsEnum, boolean>;
 const PointsProgram = () => {
-  const { ithacaSDK } = useAppStore();
+  const { ithacaSDK, isAuthenticated } = useAppStore();
 
   const [actionsPerformed, setActionsPerformed] = useState<PointProgramActions>({
     WALLET: false,
@@ -31,25 +33,63 @@ const PointsProgram = () => {
     TELEGRAM: false,
   });
 
+  // update completed actions when authentication changes
+  useEffect(() => {
+    setActionsPerformed(state => ({
+      ...state,
+      WALLET: isAuthenticated,
+    }));
+    if (isAuthenticated) {
+      updateCompletedActions();
+    }
+  }, [isAuthenticated]);
+
+  // reset completed action on wallet disconnect
   useAccount({
-    onConnect: () => {
-      setActionsPerformed(state => ({
-        ...state,
-        WALLET: true,
-      }));
-    },
     onDisconnect: () => {
       setActionsPerformed(state => ({
         ...state,
         WALLET: false,
       }));
+      resetActions();
     },
   });
+
+  // fetch current session and read accounts info to update completed actions
+  const updateCompletedActions = async () => {
+    if (isAuthenticated) {
+      try {
+        const {
+          accountInfos: { sn_discord, sn_telegram, sn_twitter },
+        }: AuthClient & { accountInfos: Record<PointsProgramAccountsEnum, string> } = await ithacaSDK.auth.getSession();
+        setActionsPerformed(state => {
+          return {
+            ...state,
+            TWITTER: !!sn_twitter,
+            DISCORD: !!sn_discord,
+            TELEGRAM: !!sn_telegram,
+          };
+        });
+      } catch {
+        resetActions();
+      }
+    }
+  };
+
+  const resetActions = () => {
+    setActionsPerformed(state => ({
+      ...state,
+      TWITTER: false,
+      DISCORD: false,
+      TELEGRAM: false,
+    }));
+  };
 
   const openUrl = (url: string) => {
     window.open(url, '_blank');
   };
 
+  // store completed actions on backend
   const addAccountData = async (account: PointsProgramAccountsEnum, userName: string): Promise<boolean> => {
     try {
       await ithacaSDK.points.addAccountData(account, userName);
@@ -62,19 +102,22 @@ const PointsProgram = () => {
   const handleTwitterClick = async () => {
     openUrl(TWITTER_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.TWITTER, 'ithacaUser');
-    setActionsPerformed(state => ({ ...state, TWITTER: flag }));
+    await updateCompletedActions();
+    //setActionsPerformed(state => ({ ...state, TWITTER: flag }));
   };
 
   const handleDiscordClick = async () => {
     openUrl(DISCORD_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.DISCORD, 'ithacaUser');
-    setActionsPerformed(state => ({ ...state, DISCORD: flag }));
+    await updateCompletedActions();
+    //setActionsPerformed(state => ({ ...state, DISCORD: flag }));
   };
 
   const handleTelegramClick = async () => {
     openUrl(TELEGRAM_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.TELEGRAM, 'ithacaUser');
-    setActionsPerformed(state => ({ ...state, TELEGRAM: flag }));
+    await updateCompletedActions();
+    // setActionsPerformed(state => ({ ...state, TELEGRAM: flag }));
   };
 
   const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
@@ -129,7 +172,7 @@ const PointsProgram = () => {
                           chain &&
                           (!authenticationStatus || authenticationStatus === 'authenticated');
                         if (ready) {
-                          if (connected) {
+                          if (actionsPerformed.WALLET) {
                             return (
                               <Button title='Completed' variant='outline' className={styles.completedBtn}>
                                 <>Completed</>
@@ -189,6 +232,16 @@ const PointsProgram = () => {
                   </div>
                 </li>
               </ul>
+              {actionsPerformed.WALLET && (
+                <div className={styles.regerralCodeContainer}>
+                  <p>Registration successful thank you joining the Ithaca Points Program.</p>
+                  <Link href='/referrals'>
+                    <Button title='Reveal Referral Code' variant='secondary'>
+                      Reveal Referral Code
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </Panel>
           </div>
         </Container>
