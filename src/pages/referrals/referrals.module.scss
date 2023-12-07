@@ -10,6 +10,10 @@
 
   h1 {
     font-weight: 400;
+    @include breakpoint(tablet2) {
+      font-size: rem(18);
+      font-weight: 600;
+    }
   }
 }
 
@@ -19,14 +23,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  @include breakpoint(tablet) {
-    padding: rem(24) rem(16);
+  @include breakpoint(tablet2) {
+    padding: rem(39) rem(60);
   }
 
   p {
     font-family: $lato;
     font-size: rem(18);
     margin-bottom: rem(32);
+    @include breakpoint(tablet2) {
+      font-size: rem(16);
+      font-weight: 500;
+      margin-bottom: rem(24);
+    }
   }
   a {
     font-size: rem(24);
@@ -34,10 +43,20 @@
     color: var(--white);
     margin-bottom: rem(36);
     text-decoration: underline;
+    word-break: break-word;
+    @include breakpoint(tablet2) {
+      font-size: rem(18);
+      font-weight: 700;
+      margin-bottom: rem(24);
+    }
   }
   button {
     min-width: rem(124);
     font-size: rem(12);
+    @include breakpoint(tablet2) {
+      padding: rem(10) rem(16);
+      height: auto;
+    }
   }
 }
 

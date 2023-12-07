@@ -129,8 +129,10 @@ $desktop: rem(1435);
 // Breakpoints
 $breakpoints: (
   mobile: rem(390),
+  mobile2: rem(767),
   tablet: rem(695),
   desktop: rem(1435),
+  tablet2: rem(1280)
 );
 
 // Mixin for breakpoints

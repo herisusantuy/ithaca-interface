@@ -81,6 +81,7 @@ const Referrals = () => {
                 activeTab={activeTab}
                 onChange={setActiveTab}
                 className={styles.referralsTab}
+                responsive={false}
               />
             </div>
           </div>
