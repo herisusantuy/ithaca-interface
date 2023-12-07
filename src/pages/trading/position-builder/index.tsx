@@ -32,6 +32,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import { MainInfo } from './MainInfo';
+import { Currency } from '@/UI/components/Currency';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -142,13 +143,18 @@ const Index = () => {
             <TradingLayout />
             <Sidebar
               leftPanel={
-                <MainInfo 
-                  setOrderSummary 
-                  positionBuilderStrategies
-                  setPositionBuilderStrategies
-                  getPositionBuilderSummary
-                  setChartData 
-                />
+                <>
+                  <Currency
+                    setOrderSummary
+                    setChartData
+                    setPositionBuilderStrategies
+                  />
+                  <MainInfo 
+                    positionBuilderStrategies
+                    setPositionBuilderStrategies
+                    getPositionBuilderSummary
+                  />
+                </>
               }
               orderSummary={
                 <>
