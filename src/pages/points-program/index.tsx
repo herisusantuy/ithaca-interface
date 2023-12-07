@@ -102,22 +102,22 @@ const PointsProgram = () => {
   const handleTwitterClick = async () => {
     openUrl(TWITTER_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.TWITTER, 'ithacaUser');
-    await updateCompletedActions();
-    //setActionsPerformed(state => ({ ...state, TWITTER: flag }));
+    setActionsPerformed(state => ({ ...state, TWITTER: flag }));
+    // await updateCompletedActions();
   };
 
   const handleDiscordClick = async () => {
     openUrl(DISCORD_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.DISCORD, 'ithacaUser');
-    await updateCompletedActions();
-    //setActionsPerformed(state => ({ ...state, DISCORD: flag }));
+    setActionsPerformed(state => ({ ...state, DISCORD: flag }));
+    // await updateCompletedActions();
   };
 
   const handleTelegramClick = async () => {
     openUrl(TELEGRAM_LINK);
     const flag = await addAccountData(PointsProgramAccountsEnum.TELEGRAM, 'ithacaUser');
-    await updateCompletedActions();
-    // setActionsPerformed(state => ({ ...state, TELEGRAM: flag }));
+    setActionsPerformed(state => ({ ...state, TELEGRAM: flag }));
+    // await updateCompletedActions();
   };
 
   const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
