@@ -143,7 +143,6 @@ const Index = () => {
       console.error('Failed to submit order', error);
     }
   };
-
   
   return (
     <>
