@@ -34,7 +34,7 @@ const Referrals = () => {
                 navigator.clipboard.writeText('https://ithaca.domain/E1BAC');
                 showToast(
                   {
-                    id: Math.floor(Math.random() * 1000),
+                    id: new Date().getTime(),
                     title: 'Copied',
                     message: 'https://ithaca.domain/E1BAC',
                     type: 'success',
