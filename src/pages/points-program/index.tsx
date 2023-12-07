@@ -232,7 +232,7 @@ const PointsProgram = () => {
                   </div>
                 </li>
               </ul>
-              {actionsPerformed.WALLET && (
+              {/* {actionsPerformed.WALLET && (
                 <div className={styles.regerralCodeContainer}>
                   <p>Registration successful thank you joining the Ithaca Points Program.</p>
                   <Link href='/referrals'>
@@ -241,7 +241,7 @@ const PointsProgram = () => {
                     </Button>
                   </Link>
                 </div>
-              )}
+              )} */}
             </Panel>
           </div>
         </Container>

@@ -11,10 +11,10 @@
 }
 
 .mainPanel {
-  padding: rem(26) rem(36);
+  padding: rem(26) rem(36) rem(60) rem(36);
 
   @include breakpoint(tablet) {
-    padding: rem(16);
+    padding: rem(16) rem(16) rem(48) rem(16);
   }
 
   p {
