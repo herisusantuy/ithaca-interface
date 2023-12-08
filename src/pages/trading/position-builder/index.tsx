@@ -52,6 +52,11 @@ export type AuctionSubmission = {
   order: ClientConditionalOrder;
 };
 
+export type ProductOption = {
+  option: string;
+  value: string;
+}
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
