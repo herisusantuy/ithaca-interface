@@ -45,3 +45,17 @@
   align-items: center;
   gap: rem(4);
 }
+
+@media (max-width: $desktop){
+  .orderSummary{
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 0.2rem;
+    .summary{
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+}

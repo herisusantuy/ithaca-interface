@@ -12,6 +12,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Utils
 import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -27,14 +28,14 @@ type Props = {
   onSubmit: () => void;
   className?: string;
 };
-
+ 
 const StorySummary = ({ showCollateral = false, summary, onSubmit, className }: Props) => {
   const { currencyPrecision } = useAppStore();
-
+  const lastSegment = useLastUrlSegment()
   const classes = `${styles.orderSummary} ${className || ''}`.trim();
 
   return (
-    <div className={classes}>
+    <div className={`${`orderSummary--${lastSegment}`} ${classes}`}>
       {showCollateral && (
         <div className={styles.summary}>
           <h5>Collateral Requirement</h5>

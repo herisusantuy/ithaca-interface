@@ -1,6 +1,9 @@
 // Packages
 import { ReactNode } from 'react';
 
+//Utils
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
+
 // Styles
 import styles from './RadioButton.module.scss';
 
@@ -25,12 +28,16 @@ const RadioButton = ({
   width = 0,
   size = 'regular',
 }: RadioButtonProps) => {
+
+  const lastSegment = useLastUrlSegment()
+
   const renderOptions = (optionList: { option: string | ReactNode; value: string }[]) => {
 
     return optionList.map(option => {
       console.log("Options", option.value, selectedOption)
       return (
-        <div key={`${name}${option.value}`} className={size === 'compact' ? styles.optionCompact : size === 'large' ? styles.optionLarge : styles.option}>
+        <div key={`${name}${option.value}`} 
+        className={`radioButton-option--${lastSegment} ${size === 'compact' ? styles.optionCompact : size === 'large' ? styles.optionLarge : styles.option}`}>
           <input
             type='radio'
             id={`${name}${option.value}`}
@@ -50,7 +57,7 @@ const RadioButton = ({
 
   return (
     <div
-      className={`${size === 'compact' ? styles.radioButtonCompact : size === 'large' ? styles.radioButtonLarge : styles.radioButton} ${
+      className={`radioButton--${lastSegment} ${size === 'compact' ? styles.radioButtonCompact : size === 'large' ? styles.radioButtonLarge : styles.radioButton} ${
         orientation === 'vertical' ? styles.vertical : ''
       }`}
       style={width > '0' ? { width: width + 'px' } : {}}

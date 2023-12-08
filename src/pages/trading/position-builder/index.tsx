@@ -138,7 +138,7 @@ const Index = () => {
       console.error('Failed to submit order', error);
     }
   };
-  
+
   return (
     <>
       <Meta />
@@ -150,12 +150,14 @@ const Index = () => {
               leftPanel={
                 <>
                   <Currency
-                    setOrderSummary
-                    setChartData
-                    setPositionBuilderStrategies
+                    onExpiryChange={() => {
+                      setOrderSummary(undefined);
+                      setPositionBuilderStrategies([]);
+                      setChartData(undefined);
+                    }}
                   />
                   <MainInfo
-                    handleAddStrategy = {handleAddStrategy}
+                    handleAddStrategy={handleAddStrategy}
                   />
                 </>
               }
@@ -198,7 +200,7 @@ const Index = () => {
                     }}
                     auctionSubmission={auctionSubmission}
                     positionBuilderStrategies={positionBuilderStrategies}
-                    orderSummary={orderSummary}/>
+                    orderSummary={orderSummary} />
                   <Toast toastList={toastList} position={position} />
                 </>
               }

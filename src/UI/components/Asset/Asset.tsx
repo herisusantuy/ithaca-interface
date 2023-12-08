@@ -1,6 +1,9 @@
 // Packages
 import { ReactNode } from 'react';
 
+// Utils
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
+
 // Styles
 import styles from './Asset.module.scss';
 
@@ -10,12 +13,14 @@ type AssetProps = {
   label: string;
   size?: string;
 };
-
+ 
 const Asset = ({ icon, label, size }: AssetProps) => {
   const sizeClass = size ? styles[size] : '';
 
+  const lastSegment = useLastUrlSegment()
+
   return (
-    <div className={`${styles.asset} ${sizeClass}`.trim()}>
+    <div className={`assets--${lastSegment} ${styles.asset} ${sizeClass}`.trim()}>
       {icon}
       <p className={styles.label}>{label}</p>
     </div>

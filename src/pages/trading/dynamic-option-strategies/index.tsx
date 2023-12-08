@@ -283,9 +283,11 @@ const Index = () => {
               leftPanel={
                 <>
                   <Currency
-                    setOrderSummary
-                    setChartData
-                    setPositionBuilderStrategies
+                    onExpiryChange={() => {
+                      setOrderSummary(undefined);
+                      setPositionBuilderStrategies([]);
+                      setChartData(undefined);
+                    }}
                   />
                   {(device !== 'desktop') ? (
                     <div className={styles.moduleHeader}>

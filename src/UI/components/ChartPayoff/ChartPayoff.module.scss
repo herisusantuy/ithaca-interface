@@ -30,6 +30,9 @@
   p {
     font-family: $roboto;
     @include font-size('text-xs', 'regular');
+    @media (max-width: $desktop) {
+      @include font-size('text-xxs', 'medium');
+    }
   }
 
   h3 {
@@ -37,6 +40,9 @@
     @include font-size('text-xs', 'semibold');
     color: var(--white);
     margin: 0 !important;
+    @media (max-width: $desktop) {
+      @include font-size('text-xxs', 'medium');
+    }
   }
 }
 

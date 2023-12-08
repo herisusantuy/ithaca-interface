@@ -5,6 +5,9 @@ import { createPortal } from 'react-dom';
 // Components
 import Dropdown from '@/UI/components/Icons/Dropdown';
 
+//Utils
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
+
 // Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
@@ -47,6 +50,9 @@ const DropdownMenu = ({
   className,
   type,
 }: DropdownMenuProps) => {
+
+  const lastSegment = useLastUrlSegment()
+
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
@@ -104,7 +110,7 @@ const DropdownMenu = ({
       )}
       <div
         style={width > 0 ? { minWidth: width + 'px' } : {}}
-        className={`${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}
+        className={`dropdownContainer--${lastSegment} ${styles.dropdownContainer} ${disabled ? styles.disabled : ''}`}
         onClick={handleDropdownClick}
         role='button'
       >

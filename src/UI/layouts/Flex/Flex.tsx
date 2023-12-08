@@ -4,6 +4,9 @@ import { ReactNode } from 'react';
 // Styles
 import styles from './Flex.module.scss';
 
+// Utils
+import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
+
 // Types
 type FlexProps = {
   direction?: string;
@@ -14,7 +17,10 @@ type FlexProps = {
 };
 
 const Flex = ({ direction = 'row', margin = 'm-0', gap = 'gap-0', padding = 'p-0', children }: FlexProps) => {
-  return <div className={`${styles.flex} ${styles[`flex--${direction}`]} ${margin} ${gap} ${padding}`}>{children}</div>;
+
+  const lastSegment = useLastUrlSegment()
+
+  return <div className={`${`flex--${lastSegment}`} ${styles.flex} ${styles[`flex--${direction}`]} ${margin} ${gap} ${padding}`}>{children}</div>
 };
 
 export default Flex;

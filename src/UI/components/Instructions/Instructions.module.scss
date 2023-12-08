@@ -157,3 +157,20 @@
     color: var(--white-60);
   }
 }
+
+@media (max-width: $desktop) {
+  .container p{
+    font-size: 0.75rem;
+    line-height: normal;
+    gap: 0.2rem;
+    white-space: nowrap;
+  }
+  .description p{
+    display: inline;
+  }
+}
+@media (max-width: $tablet) {
+  .container p{
+    flex-wrap: wrap;
+  }
+}
