@@ -32,7 +32,10 @@ import ReadyState from '@/UI/utils/ReadyState';
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import { MainInfo } from './MainInfo';
+<<<<<<< HEAD
 import { Currency } from '@/UI/components/Currency';
+=======
+>>>>>>> d902b6f (feat: modularize Position builder main input component)
 
 // Types
 export interface PositionBuilderStrategy {
@@ -51,11 +54,6 @@ export type AuctionSubmission = {
   type: string;
   order: ClientConditionalOrder;
 };
-
-export type ProductOption = {
-  option: string;
-  value: string;
-}
 
 const Index = () => {
   // State
@@ -112,11 +110,14 @@ const Index = () => {
       console.error('Order estimation for position builder failed', error);
     }
   };
+<<<<<<< HEAD
   const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
     setPositionBuilderStrategies(newPositionBuilderStrategies);
     getPositionBuilderSummary(newPositionBuilderStrategies);
   };
+=======
+>>>>>>> d902b6f (feat: modularize Position builder main input component)
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
@@ -143,6 +144,10 @@ const Index = () => {
       console.error('Failed to submit order', error);
     }
   };
+<<<<<<< HEAD
+=======
+
+>>>>>>> d902b6f (feat: modularize Position builder main input component)
   
   return (
     <>
@@ -153,6 +158,7 @@ const Index = () => {
             <TradingLayout />
             <Sidebar
               leftPanel={
+<<<<<<< HEAD
                 <>
                   <Currency
                     setOrderSummary
@@ -163,6 +169,15 @@ const Index = () => {
                     handleAddStrategy = {handleAddStrategy}
                   />
                 </>
+=======
+                <MainInfo 
+                  setOrderSummary 
+                  positionBuilderStrategies
+                  setPositionBuilderStrategies
+                  getPositionBuilderSummary
+                  setChartData 
+                />
+>>>>>>> d902b6f (feat: modularize Position builder main input component)
               }
               orderSummary={
                 <>
