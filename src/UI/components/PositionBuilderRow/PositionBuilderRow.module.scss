@@ -52,18 +52,6 @@
 .collateral,
 .premium {
   justify-content: space-between;
-<<<<<<< HEAD
-}
-
-.title {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  max-width: 200px;
-  @include breakpoint(tablet) {
-    grid-column: 1 / 2;
-  }
-=======
->>>>>>> 79164dc (fix: styles incorporated)
 }
 
 .title {
