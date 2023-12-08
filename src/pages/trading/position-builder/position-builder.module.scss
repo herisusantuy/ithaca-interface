@@ -101,3 +101,11 @@
     width: auto;
   }
 }
+
+.option {
+  display: none;
+}
+
+.option__active {
+  display: initial;
+}
