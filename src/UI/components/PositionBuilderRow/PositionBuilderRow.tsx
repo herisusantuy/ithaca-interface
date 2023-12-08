@@ -151,11 +151,11 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   const renderValues = () => (
     <>
       <div className={styles.collateral}>
-        { (device !== 'desktop') && <p className="subtitle subtitle--side">Collateral</p> }
+        { (device !== 'desktop') && <p className={styles.subtitle__side}>Collateral</p> }
         <PriceLabel label={calcCollateral()} icon={<LogoEth />} />
       </div>
       <div className={styles.premium}>
-        { (device !== 'desktop') && <p className="subtitle  subtitle--side">Premium</p> }
+        { (device !== 'desktop') && <p className={styles.subtitle__side}>Premium</p> }
         <PriceLabel label={calcPremium()} icon={<LogoUsdc />} />
       </div>
     </>
@@ -185,7 +185,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
-            { (device !== 'desktop') && <p className="subtitle">Type</p> }
+            { (device !== 'desktop') && <p className={styles.subtitle}>Type</p> }
             <RadioButton
               options={options}
               selectedOption={payoff}
@@ -195,7 +195,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             />
           </div>
           <div className={styles.side}>
-            { (device !== 'desktop') && <p className="subtitle">Side</p> }
+            { (device !== 'desktop') && <p className={styles.subtitle}>Side</p> }
             <RadioButton
               options={[
                 { option: <Plus />, value: 'BUY' },
@@ -208,7 +208,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             />
           </div>
           <div className={styles.size}>
-            { (device !== 'desktop') && <p className="subtitle">Size</p> }
+            { (device !== 'desktop') && <p className={styles.subtitle}>Size</p> }
             <Input
               type='number'
               value={size}
@@ -220,7 +220,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
           <div className={styles.strike}>
             {title !== 'Forwards' ? (
               <>
-                { (device !== 'desktop') && <p className="subtitle">Strike</p> }
+                { (device !== 'desktop') && <p className={styles.subtitle}>Strike</p> }
                 <DropdownMenu
                   value={strike ? { name: strike, value: strike } : undefined}
                   options={Object.keys(contracts).map(strike => ({ name: strike, value: strike }))}
@@ -233,7 +233,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             )}
           </div>
           <div className={styles.unitPrice}>
-            { (device !== 'desktop') && <p className="subtitle">Unit Price</p> }
+            { (device !== 'desktop') && <p className={styles.subtitle}>Unit Price</p> }
             <Input
               type='number'
               footerText={title === 'Options' ? `IV ${calcIv()}` : undefined}

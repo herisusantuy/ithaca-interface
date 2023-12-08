@@ -272,7 +272,15 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
-            {(device !== 'desktop') && <p>Product</p>}
+            {(device !== 'desktop') && 
+            <>
+              <div className={styles.removeButton}>
+                <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+                  <Remove />
+                </Button>
+              </div>
+              <p className={styles.subtitle}>Product</p>
+            </>}
             <RadioButton
               options={PRODUCT_OPTIONS}
               selectedOption={product}
@@ -282,7 +290,16 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.type}>
-            {(device !== 'desktop') && <p>Type</p>}
+            {(device !== 'desktop') ?
+            <>
+              <p className={styles.subtitle}>Type</p>
+              <RadioButton
+                options={typeList}
+                selectedOption={type}
+                name={`${id}-type`}
+                onChange={handleTypeChange}
+              />
+            </> :
             <RadioButton
               options={typeList}
               selectedOption={type}
@@ -290,9 +307,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               onChange={handleTypeChange}
               width={170}
             />
+            }
+            
           </div>
           <div className={styles.side}>
-            {(device !== 'desktop') && <p>Side</p>}
+            {(device !== 'desktop') && <p className={styles.subtitle}>Side</p>}
             <RadioButton
               options={[
                 { option: <Plus />, value: 'BUY' },
@@ -305,7 +324,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.size}>
-            {(device !== 'desktop') && <p>Size</p>}
+            {(device !== 'desktop') && <p className={styles.subtitle}>Size</p>}
             <Input
               className={styles.dynamicOptionsInput}
               canLink={true}
@@ -322,7 +341,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.strike}>
-            {(device !== 'desktop') && <p>Strike</p>}
+            {(device !== 'desktop') && <p className={styles.subtitle}>Strike</p>}
             {product !== 'Forward' ? (
               <DropdownMenu
                 value={strike ? { name: strike, value: strike } : undefined}
@@ -335,7 +354,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             )}
           </div>
           <div className={styles.unitPrice}>
-            {(device !== 'desktop') && <p>Unit Price</p>}
+            {(device !== 'desktop') && <p className={styles.subtitle}>Unit Price</p>}
             <Input
               className={styles.dynamicOptionsInput}
               type='number'
@@ -359,11 +378,13 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               }
             />
           </div>
-          <div className={styles.action}>
-            <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
-              <Remove />
-            </Button>
-          </div>
+          {(device === 'desktop') &&
+            <div className={styles.action}>
+              <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+                <Remove />
+              </Button>
+            </div>
+          }
         </div>
       </Panel>
     </>

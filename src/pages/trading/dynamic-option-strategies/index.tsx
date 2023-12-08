@@ -406,14 +406,17 @@ const Index = () => {
                     {strategy.strategies.length ? (
                       <>
                         <div className={styles.parent}>
-                          <>
-                            {sections.map((section, index) => (
-                              <div key={index} className={section.style}>
-                                <p>{section.name}</p>
-                              </div>
-                            ))}
-                            <div className={styles.action}></div>
-                          </>
+                          {
+                            (device === 'desktop') &&
+                            <>
+                              {sections.map((section, index) => (
+                                <div key={index} className={section.style}>
+                                  <p>{section.name}</p>
+                                </div>
+                              ))}
+                              <div className={styles.action}></div>
+                            </>
+                          }
                         </div>
                         {strategy.strategies.map((strat, index) => {
                           return (
