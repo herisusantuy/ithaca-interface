@@ -24,9 +24,9 @@ const Index = () => {
         <Container>
           <TradingLayout/>
           <Currency
-            setOrderSummary
-            setChartData
-            setPositionBuilderStrategies
+          onExpiryChange={() => {
+            console.log()
+          }}
           />
           <TabCard
             className='mt-39'

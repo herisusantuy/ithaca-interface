@@ -13,25 +13,14 @@ import { getNumber } from '@/UI/utils/Numbers';
 
 import styles from './currency.module.scss'
 
+type CurrencyProps = {
+  onExpiryChange: () => void;
+}
 
-// setOrderSummary({
-//   order,
-//   orderLock
-// })
-// setOrderSummari(undefined)
-// interface ICurrency {
-//   setOrderSummary: undefined | OrderType
-// }
-
-// type OrderType = {
-
-// }
 export const Currency = ({
-  setOrderSummary,
-  setChartData,
-  setPositionBuilderStrategies
-} // eslint-disable-next-line @typescript-eslint/no-explicit-any
-: any) => {
+  onExpiryChange
+} 
+: CurrencyProps) => {
 
   const device = useDevice();
   const { currentExpiryDate, expiryList, setCurrentExpiryDate } = useAppStore();
@@ -50,9 +39,7 @@ export const Currency = ({
             value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
           }))}
           onChange={value => {
-            setOrderSummary(undefined);
-            setPositionBuilderStrategies([]);
-            setChartData(undefined);
+            onExpiryChange()
             setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
           }}
           value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}

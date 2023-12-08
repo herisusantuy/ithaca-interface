@@ -278,9 +278,11 @@ const Index = () => {
               leftPanel={
                 <>
                   <Currency
-                    setOrderSummary
-                    setChartData
-                    setPositionBuilderStrategies
+                    onExpiryChange={() => {
+                      setOrderSummary(undefined);
+                      setPositionBuilderStrategies([]);
+                      setChartData(undefined);
+                    }}
                   />
                   <h3>Dynamic Option Strategy</h3>
                   <div className='mb-24'>
