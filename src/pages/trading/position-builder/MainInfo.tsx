@@ -2,30 +2,25 @@ import { useState } from 'react'
 
 import styles from './position-builder.module.scss'
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { Leg } from '@ithaca-finance/sdk';
 
 import dayjs from 'dayjs';
 import PositionBuilderRow from "@/UI/components/PositionBuilderRow/PositionBuilderRow";
 import RadioButton from "@/UI/components/RadioButton/RadioButton";
 import { useDevice } from '@/UI/hooks/useDevice';
+import { PositionBuilderStrategy } from '.';
 
 export type ProductOption = {
   option: string;
   value: string;
 }
 
-export interface PositionBuilderStrategy {
-  leg: Leg;
-  referencePrice: number;
-  payoff: string;
-  strike: string;
+interface IMainInfo {
+  handleAddStrategy: (strategy: PositionBuilderStrategy) => void
 }
-export const MainInfo = ({
-  positionBuilderStrategies, 
-  setPositionBuilderStrategies, 
-  getPositionBuilderSummary, 
+export const MainInfo = ({ 
+  handleAddStrategy, 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-}: any) => {
+}: IMainInfo) => {
   const [product, setProduct] = useState<string>('options')
   const device = useDevice()
   const PRODUCT_OPTIONS: ProductOption[] = [{
@@ -42,13 +37,6 @@ export const MainInfo = ({
     setProduct(product)
   }
   const { currentExpiryDate } = useAppStore();
-
-  const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
-    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
-    setPositionBuilderStrategies(newPositionBuilderStrategies);
-    getPositionBuilderSummary(newPositionBuilderStrategies);
-  };
-
   const renderOptions = () => {
     return (device === 'desktop') ? (
     <>

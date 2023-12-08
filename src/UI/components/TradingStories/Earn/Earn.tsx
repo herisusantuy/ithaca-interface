@@ -41,6 +41,9 @@ import RiskyEarnInstructions from '../../Instructions/RiskyEarnInstructions';
 import RisklessEarnInstructions from '../../Instructions/RisklessEarnInstructions';
 import RadioButton from '../../RadioButton/RadioButton';
 import { RISKY_RISKLESS_EARN_OPTIONS } from '@/UI/constants/options';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration)
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff,  } = useAppStore();
@@ -69,54 +72,52 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   }
 
   const handleCapitalAtRiskChange = async (amount: string) => {
-    const capitalAtRisk = getNumberValue(amount);
-    setCapitalAtRisk(capitalAtRisk);
-    await handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
-  };
-
-  const handleTargetEarnChange = async (amount: string) => {
-    const targetEarn = getNumberValue(amount);
-    setTargetEarn(targetEarn);
-    if (isInvalidNumber(getNumber(targetEarn))) {
-      setCapitalAtRisk('');
-      setOrderDetails(undefined);
-      setPayoffMap(undefined);
-      return;
+    if (radioChosen === 'Risky Earn') {
+      const capitalAtRisk = getNumberValue(amount);
+      setCapitalAtRisk(capitalAtRisk);
+      await handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
     }
+    else {
+      const capitalAtRisk = getNumberValue(amount);
+      setCapitalAtRisk(capitalAtRisk);
+      handleRisklessChange(capitalAtRisk, targetEarn);
+    }
+  };
+  
+  const handleRisklessChange = async (risk:string, earn: string) => {
+    const current = dayjs();
+    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
+    const yearDiff = dayjs.duration(expiry.diff(current)).asYears();
+    const APY = (Number(earn)/Number(risk) -1)/yearDiff;
+    if (isInvalidNumber(getNumber(earn)) || isInvalidNumber(getNumber(risk))) return;
+    const closest = Object.keys(callContracts).reduce((prev, curr) => {
+      return (Math.abs(Number(curr) - currentSpotPrice) < Math.abs(prev - currentSpotPrice) ? Number(curr) : prev);
+    }, 0);
 
-    const contracts = currency === 'WETH' ? callContracts : putContracts;
-    const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
-      const isValidStrike =
-        currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
-      if (isValidStrike) contractDetails[strike] = contracts[strike];
-      return contractDetails;
-    }, {});
-    const quantity =
-      currency === 'WETH'
-        ? `${toPrecision(
-            getNumber(targetEarn) / filteredContracts[strike.max].referencePrice,
-            currencyPrecision.strike
-          )}`
-        : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
-
-    const leg = {
-      contractId: filteredContracts[strike.max].contractId,
-      quantity,
+    const leg = [{
+      contractId: callContracts[closest].contractId,
+      quantity: (Number(earn)/strike.max).toFixed(2).toString(),
+      // quantity: earn,
       side: 'SELL',
-    } as Leg;
+    },{
+      contractId: putContracts[closest].contractId,
+      quantity: (Number(earn)/strike.max).toFixed(2).toString(),
+      // quantity: earn,
+      side: 'BUY',
+    }];
 
     const order = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: getNumber(targetEarn).toFixed(currencyPrecision.strike),
-      legs: [leg],
+      totalNetPrice: getNumber((Number(earn)-Number(risk)).toString()).toFixed(currencyPrecision.strike),
+      legs: leg,
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
     const payoffMap = estimateOrderPayoff([
-      { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
+      { ...callContracts[closest], ...leg[0], premium: callContracts[closest].referencePrice },
+      { ...putContracts[closest], ...leg[1], premium: putContracts[closest].referencePrice }
     ]);
     setPayoffMap(payoffMap);
-    setCapitalAtRisk(quantity);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -127,6 +128,69 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     } catch (error) {
       // Add toast
       console.error('Order estimation for earn failed', error);
+    }
+  };
+
+  const handleTargetEarnChange = async (amount: string) => {
+    if (radioChosen === 'Risky Earn') {
+      const targetEarn = getNumberValue(amount);
+      setTargetEarn(targetEarn);
+      if (isInvalidNumber(getNumber(targetEarn))) {
+        setCapitalAtRisk('');
+        setOrderDetails(undefined);
+        setPayoffMap(undefined);
+        return;
+      }
+
+      const contracts = currency === 'WETH' ? callContracts : putContracts;
+      const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
+        const isValidStrike =
+          currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
+        if (isValidStrike) contractDetails[strike] = contracts[strike];
+        return contractDetails;
+      }, {});
+      const quantity =
+        currency === 'WETH'
+          ? `${toPrecision(
+              getNumber(targetEarn) / filteredContracts[strike.max].referencePrice,
+              currencyPrecision.strike
+            )}`
+          : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+
+      const leg = {
+        contractId: filteredContracts[strike.max].contractId,
+        quantity,
+        side: 'SELL',
+      } as Leg;
+
+      const order = {
+        clientOrderId: createClientOrderId(),
+        totalNetPrice: getNumber(targetEarn).toFixed(currencyPrecision.strike),
+        legs: [leg],
+        addCollateral: currency === 'WETH',
+      } as ClientConditionalOrder;
+
+      const payoffMap = estimateOrderPayoff([
+        { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
+      ]);
+      setPayoffMap(payoffMap);
+      setCapitalAtRisk(quantity);
+
+      try {
+        const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+        setOrderDetails({
+          order,
+          orderLock,
+        });
+      } catch (error) {
+        // Add toast
+        console.error('Order estimation for earn failed', error);
+      }
+    }
+    else {
+      const targetEarn = getNumberValue(amount);
+      setTargetEarn(targetEarn);
+      handleRisklessChange(capitalAtRisk, targetEarn);
     }
   };
 
@@ -255,7 +319,28 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         />
       </Flex> : '' }
 
-      {!compact && (
+      {!compact && riskyOrRiskless === 'Risky Earn' && (
+        <Flex gap='gap-36' margin='mt-13 mb-17'>
+          <LabeledInput label={riskyOrRiskless === 'Risky Earn' ?'Risk' : 'Lend'} lowerLabel={riskyOrRiskless === 'Risky Earn' ?'Capital At Risk' : 'Loan'}labelClassName='justify-end'>
+            <Input
+              type='number'
+              value={capitalAtRisk}
+              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
+              icon={<LogoEth />}
+            />
+          </LabeledInput>
+          <LabeledInput label='Earn' lowerLabel={<span>Expected Return {getAPY()}</span>}>
+            <Input
+              type='number'
+              value={targetEarn}
+              onChange={({ target }) => handleTargetEarnChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+          </LabeledInput>
+        </Flex>
+      )}
+
+      {!compact && riskyOrRiskless === 'Riskless Earn' && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
           <LabeledInput label='Risk' lowerLabel='Capital At Risk' labelClassName='justify-end'>
             <Input

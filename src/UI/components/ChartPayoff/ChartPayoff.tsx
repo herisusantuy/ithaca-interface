@@ -11,7 +11,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 
 // Constants
-import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KeyType } from '@/UI/constants/charts/charts';
+import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KeyType, KeyOption } from '@/UI/constants/charts/charts';
 
 // Event Props
 import { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart';
@@ -28,7 +28,7 @@ import {
   showGradientTags,
 } from '@/UI/utils/ChartUtil';
 import { LabelPositionProp, PayoffMap } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import { getNumberFormat } from '@/UI/utils/Numbers';
 
 // Types
 type ChartDataProps = {
@@ -46,6 +46,7 @@ type DomainType = {
   max: number;
 };
 
+
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -56,8 +57,18 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
-  const [bridge] = useState<KeyType>({ label: 'total', type: 'leg1' });
-  const [dashed, setDashed] = useState<KeyType>({ label: '', type: 'leg1' });
+  const [bridge] = useState<KeyType>({
+    label: {
+      option: 'Total',
+      value: 'total'
+    }, type: 'leg1'
+  });
+  const [dashed, setDashed] = useState<KeyType>({
+    label: {
+      option: '',
+      value: ''
+    }, type: 'leg1'
+  });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
@@ -65,7 +76,14 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
-  const [key, setKey] = useState<string[]>(['total']);
+  const [key, setKey] = useState<KeyOption[]>([{
+    option: 'Total',
+    value: 'total'
+  }]);
+  const [selectedLeg, setSelectedLeg] = useState<KeyOption>({
+    option: 'Total',
+    value: 'total'
+  });
   const [color, setColor] = useState<string>('#5EE192');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
   const [domain, setDomain] = useState<DomainType>({ min: 0, max: 0 });
@@ -76,14 +94,14 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   const baseValue = 0;
   const colorArray = [
-    '#4bb475',
+    '#18b5b5',
     '#b5b5f8',
     '#ff772a',
     '#a855f7',
     '#7ad136',
     '#ff3f57',
     '#6545a4',
-    '#18b5b5',
+    '#4bb475',
     '#4421af',
     '#d7658b',
     '#7c1158',
@@ -94,14 +112,14 @@ const ChartPayoff = (props: ChartDataProps) => {
   ];
 
   const dashedColorArray = [
-    '#4bb475',
+    '#18b5b5',
     '#b5b5f8',
     '#ff772a',
     '#a855f7',
     '#7ad136',
     '#ff3f57',
     '#6545a4',
-    '#18b5b5',
+    '#4bb475',
     '#4421af',
     '#d7658b',
     '#7c1158',
@@ -116,13 +134,27 @@ const ChartPayoff = (props: ChartDataProps) => {
     setKey(getLegs(chartData));
   }, [chartData]);
 
+  useEffect(() => {
+    const keyIndex = key.findIndex((k) => {
+      return k.value === selectedLeg.value
+    }
+    )
+    if (selectedLeg.value !== 'total' && keyIndex === -1) {
+      setSelectedLeg({
+        option: 'Total',
+        value: 'total'
+      })
+    }
+  }, [key, selectedLeg])
+
   // Update chartData and updating graph
   useEffect(() => {
     setDomain(findOverallMinMaxValues(chartData));
-    const tempData = makingChartData(chartData, bridge.label, dashed.label);
-    const colorIndex = getNumber(bridge.type.replace('leg', ''));
+    const tempData = makingChartData(chartData, bridge.label, selectedLeg.value !== 'total' ? selectedLeg : dashed.label);
+    const colorIndex = key.findIndex((k) => k.value === selectedLeg.value)
     setColor(colorArray[colorIndex - 1]);
-    const dashedColorIndex = getNumber(dashed.type.replace('leg', ''));
+    const dashedColorIndex = key.findIndex((k) => k.value === dashed.label.value)
+
     setDashedColor(dashedColorArray[dashedColorIndex - 1]);
     setMinimize(Math.min(...tempData.map(i => i.value)));
     isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
@@ -130,18 +162,17 @@ const ChartPayoff = (props: ChartDataProps) => {
     setBreakPoints(breakPointList(tempData));
     const modified = tempData.map(item => ({
       ...item,
-      value: item.value - baseValue,
+      value: selectedLeg.value !== 'total' && item.dashValue ? item.dashValue - baseValue : item.value - baseValue,
       dashValue: item.dashValue !== undefined ? item.dashValue - baseValue : undefined,
     }));
     setModifiedData(modified);
-
     // set gradient value
     setOff(gradientOffset(xAxisPosition, height, modified));
     // setOff(gradientOffset(modified));
     // setXAxisPosition(0);
     setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bridge, chartData, dashed]);
+  }, [bridge, chartData, dashed, selectedLeg]);
 
   // useEffect(() => {
   //   setOff(gradientOffset(xAxisPosition, height, modifiedData));
@@ -150,10 +181,10 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     if (typeof off === 'number') {
-      setGradient(showGradientTags(off, color, dashedColor, id));
+      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [off]);
+  }, [off, color, dashedColor, selectedLeg]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
     if (!e) return; // Avoid null event in compact mode when tooltip is not rendered
@@ -161,6 +192,10 @@ const ChartPayoff = (props: ChartDataProps) => {
       const xValue = e.chartX;
       setCursorX(xValue ?? 0);
     }
+  };
+
+  const settingToChildLeg = (key: KeyType) => {
+    setSelectedLeg(key.label)
   };
 
   const updateChange = (val: number) => {
@@ -247,20 +282,20 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataList={modifiedData}
                       height={height}
                       labelPosition={labelPosition}
-                      // updateLabelPosition={updateLabelPosition}
+                    // updateLabelPosition={updateLabelPosition}
                     />
                   )
                 }
                 dot={
-                    <CustomDot
-                      base={baseValue}
-                      compact={compact || false}
-                      dataSize={modifiedData.length}
-                      special={breakPoints}
-                      dataList={modifiedData}
-                      updatePosition={updatePosition}
-                      updatePnlLabelPosition={setPnlLabelPosition}
-                    />
+                  <CustomDot
+                    base={baseValue}
+                    compact={compact || false}
+                    dataSize={modifiedData.length}
+                    special={breakPoints}
+                    dataList={modifiedData}
+                    updatePosition={updatePosition}
+                    updatePnlLabelPosition={setPnlLabelPosition}
+                  />
                 }
                 activeDot={false}
               />
@@ -301,8 +336,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
-                          ? '+' + '' + getNumberFormat(minimize)
-                          : '-' + getNumberFormat(minimize)}
+                            ? '+' + '' + getNumberFormat(minimize)
+                            : '-' + getNumberFormat(minimize)}
                       </text>
                       {downSide ? (
                         <></>
@@ -335,7 +370,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </XAxis>
             </AreaChart>
           </ResponsiveContainer>
-          {showKeys && <Key keys={key} onDashed={updateDashed} />}
+          {showKeys && <Key keys={key} onDashed={updateDashed} onChange={settingToChildLeg} />}
         </>
       )}
     </>

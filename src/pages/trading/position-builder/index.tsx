@@ -98,6 +98,7 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      console.log("🚀 ~ file: index.tsx:101 ~ getPositionBuilderSummary ~ orderLock:", orderLock, order)
       setOrderSummary({
         order,
         orderLock
@@ -105,6 +106,11 @@ const Index = () => {
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
     }
+  };
+  const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
+    const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    getPositionBuilderSummary(newPositionBuilderStrategies);
   };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
@@ -132,7 +138,6 @@ const Index = () => {
       console.error('Failed to submit order', error);
     }
   };
-
   
   return (
     <>
@@ -149,10 +154,8 @@ const Index = () => {
                     setChartData
                     setPositionBuilderStrategies
                   />
-                  <MainInfo 
-                    positionBuilderStrategies
-                    setPositionBuilderStrategies
-                    getPositionBuilderSummary
+                  <MainInfo
+                    handleAddStrategy = {handleAddStrategy}
                   />
                 </>
               }
