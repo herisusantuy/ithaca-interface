@@ -82,6 +82,33 @@
       }
     }
   }
+
+  // Market
+  .tabCard--market {
+
+    .tabCard--options,
+    .tabCard--digital-options,
+    .tabCard--forwards {
+      p {
+        white-space: normal;
+      }
+    }
+
+    .tabCard--forwards,
+    .tabCard--options,
+    .tabCard--digital-options {
+      .flex--market {
+        justify-content: space-between;
+      }
+
+      button {
+        width      : 16.125rem;
+        margin-left: auto;
+        position   : relative;
+        top        : -0.625rem;
+      }
+    }
+  }
 }
 
 @media (max-width: $mobile) {
@@ -221,6 +248,7 @@
 
         >div:nth-child(3) {
           width: 48%;
+
           .dropdownContainer--stories {
             width: 100%;
           }
@@ -243,5 +271,71 @@
         }
       }
     }
+  }
+
+  // Market
+  .tabCard--market {
+
+    .tabCard--options,
+    .tabCard--digital-options,
+    .tabCard--forwards  {
+      .flex--market {
+        >div:nth-child(1) {
+          width: 48%;
+
+          .radioButton--market {
+            width: 100% !important;
+          }
+        }
+
+        >div:nth-child(2) {
+          width: 48%;
+
+          .radioButton--market {
+            width: 100%;
+
+            .radioButton-option--market {
+              width: 100%;
+            }
+          }
+        }
+
+        >div:nth-child(3),
+        >div:nth-child(4),
+        >div:nth-child(5) {
+          width: 48%;
+
+          >div {
+            width: 100%;
+
+            >div {
+              width: 100%;
+
+              .flex--market {
+                width: 100%;
+
+                div {
+                  width: fit-content;
+                }
+              }
+            }
+          }
+        }
+
+        >div:nth-child(6),
+        >div:nth-child(7) {
+          width: 21%;
+        }
+
+        
+
+          button {
+            width: 100%;
+            top: 0.5rem;
+          }
+        
+      }
+    }
+
   }
 }
