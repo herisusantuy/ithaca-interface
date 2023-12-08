@@ -36,6 +36,10 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 import Toast from '@/UI/components/Toast/Toast';
 
+// Hooks
+
+import { useDevice } from '@/UI/hooks/useDevice';
+
 // Styles
 import styles from './dynamic-option-strategies.module.scss';
 import Toggle from '@/UI/components/Toggle/Toggle';
@@ -76,6 +80,7 @@ const Index = () => {
   const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map((s) => s.size));
   const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
   const [strategyType, setSetStrategyType] = useState<'LINEAR'|'STRUCTURED'>('LINEAR');
+  const device = useDevice()
 
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
@@ -282,76 +287,117 @@ const Index = () => {
                     setChartData
                     setPositionBuilderStrategies
                   />
-                  <h3>Dynamic Option Strategy</h3>
+                  {(device !== 'desktop') ? (
+                    <div className={styles.moduleHeader}>
+                      <h3 className='mb-0'>Dynamic Option Strategy</h3>
+                      <Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
+                            const newStrats = strategy.strategies.map((s) => {
+                              return {
+                                ...s,
+                                linked: side === 'right'
+                              }
+                            });
+                            setStrategy({...strategy,
+                            strategies: newStrats})
+                            if (side === 'right') {
+                                const largest = Math.max.apply(null,  sharedSize);
+                                setSharedSize(Array(newStrats.length).fill(largest));
+                                const strats = positionBuilderStrategies.map((s) => {
+                                  const leg = {
+                                    ...s.leg,
+                                    quantity: `${largest}` as `${number}`
+                                  };
+                                  return {
+                                    ...s,
+                                    leg
+                                  }
+                                });
+                                setPositionBuilderStrategies([...strats]);
+                                getPositionBuilderSummary([...strats]);
+                              }
+                            }
+                        }
+                      />
+                    </div>
+                  ) :
+                  (
+                    <h3>Dynamic Option Strategy</h3>
+                  )}
                   <div className='mb-24'>
-                    <Flex>
-                      <Flex>
-                        <div className={styles.prePackagedTitle}>Linear Combinations</div>
-                        <div className={styles.dropDownWrapper}>
-                          <DropdownMenu
-                            value={strategyType === 'LINEAR' ? {
-                              name: strategy.label,
-                              value: strategy.key,
-                            } : {
-                              name: '-',
-                              value: ''
-                            }}
-                            options={LINEAR_STRATEGIES.map(strat => {
-                              return {
-                                name: strat.label,
-                                value: strat.key,
-                              };
-                            })}
-                            onChange={option => handleStrategyChange(option, 'LINEAR')}
-                          />
+                    <Flex direction='row-space-between'>
+                      <Flex gap='gap-32'>
+                        <div className={styles.prePackagedContainer}>
+                          <div className={styles.prePackagedTitle}>Linear Combinations</div>
+                          <div className={styles.dropDownWrapper}>
+                            <DropdownMenu
+                              value={strategyType === 'LINEAR' ? {
+                                name: strategy.label,
+                                value: strategy.key,
+                              } : {
+                                name: '-',
+                                value: ''
+                              }}
+                              options={LINEAR_STRATEGIES.map(strat => {
+                                return {
+                                  name: strat.label,
+                                  value: strat.key,
+                                };
+                              })}
+                              onChange={option => handleStrategyChange(option, 'LINEAR')}
+                            />
+                          </div>
                         </div>
-                        <div className={`${styles.prePackagedTitle} ml-32`}>Structured Products</div>
-                        <div className={styles.dropDownWrapper}>
-                          <DropdownMenu
-                            value={strategyType === 'STRUCTURED' ? {
-                              name: strategy.label,
-                              value: strategy.key,
-                            } : {
-                              name: '-',
-                              value: ''
-                            }}
-                            options={STRUCTURED_STRATEGIES.map(strat => {
-                              return {
-                                name: strat.label,
-                                value: strat.key,
-                              };
-                            })}
-                            onChange={option => handleStrategyChange(option, 'STRUCTURED')}
-                          />
+                        <div className={styles.prePackagedContainer}>
+                          <div className={styles.prePackagedTitle}>Structured Products</div>
+                          <div className={styles.dropDownWrapper}>
+                            <DropdownMenu
+                              value={strategyType === 'STRUCTURED' ? {
+                                name: strategy.label,
+                                value: strategy.key,
+                              } : {
+                                name: '-',
+                                value: ''
+                              }}
+                              options={STRUCTURED_STRATEGIES.map(strat => {
+                                return {
+                                  name: strat.label,
+                                  value: strat.key,
+                                };
+                              })}
+                              onChange={option => handleStrategyChange(option, 'STRUCTURED')}
+                            />
+                          </div>
                         </div>
                       </Flex>
-                      <Toggle defaultState={linkToggle} size='sm' rightLabel='Link' rightLabelClass='link-icon' onChange={(side) => {
-                          const newStrats = strategy.strategies.map((s) => {
-                            return {
-                              ...s,
-                              linked: side === 'right'
+                      { (device === 'desktop') &&
+                        <Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
+                            const newStrats = strategy.strategies.map((s) => {
+                              return {
+                                ...s,
+                                linked: side === 'right'
+                              }
+                            });
+                            setStrategy({...strategy,
+                            strategies: newStrats})
+                            if (side === 'right') {
+                                const largest = Math.max.apply(null,  sharedSize);
+                                setSharedSize(Array(newStrats.length).fill(largest));
+                                const strats = positionBuilderStrategies.map((s) => {
+                                  const leg = {
+                                    ...s.leg,
+                                    quantity: `${largest}` as `${number}`
+                                  };
+                                  return {
+                                    ...s,
+                                    leg
+                                  }
+                                });
+                                setPositionBuilderStrategies([...strats]);
+                                getPositionBuilderSummary([...strats]);
+                              }
                             }
-                          });
-                          setStrategy({...strategy,
-                          strategies: newStrats})
-                          if (side === 'right') {
-                              const largest = Math.max.apply(null,  sharedSize);
-                              setSharedSize(Array(newStrats.length).fill(largest));
-                              const strats = positionBuilderStrategies.map((s) => {
-                                const leg = {
-                                  ...s.leg,
-                                  quantity: `${largest}` as `${number}`
-                                };
-                                return {
-                                  ...s,
-                                  leg
-                                }
-                              });
-                              setPositionBuilderStrategies([...strats]);
-                              getPositionBuilderSummary([...strats]);
-                            }
-                          }
-                      }/>
+                        }/>
+                      }
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>

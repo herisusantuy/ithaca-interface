@@ -8,6 +8,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: rem(6);
+  width: rem(90);
 }
 
 .container {
@@ -21,7 +22,7 @@
   transition: $transition_all;
   position: relative;
   height: rem(34);
-  width: rem(90);
+  
 
   &:before {
     content: '';

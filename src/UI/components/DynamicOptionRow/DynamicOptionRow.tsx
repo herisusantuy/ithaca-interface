@@ -29,6 +29,7 @@ import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { useDevice } from '@/UI/hooks/useDevice';
 dayjs.extend(duration)
 
 type DynamicOptionRowProps = {
@@ -100,7 +101,8 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
   const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
-  
+  const device = useDevice()
+
   useEffect(() => {
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -270,6 +272,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
+            {(device !== 'desktop') && <p>Product</p>}
             <RadioButton
               options={PRODUCT_OPTIONS}
               selectedOption={product}
@@ -279,6 +282,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.type}>
+            {(device !== 'desktop') && <p>Type</p>}
             <RadioButton
               options={typeList}
               selectedOption={type}
@@ -288,6 +292,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.side}>
+            {(device !== 'desktop') && <p>Side</p>}
             <RadioButton
               options={[
                 { option: <Plus />, value: 'BUY' },
@@ -300,7 +305,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.size}>
+            {(device !== 'desktop') && <p>Size</p>}
             <Input
+              className={styles.dynamicOptionsInput}
               canLink={true}
               isLinked={linked}
               onLink={(link) => {
@@ -310,12 +317,12 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               type='number'
               
               value={size}
-              width={105}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
           </div>
           <div className={styles.strike}>
+            {(device !== 'desktop') && <p>Strike</p>}
             {product !== 'Forward' ? (
               <DropdownMenu
                 value={strike ? { name: strike, value: strike } : undefined}
@@ -328,10 +335,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             )}
           </div>
           <div className={styles.unitPrice}>
+            {(device !== 'desktop') && <p>Unit Price</p>}
             <Input
+              className={styles.dynamicOptionsInput}
               type='number'
               value={unitPrice}
-              width={105}
               icon={<LogoUsdc />}
               footerText={product === 'option' ? `IV ${calcIv()}` : undefined}
               onChange={({ target }) => {
