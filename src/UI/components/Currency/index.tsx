@@ -13,6 +13,19 @@ import { getNumber } from '@/UI/utils/Numbers';
 
 import styles from './currency.module.scss'
 
+
+// setOrderSummary({
+//   order,
+//   orderLock
+// })
+// setOrderSummari(undefined)
+// interface ICurrency {
+//   setOrderSummary: undefined | OrderType
+// }
+
+// type OrderType = {
+
+// }
 export const Currency = ({
   setOrderSummary,
   setChartData,

@@ -321,7 +321,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
       {!compact && riskyOrRiskless === 'Risky Earn' && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label='Risk' lowerLabel='Capital At Risk' labelClassName='justify-end'>
+          <LabeledInput label={riskyOrRiskless === 'Risky Earn' ?'Risk' : 'Lend'} lowerLabel={riskyOrRiskless === 'Risky Earn' ?'Capital At Risk' : 'Loan'}labelClassName='justify-end'>
             <Input
               type='number'
               value={capitalAtRisk}
