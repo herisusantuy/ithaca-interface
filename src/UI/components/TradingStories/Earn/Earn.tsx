@@ -304,7 +304,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           Select Target Price <LogoEth />
         </h3>
       )}
-      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='special-slider display-inline-flex mb-7'>
+      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='special-slider mb-7'>
         <Slider
           value={strike}
           min={strikes[0]}
