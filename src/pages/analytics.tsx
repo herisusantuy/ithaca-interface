@@ -56,11 +56,10 @@ const Analytics = () => {
         mainValue: formatNumber(interest, 'string')
       }, 
     ]);
-    const test = await ithacaSDK.analytics.openInterestByProduct('WETH', 'USDC', '2023-01-01', '2023-12-31')
+    const byProduct = await ithacaSDK.analytics.openInterestByProduct('WETH', 'USDC', '2023-01-01', '2023-12-31')
     const count = await ithacaSDK.analytics.dailyVolume('WETH', 'USDC', '2023-01-01', '2023-12-31')
     const byStrike = await ithacaSDK.analytics.openInterestByStrike('WETH', 'USDC', '2023-01-01', '2023-12-31', 1400, 2200)
-    const a = await ithacaSDK.analytics.trades('WETH', 'USDC', '2023-01-01', '2023-12-31')
-    console.log(test)
+    const trades = await ithacaSDK.analytics.trades('WETH', 'USDC', '2023-01-01', '2023-12-31')
   }, [])
   return (
     <>

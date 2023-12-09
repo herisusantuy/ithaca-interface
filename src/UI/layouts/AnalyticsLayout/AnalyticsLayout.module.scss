@@ -24,3 +24,17 @@
     width: 100%;
   }
 }
+
+
+@media (max-width: $tablet) {
+
+  // Analytics Sections 
+  .container {
+    flex-direction: column;
+    .leftPanel,
+    .rightPanel{
+      width: 100%;
+    }
+  }
+
+}
