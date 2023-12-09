@@ -16,7 +16,7 @@ export type ProductOption = {
 interface IMainInfo {
   handleAddStrategy: (strategy: PositionBuilderStrategy) => void
 }
-export const MainInfo = ({ 
+const MainInfo = ({ 
   handleAddStrategy, 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: IMainInfo) => {
@@ -122,3 +122,4 @@ export const MainInfo = ({
     </>
   )
 }
+export default MainInfo;

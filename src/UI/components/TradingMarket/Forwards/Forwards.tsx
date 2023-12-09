@@ -9,7 +9,6 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Components
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Input from '@/UI/components/Input/Input';
 import LogoEth from '@/UI/components/Icons/LogoEth';

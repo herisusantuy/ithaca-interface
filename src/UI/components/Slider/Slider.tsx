@@ -45,7 +45,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
     console.log('max',((maxValue - min) / (max - min)) * 100)
     setMinPos(range ? ((minValue - min) / (max - min)) * 100 : 0);
     setMaxPos(((maxValue - min) / (max - min)) * 100);
-  }, [maxValue, minValue, min, max]);
+  }, [maxValue, minValue, min, max, range]);
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
