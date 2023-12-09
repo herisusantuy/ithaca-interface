@@ -49,7 +49,7 @@ export const Currency = ({
       <div className={styles.currency__info}>
         <LabelValue label='Next Auction' value={<CountdownTimer />} />
       </div>
-      <div className={styles.currency__info}>
+      {/* <div className={styles.currency__info}>
         <LabelValue
           label='Last Auction Price'
           value='1629'
@@ -61,7 +61,7 @@ export const Currency = ({
             </>
           }
         />
-      </div>
+      </div> */}
     </Flex>
   );
 };

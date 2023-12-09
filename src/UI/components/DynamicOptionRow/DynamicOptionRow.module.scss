@@ -5,11 +5,11 @@
   grid-column-gap: rem(6);
   grid-row-gap: rem(12);
   align-items: center;
-  padding: rem(16);
   @include breakpoint (tablet) {
     grid-template-columns: calc((34% - rem(40)) - ( rem(10) * 4 )) rem(40) 22% 22% 22%;
     grid-template-rows: repeat(2, auto);
     grid-column-gap: rem(10);
+    // padding: rem(16);
   }
   @include breakpoint (desktop) {
     grid-template-columns: auto;
@@ -17,7 +17,12 @@
   }
 
   .dynamicOptionsInput {
-    width: 100%;
+    @include breakpoint (tablet) {
+      width: 100%;
+    }
+    @include breakpoint (desktop) {
+      width: 100px;
+    }
   }
 
   p {
@@ -102,9 +107,16 @@
 }
 
 .action {
-  grid-area: 1 / 9 / 2 / 10;
-  width: rem(30);
-  height: rem(34);
+  grid-area: 1 / 7 / 2 / 8;
+  button {
+    @include spacing(padding, 6, 'all');
+    border-radius: rem(6);
+    background: var(--white-10);
+    height: rem(16);
+    width: rem(16);
+    @include spacing(padding, 8, 'top+bottom');
+    @include spacing(padding, 4, 'left+right');
+  }
 }
 
 .forwardPlaceholder {

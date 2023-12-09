@@ -52,6 +52,9 @@
 .collateral,
 .premium {
   justify-content: space-between;
+  @include breakpoint (desktop) {
+    justify-content: right;
+  }
 }
 
 .title {

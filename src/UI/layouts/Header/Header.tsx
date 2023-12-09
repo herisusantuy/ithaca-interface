@@ -21,6 +21,7 @@ import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
+import { useRouter } from 'next/navigation';
 
 // Types
 type HeaderProps = {
@@ -48,7 +49,7 @@ const Header = ({ className }: HeaderProps) => {
   const closeRewardsDropdown = () => {
     setIsRewardsOpen(false);
   };
-
+  const router = useRouter();
   // Hook to close the dropdown when clicking outside
   useClickOutside(rewardsDropdownRef, closeRewardsDropdown);
 
@@ -60,7 +61,11 @@ const Header = ({ className }: HeaderProps) => {
       <header className={`${styles.header} ${className || ''}`}>
         <div className={styles.container}>
           <div className={styles.left}>
+              <span className={styles.logo} onClick={() => { 
+            router.push('/trading/position-builder')
+            }}>
             <Logo />
+            </span>
             {!tabletBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>

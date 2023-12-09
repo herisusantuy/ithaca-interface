@@ -27,7 +27,7 @@ const Analytics = () => {
       <Meta />
       <Main>
         <Container margin='mb-15 mt-8'>
-          <h1>Analytics</h1>
+          {/* <h1>Analytics</h1> */}
           <Flex direction='row-center' margin='mb-24' gap='gap-12 column-tablet-start gap-tablet-8'>
             <p className='fs-xs'>Date Range</p>
             <DatePicker />

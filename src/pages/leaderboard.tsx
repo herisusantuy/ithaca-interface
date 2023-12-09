@@ -21,7 +21,7 @@ const Leaderboard = () => {
       <Meta />
       <Main>
         <Container margin='mb-15 mt-8'>
-          <h1>Leaderboard</h1>
+          {/* <h1>Leaderboard</h1> */}
           <Flex direction='row-space-between' gap='gap-15 wrap-tablet'>
             {LEADERBOARD_CARDS.map((data, index) => (
               <Card key={index} {...data} />
