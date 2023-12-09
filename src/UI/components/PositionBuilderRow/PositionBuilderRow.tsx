@@ -91,7 +91,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
 
   const handleStrikeChange = (strike: string) => {
     setStrike(strike);
-    setUnitPrice(`${contracts[strike].referencePrice}`);
+    setUnitPrice(`${contracts[strike].referencePrice > 1 ? contracts[strike].referencePrice.toFixed(0) : contracts[strike].referencePrice}`);
   };
 
   const calcCollateral = () => {

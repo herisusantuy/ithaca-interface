@@ -32,7 +32,7 @@ import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } f
 import useToast from '@/UI/hooks/useToast';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -464,7 +464,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         </Flex>
       )}
 
-      {!compact && showInstructions && <BarrierDescription upOrDown={upOrDown} buyOrSell={buyOrSell} inOrOut={inOrOut} />}
+      {!compact && showInstructions && <BarrierDescription upOrDown={upOrDown} buyOrSell={buyOrSell} inOrOut={inOrOut} currentExpiryDate={currentExpiryDate.toString()} />}
 
       <Toast toastList={toastList} position={position} />
 

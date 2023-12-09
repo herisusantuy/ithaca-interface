@@ -156,6 +156,9 @@
     gap: rem(3);
     color: var(--white-60);
   }
+  .italic {
+    font-style: italic;
+  }
 }
 
 @media (max-width: $desktop) {

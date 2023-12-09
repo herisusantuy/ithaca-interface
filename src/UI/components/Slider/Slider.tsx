@@ -24,11 +24,12 @@ type SliderProps = {
   label?: number;
   showLabel?: boolean;
   title?: string;
+  lockFirst?: boolean;
   onChange?: (value: ValueProps) => void;
 };
 
-const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange, extended = false }: SliderProps) => {
-  
+const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel = true, onChange, extended = false, lockFirst = false }: SliderProps) => {
+
   const lastSegment = useLastUrlSegment()
 
   const [minValue, setMinValue] = useState<number>(range ? (value ? value.min : min) : min);
@@ -40,20 +41,32 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
   const controlWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMinPos(((minValue - min) / (max - min)) * 100);
+    console.log('min',((minValue - min) / (max - min)) * 100)
+    console.log('max',((maxValue - min) / (max - min)) * 100)
+    setMinPos(range ? ((minValue - min) / (max - min)) * 100 : 0);
     setMaxPos(((maxValue - min) / (max - min)) * 100);
   }, [maxValue, minValue, min, max]);
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
-    setMinValue(newMinVal);
-    if (onChange) onChange({ min: newMinVal, max: maxValue });
+    if (lockFirst && newMinVal === min) {
+      setMinValue(stepList[1]);
+    }
+    else {
+      setMinValue(newMinVal);
+      if (onChange) onChange({ min: newMinVal, max: maxValue });
+    }
   };
 
   const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMaxVal = Math.max(+e.target.value, minValue);
-    setMaxValue(newMaxVal);
-    if (onChange) onChange({ min: minValue, max: newMaxVal });
+    if (lockFirst && newMaxVal === min) {
+      setMinValue(stepList[1]);
+    }
+    else {
+      setMaxValue(newMaxVal);
+      if (onChange) onChange({ min: minValue, max: newMaxVal });
+    }
   };
 
   const getLabelClassName = (item: number) => {
@@ -71,17 +84,27 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
 
   const setMinMaxValue = (item: number) => {
     if (!range) {
-      setMaxValue(item);
+      if (lockFirst && item === min) {
+        setMaxValue(stepList[1]);
+      }
+      else {
+        setMaxValue(item);
+        if (onChange) onChange({ min: minValue, max: item });
+      }
     } else {
       const betweenVal = minValue + (maxValue - minValue) / 2;
       if (item > maxValue) {
         setMaxValue(item);
+        if (onChange) onChange({ min: minValue, max: item });
       } else if (item < minValue) {
         setMinValue(item);
+        if (onChange) onChange({ min: item, max: maxValue });
       } else if (betweenVal < item) {
         setMaxValue(item);
+        if (onChange) onChange({ min: minValue, max: item });
       } else if (betweenVal >= item) {
         setMinValue(item);
+        if (onChange) onChange({ min: item, max: maxValue });
       }
     }
   };
@@ -121,7 +144,13 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
           }
         }
       } else {
-        setMaxValue(checkValidMinMaxValue(stepList, value));
+        const validValue = checkValidMinMaxValue(stepList, value)
+        if (lockFirst && validValue === min) {
+          setMaxValue(stepList[1]);
+        }
+        else {
+          setMaxValue(validValue);
+        }
       }
     } else {
       if (range) {
@@ -138,13 +167,19 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
           }
         }
       } else {
-        setMaxValue(checkValidMinMaxValue(stepList, value));
+        const validValue = checkValidMinMaxValue(stepList, value)
+        if (lockFirst && validValue === min) {
+          setMaxValue(stepList[1]);
+        }
+        else {
+          setMaxValue(validValue);
+        }
       }
     }
   };
 
   return (
-    <div className={`slider--${lastSegment} ${showLabel ? styles.container : styles.containerNoLabels}`}>
+    <div className={`slider--${lastSegment} ${showLabel ? extended ? range ? styles.containerExtendRange : styles.containerExtend : styles.container : styles.containerNoLabels}`}>
       <div className={styles.inputWrapper}>
         <input
           className={`${styles.input} ${!range ? styles.hide : ''}`}
@@ -168,7 +203,8 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
       <div className={styles.sliderEffect} onClick={event => getValuePosition(event)}></div>
       <div className={styles.controlWrapper} onClick={event => getValuePosition(event)} ref={controlWrapperRef}>
         <div className={`${styles.control} ${!range ? styles.hide : ''}`} style={{ left: `${minPos}%` }} />
-        {extended &&<div className={styles.railExtend}></div>}
+        {extended && range && <div className={styles.railExtendRange}></div>}
+        {extended && !range && <div className={styles.railExtend}></div>}
         <div className={styles.rail}>
           <div className={styles.innerRail} style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }} />
         </div>

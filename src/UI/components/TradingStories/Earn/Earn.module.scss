@@ -1,0 +1,12 @@
+.label {
+    color: var(--white);
+    @include font-size('text-xs', 'regular');
+    margin-top: rem(10);
+    margin-right: rem(8);
+}
+.value {
+    margin-top: rem(8);
+    color: var(--white);
+    @include font-size('text-md', 'bold');
+    margin-right: rem(6);
+}

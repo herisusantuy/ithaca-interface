@@ -53,17 +53,25 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
 
-  const handleCapitalAtRiskChange = async (amount: string) => {
+  const handleCapitalAtRiskChange = (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
     setCapitalAtRisk(capitalAtRisk);
-    await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
   };
 
-  const handleBetTypeChange = async (betType: 'INSIDE' | 'OUTSIDE') => {
+  const handleBetTypeChange = (betType: 'INSIDE' | 'OUTSIDE') => {
     setInsideOrOutside(betType);
-    await handleStrikeChange(strike, betType === 'INSIDE', getNumber(capitalAtRisk));
   };
 
+  useEffect(() => {
+    handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk))
+  }, [capitalAtRisk, strike, insideOrOutside])
+
+  const handleTargetEarnChange = async (amount:string) => {
+    const targetEarn = getNumberValue(amount);
+    setTargetEarn(targetEarn);
+    // await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
+
+  };
 
   const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number) => {
     if (isInvalidNumber(capitalAtRisk)) {
@@ -199,7 +207,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             showLabel={false}
             onChange={strike => {
               setStrike(strike);
-              handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
+              // handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
             }}
             range
           />
@@ -227,7 +235,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           step={100}
           onChange={strike => {
             setStrike(strike);
-            handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
+            // handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
           }}
           range
         />
@@ -239,6 +247,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={capitalAtRisk}
+              width={85}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
               icon={<LogoUsdc />}
             />
@@ -246,8 +255,9 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return {getAPY()}</span>}>
             <Input
               type='number'
-              value={capitalAtRisk}
-              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
+              value={targetEarn}
+              width={85}
+              onChange={({ target }) => handleTargetEarnChange(target.value)}
               icon={<LogoUsdc />}
             />
           </LabeledInput>

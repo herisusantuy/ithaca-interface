@@ -46,9 +46,6 @@ const BarrierInstructions = ({inOrOut, buyOrSell, upOrDown} : BarrierInscription
           <p>
             if <LogoEth /> at expiry beyond barrier
           </p>
-          <p>
-            if <LogoEth /> at expiry beyond barrier
-          </p>
         </span>
       </p>
     </div>

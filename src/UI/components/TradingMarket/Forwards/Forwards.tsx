@@ -208,11 +208,6 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             />
           </LabeledControl>
 
-          {/** Mising dropdown options */}
-          <LabeledControl label='Strike'>
-            <DropdownMenu disabled options={[]} iconEnd={<LogoUsdc />} />
-          </LabeledControl>
-
           <LabeledControl label='Unit Price'>
             <Input
               type='number'

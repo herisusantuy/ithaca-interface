@@ -15,7 +15,7 @@ const BetInstructions = ({ type = 'INSIDE' }: BetInstructionType) => {
         Bet & Earn Return if <LogoEth /> at Expiry
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inisde
+            Inside
           </span>
           <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Outside
@@ -27,7 +27,7 @@ const BetInstructions = ({ type = 'INSIDE' }: BetInstructionType) => {
         i. Bet on
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inisde
+            Inside
           </span>
           <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Outside
@@ -41,7 +41,7 @@ const BetInstructions = ({ type = 'INSIDE' }: BetInstructionType) => {
         iv. Expected Return reflects the probability of at Expiry{' '}
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inisde
+            Inside
           </span>
           <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Outside

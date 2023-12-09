@@ -212,7 +212,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
+      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-2'>
         {!compact && (
           <>
             <LabeledControl label='Type'>

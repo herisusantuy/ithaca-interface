@@ -175,7 +175,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   return (
     <>
       {renderInstruction()}
-      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
+      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-2'>
         {!compact && (
           <>
             <LabeledControl label='Type'>
