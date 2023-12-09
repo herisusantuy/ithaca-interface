@@ -35,7 +35,7 @@
   @include font-size('text-sm', 'bold');
   height: rem(40);
   border-radius: rem(20);
-  width: rem(148);
+  // width: rem(148);
   &:before {
     border-radius: rem(20) !important;
   }

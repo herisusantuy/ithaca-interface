@@ -156,3 +156,7 @@
   justify-content: center;
   font-family: $lato;
 }
+
+.clearAll {
+  @include font-size('text-xs', 'regular');
+}

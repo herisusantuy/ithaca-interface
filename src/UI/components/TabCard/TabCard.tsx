@@ -49,7 +49,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
     setRadioChosen(activeTab.radioOptions && activeTab.radioOptions[0].value || '')
     const options = tabs.filter(tab => tab.id !== activeTab.id);
     setOpenOptions(options)
-  }, [activeTab])
+  }, [activeTab, tabs])
 
   useEffect(() => {
   }, [openOptions, activeDropdown])

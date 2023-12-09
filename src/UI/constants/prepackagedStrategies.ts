@@ -386,8 +386,8 @@ export const LINEAR_STRATEGIES = [
             }
         ]
     }, {
-        "label": "Straddles",
-        "key": "straddles",
+        "label": "Straddle",
+        "key": "straddle",
         "strategies": [
             {
                 "product": "option",
@@ -409,8 +409,8 @@ export const LINEAR_STRATEGIES = [
         ]
     },
     {
-        "label": "Strangles",
-        "key": "strangles",
+        "label": "Strangle",
+        "key": "strangle",
         "strategies": [
             {
                 "product": "option",
