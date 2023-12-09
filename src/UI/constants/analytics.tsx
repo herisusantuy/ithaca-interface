@@ -19,7 +19,7 @@ export const ANALYTICS_CARD_DATA: AnalyticsCardData[] = [
   {
     title: 'Total Trading Volume',
     mainValue: '593.1k',
-    changeValue: '+52.29',
+    changeValue: '-',
     currencySymbol: <LogoUsdc />,
     currency: 'USDC',
     isChangePositive: true,
@@ -27,13 +27,13 @@ export const ANALYTICS_CARD_DATA: AnalyticsCardData[] = [
   {
     title: 'Total Contracts Traded',
     mainValue: '3.1k',
-    changeValue: '-10.39',
+    changeValue: '-',
     isChangePositive: false,
   },
   {
     title: 'Total Value Locked',
     mainValue: '13.1k',
-    changeValue: '+29.1',
+    changeValue: '-',
     currencySymbol: <LogoEth />,
     currency: 'WETH',
     isChangePositive: true,
@@ -41,7 +41,7 @@ export const ANALYTICS_CARD_DATA: AnalyticsCardData[] = [
   {
     title: 'Open Interest',
     mainValue: '593.1k',
-    changeValue: '+29.1',
+    changeValue: '-',
     currencySymbol: <LogoEth />,
     currency: 'WETH',
     isChangePositive: true,

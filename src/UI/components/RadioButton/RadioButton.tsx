@@ -34,7 +34,6 @@ const RadioButton = ({
   const renderOptions = (optionList: { option: string | ReactNode; value: string }[]) => {
 
     return optionList.map(option => {
-      console.log("Options", option.value, selectedOption)
       return (
         <div key={`${name}${option.value}`} 
         className={`radioButton-option--${lastSegment} ${size === 'compact' ? styles.optionCompact : size === 'large' ? styles.optionLarge : styles.option}`}>

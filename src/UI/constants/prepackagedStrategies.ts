@@ -20,8 +20,30 @@ export enum SIDE {
 
 export const STRUCTURED_STRATEGIES: PrepackagedStrategy[] = [
     {
-        "label": "Bet",
-        "key": "bet",
+        "label": "Bet (Inside)",
+        "key": "bet-inside",
+        "strategies": [
+            {
+                "product": "digital-option",
+                "type": "BinaryCall",
+                "side": SIDE.BUY,
+                "size": 1,
+                "strike": 0,
+                "linked": true
+            },
+            {
+                "product": "digital-option",
+                "type": "BinaryCall",
+                "side": SIDE.SELL,
+                "size": 1,
+                "strike": 2,
+                "linked": true
+            }
+        ]
+    },
+    {
+        "label": "Bet (Outside)",
+        "key": "bet-outside",
         "strategies": [
             {
                 "product": "digital-option",

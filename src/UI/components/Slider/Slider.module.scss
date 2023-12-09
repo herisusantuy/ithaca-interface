@@ -27,6 +27,22 @@
   height: rem(30);
 }
 
+
+.containerExtend {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - rem(25));
+  height: rem(30);
+}
+
+.containerExtendRange {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - rem(50));
+  margin: auto;
+  height: rem(30);
+}
+
 .containerNoLabels {
   display: flex;
   flex-direction: column;
@@ -89,11 +105,22 @@
   }
 }
 
-.railExtend {
+.railExtendRange {
   position: absolute;
   width: calc(100% + rem(50));
   top: 50%;
   left: rem(-25);
+  transform: translateY(-50%);
+  height: rem(1.5);
+  border-radius: rem(4);
+  background-color: var(--white-30);
+}
+
+.railExtend {
+  position: absolute;
+  width: calc(100% + rem(25));
+  top: 50%;
+  left: rem(0);
   transform: translateY(-50%);
   height: rem(1.5);
   border-radius: rem(4);

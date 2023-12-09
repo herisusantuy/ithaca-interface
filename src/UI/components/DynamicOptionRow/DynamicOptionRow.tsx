@@ -100,7 +100,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   const [strike, setStrike] = useState<string | undefined>(strategy.product === 'Forward' ? '-' : undefined);
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
-  const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
+  const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice > 1 ? contracts['-'].referencePrice.toFixed(0) : contracts['-'].referencePrice}` : '');
   const device = useDevice()
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     let price = '';
     if (product === 'Forward') {
       const newStrike = '-'
-      price = `${strikeList[newStrike].referencePrice}`;
+      price = `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
       setUnitPrice(price);
       setStrike(newStrike);
       if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
@@ -198,7 +198,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       const strikePoint = index + strategy.strike
       const newStrike = list[strikePoint < 0 ? 0 : strikePoint >= list.length ? list.length - 1 : strikePoint];
       setStrike(newStrike);
-       price = `${strikeList[newStrike].referencePrice}`;
+       price = `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
       setUnitPrice(price);
       if (!newStrike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
       const leg = {
@@ -235,7 +235,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
 
   const handleStrikeChange = (strike: string) => {
     setStrike(strike);
-    const price = `${strikeList[strike].referencePrice}`;
+    const price = `${strikeList[strike].referencePrice > 1 ? strikeList[strike].referencePrice.toFixed(0) : strikeList[strike].referencePrice}`;
     setUnitPrice(price);
     if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
     const leg = {

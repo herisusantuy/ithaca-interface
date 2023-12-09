@@ -2,6 +2,8 @@ import { StateCreator } from 'zustand';
 import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { PublicClient, WalletClient } from 'wagmi';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat)
 
 export interface AuctionTimes {
   hour: number;
@@ -161,12 +163,12 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
           economics: { currencyPair, expiry, strike },
           payoff,
         } = contract;
-
+        const date = parseInt(dayjs(expiry.toString(), 'YYMMDDHHm').format('YYYYMMDD'));
         if (!result[currencyPair]) result[currencyPair] = {};
-        if (!result[currencyPair][expiry]) result[currencyPair][expiry] = {};
-        if (!result[currencyPair][expiry][payoff]) result[currencyPair][expiry][payoff] = {};
+        if (!result[currencyPair][date]) result[currencyPair][date] = {};
+        if (!result[currencyPair][date][payoff]) result[currencyPair][date][payoff] = {};
 
-        result[currencyPair][expiry][payoff][strike ?? '-'] = contract;
+        result[currencyPair][date][payoff][strike ?? '-'] = contract;
 
         return result;
       },

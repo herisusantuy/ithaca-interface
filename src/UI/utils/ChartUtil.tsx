@@ -113,11 +113,11 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
           </>) : ''}
       </linearGradient>
 
-      <linearGradient id={`dashGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
+      {dashedColor && <linearGradient id={`dashGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
         <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
         <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
         <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
-      </linearGradient>
+      </linearGradient>}
     </defs>
   );
 };

@@ -31,7 +31,7 @@ import ReadyState from '@/UI/utils/ReadyState';
 // Styles
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
-import { MainInfo } from './MainInfo';
+import MainInfo from './MainInfo';
 import { Currency } from '@/UI/components/Currency';
 
 // Types
