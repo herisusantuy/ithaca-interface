@@ -29,6 +29,7 @@ import Button from '../Button/Button';
 import Remove from '../Icons/Remove';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { useDevice } from '@/UI/hooks/useDevice';
 dayjs.extend(duration)
 
 type DynamicOptionRowProps = {
@@ -100,7 +101,8 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
   const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice}` : '');
-  
+  const device = useDevice()
+
   useEffect(() => {
     handleStrikeListUpdate()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -270,6 +272,15 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
+            {(device !== 'desktop') && 
+            <>
+              <div className={styles.removeButton}>
+                <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+                  <Remove />
+                </Button>
+              </div>
+              <p className={styles.subtitle}>Product</p>
+            </>}
             <RadioButton
               options={PRODUCT_OPTIONS}
               selectedOption={product}
@@ -279,6 +290,16 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.type}>
+            {(device !== 'desktop') ?
+            <>
+              <p className={styles.subtitle}>Type</p>
+              <RadioButton
+                options={typeList}
+                selectedOption={type}
+                name={`${id}-type`}
+                onChange={handleTypeChange}
+              />
+            </> :
             <RadioButton
               options={typeList}
               selectedOption={type}
@@ -286,8 +307,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               onChange={handleTypeChange}
               width={170}
             />
+            }
+            
           </div>
           <div className={styles.side}>
+            {(device !== 'desktop') && <p className={styles.subtitle}>Side</p>}
             <RadioButton
               options={[
                 { option: <Plus />, value: 'BUY' },
@@ -300,7 +324,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.size}>
+            {(device !== 'desktop') && <p className={styles.subtitle}>Size</p>}
             <Input
+              className={styles.dynamicOptionsInput}
               canLink={true}
               isLinked={linked}
               onLink={(link) => {
@@ -310,12 +336,12 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               type='number'
               
               value={size}
-              width={105}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
           </div>
           <div className={styles.strike}>
+            {(device !== 'desktop') && <p className={styles.subtitle}>Strike</p>}
             {product !== 'Forward' ? (
               <DropdownMenu
                 value={strike ? { name: strike, value: strike } : undefined}
@@ -328,10 +354,11 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             )}
           </div>
           <div className={styles.unitPrice}>
+            {(device !== 'desktop') && <p className={styles.subtitle}>Unit Price</p>}
             <Input
+              className={styles.dynamicOptionsInput}
               type='number'
               value={unitPrice}
-              width={105}
               icon={<LogoUsdc />}
               footerText={product === 'option' ? `IV ${calcIv()}` : undefined}
               onChange={({ target }) => {
@@ -351,11 +378,13 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               }
             />
           </div>
-          <div className={styles.action}>
-            <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
-              <Remove />
-            </Button>
-          </div>
+          {(device === 'desktop') &&
+            <div className={styles.action}>
+              <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+                <Remove />
+              </Button>
+            </div>
+          }
         </div>
       </Panel>
     </>

@@ -1,15 +1,15 @@
 .flex {
   display: flex;
   position: relative;
+  flex-wrap: wrap;
   width: 100%;
+  @include breakpoint (desktop) {
+    width: auto;
+  }
 }
 
 .flex--row {
   flex-direction: row;
-
-  @include breakpoint(tablet) {
-    flex-direction: column;
-  }
 }
 
 .flex--row-center {
@@ -38,6 +38,12 @@
 
 .flex--column {
   flex-direction: column;
+}
+
+.flex--column-space-between {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .flex--row-space-between {

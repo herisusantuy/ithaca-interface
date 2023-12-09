@@ -189,7 +189,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       {renderInstruction()}
 
       {compact && (
-        <Flex margin='display-inline-flex mb-7'>
+        <Flex margin='mb-7'>
           <Slider
             value={strike}
             min={strikes[0]}

@@ -30,7 +30,7 @@
     color: var(--white);
 
     @include breakpoint(tablet) {
-      @include font-size('text-lg', 'semibold');
+      @include font-size('text-sm', 'semibold');
     }
   }
 }

@@ -15,3 +15,9 @@
 .labelHidden {
   visibility: hidden;
 }
+
+@media (max-width: $desktop){
+  .container{
+    flex: initial;
+  }
+}

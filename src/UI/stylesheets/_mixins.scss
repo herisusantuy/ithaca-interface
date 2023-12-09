@@ -121,6 +121,11 @@ $spacings: (
   }
 }
 
+// Variables 
+$mobile: rem(590);
+$tablet: rem(695);
+$desktop: rem(1440);
+
 // Breakpoints
 $breakpoints: (
   mobile: rem(390),
@@ -131,7 +136,7 @@ $breakpoints: (
 // Mixin for breakpoints
 @mixin breakpoint($point) {
   @if map-has-key($breakpoints, $point) {
-    @media (max-width: map-get($breakpoints, $point)) {
+    @media (min-width: map-get($breakpoints, $point)) {
       @content;
     }
   } @else {

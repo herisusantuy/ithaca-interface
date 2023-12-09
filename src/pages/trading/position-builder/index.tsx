@@ -1,6 +1,5 @@
 // Packages
 import { useState } from 'react';
-import dayjs from 'dayjs';
 
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
@@ -12,12 +11,7 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Components
 import Meta from '@/UI/components/Meta/Meta';
-import LabelValue from '@/UI/components/LabelValue/LabelValue';
-import CountdownTimer from '@/UI/components/CountdownTimer/CountdownTimer';
-import Asset from '@/UI/components/Asset/Asset';
-import LogoEth from '@/UI/components/Icons/LogoEth';
 import TableStrategy from '@/UI/components/TableStrategy/TableStrategy';
-import PositionBuilderRow from '@/UI/components/PositionBuilderRow/PositionBuilderRow';
 import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import PayoffOutline from '@/UI/components/Icons/PayoffOutline';
@@ -27,7 +21,6 @@ import Toast from '@/UI/components/Toast/Toast';
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
-import Flex from '@/UI/layouts/Flex/Flex';
 import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
 // Utils
@@ -38,6 +31,8 @@ import ReadyState from '@/UI/utils/ReadyState';
 // Styles
 import styles from './position-builder.module.scss';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import { MainInfo } from './MainInfo';
+import { Currency } from '@/UI/components/Currency';
 
 // Types
 export interface PositionBuilderStrategy {
@@ -67,7 +62,7 @@ const Index = () => {
   const { toastList, position, showToast } = useToast();
 
   // Store
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, expiryList, setCurrentExpiryDate } =
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } =
     useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
@@ -103,6 +98,7 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      console.log("🚀 ~ file: index.tsx:101 ~ getPositionBuilderSummary ~ orderLock:", orderLock, order)
       setOrderSummary({
         order,
         orderLock
@@ -111,7 +107,6 @@ const Index = () => {
       console.error('Order estimation for position builder failed', error);
     }
   };
-
   const handleAddStrategy = (strategy: PositionBuilderStrategy) => {
     const newPositionBuilderStrategies = [...positionBuilderStrategies, strategy];
     setPositionBuilderStrategies(newPositionBuilderStrategies);
@@ -154,63 +149,15 @@ const Index = () => {
             <Sidebar
               leftPanel={
                 <>
-                  <Flex gap='gap-12' margin='mb-24'>
-                    <Asset icon={<LogoEth />} label='ETH' />
-                    <LabelValue
-                      label='Expiry Date'
-                      valueList={expiryList.map(date => ({
-                        label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                        value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
-                      }))}
-                      onChange={value => {
-                        setOrderSummary(undefined);
-                        setPositionBuilderStrategies([]);
-                        setChartData(undefined);
-                        setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
-                      }}
-                      value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}
-                      hasDropdown={true}
-                    />
-                    <LabelValue label='Next Auction' value={<CountdownTimer />} />
-                    {/* <LabelValue
-                      label='Last Auction Price'
-                      value='1629'
-                      subValue={
-                        <>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('MMM')}</span>
-                          <span>{dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('YY')}</span>
-                        </>
-                      }
-                    /> */}
-                  </Flex>
-                  <h3>Position Builder</h3>
-                  <PositionBuilderRow
-                    title='Options'
-                    options={[
-                      { option: 'Call', value: 'Call' },
-                      { option: 'Put', value: 'Put' },
-                    ]}
-                    addStrategy={handleAddStrategy}
+                  <Currency
+                    onExpiryChange={() => {
+                      setOrderSummary(undefined);
+                      setPositionBuilderStrategies([]);
+                      setChartData(undefined);
+                    }}
                   />
-                  <PositionBuilderRow
-                    title='Digital Options'
-                    options={[
-                      { option: 'Call', value: 'BinaryCall' },
-                      { option: 'Put', value: 'BinaryPut' },
-                    ]}
-                    addStrategy={handleAddStrategy}
-                  />
-                  <PositionBuilderRow
-                    title='Forwards'
-                    options={[
-                      {
-                        option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
-                        value: 'Forward',
-                      },
-                      { option: 'Next Auction', value: 'Forward (Next Auction)' },
-                    ]}
-                    addStrategy={handleAddStrategy}
+                  <MainInfo
+                    handleAddStrategy={handleAddStrategy}
                   />
                 </>
               }
@@ -253,7 +200,7 @@ const Index = () => {
                     }}
                     auctionSubmission={auctionSubmission}
                     positionBuilderStrategies={positionBuilderStrategies}
-                    orderSummary={orderSummary}/>
+                    orderSummary={orderSummary} />
                   <Toast toastList={toastList} position={position} />
                 </>
               }

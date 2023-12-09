@@ -300,11 +300,11 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     </Flex>}
 
       {!compact && (
-        <h3 className='flex-row gap-4 fs-lato-md mb-12'>
+        <h3 className='mbi-16 flex-row gap-4 fs-lato-md mb-12 mt-16'>
           Select Target Price <LogoEth />
         </h3>
       )}
-      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='display-inline-flex mb-7'>
+      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='special-slider mb-7'>
         <Slider
           value={strike}
           min={strikes[0]}

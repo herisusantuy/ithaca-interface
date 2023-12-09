@@ -86,3 +86,18 @@
   color: var(--white);
   margin-right: 4px;
 }
+
+.option {
+  display: none;
+}
+
+.option__active {
+  display: initial;
+}
+.currency__info {
+  display: flex;
+  width: 50%;
+  @include breakpoint(tablet) {
+    width: auto;
+  }
+}

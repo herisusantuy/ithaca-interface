@@ -54,11 +54,23 @@
   width: rem(150);
 }
 
+.prePackagedContainer {
+  display: flex;
+  flex-direction: column;
+  @include breakpoint(tablet) {
+    flex-direction: row;
+    align-items: center;
+    gap: rem(12);
+  }
+}
+
 .prePackagedTitle {
   @include font-size('text-xs', 'regular');
   color: var(--white);
-  margin-top: rem(10);
-  margin-right: rem(12);
+  margin-bottom: rem(8);
+  @include breakpoint(tablet) {
+    margin-bottom: 0;
+  }
 }
 
 .parent {
@@ -148,4 +160,13 @@
 
 .strategiesWrapper {
   min-height: rem(200);
+}
+
+.moduleHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: rem(16);
+  @include breakpoint (tablet) {
+    margin-bottom: rem(24);
+  }
 }
