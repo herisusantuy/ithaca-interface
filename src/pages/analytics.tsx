@@ -33,33 +33,33 @@ const Analytics = () => {
   }, [])
 
   const getAnalytics = useCallback(async () => {
-    const volume = await ithacaSDK.analytics.totalTradingVolume('WETH', 'USDC');
-    const contracts = await ithacaSDK.analytics.totalContractsTraded('WETH', 'USDC');
-    const locked = await ithacaSDK.analytics.totalValueLocked('WETH', 'USDC');
-    const interest = await ithacaSDK.analytics.totalOpenInterest('WETH', 'USDC');
-    parseUnits(volume.toString(), systemInfo.tokenDecimals['USDC'])
-    setAnalytics([
-      {
-        ...analytics[0],
-        mainValue: formatNumber(Number(formatUnits(BigInt(volume), systemInfo.tokenDecimals['USDC'])), 'string')
-      },
-      {
-        ...analytics[1],
-        mainValue: formatNumber(contracts, 'string')
-      }, 
-      {
-        ...analytics[2],
-        mainValue: formatNumber(Number(formatUnits(BigInt(locked), systemInfo.tokenDecimals['WETH'])), 'string')
-      }, 
-      {
-        ...analytics[3],
-        mainValue: formatNumber(interest, 'string')
-      }, 
-    ]);
-    const byProduct = await ithacaSDK.analytics.openInterestByProduct('WETH', 'USDC', '2023-01-01', '2023-12-31')
-    const count = await ithacaSDK.analytics.dailyVolume('WETH', 'USDC', '2023-01-01', '2023-12-31')
-    const byStrike = await ithacaSDK.analytics.openInterestByStrike('WETH', 'USDC', '2023-01-01', '2023-12-31', 1400, 2200)
-    const trades = await ithacaSDK.analytics.trades('WETH', 'USDC', '2023-01-01', '2023-12-31')
+    // const volume = await ithacaSDK.analytics.totalTradingVolume('WETH', 'USDC');
+    // const contracts = await ithacaSDK.analytics.totalContractsTraded('WETH', 'USDC');
+    // const locked = await ithacaSDK.analytics.totalValueLocked('WETH', 'USDC');
+    // const interest = await ithacaSDK.analytics.totalOpenInterest('WETH', 'USDC');
+    // parseUnits(volume.toString(), systemInfo.tokenDecimals['USDC'])
+    // setAnalytics([
+    //   {
+    //     ...analytics[0],
+    //     mainValue: formatNumber(Number(formatUnits(BigInt(volume), systemInfo.tokenDecimals['USDC'])), 'string')
+    //   },
+    //   {
+    //     ...analytics[1],
+    //     mainValue: formatNumber(contracts, 'string')
+    //   }, 
+    //   {
+    //     ...analytics[2],
+    //     mainValue: formatNumber(Number(formatUnits(BigInt(locked), systemInfo.tokenDecimals['WETH'])), 'string')
+    //   }, 
+    //   {
+    //     ...analytics[3],
+    //     mainValue: formatNumber(interest, 'string')
+    //   }, 
+    // ]);
+    // const byProduct = await ithacaSDK.analytics.openInterestByProduct('WETH', 'USDC', '2023-01-01', '2023-12-31')
+    // const count = await ithacaSDK.analytics.dailyVolume('WETH', 'USDC', '2023-01-01', '2023-12-31')
+    // const byStrike = await ithacaSDK.analytics.openInterestByStrike('WETH', 'USDC', '2023-01-01', '2023-12-31', 1400, 2200)
+    // const trades = await ithacaSDK.analytics.trades('WETH', 'USDC', '2023-01-01', '2023-12-31')
   }, [])
   return (
     <>
