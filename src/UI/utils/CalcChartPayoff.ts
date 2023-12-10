@@ -65,8 +65,9 @@ export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange
     legs.forEach((leg,index) => {
       const side = leg.side === 'BUY' ? 1 : -1;
       const premium = leg.payoff !== 'Forward' ? -leg.premium * side : 0;
+      const strike = leg.payoff !== 'Forward' ? leg.economics.strike : leg.premium;
       const intrinsicValue =
-        side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, leg.economics.strike || 0) + premium;
+        side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, strike || 0) + premium;
       const label = `${payoffMap[leg.payoff as PAYOFF_TYPE]}@${index}`
       payoff[label] = intrinsicValue * parseInt(leg.quantity);
       payoff.total += intrinsicValue * parseInt(leg.quantity);
