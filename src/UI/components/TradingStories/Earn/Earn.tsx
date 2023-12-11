@@ -47,13 +47,10 @@ import styles from './Earn.module.scss'
 dayjs.extend(duration)
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, getContractsByExpiry, expiryList} = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, spotContract} = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
-  const nextAuctionForwardContract = getContractsByExpiry(
-    `${expiryList[0]}`,
-    'Forward'
-  )['-'];
+  const nextAuctionForwardContract = spotContract;
 
   const [currency, setCurrency] = useState('WETH');
 
@@ -103,7 +100,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       quantity: (Number(earn) / strike.max).toFixed(2).toString(),
       side: 'BUY',
     }, {
-      contractId: nextAuctionForwardContract.contractId,
+      contractId: nextAuctionForwardContract?.contractId,
       quantity: (Number(risk) / strike.max).toFixed(2).toString(),
       side: 'BUY',
     }];
@@ -118,7 +115,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     const payoffMap = estimateOrderPayoff([
       { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
       { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
-      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract.referencePrice }
+      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 }
     ]);
     setPayoffMap(payoffMap);
 

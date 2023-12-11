@@ -20,7 +20,7 @@ import Flex from '@/UI/layouts/Flex/Flex';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
-import { BARRIER_OPTIONS, IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
+import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
 import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';

@@ -106,6 +106,7 @@ function App({ Component, pageProps, router }: AppProps) {
     if (isAuthenticated) {
       heartBeat(ithacaSDK)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
   
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
