@@ -175,7 +175,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       {}
     );
     const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).map(expiry => parseInt(expiry));
-    const currentExpiryDate = expiryList[1];
+    const currentExpiryDate = expiryList[2];
     const currentSpotPrice = spotPrices[currentCurrencyPair];
 
     set({
