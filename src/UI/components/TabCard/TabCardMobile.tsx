@@ -30,7 +30,7 @@ const TabCardMobile = (
   return (
     <div style={{ maxHeight: activeDropdown ? '3000px' : '151px' }} className={styles.dropDownPanel}>
       {
-        <div className={`tab--${activeTab.id} ${styles.tab} ${tabClassName}`}>
+        <div className={`tab--${activeTab.id} ${styles.tab} ${tabClassName}`} onClick={() => setActiveDropdown(!activeDropdown)}>
           <div className={styles.tabInfo}>
             <h3>{activeTab.title}</h3>
             <p>{activeTab.description}</p>

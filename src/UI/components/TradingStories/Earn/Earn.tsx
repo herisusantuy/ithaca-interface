@@ -31,7 +31,7 @@ import { ContractDetails } from '@/UI/lib/zustand/slices/ithacaSDKSlice';
 import {
   ClientConditionalOrder,
   Leg,
-  calculateAPY,
+  // calculateAPY,
   calculateNetPrice,
   createClientOrderId,
   toPrecision,
@@ -44,6 +44,7 @@ import { RISKY_RISKLESS_EARN_OPTIONS } from '@/UI/constants/options';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import styles from './Earn.module.scss'
+import { calculateAPY } from '@/UI/utils/APYCalc';
 dayjs.extend(duration)
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
@@ -264,15 +265,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Earn');
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Transaction Sent',
-          message: 'We have received your request',
-          type: 'info',
-        },
-        'top-right'
-      );
     } catch (error) {
       showToast(
         {
@@ -293,7 +285,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     }
 
     const risk = currency === 'WETH' ? getNumber(capitalAtRisk) * strike.max : getNumber(capitalAtRisk);
-    const apy = calculateAPY(`${currentExpiryDate}`, 'Earn', risk, getNumber(targetEarn));
+    const apy = calculateAPY(`${callContracts[strike.max].economics.expiry}`, risk, getNumber(targetEarn))
     return `${apy}%`;
   };
 

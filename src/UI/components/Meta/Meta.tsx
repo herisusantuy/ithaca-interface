@@ -3,7 +3,7 @@ import Head from 'next/head';
 const Meta = () => {
   return (
     <Head>
-      <title>Ithaca - Decentralized Options & Collateralized Funding Protocol</title>
+      <title>Ithaca - Non-Custodial, Composable Option Protoco</title>
       <meta
         name='description'
         content="Ithaca is a decentralized options and collateralized funding protocol offering optimal risk sharing across various states and time, embedding itself in all steps of any risk sharing instrument's lifecycle."

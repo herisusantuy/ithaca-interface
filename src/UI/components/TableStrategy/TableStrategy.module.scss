@@ -160,3 +160,7 @@
 .clearAll {
   @include font-size('text-xs', 'bold');
 }
+
+.strategy {
+  white-space: nowrap;
+}

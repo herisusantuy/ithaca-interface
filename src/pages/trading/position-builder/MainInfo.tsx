@@ -58,7 +58,7 @@ const MainInfo = ({
       <PositionBuilderRow
         title='Forwards'
         options={[
-          { option: 'Next Auction', value: 'Forward (Next Auction)' },
+          { option: 'Next Auction', value: 'NEXT_AUCTION' },
           {
             option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
             value: 'Forward',
@@ -102,7 +102,7 @@ const MainInfo = ({
           <PositionBuilderRow
             title='Forwards'
             options={[
-              { option: 'Next Auction', value: 'Forward (Next Auction)' },
+              { option: 'Next Auction', value: 'NEXT_AUCTION' },
               {
                 option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'),
                 value: 'Forward',

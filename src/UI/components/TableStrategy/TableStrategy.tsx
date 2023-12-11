@@ -40,7 +40,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: Str
               <div className={styles.cell}>
                 <div className={styles.dot}>
                   <Dot type={`leg${idx + 1}`} />
-                  <div className={styles.strategy}>{strategy.payoff}</div>
+                  <div className={styles.strategy}>{strategy.payoff === 'NEXT_AUCTION' ? 'Forward(Next Auction)' : strategy.payoff}</div>
                 </div>
               </div>
               <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>

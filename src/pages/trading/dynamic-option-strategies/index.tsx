@@ -46,6 +46,8 @@ import Toggle from '@/UI/components/Toggle/Toggle';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import { AuctionSubmission } from '../position-builder';
 import { Currency } from '@/UI/components/Currency';
+import RadioButton from '@/UI/components/RadioButton/RadioButton';
+import Minus from '@/UI/components/Icons/Minus';
 
 // Types
 export interface DynamicOptionStrategy {
@@ -80,7 +82,8 @@ const Index = () => {
   const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map((s) => s.size));
   const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
   const [strategyType, setSetStrategyType] = useState<'LINEAR'|'STRUCTURED'>('LINEAR');
-  const device = useDevice()
+  const [invertSide, setInvertSide] = useState('BUY');
+  const device = useDevice();
 
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
@@ -155,6 +158,22 @@ const Index = () => {
     setPositionBuilderStrategies(positionBuilderStrategies);
     getPositionBuilderSummary(positionBuilderStrategies);
   };
+
+  const handleInvertSide = (side: string) => {
+    const strats = strategy.strategies.map((strat) => {
+      return {
+        ...strat,
+        side: (strat.side === 'BUY' ? 'SELL' : 'BUY') as SIDE
+      }
+    });
+    setInvertSide(side);
+    setStrategy({
+      ...strategy,
+      strategies: [
+        ...strats
+      ]
+    });
+  }
 
   const handleLinkChange = (isLinked: boolean, index: number) => {
     if (isLinked) {
@@ -249,15 +268,6 @@ const Index = () => {
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Transaction Sent',
-          message: 'We have received your request',
-          type: 'info',
-        },
-        'top-right'
-      );
     } catch (error) {
       showToast(
         {
@@ -320,6 +330,18 @@ const Index = () => {
                             }
                         }
                       />
+                      <RadioButton
+                        options={[
+                          { option: <Plus />, value: 'BUY' },
+                          { option: <Minus />, value: 'SELL' },
+                        ]}
+                        size='vertical-compact'
+                        selectedOption={invertSide}
+                        name='invert-side'
+                        orientation='vertical'
+                        onChange={value => handleInvertSide(value)}
+                      />
+                      <span className='color-white'>Invert Side</span>
                     </div>
                   ) :
                   (
@@ -374,7 +396,7 @@ const Index = () => {
                         </div>
                       </Flex>
                       { (device === 'desktop') &&
-                        <Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
+                        <><Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
                             const newStrats = strategy.strategies.map((s) => {
                               return {
                                 ...s,
@@ -401,6 +423,20 @@ const Index = () => {
                               }
                             }
                         }/>
+                        <RadioButton
+                          options={[
+                            { option: <Plus />, value: 'BUY' },
+                            { option: <Minus />, value: 'SELL' },
+                          ]}
+                          size='vertical-compact'
+                          width={24}
+                          selectedOption={invertSide}
+                          name='invert-side'
+                          orientation='vertical'
+                          onChange={value => handleInvertSide(value)}
+                        />
+                        <span className='color-white'>Invert Side</span>
+                        </>
                       }
                     </Flex>
                   </div>
