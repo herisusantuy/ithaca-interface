@@ -40,7 +40,8 @@ export interface IthacaSDKSlice {
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
   toastNotifications: Omit<Order, "collateral">[];
-  newToast?:  Omit<Order, "collateral">
+  newToast?:  Omit<Order, "collateral">;
+  spotContract: Contract & ReferencePrice;
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
@@ -83,6 +84,22 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   expiryList: [],
   referencePrices: [],
   spotPrices: {},
+  spotContract: {
+    contractId: 0,
+    payoff: 'Spot',
+    tradeable: true,
+    referencePrice: 0,
+    lowRange: 0,
+    highRange: 0,
+    lastPrice: 0,
+    updateAt: '',
+    economics: {
+      currencyPair: 'WETH/USDC',
+      expiry: 0,
+      priceCurrency: '',
+      qtyCurrency: ''
+    }
+  },
   toastNotifications: [],
   newToast: undefined,
   initIthacaSDK: async (publicClient, walletClient) => {
@@ -157,12 +174,17 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     referencePrices.forEach(ref => {
       contractsWithReferencePrices[ref.contractId] = { ...contractsWithReferencePrices[ref.contractId], ...ref };
     });
+    let spotContract = undefined;
     const filteredContractList = Object.values(contractsWithReferencePrices).reduce<ContractList>(
       (result, contract) => {
         const {
           economics: { currencyPair, expiry, strike },
           payoff,
         } = contract;
+        if (payoff === 'Spot') {
+          spotContract = contract;
+          return result;
+        }
         const date = parseInt(dayjs(expiry.toString(), 'YYMMDDHHm').format('YYYYMMDD'));
         if (!result[currencyPair]) result[currencyPair] = {};
         if (!result[currencyPair][date]) result[currencyPair][date] = {};
@@ -174,11 +196,17 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       },
       {}
     );
-    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).map(expiry => parseInt(expiry));
-    const currentExpiryDate = expiryList[2];
+    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[],expiry) => {
+      if (Object.keys(filteredContractList[currentCurrencyPair][expiry]).length > 4) {
+        arr.push(parseInt(expiry))
+      }
+      return arr;
+    },[]);
+    const currentExpiryDate = expiryList[0];
     const currentSpotPrice = spotPrices[currentCurrencyPair];
 
     set({
+      spotContract: spotContract || get().spotContract,
       isLoading: false,
       systemInfo,
       currencyPrecision,

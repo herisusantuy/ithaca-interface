@@ -39,13 +39,10 @@ import useToast from '@/UI/hooks/useToast';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry } =
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } =
     useAppStore();
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
-  const nextAuctionForwardContract = getContractsByExpiry(
-    `${expiryList[0]}`,
-    'Forward'
-  )['-'];
+  const nextAuctionForwardContract = spotContract;
 
   const [currentOrNextAuction, setCurrentOrNextAuction] = useState<'CURRENT' | 'NEXT'>('NEXT');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');

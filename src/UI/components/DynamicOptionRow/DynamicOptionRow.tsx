@@ -70,11 +70,11 @@ const PRODUCT_TYPES: ProductType = {
     value: 'BinaryPut'
   }],
   Forward: [{
-    option: 'Call',
-    value: 'CURRENT'
-  }, {
     option: 'Next Auction',
     value: 'NEXT'
+  }, {
+    option: 'Call',
+    value: 'CURRENT'
   }]
 };
 
@@ -87,7 +87,7 @@ type ProductOption = {
 
 const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkChange, linked, sharedSize, sizeChange }: DynamicOptionRowProps) => {
   // Store
-  const { getContractsByPayoff, spotPrices, currentExpiryDate, currentSpotPrice, ithacaSDK } =
+  const { getContractsByPayoff, spotPrices, currentExpiryDate, currentSpotPrice, ithacaSDK, spotContract } =
     useAppStore();
 
   // State
@@ -100,12 +100,20 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   const [strike, setStrike] = useState<string | undefined>(strategy.product === 'Forward' ? '-' : undefined);
   const contracts = getContractsByPayoff(strategy.product === 'Forward' ? 'Forward' : strategy.type);
   const [strikeList, setStrikeList] = useState(contracts);
-  const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward' ? `${contracts['-'].referencePrice > 1 ? contracts['-'].referencePrice.toFixed(0) : contracts['-'].referencePrice}` : '');
+  const [unitPrice, setUnitPrice] = useState(strategy.product === 'Forward'
+    ? strategy.type === 'NEXT'
+      ? spotContract.referencePrice > 1
+        ? spotContract.referencePrice.toFixed(0)
+        : `${spotContract.referencePrice}`
+      : `${contracts['-'].referencePrice > 1
+        ? contracts['-'].referencePrice.toFixed(0)
+        : contracts['-'].referencePrice}`
+    : '');
   const device = useDevice()
 
   useEffect(() => {
     handleStrikeListUpdate()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikeList, id]);
 
   useEffect(() => {
@@ -132,7 +140,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   }, [strategy.size]);
 
   useEffect(() => {
-    productTypes.Forward = [ {
+    productTypes.Forward = [{
       option: 'Next Auction',
       value: 'NEXT'
     }, {
@@ -142,30 +150,30 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     setProductTypes(productTypes)
   }, [currentExpiryDate])
 
-  const handleProductChange = (product: string, type?:string) => {
+  const handleProductChange = (product: string, type?: string) => {
     setProduct(product);
     setTypeList(PRODUCT_TYPES[product]);
     setType(type || PRODUCT_TYPES[product][0].value);
-    setStrikeList({...getContractsByPayoff(product === 'Forward' ? 'Forward' : PRODUCT_TYPES[product][0].value)})
+    setStrikeList({ ...getContractsByPayoff(product === 'Forward' ? 'Forward' : PRODUCT_TYPES[product][0].value) })
   };
 
   const handleTypeChange = (type: string) => {
     setType(type);
-    setStrikeList({...getContractsByPayoff(product === 'Forward' ? 'Forward' : type)});
+    setStrikeList({ ...getContractsByPayoff(product === 'Forward' ? 'Forward' : type) });
   };
 
   const handleSideChange = (side: 'BUY' | 'SELL') => {
     setSide(side);
     if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(unitPrice))) return;
     const leg = {
-      contractId: strikeList[strike].contractId,
+      contractId: product === 'Forward' && type === 'NEXT' ? spotContract.contractId : strikeList[strike].contractId,
       quantity: size,
       side,
     } as Leg;
     updateStrategy({
       leg,
       referencePrice: getNumber(unitPrice),
-      payoff: product === 'Forward' ? 'Forward': type,
+      payoff: product === 'Forward' ? 'Forward' : type,
       strike,
     });
   };
@@ -174,12 +182,16 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     let price = '';
     if (product === 'Forward') {
       const newStrike = '-'
-      price = `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
+      price = type === 'NEXT'
+        ? spotContract.referencePrice > 1
+          ? spotContract.referencePrice.toFixed(0)
+          : `${spotContract.referencePrice}`
+        : `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
       setUnitPrice(price);
       setStrike(newStrike);
       if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
       const leg = {
-        contractId: strikeList[newStrike].contractId,
+        contractId: product === 'Forward' && type === 'NEXT' ? spotContract.contractId : strikeList[strike].contractId,
         quantity: size,
         side,
       } as Leg;
@@ -198,7 +210,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       const strikePoint = index + strategy.strike
       const newStrike = list[strikePoint < 0 ? 0 : strikePoint >= list.length ? list.length - 1 : strikePoint];
       setStrike(newStrike);
-       price = `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
+      price = `${strikeList[newStrike].referencePrice > 1 ? strikeList[newStrike].referencePrice.toFixed(0) : strikeList[newStrike].referencePrice}`;
       setUnitPrice(price);
       if (!newStrike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
       const leg = {
@@ -206,15 +218,15 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
         quantity: size,
         side,
       } as Leg;
-        updateStrategy({
-          leg,
-          referencePrice: getNumber(price),
-          payoff: type,
-          strike: newStrike,
-        });
+      updateStrategy({
+        leg,
+        referencePrice: getNumber(price),
+        payoff: type,
+        strike: newStrike,
+      });
     }
   };
- 
+
   const handleSizeChange = (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
@@ -235,18 +247,22 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
 
   const handleStrikeChange = (strike: string) => {
     setStrike(strike);
-    const price = `${strikeList[strike].referencePrice > 1 ? strikeList[strike].referencePrice.toFixed(0) : strikeList[strike].referencePrice}`;
+    const price = type === 'NEXT'
+    ? spotContract.referencePrice > 1
+      ? spotContract.referencePrice.toFixed(0)
+      : `${spotContract.referencePrice}`
+    : `${strikeList[strike].referencePrice > 1 ? strikeList[strike].referencePrice.toFixed(0) : strikeList[strike].referencePrice}`;
     setUnitPrice(price);
     if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(price))) return;
     const leg = {
-      contractId: strikeList[strike].contractId,
+      contractId: product === 'Forward' && type === 'NEXT' ? spotContract.contractId : strikeList[strike].contractId,
       quantity: size,
       side,
     } as Leg;
     updateStrategy({
       leg,
       referencePrice: getNumber(price),
-      payoff: product === 'Forward' ? 'Forward': type,
+      payoff: product === 'Forward' ? 'Forward' : type,
       strike,
     });
   };
@@ -262,9 +278,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       strike: strike,
       time: dayjs.duration(diff).asYears(),
       isCall: type === 'Call',
-      underlying:currentSpotPrice
+      underlying: currentSpotPrice
     }
-    return (ithacaSDK.calculation.calcSigma(params)*100).toFixed(1) + '%'
+    return (ithacaSDK.calculation.calcSigma(params) * 100).toFixed(1) + '%'
   }
 
   return (
@@ -272,15 +288,15 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
       <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
         <div className={styles.parent}>
           <div className={styles.title}>
-            {(device !== 'desktop') && 
-            <>
-              <div className={styles.removeButton}>
-                <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
-                  <Remove />
-                </Button>
-              </div>
-              <p className={styles.subtitle}>Product</p>
-            </>}
+            {(device !== 'desktop') &&
+              <>
+                <div className={styles.removeButton}>
+                  <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
+                    <Remove />
+                  </Button>
+                </div>
+                <p className={styles.subtitle}>Product</p>
+              </>}
             <RadioButton
               options={PRODUCT_OPTIONS}
               selectedOption={product}
@@ -291,24 +307,24 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
           </div>
           <div className={styles.type}>
             {(device !== 'desktop') ?
-            <>
-              <p className={styles.subtitle}>Type</p>
+              <>
+                <p className={styles.subtitle}>Type</p>
+                <RadioButton
+                  options={typeList}
+                  selectedOption={type}
+                  name={`${id}-type`}
+                  onChange={handleTypeChange}
+                />
+              </> :
               <RadioButton
                 options={typeList}
                 selectedOption={type}
                 name={`${id}-type`}
                 onChange={handleTypeChange}
+                width={170}
               />
-            </> :
-            <RadioButton
-              options={typeList}
-              selectedOption={type}
-              name={`${id}-type`}
-              onChange={handleTypeChange}
-              width={170}
-            />
             }
-            
+
           </div>
           <div className={styles.side}>
             {(device !== 'desktop') && <p className={styles.subtitle}>Side</p>}
@@ -332,9 +348,9 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               onLink={(link) => {
                 linkChange(link);
               }}
-              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
+              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
               type='number'
-              
+
               value={size}
               icon={<LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
@@ -365,16 +381,17 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
                 setUnitPrice(getNumberValue(target.value))
                 if (!strike || isInvalidNumber(getNumber(size))) return;
                 const leg = {
-                  contractId: strikeList[strike].contractId,
+                  contractId: product === 'Forward' && type === 'NEXT' ? spotContract.contractId : strikeList[strike].contractId,
                   quantity: size,
                   side,
                 } as Leg;
                 updateStrategy({
                   leg,
                   referencePrice: getNumber(target.value),
-                  payoff: product === 'Forward' ? 'Forward': type,
+                  payoff: product === 'Forward' ? 'Forward' : type,
                   strike,
-                });}
+                });
+              }
               }
             />
           </div>

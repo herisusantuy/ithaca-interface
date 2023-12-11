@@ -46,7 +46,7 @@ type SectionType = {
 
 const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowProps) => {
   // Store
-  const { currencyPrecision, currentExpiryDate, expiryList, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK } =
+  const { currencyPrecision, currentExpiryDate, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK, spotContract } =
   useAppStore();
 
   // State
@@ -102,9 +102,8 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       side,
     };
     if (title === 'Forwards') {
-      const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
-      const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[strike]?.contractId;
+      const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
+      leg.contractId = forwardContracts.contractId;
     }
     return formatNumber(
       calcCollateralRequirement(
@@ -125,9 +124,8 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       side,
     };
     if (title === 'Forwards') {
-      const expiry = payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
-      const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-      leg.contractId = forwardContracts[strike]?.contractId;
+      const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
+      leg.contractId = forwardContracts.contractId;
     }
     return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
   };
@@ -264,10 +262,8 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
                     side,
                   } as Leg;
                   if (title === 'Forwards') {
-                    const expiry =
-                    payoff === 'Forward' ? currentExpiryDate : expiryList[expiryList.indexOf(currentExpiryDate) + 1];
-                    const forwardContracts = getContractsByExpiry(`${expiry}`, 'Forward');
-                    leg.contractId = forwardContracts[strike].contractId;
+                    const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
+                    leg.contractId = forwardContracts.contractId;
                   }
                   addStrategy({
                     leg,
