@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
 
 // Components
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
@@ -44,7 +43,6 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [strike, setStrike] = useState<string>('1900');
   const [barrier, setBarrier] = useState<string | undefined>('2300');
   const [size, setSize] = useState('');
-  const [price, setPrice] = useState('');
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -111,7 +109,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   };
 
   const handlePriceChange = (price: string) => {
-    setPrice(price);
+    setUnitPrice(price);
   }
 
   const prepareOrderLegs = async (
@@ -349,7 +347,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const renderInstruction = () => {
     return (
       <>
-        {!compact && showInstructions && <BarrierInstructions upOrDown={upOrDown} buyOrSell={buyOrSell} inOrOut={inOrOut} />}
+        {!compact && showInstructions && <BarrierInstructions upOrDown={upOrDown} inOrOut={inOrOut} currentExpiry={currentExpiryDate.toString()} />}
       </>
     )
   }
@@ -447,18 +445,9 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               <Input type='number' value={size} onChange={({ target }) => handleSizeChange(target.value)} />
             </LabeledControl>
 
-            <LabeledControl label='Price'>
-              <Input type='number' value={price} onChange={({ target }) => handlePriceChange(target.value)} />
+            <LabeledControl label='Unit Price'>
+              <Input type='number' value={unitPrice} onChange={({ target }) => handlePriceChange(target.value)} />
             </LabeledControl>
-          </Flex>
-
-          <Flex direction='row-center'>
-            <p className='fs-lato-sm mr-14'>Total Premium</p>
-            <p className='fs-md-bold mr-4'>{orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}</p>
-            <LogoUsdc />
-            <p className='ml-32 fs-lato-sm-italic mr-12'>Unit Price</p>
-            <p className='mr-4 fs-roboto-md-italic'>{unitPrice}</p>
-            <LogoUsdc />
           </Flex>
         </Flex>
       )}

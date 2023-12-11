@@ -251,7 +251,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return {getAPY()}</span>}>
+          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
             <Input
               type='number'
               value={targetEarn}

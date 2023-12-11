@@ -1,5 +1,5 @@
 .container {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
 
   label:first-child {
     @include font-size('text-xs', 'regular');

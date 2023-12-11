@@ -229,7 +229,7 @@ const Index = () => {
                   />
 
                   {chartData ? (
-                    <ChartPayoff chartData={chartData} height={300} id='position-chart' />
+                    <ChartPayoff chartData={chartData} height={210} id='position-chart' />
                   ) : (
                     <>
                       <h3>Payoff Diagram</h3>

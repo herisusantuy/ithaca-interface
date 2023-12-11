@@ -531,6 +531,10 @@
   flex-grow: 1;
 }
 
+.flexGrow-0 {
+  flex-grow: 0;
+}
+
 .column-tablet {
   @include breakpoint(tablet) {
     flex-direction: column !important;
@@ -596,6 +600,10 @@
 
 .width-12 {
   width: rem(12) !important;
+}
+
+.min-width-140 {
+  min-width: rem(140) !important;
 }
 
 .height-25 {

@@ -104,8 +104,8 @@ const Input = ({
             key={option.value}
             className={`${styles.dropdownItem} ${value === option.value ? styles.selected : ''}`}
             onClick={() => handleOptionClick(option.value)}
-            >{option.icon} {option.label}</li>
-          
+          >{option.icon} {option.label}</li>
+
         ))}
       </ul>
     );
@@ -122,7 +122,8 @@ const Input = ({
     onDropdownChange && onDropdownChange(optionValue);
   };
   return (
-    <div className={`${inputClass} ${className || ''}`}>
+    <div className={`${inputClass} ${className || ''}`}
+      style={width > 0 ? { width: width + 'px' } : {}}>
       {label && (
         <label htmlFor={id} className={styles.label}>
           {label}

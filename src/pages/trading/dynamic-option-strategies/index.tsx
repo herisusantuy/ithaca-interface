@@ -332,6 +332,7 @@ const Index = () => {
                           <div className={styles.prePackagedTitle}>Linear Combinations</div>
                           <div className={styles.dropDownWrapper}>
                             <DropdownMenu
+                              width={200}
                               value={strategyType === 'LINEAR' ? {
                                 name: strategy.label,
                                 value: strategy.key,
@@ -353,6 +354,7 @@ const Index = () => {
                           <div className={styles.prePackagedTitle}>Structured Products</div>
                           <div className={styles.dropDownWrapper}>
                             <DropdownMenu
+                              width={200}
                               value={strategyType === 'STRUCTURED' ? {
                                 name: strategy.label,
                                 value: strategy.key,
@@ -546,7 +548,7 @@ const Index = () => {
                     clearAll={handleRemoveAllStrategies}
                   />
                   {chartData ? (
-                    <ChartPayoff chartData={chartData} height={230} id='dynamic-chart' />
+                    <ChartPayoff chartData={chartData} height={210} id='dynamic-chart' />
                   ) : (
                     <>
                       <h3>Payoff Diagram</h3>

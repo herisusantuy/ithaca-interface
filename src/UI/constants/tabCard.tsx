@@ -2,6 +2,7 @@
 type Tab = {
   id: string;
   title: string;
+  selectedTitle?: string;
   description: string;
   contentId: string;
   radioOptions?: {
@@ -14,6 +15,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
   {
     id: 'options',
     title: 'Options',
+    selectedTitle: 'Option',
     description:
       'A Call Option is a contract allowing a user to buy an asset at a fixed price at contract expiry, while a Put Option provides the user with the right to sell. ',
     contentId: 'optionsChart',
@@ -21,6 +23,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
   {
     id: 'digital-options',
     title: 'Digital Options',
+    selectedTitle: 'Digital Option',
     description:
       'A Digital Call Option pays off if underlying asset price ends up above a certain level at expiry, while a Digital Put Option pays off if underlying asset price ends up below a certain level at expiry. Bet on whether the market will finish above or below your defined level and get paid accordingly.',
     contentId: 'digitalOptionsChart',
@@ -28,6 +31,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
   {
     id: 'forwards',
     title: 'Forwards',
+    selectedTitle: 'Forward',
     description:
       'A Forward is a contract where the user agrees to buy or sell an asset at a fixed price and date in the future. Gain or loss depends on the difference between the agreed price and the market price at expiry.',
     contentId: 'forwardsChart',

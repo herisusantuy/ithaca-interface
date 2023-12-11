@@ -11,19 +11,19 @@ const storyMap: {
     height: { normal: { withInstructions: number; withoutInstructions: number }; compact: number };
   };
 } = {
-  betChart: { component: Bet, height: { compact: 71, normal: { withInstructions: 170, withoutInstructions: 286 } } },
-  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 206, withoutInstructions: 325 } } },
+  betChart: { component: Bet, height: { compact: 71, normal: { withInstructions: 160, withoutInstructions: 316 } } },
+  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 194, withoutInstructions: 320 } } },
   noGainNoPayinChart: {
     component: NoGainNoPayin,
-    height: { compact: 75, normal: { withInstructions: 178, withoutInstructions: 312 } },
+    height: { compact: 75, normal: { withInstructions: 168, withoutInstructions: 350 } },
   },
   bonusTwinWinChart: {
     component: BonusTwinWin,
-    height: { compact: 75, normal: { withInstructions: 215, withoutInstructions: 274 } },
+    height: { compact: 75, normal: { withInstructions: 233, withoutInstructions: 328 } },
   },
   barriersChart: {
     component: Barriers,
-    height: { compact: 61.5, normal: { withInstructions: 170, withoutInstructions: 339 } },
+    height: { compact: 61.5, normal: { withInstructions: 238, withoutInstructions: 420 } },
   },
   optionsChart: {
     component: Options,
