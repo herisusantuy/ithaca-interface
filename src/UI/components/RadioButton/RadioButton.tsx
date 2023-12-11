@@ -15,7 +15,7 @@ type RadioButtonProps = {
   orientation?: 'horizontal' | 'vertical';
   onChange?: (value: string) => void;
   width?: number | string;
-  size?: 'compact' | 'regular' | 'large';
+  size?: 'compact' | 'regular' | 'large' | 'vertical-compact';
 };
 
 const RadioButton = ({
@@ -58,7 +58,7 @@ const RadioButton = ({
     <div
       className={`radioButton--${lastSegment} ${size === 'compact' ? styles.radioButtonCompact : size === 'large' ? styles.radioButtonLarge : styles.radioButton} ${
         orientation === 'vertical' ? styles.vertical : ''
-      }`}
+      } ${size === 'vertical-compact' ? styles.verticalCompact: ''}`}
       style={width > '0' ? { width: width + 'px' } : {}}
     >
       {renderOptions(options)}

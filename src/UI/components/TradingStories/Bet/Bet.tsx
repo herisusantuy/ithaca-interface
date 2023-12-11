@@ -31,12 +31,13 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import {
   ClientConditionalOrder,
   Leg,
-  calculateAPY,
+  // calculateAPY,
   calculateNetPrice,
   createClientOrderId,
   toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import { calculateAPY } from '@/UI/utils/APYCalc';
 
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
@@ -147,15 +148,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'Bet');
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Transaction Sent',
-          message: 'We have received your request',
-          type: 'info',
-        },
-        'top-right'
-      );
     } catch (error) {
       showToast(
         {
@@ -174,7 +166,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) {
       return <span>-%</span>;
     }
-    const apy = calculateAPY(`${currentExpiryDate}`, 'Bet', getNumber(capitalAtRisk), getNumber(targetEarn));
+    const apy = calculateAPY(`${binaryCallContracts[strike.max].economics.expiry}`, getNumber(capitalAtRisk), getNumber(targetEarn))
     return <span>{`${apy}%`}</span>;
   };
 

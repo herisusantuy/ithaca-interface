@@ -142,15 +142,6 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     if (!orderDetails) return;
     try {
       await ithacaSDK.orders.newOrder(orderDetails.order, 'No Gain, No Payin’');
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Transaction Sent',
-          message: 'We have received your request',
-          type: 'info',
-        },
-        'top-right'
-      );
     } catch (error) {
       showToast(
         {

@@ -62,7 +62,7 @@ const Index = () => {
   const { toastList, position, showToast } = useToast();
 
   // Store
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } =
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, spotContract } =
     useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
@@ -90,15 +90,14 @@ const Index = () => {
 
     const chartData = estimateOrderPayoff(
       strikes.map((strike, idx) => {
-        const contracts = getContractsByPayoff(payoffs[idx]);
-        return { ...contracts[strike], ...legs[idx], premium: referencePrices[idx] };
+        const contracts = payoffs[idx] === 'NEXT_AUCTION' ? spotContract : getContractsByPayoff(payoffs[idx])[strike];
+        return { ...contracts, ...legs[idx], premium: payoffs[idx] === 'NEXT_AUCTION' ? spotContract.referencePrice : referencePrices[idx] };
       })
     );
     setChartData(chartData);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      console.log("🚀 ~ file: index.tsx:101 ~ getPositionBuilderSummary ~ orderLock:", orderLock, order)
       setOrderSummary({
         order,
         orderLock
@@ -116,15 +115,6 @@ const Index = () => {
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Transaction Sent',
-          message: 'We have received your request',
-          type: 'info',
-        },
-        'top-right'
-      );
     } catch (error) {
       showToast(
         {

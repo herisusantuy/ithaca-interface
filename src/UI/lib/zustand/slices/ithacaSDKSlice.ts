@@ -58,7 +58,8 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     IthacaNetwork.ARBITRUM_GOERLI,
     undefined,
     undefined,
-    "https://api.salt.develop.ithacanoemon.tech/api/v1"
+    process.env.API_URL,
+    process.env.WS_URL
   ),
   systemInfo: {
     chainId: 0,
@@ -122,7 +123,8 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
          }
       },
       // undefined,
-      "https://api.salt.develop.ithacanoemon.tech/api/v1"
+      process.env.API_URL,
+      process.env.WS_URL
     );
     
     if (walletClient) {

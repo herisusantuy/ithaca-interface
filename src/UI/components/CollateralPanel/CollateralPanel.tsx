@@ -96,15 +96,15 @@ const CollateralPanel = () => {
         args: [walletClient.account.address, parseUnits('100', systemInfo.tokenDecimals[currency])],
       });
       await publicClient.waitForTransactionReceipt({ hash });
-      showToast(
-        {
-          id: Math.floor(Math.random() * 1000),
-          title: 'Faucet received',
-          message: 'We have received your Faucet',
-          type: 'info',
-        },
-        'top-right'
-      );
+      // showToast(
+      //   {
+      //     id: Math.floor(Math.random() * 1000),
+      //     title: 'Faucet received',
+      //     message: 'We have received your Faucet',
+      //     type: 'info',
+      //   },
+      //   'top-right'
+      // );
     } catch (error) {
       showToast(
         {

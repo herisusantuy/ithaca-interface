@@ -37,16 +37,29 @@
     &:before {
       border-radius: rem(6);
     }
+      label {
+        @include spacing(padding, 2, 'top+bottom');
+        @include spacing(padding, 10, 'left+right');
+        height: rem(15);
+        border-radius: rem(5);
 
-    label {
-      @include spacing(padding, 2, 'top+bottom');
-      @include spacing(padding, 10, 'left+right');
-      height: rem(15);
-      border-radius: rem(5);
+        svg {
+          height: rem(16);
+          width: rem(16);
+        }
+      }
 
-      svg {
-        height: rem(16);
-        width: rem(16);
+    &.verticalCompact {
+      label {
+        @include spacing(padding, 2, 'top+bottom');
+        @include spacing(padding, 0, 'left+right');
+        padding: 0 !important;
+        height: rem(15);
+        border-radius: rem(5);
+        svg {
+          height: rem(16);
+          width: rem(16);
+        }
       }
     }
 
