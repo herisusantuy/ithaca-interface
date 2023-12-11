@@ -132,12 +132,12 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
   }, [strategy.size]);
 
   useEffect(() => {
-    productTypes.Forward = [{
-      option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
-      value: 'CURRENT'
-    }, {
+    productTypes.Forward = [ {
       option: 'Next Auction',
       value: 'NEXT'
+    }, {
+      option: dayjs(currentExpiryDate.toString(), 'YYYYMMDD').format('DD MMM YY'),
+      value: 'CURRENT'
     }];
     setProductTypes(productTypes)
   }, [currentExpiryDate])
@@ -362,7 +362,8 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               icon={<LogoUsdc />}
               footerText={product === 'option' ? `IV ${calcIv()}` : undefined}
               onChange={({ target }) => {
-                if (!strike || isInvalidNumber(getNumber(size)) || isInvalidNumber(getNumber(target.value))) return;
+                setUnitPrice(getNumberValue(target.value))
+                if (!strike || isInvalidNumber(getNumber(size))) return;
                 const leg = {
                   contractId: strikeList[strike].contractId,
                   quantity: size,
@@ -373,8 +374,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
                   referencePrice: getNumber(target.value),
                   payoff: product === 'Forward' ? 'Forward': type,
                   strike,
-                });
-                setUnitPrice(getNumberValue(target.value))}
+                });}
               }
             />
           </div>

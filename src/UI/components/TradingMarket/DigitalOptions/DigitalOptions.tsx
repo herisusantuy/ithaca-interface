@@ -57,7 +57,9 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
     if (!strike) return;
-    await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike);
+    const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
   };
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
@@ -66,11 +68,11 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
     await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, unitPrice);
   };
 
-  const handleSizeChange = async (amount: string) => {
+  const handleSizeChange = async (amount: string, price?: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike) return;
-    await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, unitPrice);
+    await handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, price || unitPrice);
   };
 
   const handleUnitPriceChange = async (amount: string) => {
@@ -87,7 +89,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
     strike: string,
     unitPrice?: string
   ) => {
-    if (isInvalidNumber(size)) {
+    if (isInvalidNumber(size) || isInvalidNumber(Number(unitPrice))) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -109,7 +111,6 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
     const payoffMap = estimateOrderPayoff([{ ...contract, ...leg, premium: referencePrice }]);
     setPayoffMap(payoffMap);
-    if (!unitPrice) setUnitPrice(`${referencePrice}`);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -161,7 +162,9 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   };
 
   useEffect(() => {
-    handleSizeChange('100');
+    const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleSizeChange('1', `${contract.referencePrice}`);
   }, []);
 
   const renderInstruction = () => {
@@ -216,7 +219,9 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), value);
+                  const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[value] : binaryPutContracts[value];
+                  setUnitPrice(`${contract.referencePrice}`);
+                  handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>

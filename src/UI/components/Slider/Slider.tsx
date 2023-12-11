@@ -41,8 +41,6 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
   const controlWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log('min',((minValue - min) / (max - min)) * 100)
-    console.log('max',((maxValue - min) / (max - min)) * 100)
     setMinPos(range ? ((minValue - min) / (max - min)) * 100 : 0);
     setMaxPos(((maxValue - min) / (max - min)) * 100);
   }, [maxValue, minValue, min, max, range]);

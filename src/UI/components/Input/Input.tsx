@@ -1,5 +1,5 @@
 // Packages
-import { ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 
 // Utils
 import { preventScrollOnNumberInput } from '@/UI/utils/Input';
@@ -27,7 +27,16 @@ type InputProps = {
   increment?: (direction: 'UP' | 'DOWN') => void;
   isLinked?: boolean;
   canLink?: boolean;
+  hasDropdown?: boolean;
+  dropDownOptions?: DropDownOption[];
+  onDropdownChange?: (option: string) => void
 };
+
+type DropDownOption = {
+  value: string,
+  label: string,
+  icon: ReactElement
+}
 
 // Styles
 import styles from './Input.module.scss';
@@ -37,6 +46,8 @@ import UnLink from '../Icons/UnLink';
 import ChevronUp from '../Icons/ChevronUp';
 import ChevronDown from '../Icons/ChevronDown';
 import Flex from '@/UI/layouts/Flex/Flex';
+import DropdownOutlined from '../Icons/DropdownOutlined';
+import { useEscKey } from '@/UI/hooks/useEscKey';
 
 const Input = ({
   increment,
@@ -56,9 +67,60 @@ const Input = ({
   isLinked,
   canLink,
   onLink,
-  footerText
+  footerText,
+  hasDropdown,
+  dropDownOptions,
+  onDropdownChange
 }: InputProps) => {
   const inputClass = hasError ? `${styles.input} ${styles.error}` : styles.input;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
+  useEscKey(() => {
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+    }
+  });
+  // Render Dropdown Menu
+  const renderDropdownOptions = () => {
+    return (
+      <ul className={styles.dropdownMenu}>
+        {dropDownOptions && dropDownOptions.map(option => (
+          <li
+            key={option.value}
+            className={`${styles.dropdownItem} ${value === option.value ? styles.selected : ''}`}
+            onClick={() => handleOptionClick(option.value)}
+            >{option.icon} {option.label}</li>
+          
+        ))}
+      </ul>
+    );
+  };
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Handle option click
+  const handleOptionClick = (optionValue: string) => {
+    setIsDropdownOpen(false);
+    onDropdownChange && onDropdownChange(optionValue);
+  };
   return (
     <div className={`${inputClass} ${className || ''}`}>
       {label && (
@@ -85,6 +147,12 @@ const Input = ({
               onWheel={type === 'number' ? preventScrollOnNumberInput : undefined}
               disabled={disabled}
             />
+            {hasDropdown && (
+              <div onClick={toggleDropdown} className={`${styles.dropdown} ${isDropdownOpen ? styles.isActive : ''}`}>
+                <DropdownOutlined />
+                {isDropdownOpen && renderDropdownOptions()}
+              </div>
+            )}
             {icon && <div className='mt-2'>{icon}</div>}
           </Flex>
           {footerText && <div className={styles.footer}>{footerText}</div>}

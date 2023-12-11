@@ -36,7 +36,7 @@
   .divider {
     width: rem(170);
     height: rem(2);
-    background: var(--white-60);
+    background: var(--white-80);
     margin: rem(4) 0;
   }
 
@@ -46,7 +46,7 @@
     align-items: center;
     gap: rem(4);
     font-family: $roboto;
-    color: var(--white-60);
+    color: var(--white-80);
     line-height: rem(25.2);
 
     .italic {
@@ -154,7 +154,7 @@
     display: flex;
     align-items: center;
     gap: rem(3);
-    color: var(--white-60);
+    color: var(--white-80);
   }
   .italic {
     font-style: italic;

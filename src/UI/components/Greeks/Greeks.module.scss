@@ -1,6 +1,6 @@
 .container {
   @include spacing(padding, 10, 'left+right');
-  @include spacing(padding, 20, 'top+bottom');
+  @include spacing(padding, 10, 'top+bottom');
   display: flex;
   align-items: center;
   gap: rem(24);

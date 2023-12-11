@@ -124,13 +124,13 @@ $spacings: (
 // Variables 
 $mobile: rem(590);
 $tablet: rem(695);
-$desktop: rem(1440);
+$desktop: rem(1435);
 
 // Breakpoints
 $breakpoints: (
   mobile: rem(390),
   tablet: rem(695),
-  desktop: rem(1440),
+  desktop: rem(1435),
 );
 
 // Mixin for breakpoints
@@ -149,5 +149,5 @@ $container-sizes: (
   sm: rem(480),
   md: rem(990),
   lg: rem(1024),
-  xl: rem(1440),
+  xl: rem(1435),
 );

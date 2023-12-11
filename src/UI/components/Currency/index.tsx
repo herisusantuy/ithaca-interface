@@ -1,5 +1,5 @@
 import Flex from '@/UI/layouts/Flex/Flex';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useDevice } from '@/UI/hooks/useDevice';
 
@@ -24,7 +24,12 @@ export const Currency = ({
 
   const device = useDevice();
   const { currentExpiryDate, expiryList, setCurrentExpiryDate } = useAppStore();
-
+  const [list, setList] = useState([...expiryList]);
+  useEffect(() => {
+    const l = [...expiryList];
+    l.shift()
+    setList([...l])
+  }, [expiryList])
   return (
     <Flex gap={device !== 'phone' ? 'gap-12' : 'gap-0'} margin='mb-24'>
       <div className={styles.currency__info}>
@@ -34,7 +39,7 @@ export const Currency = ({
         <LabelValue
           label='Expiry Date'
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          valueList={expiryList.map((date: any) => ({
+          valueList={list.map((date: any) => ({
             label: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
             value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
           }))}

@@ -63,8 +63,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   useEffect(() => {
-    handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk))
-  }, [capitalAtRisk, strike, insideOrOutside])
+    handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn))
+  }, [capitalAtRisk, strike, insideOrOutside, targetEarn])
 
   const handleTargetEarnChange = async (amount:string) => {
     const targetEarn = getNumberValue(amount);
@@ -73,9 +73,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
   };
 
-  const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number) => {
-    if (isInvalidNumber(capitalAtRisk)) {
-      setTargetEarn('');
+  const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number, targetEarn: number) => {
+    if (isInvalidNumber(capitalAtRisk) || isInvalidNumber(targetEarn)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -94,7 +93,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       ? binaryPutContracts[strike.min]
       : binaryCallContracts[strike.max];
 
-    let quantity = (isInvalidNumber(getNumber(targetEarn)) ? '1' : targetEarn) as `${number}`;
+    let quantity = `${targetEarn}` as `${number}`
     let legMin: Leg = {
       contractId: minContract.contractId,
       quantity,
@@ -131,7 +130,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       max: strikes[strikes.length -1] +strikeDiff
     });
     setPayoffMap(payoffMap);
-    setTargetEarn(quantity);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -182,6 +180,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
   useEffect(() => {
     handleCapitalAtRiskChange('100');
+    handleTargetEarnChange('100');
   }, []);
 
   useEffect(() => {
