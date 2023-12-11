@@ -27,7 +27,7 @@ export const Currency = ({
   const [list, setList] = useState([...expiryList]);
   useEffect(() => {
     const l = [...expiryList];
-    l.shift()
+    // l.shift()
     setList([...l])
   }, [expiryList])
   return (

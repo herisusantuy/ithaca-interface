@@ -45,6 +45,11 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
     setMaxPos(((maxValue - min) / (max - min)) * 100);
   }, [maxValue, minValue, min, max, range]);
 
+  useEffect(() => {
+    setMinValue(value?.min || min)
+    setMaxValue(value?.max || max)
+  }, [value])
+
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(+e.target.value, maxValue);
     if (lockFirst && newMinVal === min) {

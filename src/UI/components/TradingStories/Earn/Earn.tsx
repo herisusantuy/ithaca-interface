@@ -53,14 +53,13 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const nextAuctionForwardContract = spotContract;
 
   const [currency, setCurrency] = useState('WETH');
-
-  const strikes = callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
+  const [strikes, setStrikeList] = useState<number[]>(callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
     const isValidStrike =
       currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
     if (isValidStrike) strikeArr.push(parseFloat(currStrike));
     return strikeArr;
-  }, []) : [];
-  strikes.unshift(strikes[0] - 100)
+  }, []) : []);
+
   const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
   const [strike, setStrike] = useState({ min: strikes[Math.ceil(strikes.length / 2) - 1], max: strikes[Math.ceil(strikes.length / 2) - 1] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
@@ -72,6 +71,18 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
     setRiskyOrRiskless(option)
   }
+
+  useEffect(() => {
+    const strikeList = callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
+      const isValidStrike =
+        currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
+      if (isValidStrike) strikeArr.push(parseFloat(currStrike));
+      return strikeArr;
+    }, []) : [];
+    strikeList.unshift(strikeList[0] - 100)
+    setStrikeList(strikeList)
+    setStrike({ min: strikeList[Math.ceil(strikeList.length / 2) - 1], max: strikeList[Math.ceil(strikeList.length / 2) - 1] })
+  }, [currency, currentExpiryDate])
 
   useEffect(() => {
     if (radioChosen === 'Risky Earn') {
@@ -283,7 +294,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
     const risk = currency === 'WETH' ? getNumber(capitalAtRisk) * strike.max : getNumber(capitalAtRisk);
     const apy = calculateAPY(`${currentExpiryDate}`, 'Earn', risk, getNumber(targetEarn));
-    return <span>{`${apy}%`}</span>;
+    return `${apy}%`;
   };
 
   useEffect(() => {
@@ -348,7 +359,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               }]}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel='Expected Return' labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={`Expected Return ${getAPY()}`} labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
@@ -357,10 +368,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <Flex>
-            <div className={styles.label}>APY</div>
-            <div className={styles.value}>{getAPY()}</div>
-          </Flex>
         </Flex>
       )}
 
@@ -375,7 +382,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel='Expected Return' labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={`Expected Return ${getAPY()}`} labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
@@ -384,11 +391,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <Flex>
-            <div className={styles.label}>APY</div>
-            <div className={styles.value}>{getAPY()}</div>
-          </Flex>
-
         </Flex>
       )}
 

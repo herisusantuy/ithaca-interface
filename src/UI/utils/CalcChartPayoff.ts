@@ -56,6 +56,7 @@ export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange
     BinaryCall: (price: number, strike: number) => (price > strike ? 1 : 0),
     BinaryPut: (price: number, strike: number) => (price < strike ? 1 : 0),
     Forward: (price: number, strike: number) => price - strike,
+    Spot: (price: number, strike: number) => price - strike,
   };
 
   const prices = calculateRange(legs, customRange);
@@ -65,7 +66,7 @@ export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange
     legs.forEach((leg,index) => {
       const side = leg.side === 'BUY' ? 1 : -1;
       const premium = leg.payoff !== 'Forward' ? -leg.premium * side : 0;
-      const strike = leg.payoff !== 'Forward' ? leg.economics.strike : leg.premium;
+      const strike = leg.payoff !== 'Forward' && leg.payoff !== 'Spot' ? leg.economics.strike : leg.premium;
       const intrinsicValue =
         side * payoffFunctions[leg.payoff as keyof typeof payoffFunctions](price, strike || 0) + premium;
       const label = `${payoffMap[leg.payoff as PAYOFF_TYPE]}@${index}`
