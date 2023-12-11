@@ -48,6 +48,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
   useEffect(() => {
     setMinValue(value?.min || min)
     setMaxValue(value?.max || max)
+  //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
   const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {

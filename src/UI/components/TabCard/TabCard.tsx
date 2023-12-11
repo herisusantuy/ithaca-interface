@@ -19,7 +19,7 @@ import RadioButton from '../RadioButton/RadioButton';
 export type MainTab = {
   id: string;
   title: string;
-  selectedTitle: string;
+  selectedTitle?: string;
   description: ReactNode;
   contentId: string;
   radioOptions?: {

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
 
 // Components
-import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
@@ -44,7 +43,6 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [strike, setStrike] = useState<string>('1900');
   const [barrier, setBarrier] = useState<string | undefined>('2300');
   const [size, setSize] = useState('');
-  const [price, setPrice] = useState('');
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -111,7 +109,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   };
 
   const handlePriceChange = (price: string) => {
-    setPrice(price);
+    setUnitPrice(price);
   }
 
   const prepareOrderLegs = async (
@@ -448,7 +446,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             </LabeledControl>
 
             <LabeledControl label='Unit Price'>
-              <Input type='number' value={price} onChange={({ target }) => handlePriceChange(target.value)} />
+              <Input type='number' value={unitPrice} onChange={({ target }) => handlePriceChange(target.value)} />
             </LabeledControl>
           </Flex>
         </Flex>
