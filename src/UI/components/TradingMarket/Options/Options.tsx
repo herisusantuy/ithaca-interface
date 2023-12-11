@@ -218,13 +218,13 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-2'>
+      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
         {!compact && (
           <>
             <LabeledControl label='Type'>
               <RadioButton
                 size={compact ? 'compact' : 'regular'}
-                width={compact ? 120 : 160}
+                width={compact ? 120 : 110}
                 options={TYPE_OPTIONS}
                 name={compact ? 'callOrPutCompact' : 'callOrPut'}
                 selectedOption={callOrPut}
@@ -247,7 +247,8 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoEth />}
-                
+                width={105}
+                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />

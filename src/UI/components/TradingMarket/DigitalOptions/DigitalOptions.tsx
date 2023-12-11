@@ -47,7 +47,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const [binaryCallOrPut, setBinaryCallOrPut] = useState<'BinaryCall' | 'BinaryPut'>('BinaryCall');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikes[4].value);
+  const [strike, setStrike] = useState<string>(strikes[5].value);
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -164,7 +164,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   useEffect(() => {
     const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
     setUnitPrice(`${contract.referencePrice}`);
-    handleSizeChange('1', `${contract.referencePrice}`);
+    handleSizeChange('100', `${contract.referencePrice}`);
   }, []);
 
   const renderInstruction = () => {
@@ -178,13 +178,13 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   return (
     <>
       {renderInstruction()}
-      <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-2'>
+      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
         {!compact && (
           <>
             <LabeledControl label='Type'>
               <RadioButton
                 size={compact ? 'compact' : 'regular'}
-                width={compact ? 120 : 160}
+                width={compact ? 120 : 110}
                 options={DIGITAL_OPTIONS}
                 name={compact ? 'binaryCallOrPutCompact' : 'binaryCallOrPut'}
                 selectedOption={binaryCallOrPut}
@@ -207,6 +207,8 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
               <Input
                 type='number'
                 icon={<LogoEth />}
+                width={105}
+                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />

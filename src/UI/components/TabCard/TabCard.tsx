@@ -19,6 +19,7 @@ import RadioButton from '../RadioButton/RadioButton';
 export type MainTab = {
   id: string;
   title: string;
+  selectedTitle: string;
   description: ReactNode;
   contentId: string;
   radioOptions?: {
@@ -77,7 +78,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
       }
       <div className={`tabCard--${activeTab.id} ${styles.rightPanel}`}>
         <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader}`}>
-          {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? <h2>{activeTab.title}</h2> : <RadioButton
+          {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? <h2>{activeTab.selectedTitle || activeTab.title}</h2> : <RadioButton
             size='large'
             options={activeTab.radioOptions || []}
             selectedOption={radioChosen}

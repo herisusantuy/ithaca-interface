@@ -239,6 +239,10 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
                 />
               </LabeledControl>
             </div>
+            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+              <LogoEth />
+              <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
+            </Flex>
             <div className='width-80 mr-15'>
               <LabeledControl label='Price'>
                 <Input
@@ -248,28 +252,26 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
                 />
               </LabeledControl>
             </div>
-            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
-              <LogoEth />
-              <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
-              <span className='fs-md-bold color-white mr-7'>1740</span>
-              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
-            </Flex>
           </Flex>
 
-          <Flex gap='gap-15'>
-            <LabeledControl label='Size (Multiplier)'>
+          <Flex>
+            <LabeledControl label='Size (Multiplier)' labelClassName='mr-20'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
-            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
-              <p className='fs-sm mr-6'>Total Premium</p>
-              <span className='fs-md-bold color-white'>400</span>
-              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
-              <p className='fs-sm ml-19 mr-10'>Total Price</p>
-              <span className='fs-md-bold color-white'>
-                {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
-              </span>
-              <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
-            </Flex>
+            <LabeledControl label='Total Premium' labelClassName='mr-20 color-white mb-16'>
+              <Flex>
+                <span className='fs-md-bold color-white'>400</span>
+                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+              </Flex>
+            </LabeledControl>
+            <LabeledControl label='Total Price' labelClassName='color-white mb-16'>
+              <Flex>
+                <span className='fs-md-bold color-white'>
+                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                </span>
+                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+              </Flex>
+            </LabeledControl>
           </Flex>
         </Flex>
       )}

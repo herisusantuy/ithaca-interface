@@ -124,7 +124,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
         </div>
         <Flex direction='column'>
           {Number(premium) >= collateralSummary['USDC'].fundLockValue ?
-            <Button size='lg' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
+            <Button size='lg' className='min-width-140' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
               Deposit
             </Button> :
             <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>

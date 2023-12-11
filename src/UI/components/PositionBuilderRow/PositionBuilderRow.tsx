@@ -211,6 +211,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
               type='number'
               value={size}
               icon={<LogoEth />}
+              width={105}
               increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               onChange={({ target }) => handleSizeChange(target.value)}
             />

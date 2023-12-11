@@ -44,7 +44,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
   const nextAuctionForwardContract = spotContract;
 
-  const [currentOrNextAuction, setCurrentOrNextAuction] = useState<'CURRENT' | 'NEXT'>('NEXT');
+  const [currentOrNextAuction, setCurrentOrNextAuction] = useState<'CURRENT' | 'NEXT'>('CURRENT');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
   const [unitPrice, setUnitPrice] = useState('');
@@ -159,6 +159,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     handleSizeChange('1');
     const contract = currentOrNextAuction === 'CURRENT' ? currentForwardContract : nextAuctionForwardContract;
     setUnitPrice(`${contract.referencePrice}`);
+    handleStrikeChange(currentOrNextAuction, buyOrSell, 1, `${contract.referencePrice}`);
   }, []);
 
 
@@ -174,10 +175,10 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     <>
     {renderInstruction()}
       {!compact && (
-        <Flex margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
+        <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
           <LabeledControl label='Type'>
             <RadioButton
-              width={160}
+              width={200}
               options={[
                 { option: 'Next Auction', value: 'NEXT' },
                 { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' }
@@ -203,6 +204,8 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             <Input
               type='number'
               icon={<LogoEth />}
+              width={105}
+              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               value={size}
               onChange={({ target }) => handleSizeChange(target.value)}
             />

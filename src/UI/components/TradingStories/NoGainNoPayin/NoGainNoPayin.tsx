@@ -219,17 +219,19 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-              <Flex direction='row-center' gap='gap-4' margin='mt-22'>
-                <p className='fs-sm'>Price Reference + {callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'}</p>
-                <span className='fs-md-bold color-white'>
-                  {priceReference &&
-                    !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                    getNumberFormat(
-                      toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
-                    )}
-                </span>
-                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
-              </Flex>
+
+              <LabeledControl label={`Price Reference + ${callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'}`} labelClassName='mb-16 color-white'>
+                <Flex>
+                  <span className='fs-md-bold color-white'>
+                    {priceReference &&
+                      !isInvalidNumber(getNumber(maxPotentialLoss)) &&
+                      getNumberFormat(
+                        toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
+                      )}
+                  </span>
+                  <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
+                </Flex>
+              </LabeledControl>
             </>
           )}
         </Flex>
@@ -240,9 +242,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
 
-            <Flex direction='row-center' gap='gap-9' margin='mt-22'>
-              <p className='fs-sm min-width-60'>Collateral</p>
-              <Flex direction='row-center' gap='gap-4'>
+            <LabeledControl label='Collateral' labelClassName='mb-16 color-white'>
+              <Flex>
                 <span className='fs-md-bold color-white'>
                   {!isInvalidNumber(getNumber(multiplier)) &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&
@@ -252,7 +253,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>
-            </Flex>
+            </LabeledControl>
           </Flex>
         )}
       </Flex>

@@ -359,7 +359,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               }]}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={`Expected Return ${getAPY()}`} labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
@@ -382,7 +382,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={`Expected Return ${getAPY()}`} labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
@@ -399,7 +399,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={!compact && showInstructions && radioChosen === 'Riskless Earn' ? 112 : chartHeight}
+        height={!compact && radioChosen === 'Riskless Earn' ? showInstructions ?  96 : 362 : chartHeight}
         showKeys={false}
         showPortial={!compact}
       />
