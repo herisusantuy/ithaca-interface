@@ -44,6 +44,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [strike, setStrike] = useState<string>('1900');
   const [barrier, setBarrier] = useState<string | undefined>('2300');
   const [size, setSize] = useState('');
+  const [price, setPrice] = useState('');
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -108,6 +109,10 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     if (!strike || !barrier) return;
     await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
+
+  const handlePriceChange = (price: string) => {
+    setPrice(price);
+  }
 
   const prepareOrderLegs = async (
     buyOrSell: 'BUY' | 'SELL',
@@ -385,16 +390,6 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
           <Flex direction='row-center' gap='gap-10'>
             {/** Needs hooking up */}
-            <LabeledControl label='Type'>
-              <RadioButton
-                size={compact ? 'compact' : 'regular'}
-                width={compact ? 140 : 186}
-                options={BARRIER_OPTIONS}
-                selectedOption={upOrDown}
-                name='type'
-                onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
-              />
-            </LabeledControl>
 
             <LabeledControl label='Side'>
               <Flex gap='gap-10'>
@@ -450,6 +445,10 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
             <LabeledControl label='Size'>
               <Input type='number' value={size} onChange={({ target }) => handleSizeChange(target.value)} />
+            </LabeledControl>
+
+            <LabeledControl label='Price'>
+              <Input type='number' value={price} onChange={({ target }) => handlePriceChange(target.value)} />
             </LabeledControl>
           </Flex>
 

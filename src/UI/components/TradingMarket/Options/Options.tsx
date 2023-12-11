@@ -63,7 +63,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
     if (!strike) return;
-    await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike);
+    const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
   };
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
@@ -72,11 +74,11 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, unitPrice);
   };
 
-  const handleSizeChange = async (amount: string) => {
+  const handleSizeChange = async (amount: string, price?: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike) return;
-    await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, unitPrice);
+    await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, price || unitPrice);
   };
 
   const handleUnitPriceChange = async (amount: string) => {
@@ -93,13 +95,13 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     strike: string,
     unitPrice?: string
   ) => {
-    if (isInvalidNumber(size)) {
+    if (isInvalidNumber(size) || isInvalidNumber(Number(unitPrice))) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
+      setIv(0);
+      setGreeks(undefined)
       return;
     }
-
-    calcIv(unitPrice || '', strike, callOrPut);
 
     const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
 
@@ -120,7 +122,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     const payoffMap = estimateOrderPayoff([{ ...contract, ...leg, premium: referencePrice }]);
     setPayoffMap(payoffMap);
 
-    if (!unitPrice) setUnitPrice(`${referencePrice}`);
+    // if (!unitPrice) setUnitPrice(`${referencePrice}`);
+
+    calcIv(unitPrice || `${referencePrice}`, strike, callOrPut);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -198,7 +202,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   };
 
   useEffect(() => {
-    handleSizeChange('100');
+    const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleSizeChange('1', `${contract.referencePrice}`);
   }, []);
 
   const renderInstruction = () => {
@@ -254,7 +260,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  handleStrikeChange(callOrPut, buyOrSell, getNumber(size), value);
+                  const contract = callOrPut === 'Call' ? callContracts[value] : putContracts[value];
+                  setUnitPrice(`${contract.referencePrice}`);
+                  handleStrikeChange(callOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>

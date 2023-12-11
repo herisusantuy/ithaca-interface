@@ -20,7 +20,6 @@ type CustomTooltipProps = {
 
 const CustomTooltip = (props: CustomTooltipProps) => {
   const { base, active, payload, setChangeVal, y, height, x } = props;
-  console.log(x)
   if (active) {
     setChangeVal(payload && Math.abs(payload[0].value) >= 0 ? payload[0].value + Number(base) : 0);
     return (

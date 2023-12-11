@@ -283,6 +283,10 @@
   margin-right: rem(14) !important;
 }
 
+.mr-15 {
+  margin-right: rem(15) !important;
+}
+
 .mr-50 {
   margin-right: rem(50) !important;
 }
@@ -317,6 +321,10 @@
 
 .ml-36 {
   margin-left: rem(36) !important;
+}
+
+.ml-40 {
+  margin-left: rem(40) !important;
 }
 
 .ml-48 {
@@ -394,6 +402,10 @@
 
 .width-90 {
   width: 90px !important;
+}
+
+.width-80 {
+  width: 80px !important;
 }
 
 .nowrap {
@@ -608,4 +620,8 @@
 
 .hide-visibility {
   visibility: hidden;
+}
+
+.z-unset {
+  z-index: unset !important;
 }

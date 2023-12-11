@@ -43,11 +43,11 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     useAppStore();
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
   const nextAuctionForwardContract = getContractsByExpiry(
-    `${expiryList[expiryList.indexOf(currentExpiryDate) + 1]}`,
+    `${expiryList[0]}`,
     'Forward'
   )['-'];
 
-  const [currentOrNextAuction, setCurrentOrNextAuction] = useState<'CURRENT' | 'NEXT'>('CURRENT');
+  const [currentOrNextAuction, setCurrentOrNextAuction] = useState<'CURRENT' | 'NEXT'>('NEXT');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
   const [unitPrice, setUnitPrice] = useState('');
@@ -58,7 +58,9 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleCurrentOrNextAuctionChange = async (currentOrNextAuction: 'CURRENT' | 'NEXT') => {
     setCurrentOrNextAuction(currentOrNextAuction);
-    await handleStrikeChange(currentOrNextAuction, buyOrSell, getNumber(size));
+    const contract = currentOrNextAuction === 'CURRENT' ? currentForwardContract : nextAuctionForwardContract;
+    setUnitPrice(`${contract.referencePrice}`);
+    await handleStrikeChange(currentOrNextAuction, buyOrSell, getNumber(size), `${contract.referencePrice}`);
   };
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
@@ -84,7 +86,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     size: number,
     unitPrice?: string
   ) => {
-    if (isInvalidNumber(size)) {
+    if (isInvalidNumber(size) || isInvalidNumber(Number(unitPrice))) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -105,7 +107,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
     const payoffMap = estimateOrderPayoff([{ ...contract, ...leg, premium: referencePrice }]);
     setPayoffMap(payoffMap);
-    if (!unitPrice) setUnitPrice(`${referencePrice}`);
+    // if (!unitPrice) setUnitPrice(`${referencePrice}`);
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
@@ -157,7 +159,9 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   };
 
   useEffect(() => {
-    handleSizeChange('100');
+    handleSizeChange('1');
+    const contract = currentOrNextAuction === 'CURRENT' ? currentForwardContract : nextAuctionForwardContract;
+    setUnitPrice(`${contract.referencePrice}`);
   }, []);
 
 
@@ -178,8 +182,8 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             <RadioButton
               width={160}
               options={[
-                { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' },
                 { option: 'Next Auction', value: 'NEXT' },
+                { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' }
               ]}
               name={compact ? 'currentOrNextAuctionCompact' : 'currentOrNextAuction'}
               selectedOption={currentOrNextAuction}

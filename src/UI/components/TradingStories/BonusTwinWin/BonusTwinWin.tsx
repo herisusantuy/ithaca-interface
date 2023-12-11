@@ -47,6 +47,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
   const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[3]);
   const [multiplier, setMultiplier] = useState('');
+  const [price, setPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
@@ -73,6 +74,10 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
   const handleKOBarrierChange = async (koBarrier: string) => {
     setKoBarrier(koBarrier);
     await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+  };
+
+  const handlePriceChange = (price: string) => {
+    setPrice(price);
   };
 
   const handlePriceReferenceChange = async (
@@ -204,36 +209,46 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
   return (
     <>
-    {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
-      <RadioButton
-        size={compact ? 'compact' : 'regular'}
-        width={compact ? 140 : 186}
-        options={BONUS_TWIN_WIN_OPTIONS}
-        selectedOption={bonusOrTwinWin}
-        name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
-        onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
-      />
-    </Flex>}
+      {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
+        <RadioButton
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 140 : 186}
+          options={BONUS_TWIN_WIN_OPTIONS}
+          selectedOption={bonusOrTwinWin}
+          name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
+          onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
+        />
+      </Flex>}
 
-      {!compact && showInstructions && (bonusOrTwinWin === 'Bonus' ?<BonusInstructions /> : <TwinWinInstructions/>)}
+      {!compact && showInstructions && (bonusOrTwinWin === 'Bonus' ? <BonusInstructions /> : <TwinWinInstructions />)}
 
       {!compact && (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>
           <Flex gap='gap-15'>
-            <LabeledControl label='Price Reference'>
-              <DropdownMenu disabled options={[]} value={{ name: priceReference, value: priceReference }} />
-            </LabeledControl>
-
-            <LabeledControl label='KO Barrier' labelClassName='hide-visibility'>
-              <DropdownMenu
-                options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
-                value={koBarrier ? { name: koBarrier, value: koBarrier } : undefined}
-                onChange={handleKOBarrierChange}
-              />
-            </LabeledControl>
-
+            <div className='width-90 mr-15'>
+              <LabeledControl label='Price Reference'>
+                <DropdownMenu width={80} disabled options={[]} value={{ name: priceReference, value: priceReference }} />
+              </LabeledControl>
+            </div>
+            <div className='width-80 mr-15'>
+              <LabeledControl label='KO Barrier'>
+                <DropdownMenu
+                  options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
+                  value={koBarrier ? { name: koBarrier, value: koBarrier } : undefined}
+                  onChange={handleKOBarrierChange}
+                />
+              </LabeledControl>
+            </div>
+            <div className='width-80 mr-15'>
+              <LabeledControl label='Price'>
+                <Input
+                  type='number'
+                  value={price}
+                  onChange={({ target }) => handlePriceChange(target.value)}
+                />
+              </LabeledControl>
+            </div>
             <Flex direction='row-center' gap='gap-4' margin='mt-22'>
-              <p className='color-white-60 fs-xs mr-10'>KO Barrier</p>
               <LogoEth />
               <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
               <span className='fs-md-bold color-white mr-7'>1740</span>

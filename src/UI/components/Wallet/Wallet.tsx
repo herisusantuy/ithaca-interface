@@ -8,7 +8,7 @@ import ConnectWalletIcon from '../Icons/ConnectWalletIcon';
 import ChevronDown from '../Icons/ChevronDown';
 
 const Wallet = () => {
-  const { ithacaSDK, initIthacaSDK } = useAppStore();
+  const { ithacaSDK, initIthacaSDK, isAuthenticated } = useAppStore();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   useAccount({

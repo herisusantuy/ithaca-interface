@@ -149,7 +149,6 @@ const TableFundLock = () => {
 
   const selectedLabeStatus = (label: string, status: boolean) => {
     if (filterHeader == 'Currency') {
-      console.log(filterHeader);
       setCurrencyChecked(false);
       const filter = currencyArray.slice();
       if (status) {
@@ -211,7 +210,6 @@ const TableFundLock = () => {
         break;
       }
       case 'Amount': {
-        console.log(slicedData);
         const sortData = foundLockAmountDataSort(slicedData, sortDirection);
         setSlicedData(sortData.slice(pageStart, pageEnd));
         break;

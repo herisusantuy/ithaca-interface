@@ -12,7 +12,7 @@ const storyMap: {
   };
 } = {
   betChart: { component: Bet, height: { compact: 71, normal: { withInstructions: 170, withoutInstructions: 286 } } },
-  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 271, withoutInstructions: 390 } } },
+  earnChart: { component: Earn, height: { compact: 88, normal: { withInstructions: 206, withoutInstructions: 325 } } },
   noGainNoPayinChart: {
     component: NoGainNoPayin,
     height: { compact: 75, normal: { withInstructions: 178, withoutInstructions: 312 } },
@@ -27,15 +27,15 @@ const storyMap: {
   },
   optionsChart: {
     component: Options,
-    height: { compact: 93, normal: { withInstructions: 318, withoutInstructions: 379 } },
+    height: { compact: 93, normal: { withInstructions: 178, withoutInstructions: 239 } },
   },
   digitalOptionsChart: {
     component: DigitalOptions,
-    height: { compact: 104, normal: { withInstructions: 294, withoutInstructions: 379 } },
+    height: { compact: 104, normal: { withInstructions: 214, withoutInstructions: 279 } },
   },
   forwardsChart: {
     component: Forwards,
-    height: { compact: 120, normal: { withInstructions: 318, withoutInstructions: 426 } },
+    height: { compact: 120, normal: { withInstructions: 198, withoutInstructions: 306 } },
   },
 };
 

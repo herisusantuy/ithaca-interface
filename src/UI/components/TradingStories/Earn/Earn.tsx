@@ -47,9 +47,13 @@ import styles from './Earn.module.scss'
 dayjs.extend(duration)
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, } = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, getContractsByExpiry, expiryList} = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
+  const nextAuctionForwardContract = getContractsByExpiry(
+    `${expiryList[0]}`,
+    'Forward'
+  )['-'];
 
   const [currency, setCurrency] = useState('WETH');
 
@@ -63,7 +67,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
   const [strike, setStrike] = useState({ min: strikes[Math.ceil(strikes.length / 2) - 1], max: strikes[Math.ceil(strikes.length / 2) - 1] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
-  const [targetEarn, setTargetEarn] = useState('');
+  const [targetEarn, setTargetEarn] = useState('101');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
@@ -74,57 +78,104 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   useEffect(() => {
     if (radioChosen === 'Risky Earn') {
-      handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
+      handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
     }
     else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
-  }, [capitalAtRisk])
+  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen])
 
   const handleCapitalAtRiskChange = async (amount: string) => {
-    if (radioChosen === 'Risky Earn') {
-      const capitalAtRisk = getNumberValue(amount);
-      setCapitalAtRisk(capitalAtRisk);
-    }
-    else {
-      const capitalAtRisk = getNumberValue(amount);
-      setCapitalAtRisk(capitalAtRisk);
-    }
+    const capitalAtRisk = getNumberValue(amount);
+    setCapitalAtRisk(capitalAtRisk);
   };
 
   const handleRisklessChange = async (risk: string, earn: string) => {
-    const current = dayjs();
-    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
-    const yearDiff = dayjs.duration(expiry.diff(current)).asYears();
-    const APY = (Number(earn) / Number(risk) - 1) / yearDiff;
     if (isInvalidNumber(getNumber(earn)) || isInvalidNumber(getNumber(risk))) return;
-    const closest = Object.keys(callContracts).reduce((prev, curr) => {
-      return (Math.abs(Number(curr) - currentSpotPrice) < Math.abs(prev - currentSpotPrice) ? Number(curr) : prev);
-    }, 0);
+    const closest = Object.keys(callContracts).filter((contract) => Number(contract) > currentSpotPrice).sort()[0];
 
-    const leg = [{
+    const legs = [{
       contractId: callContracts[closest].contractId,
       quantity: (Number(earn) / strike.max).toFixed(2).toString(),
-      // quantity: earn,
       side: 'SELL',
     }, {
       contractId: putContracts[closest].contractId,
       quantity: (Number(earn) / strike.max).toFixed(2).toString(),
-      // quantity: earn,
+      side: 'BUY',
+    }, {
+      contractId: nextAuctionForwardContract.contractId,
+      quantity: (Number(risk) / strike.max).toFixed(2).toString(),
       side: 'BUY',
     }];
 
     const order = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: getNumber((Number(earn) - Number(risk)).toString()).toFixed(currencyPrecision.strike),
-      legs: leg,
+      legs,
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
     const payoffMap = estimateOrderPayoff([
-      { ...callContracts[closest], ...leg[0], premium: callContracts[closest].referencePrice },
-      { ...putContracts[closest], ...leg[1], premium: putContracts[closest].referencePrice }
+      { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
+      { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
+      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract.referencePrice }
     ]);
+    setPayoffMap(payoffMap);
+
+    try {
+      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      setOrderDetails({
+        order,
+        orderLock,
+      });
+    } catch (error) {
+      // Add toast
+      console.error('Order estimation for earn failed', error);
+    }
+  };
+
+  const handleRiskyChange = async (strike: { min: number; max: number }, currency: string, capitalAtRisk: string, targetEarn: string) => {
+    if (isInvalidNumber(getNumber(targetEarn)) || isInvalidNumber(getNumber(capitalAtRisk))) {
+      setOrderDetails(undefined);
+      setPayoffMap(undefined);
+      return;
+    }
+    const contract = callContracts[strike.max];
+    const closest = Object.keys(callContracts).filter((contract) => getNumber(contract) > currentSpotPrice).sort()[0];
+    const forwardPrice = getNumber(closest) - (getNumber(targetEarn) - getNumber(capitalAtRisk))
+    const quantity =
+      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+    const legs = [{
+        contractId: contract.contractId,
+        quantity: quantity,
+        side: 'SELL',
+    }, {
+      contractId: nextAuctionForwardContract.contractId,
+      quantity: forwardPrice.toFixed(2).toString(),
+      side: 'SELL',
+    }]
+
+    const order = {
+      clientOrderId: createClientOrderId(),
+      totalNetPrice: getNumber(targetEarn).toFixed(currencyPrecision.strike),
+      legs: legs,
+      addCollateral: currency === 'WETH',
+    } as ClientConditionalOrder;
+    const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
+
+    const payOffQuantity =
+      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+    const payOffLeg = {
+      contractId: putContracts[strike.max].contractId,
+      quantity: payOffQuantity,
+      side: 'SELL',
+    };
+    const payoffMap = estimateOrderPayoff([
+      { ...putContracts[strike.max], ...payOffLeg, premium: putContracts[strike.max].referencePrice },
+    ], {
+      min: strikes[0],
+      max: strikes[strikes.length -1] + strikeDiff
+    });
     setPayoffMap(payoffMap);
 
     try {
@@ -143,116 +194,63 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     if (radioChosen === 'Risky Earn') {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
-      if (isInvalidNumber(getNumber(targetEarn))) {
-        setCapitalAtRisk('');
-        setOrderDetails(undefined);
-        setPayoffMap(undefined);
-        return;
-      }
-
-      const contracts = currency === 'WETH' ? callContracts : putContracts;
-      const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
-        const isValidStrike =
-          currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
-        if (isValidStrike) contractDetails[strike] = contracts[strike];
-        return contractDetails;
-      }, {});
-      const quantity =
-        currency === 'WETH'
-          ? `${toPrecision(
-            getNumber(targetEarn) / filteredContracts[strike.max].referencePrice,
-            currencyPrecision.strike
-          )}`
-          : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
-
-      const leg = {
-        contractId: filteredContracts[strike.max].contractId,
-        quantity,
-        side: 'SELL',
-      } as Leg;
-
-      const order = {
-        clientOrderId: createClientOrderId(),
-        totalNetPrice: getNumber(targetEarn).toFixed(currencyPrecision.strike),
-        legs: [leg],
-        addCollateral: currency === 'WETH',
-      } as ClientConditionalOrder;
-
-      const payoffMap = estimateOrderPayoff([
-        { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
-      ]);
-      setPayoffMap(payoffMap);
-      setCapitalAtRisk(quantity);
-
-      try {
-        const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-        setOrderDetails({
-          order,
-          orderLock,
-        });
-      } catch (error) {
-        // Add toast
-        console.error('Order estimation for earn failed', error);
-      }
     }
     else {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
-      handleRisklessChange(capitalAtRisk, targetEarn);
     }
   };
 
-  const handleStrikeChange = async (strike: { min: number; max: number }, currency: string, capitalAtRisk: number) => {
-    if (isInvalidNumber(capitalAtRisk)) {
-      setTargetEarn('');
-      setOrderDetails(undefined);
-      setPayoffMap(undefined);
-      return;
-    }
+  // const handleStrikeChange = async (strike: { min: number; max: number }, currency: string, capitalAtRisk: number) => {
+  //   if (isInvalidNumber(capitalAtRisk)) {
+  //     setOrderDetails(undefined);
+  //     setPayoffMap(undefined);
+  //     return;
+  //   }
 
-    const contracts = currency === 'WETH' ? callContracts : putContracts;
-    const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
-      const isValidStrike =
-        currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
-      if (isValidStrike) contractDetails[strike] = contracts[strike];
-      return contractDetails;
-    }, {});
-    const quantity =
-      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(capitalAtRisk / strike.max, currencyPrecision.strike)}`;
+  //   const contracts = currency === 'WETH' ? callContracts : putContracts;
+  //   const filteredContracts = Object.keys(contracts).reduce<ContractDetails>((contractDetails, strike) => {
+  //     const isValidStrike =
+  //       currency === 'WETH' ? parseFloat(strike) > currentSpotPrice : parseFloat(strike) < currentSpotPrice;
+  //     if (isValidStrike) contractDetails[strike] = contracts[strike];
+  //     return contractDetails;
+  //   }, {});
+  //   const quantity =
+  //     currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(capitalAtRisk / strike.max, currencyPrecision.strike)}`;
 
-    const leg = {
-      contractId: filteredContracts[strike.max].contractId,
-      quantity,
-      side: 'SELL',
-    } as Leg;
+  //   const leg = {
+  //     contractId: filteredContracts[strike.max].contractId,
+  //     quantity,
+  //     side: 'SELL',
+  //   } as Leg;
 
-    const order = {
-      clientOrderId: createClientOrderId(),
-      totalNetPrice: capitalAtRisk.toFixed(currencyPrecision.strike),
-      legs: [leg],
-      addCollateral: currency === 'WETH',
-    } as ClientConditionalOrder;
-    const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
-    const payoffMap = estimateOrderPayoff([
-      { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
-    ], {
-      min: strikes[0],
-      max: strikes[strikes.length -1] + strikeDiff
-    });
-    setPayoffMap(payoffMap);
-    setTargetEarn(calculateNetPrice([leg], [filteredContracts[strike.max].referencePrice], currencyPrecision.strike));
+  //   const order = {
+  //     clientOrderId: createClientOrderId(),
+  //     totalNetPrice: capitalAtRisk.toFixed(currencyPrecision.strike),
+  //     legs: [leg],
+  //     addCollateral: currency === 'WETH',
+  //   } as ClientConditionalOrder;
+  //   const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
+  //   const payoffMap = estimateOrderPayoff([
+  //     { ...filteredContracts[strike.max], ...leg, premium: filteredContracts[strike.max].referencePrice },
+  //   ], {
+  //     min: strikes[0],
+  //     max: strikes[strikes.length -1] + strikeDiff
+  //   });
+  //   setPayoffMap(payoffMap);
+  //   setTargetEarn(calculateNetPrice([leg], [filteredContracts[strike.max].referencePrice], currencyPrecision.strike));
 
-    try {
-      const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
-      setOrderDetails({
-        order,
-        orderLock,
-      });
-    } catch (error) {
-      // Add toast
-      console.error('Order estimation for earn failed', error);
-    }
-  };
+  //   try {
+  //     const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+  //     setOrderDetails({
+  //       order,
+  //       orderLock,
+  //     });
+  //   } catch (error) {
+  //     // Add toast
+  //     console.error('Order estimation for earn failed', error);
+  //   }
+  // };
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
@@ -327,51 +325,33 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           showLabel={!compact}
           onChange={strike => {
             setStrike(strike);
-            handleStrikeChange(strike, currency, getNumber(capitalAtRisk));
           }}
         />
       </Flex> : ''}
 
       {!compact && radioChosen === 'Risky Earn' && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label={riskyOrRiskless === 'Risky Earn' ? 'Risk' : 'Lend'} lowerLabel={riskyOrRiskless === 'Risky Earn' ? 'Capital At Risk' : 'Loan'} labelClassName='justify-end'>
+          <LabeledInput label='Risk' lowerLabel='Capital At Risk' labelClassName='ml-40'>
             <Input
               type='number'
-              width={80}
+              width={100}
               value={capitalAtRisk}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
-              icon={<LogoEth />}
+              icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc/>}
+              hasDropdown={true}
+              onDropdownChange={(option) => setCurrency(option)}
+              dropDownOptions={[{
+                label: 'USDC',
+                value: 'USDC',
+                icon: <LogoUsdc/>
+              },{
+                label: 'WETH',
+                value: 'WETH',
+                icon: <LogoEth/>
+              }]}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected Return {getAPY()}</span>}>
-            <Input
-              type='number'
-              width={80}
-              value={targetEarn}
-              onChange={({ target }) => handleTargetEarnChange(target.value)}
-              icon={<LogoUsdc />}
-            />
-          </LabeledInput>
-          <Flex>
-            <div className={styles.label}>Premium</div>
-            <div className={styles.value}>933.8K</div>
-            <div className='mt-8'><LogoUsdc /></div>
-          </Flex>
-        </Flex>
-      )}
-
-      {!compact && radioChosen === 'Riskless Earn' && (
-        <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label='Loan' lowerLabel='Lend' labelClassName='justify-end'>
-            <Input
-              type='number'
-              width={80}
-              value={capitalAtRisk}
-              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
-              icon={<LogoUsdc />}
-            />
-          </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected Return</span>}>
+          <LabeledInput label='Earn' lowerLabel='Expected Return' labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
@@ -384,10 +364,32 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
             <div className={styles.label}>APY</div>
             <div className={styles.value}>{getAPY()}</div>
           </Flex>
+        </Flex>
+      )}
+
+      {!compact && radioChosen === 'Riskless Earn' && (
+        <Flex gap='gap-36' margin='mt-13 mb-17'>
+          <LabeledInput label='Loan' lowerLabel='Lend' labelClassName='ml-40'>
+            <Input
+              type='number'
+              width={80}
+              value={capitalAtRisk}
+              onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+          </LabeledInput>
+          <LabeledInput label='Earn' lowerLabel='Expected Return' labelClassName='ml-40'>
+            <Input
+              type='number'
+              width={80}
+              value={targetEarn}
+              onChange={({ target }) => handleTargetEarnChange(target.value)}
+              icon={<LogoUsdc />}
+            />
+          </LabeledInput>
           <Flex>
-            <div className={styles.label}>Premium</div>
-            <div className={styles.value}>933.8K</div>
-            <div className='mt-8'><LogoUsdc /></div>
+            <div className={styles.label}>APY</div>
+            <div className={styles.value}>{getAPY()}</div>
           </Flex>
 
         </Flex>

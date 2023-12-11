@@ -23,6 +23,7 @@ import 'src/UI/stylesheets/vendor/_prism-onedark.scss';
 import 'src/UI/stylesheets/_global.scss';
 import Toast from '@/UI/components/Toast/Toast';
 import useToast from '@/UI/hooks/useToast';
+import { IthacaSDK } from '@ithaca-finance/sdk';
 
 const STATUS_MAP: Record<string, string> = {
   'NEW': 'info',
@@ -90,7 +91,7 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol } = useAppStore();
+  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol, ithacaSDK, isAuthenticated } = useAppStore();
 
   useEffect(() => {
     getTimeNextAuction(nextAuction.milliseconds || 0, fetchNextAuction, fetchSpotPrices);
@@ -101,8 +102,20 @@ function App({ Component, pageProps, router }: AppProps) {
     initIthacaProtocol();
   }, [initIthacaProtocol]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      heartBeat(ithacaSDK)
+    }
+  }, [isAuthenticated])
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
+
+const heartBeat = (ithacaSDK: IthacaSDK) => {
+  setTimeout(() => {
+    ithacaSDK.auth.heartbeat();
+    heartBeat(ithacaSDK);
+  }, 10)
+};
 
 const getTimeNextAuction = async (
   timeUntilNexAuction: number,
