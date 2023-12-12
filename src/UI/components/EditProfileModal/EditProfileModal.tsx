@@ -91,7 +91,6 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
             id='leaderboardName'
             value={leaderboardName}
             onChange={() => {}}
-            disabled
             label='Leaderboard Name'
             type='text'
             className={styles.leaderboardName}
