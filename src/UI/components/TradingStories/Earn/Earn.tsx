@@ -103,17 +103,20 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     if (isInvalidNumber(getNumber(earn)) || isInvalidNumber(getNumber(risk))) return;
     const closest = Object.keys(callContracts).filter((contract) => Number(contract) > currentSpotPrice).sort()[0];
 
+    const quantity = (Number(risk) / strike.max).toFixed(2).toString();
+
     const legs = [{
+        contractId: nextAuctionForwardContract?.contractId,
+        quantity,
+        side: 'BUY',
+      },          
+      {
       contractId: callContracts[closest].contractId,
-      quantity: (Number(earn) / strike.max).toFixed(2).toString(),
+      quantity,
       side: 'SELL',
     }, {
       contractId: putContracts[closest].contractId,
-      quantity: (Number(earn) / strike.max).toFixed(2).toString(),
-      side: 'BUY',
-    }, {
-      contractId: nextAuctionForwardContract?.contractId,
-      quantity: (Number(risk) / strike.max).toFixed(2).toString(),
+      quantity,
       side: 'BUY',
     }];
 
@@ -149,20 +152,17 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       setPayoffMap(undefined);
       return;
     }
-    const contract = callContracts[strike.max];
-    const closest = Object.keys(callContracts).filter((contract) => getNumber(contract) > currentSpotPrice).sort()[0];
-    const forwardPrice = getNumber(closest) - (getNumber(targetEarn) - getNumber(capitalAtRisk))
+    const contract = currency === 'WETH' ? callContracts[strike.max] : putContracts[strike.max]    
+    
     const quantity =
       currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
-    const legs = [{
+    const legs = [
+      {
         contractId: contract.contractId,
         quantity: quantity,
         side: 'SELL',
-    }, {
-      contractId: nextAuctionForwardContract.contractId,
-      quantity: forwardPrice.toFixed(2).toString(),
-      side: 'SELL',
-    }]
+    }
+  ]
 
     const order = {
       clientOrderId: createClientOrderId(),
@@ -170,17 +170,19 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       legs: legs,
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
+
     const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
 
     const payOffQuantity =
       currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+
     const payOffLeg = {
       contractId: putContracts[strike.max].contractId,
       quantity: payOffQuantity,
       side: 'SELL',
     };
     const payoffMap = estimateOrderPayoff([
-      { ...putContracts[strike.max], ...payOffLeg, premium: putContracts[strike.max].referencePrice },
+      { ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn), quantity: '1' },
     ], {
       min: strikes[0],
       max: strikes[strikes.length -1] + strikeDiff
@@ -264,7 +266,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const handleSubmit = async () => {
     if (!orderDetails) return;
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, 'Earn');
+      await ithacaSDK.orders.newOrder(orderDetails.order, riskyOrRiskless);
     } catch (error) {
       showToast(
         {
