@@ -538,7 +538,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                   </div>
                   <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
                   <div className={styles.cell}>
-                    <div className={styles.currency}>{formatCurrencyPair(row.currencyPair)}</div>
+                    <div className={styles.currency}>{row.currencyPair}</div>
                   </div>
                   <div className={styles.cell}>{row.product}</div>
                   <div className={styles.cell}>{getSideIcon(row.side)}</div>

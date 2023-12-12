@@ -93,7 +93,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       ? binaryPutContracts[strike.min]
       : binaryCallContracts[strike.max];
 
-    let quantity = `${targetEarn}` as `${number}`
+    const quantity = `${targetEarn}` as `${number}`
     let legMin: Leg = {
       contractId: minContract.contractId,
       quantity,
@@ -104,14 +104,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       quantity,
       side: !inRange ? 'BUY' : 'SELL',
     };
-
-    const spread = calculateNetPrice(
-      [legMin, legMax],
-      [minContract.referencePrice, maxContract.referencePrice],
-      currencyPrecision.strike,
-      getNumber(quantity)
-    );
-    quantity = (capitalAtRisk / getNumber(spread)).toFixed(currencyPrecision.strike) as `${number}`;
 
     legMin = { ...legMin, quantity };
     legMax = { ...legMax, quantity };

@@ -29,7 +29,7 @@ import { TYPE_OPTIONS } from '@/UI/constants/options';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
@@ -51,29 +51,21 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
     if (!priceReference) return;
-    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
   };
 
   const handleMaxPotentialLossChange = async (amount: string) => {
-    const maxPotentialLoss = getNumberValue(amount);
+    setMaxPotentialLoss(amount);
     if (!priceReference) return;
-    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier), getNumber(maxPotentialLoss));
   };
 
   const handleMultiplierChange = async (amount: string) => {
-    const multiplier = getNumberValue(amount);
-    setMultiplier(multiplier);
+    setMultiplier(amount);
     if (!priceReference) return;
-    await handlePriceReferenceChange(priceReference, callOrPut, getNumber(multiplier));
   };
 
-  const handlePriceReferenceChange = async (
-    priceReference: string,
-    callOrPut: 'Call' | 'Put',
-    multiplier: number,
-    maxPotentialLoss?: number
-  ) => {
-    if (maxPotentialLoss ? isInvalidNumber(maxPotentialLoss) : isInvalidNumber(multiplier)) {
+
+  const handlePriceReferenceChange = () => {
+    if (maxPotentialLoss ? isInvalidNumber(getNumber(maxPotentialLoss)) : isInvalidNumber(getNumber(multiplier))) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -83,31 +75,15 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     const sellContracts = callOrPut === 'Call' ? binaryCallContracts : binaryPutContracts;
     const buyContractId = buyContracts[priceReference].contractId;
     const sellContractId = sellContracts[priceReference].contractId;
-    const buyContractRefPrice = buyContracts[priceReference].referencePrice;
-    const sellContractRefPrice = sellContracts[priceReference].referencePrice;
 
-    let sizeMultipier = multiplier;
-    let downside = toPrecision((multiplier * buyContractRefPrice) / sellContractRefPrice, currencyPrecision.strike);
+    const sellQuantity = getNumber(multiplier) * getNumber(maxPotentialLoss)
 
-    if (maxPotentialLoss) {
-      sizeMultipier = toPrecision(
-        (maxPotentialLoss * sellContractRefPrice) / buyContractRefPrice,
-        currencyPrecision.strike
-      );
-      downside = maxPotentialLoss;
-      setMultiplier(`${sizeMultipier}`);
-    }
-
-    const buyLeg: Leg = { contractId: buyContractId, quantity: `${sizeMultipier}`, side: 'BUY' };
-    const sellLeg: Leg = { contractId: sellContractId, quantity: `${downside}`, side: 'SELL' };
+    const buyLeg: Leg = { contractId: buyContractId, quantity: multiplier as `${number}`, side: 'BUY' };
+    const sellLeg: Leg = { contractId: sellContractId, quantity: `${sellQuantity}`, side: 'SELL' };
 
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: calculateNetPrice(
-        [buyLeg, sellLeg],
-        [buyContractRefPrice, sellContractRefPrice],
-        currencyPrecision.strike
-      ),
+      totalNetPrice: '0.0000',
       legs: [buyLeg, sellLeg],
     };
 
@@ -115,17 +91,19 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       {
         ...buyContracts[priceReference],
         ...buyLeg,
-        premium: buyContracts[priceReference].referencePrice,
+        premium: 1,
       },
       {
         ...sellContracts[priceReference],
         ...sellLeg,
-        premium: sellContracts[priceReference].referencePrice,
+        premium: 1 / getNumber(maxPotentialLoss),
       },
     ]);
     setPayoffMap(payoffMap);
-    setMaxPotentialLoss(`${downside}`);
+    updateOrderDetails(order)
+  };
 
+  const updateOrderDetails = async (order: ClientConditionalOrder) => {
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
       setOrderDetails({
@@ -136,7 +114,11 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       // Add toast
       console.error('Order estimation for No Gain, No Payin’ failed', error);
     }
-  };
+  }
+
+  useEffect(() => {
+    handlePriceReferenceChange()
+  }, [multiplier, maxPotentialLoss, priceReference, callOrPut, ])
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
@@ -166,7 +148,8 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   };
 
   useEffect(() => {
-    handleMultiplierChange('100');
+    setMaxPotentialLoss('10');
+    handleMultiplierChange('1');
   }, []);
 
   const renderInstruction = () => {
@@ -206,7 +189,6 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                   value={priceReference ? { name: priceReference, value: priceReference } : undefined}
                   onChange={value => {
                     setPriceReference(value);
-                    handlePriceReferenceChange(value, callOrPut, getNumber(multiplier));
                   }}
                 />
               </LabeledControl>

@@ -285,12 +285,12 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       }
     }
 
-    const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
-    setUnitPrice(getNumberFormat(unitPrice));
+    // const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
+    // setUnitPrice(getNumberFormat(unitPrice));
 
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: calculateNetPrice(legs, referencePrices, currencyPrecision.strike),
+      totalNetPrice: `${getNumber(unitPrice)}`,
       legs,
     };
 
