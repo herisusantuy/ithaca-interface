@@ -341,7 +341,7 @@ const Index = () => {
                         orientation='vertical'
                         onChange={value => handleInvertSide(value)}
                       />
-                      <span className='color-white'>Invert Side</span>
+                      <span className='color-white fs-xs'>Invert Side</span>
                     </div>
                   ) :
                   (
@@ -435,7 +435,7 @@ const Index = () => {
                           orientation='vertical'
                           onChange={value => handleInvertSide(value)}
                         />
-                        <span className='color-white'>Invert Side</span>
+                        <span className='color-white fs-xs'>Invert Side</span>
                         </>
                       }
                     </Flex>

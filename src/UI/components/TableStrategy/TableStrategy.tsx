@@ -45,7 +45,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: Str
               </div>
               <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
               <div className={styles.cell}>{strategy.leg.quantity}</div>
-              <div className={styles.cell}>{formatNumber(Number(strategy.strike), 'string')}</div>
+              <div className={styles.cell}>{Number(strategy.strike)}</div>
               <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
               {!hideClear && <div className={styles.cell}>
                 <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>

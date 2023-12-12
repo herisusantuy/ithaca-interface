@@ -15,7 +15,7 @@ import { TRADING_MARKET_TABS } from '@/UI/constants/tabCard';
 import { Currency } from '@/UI/components/Currency';
 
 const Index = () => {
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   return (
     <>

@@ -91,6 +91,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
               size='sm'
               defaultState={showInstructions ? 'right' : 'left'}
               rightLabel='Show Instructions'
+              rightLabelClass='white-80'
               onChange={() => setShowInstructions(!showInstructions)}
             />
           </div>

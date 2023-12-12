@@ -15,5 +15,5 @@ export const calculateAPY = (
     const expiry = dayjs(contractExpiry, 'YYMMDDHHm')
     const diff = dayjs.duration(expiry.diff(current)).asYears()
     const apy = (100 * (earn /(risk - 1)) )/ diff;
-    return `${apy.toFixed(2)}%`
+    return `${apy.toFixed(1)}`
 };
