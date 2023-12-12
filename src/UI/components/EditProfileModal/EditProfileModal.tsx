@@ -90,7 +90,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
           <Input
             id='leaderboardName'
             value={leaderboardName}
-            onChange={() => {}}
+            onChange={({ target: { value } }) => setLeaderboardName(value)}
             label='Leaderboard Name'
             type='text'
             className={styles.leaderboardName}
