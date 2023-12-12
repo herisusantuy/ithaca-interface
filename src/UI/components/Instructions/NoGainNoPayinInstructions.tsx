@@ -56,7 +56,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
             min Upside
           </span>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            maxDownside
+            min Downside
           </span>
         </span>
         , receive <LogoEth /> Price at Expiry <Subtract />
@@ -65,7 +65,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
             min Upside
           </span>
           <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            maxDownside
+            min Downside
           </span>
         </span>
         .

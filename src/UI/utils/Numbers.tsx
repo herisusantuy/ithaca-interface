@@ -33,11 +33,11 @@ export const formatNumber = (value: number, type: string) => {
   }
   if (!value) return '-'
   if (value*(isNeg ? -1: 1) > 1000000000) {
-    return (value / 1000000000).toFixed(6) + 'b';
+    return (value / 1000000000).toFixed(6) + 'B';
   } else if (value*(isNeg ? -1: 1) > 1000000) {
-    return (value / 1000000).toFixed(3) + 'm';
+    return (value / 1000000).toFixed(3) + 'M';
   } else if (value*(isNeg ? -1: 1) > 1000) {
-    return (value / 1000).toFixed(1) + 'k';
+    return (value / 1000).toFixed(1) + 'K';
   } else {
     return type == 'int' ? Math.round(value)?.toString() : Number(value)?.toFixed(1)?.toString();
   }

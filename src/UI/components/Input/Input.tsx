@@ -148,13 +148,15 @@ const Input = ({
               onWheel={type === 'number' ? preventScrollOnNumberInput : undefined}
               disabled={disabled}
             />
+            {icon && <div className='mt-2'>{icon}</div>}
             {hasDropdown && (
               <div onClick={toggleDropdown} className={`${styles.dropdown} ${isDropdownOpen ? styles.isActive : ''}`}>
-                <DropdownOutlined />
+                <div className='mmt-2'>
+                  <DropdownOutlined />
+                </div>
                 {isDropdownOpen && renderDropdownOptions()}
               </div>
             )}
-            {icon && <div className='mt-2'>{icon}</div>}
           </Flex>
           {footerText && <div className={styles.footer}>{footerText}</div>}
         </Flex>

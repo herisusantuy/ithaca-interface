@@ -409,7 +409,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               />
             </LabeledControl>
 
-            <p className='mt-22'>Knock</p>
+            <h5 className='mt-22 color-white'>Knock</h5>
 
             <div className='mt-22'>
               <RadioButton
@@ -457,7 +457,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         showPortial={!compact}
       />
 
-      {!compact && <StorySummary showCollateral summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </>
   );
 };

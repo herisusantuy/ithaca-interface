@@ -47,7 +47,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const strikes = binaryPutContracts ? Object.keys(binaryPutContracts).map(strike => parseFloat(strike)) : [];
 
   const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('INSIDE');
-  const [strike, setStrike] = useState({ min: strikes[strikes.length > 4 ? 2 : 0], max: strikes[strikes.length > 2 ? strikes.length -3 : 0] });
+  const [strike, setStrike] = useState({ min: strikes[strikes.length > 6 ? 3 : 0], max: strikes[strikes.length > 2 ? strikes.length -5 : 0] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -235,7 +235,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
+          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>}>
             <Input
               type='number'
               value={targetEarn}

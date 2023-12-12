@@ -21,11 +21,11 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
   //   titleKey: 'Click to visit leaderboard',
   //   displayText: 'Leaderboard',
   // },
-  {
-    path: '/analytics',
-    titleKey: 'Click to visit analytics',
-    displayText: 'Analytics',
-  },
+  // {
+  //   path: '/analytics',
+  //   titleKey: 'Click to visit analytics',
+  //   displayText: 'Analytics',
+  // },
   // {
   //   path: '#',
   //   titleKey: 'Click to view more',
