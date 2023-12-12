@@ -38,12 +38,12 @@
       justify-content: flex-end;
     }
 
-    @include breakpoint(tablet) {
+    @include breakpoint2(tablet) {
       @include font-size('text-xxs', 'regular');
     }
   }
 
-  @include breakpoint(tablet) {
+  @include breakpoint2(tablet) {
     padding-left: 0;
     padding-right: 0;
   }
@@ -72,7 +72,7 @@
       align-items: center;
       gap: rem(10);
       width: 30%;
-      @include breakpoint(mobile2) {
+      @include breakpoint2(mobile) {
         > svg {
           display: none;
         }
@@ -83,7 +83,7 @@
       text-align: right;
     }
 
-    @include breakpoint(tablet) {
+    @include breakpoint2(tablet) {
       @include font-size('text-sm', 'regular');
 
       svg {
@@ -92,7 +92,7 @@
       }
     }
 
-    @include breakpoint(mobile) {
+    @include breakpoint2(mobile) {
       @include font-size('text-xs', 'regular');
 
       svg {
@@ -101,7 +101,7 @@
     }
   }
 
-  @include breakpoint(tablet) {
+  @include breakpoint2(tablet) {
     padding-left: 0;
     padding-right: 0;
   }

@@ -22,6 +22,8 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
+import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
+import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
 
 // Types
 type HeaderProps = {
@@ -61,16 +63,21 @@ const Header = ({ className }: HeaderProps) => {
       <header className={`${styles.header} ${className || ''}`}>
         <div className={styles.container}>
           <div className={styles.left}>
-              <span className={styles.logo} onClick={() => { 
-            router.push('/trading/position-builder')
-            }}>
-            <Logo />
+            <span
+              className={styles.logo}
+              onClick={() => {
+                router.push('/trading/position-builder');
+              }}
+            >
+              <Logo />
             </span>
             {!tabletBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
             <Bell />
             {/* <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} /> */}
+            <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
+            <EditProfileModal trigger={<UserProfileIcon />} />
             <Wallet />
             {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
             {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}

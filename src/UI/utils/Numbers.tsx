@@ -42,3 +42,5 @@ export const formatNumber = (value: number, type: string) => {
     return type == 'int' ? Math.round(value)?.toString() : Number(value)?.toFixed(1)?.toString();
   }
 };
+
+export const formatEthAddress = (text: string) => (text ? `${text.slice(0, 4)}...${text.slice(-4)}` : "");

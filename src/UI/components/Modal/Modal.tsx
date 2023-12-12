@@ -40,9 +40,19 @@ type ModalProps = {
   isLoading?: boolean;
   isOpen: boolean;
   hideFooter?: boolean;
+  className?: string;
 };
 
-const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen, hideFooter }: ModalProps) => {
+const Modal = ({
+  children,
+  title,
+  onCloseModal,
+  onSubmitOrder,
+  isLoading,
+  isOpen,
+  hideFooter,
+  className,
+}: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
@@ -74,7 +84,7 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
     >
       <motion.div
         onClick={(e: React.MouseEvent<Element, Event>) => e.stopPropagation()}
-        className={styles.modal}
+        className={`${styles.modal} ${className}`}
         variants={animatedModal}
         initial='hidden'
         animate='visible'
@@ -87,25 +97,31 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
           </Button>
         </div>
         <div className={styles.modalContent}>{children}</div>
-        {!hideFooter && onSubmitOrder ? <div className={styles.modalFooter}>
-          <Button
-            className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
-            onClick={onSubmitOrder}
-            title='Click to confirm'
-          >
-            {isLoading ? <Loader /> : 'Confirm'}
-          </Button>
-        </div> : ''}
+        {!hideFooter && onSubmitOrder ? (
+          <div className={styles.modalFooter}>
+            <Button
+              className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
+              onClick={onSubmitOrder}
+              title='Click to confirm'
+            >
+              {isLoading ? <Loader /> : 'Confirm'}
+            </Button>
+          </div>
+        ) : (
+          ''
+        )}
       </motion.div>
     </motion.div>
   );
 
-  return ReactDOM.createPortal(
-    <AnimatePresence initial={true} mode='wait'>
-      {isOpen && modalContent}
-    </AnimatePresence>,
-    document.body
-  );
+  return isOpen && document.body
+    ? ReactDOM.createPortal(
+        <AnimatePresence initial={true} mode='wait'>
+          {modalContent}
+        </AnimatePresence>,
+        document.body
+      )
+    : null;
 };
 
 export default Modal;

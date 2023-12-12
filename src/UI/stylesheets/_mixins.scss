@@ -121,7 +121,7 @@ $spacings: (
   }
 }
 
-// Variables 
+// Variables
 $mobile: rem(590);
 $tablet: rem(695);
 $desktop: rem(1435);
@@ -132,13 +132,31 @@ $breakpoints: (
   mobile2: rem(767),
   tablet: rem(695),
   desktop: rem(1435),
-  tablet2: rem(1280)
+  tablet2: rem(1280),
 );
 
-// Mixin for breakpoints
+// Breakpoints
+$breakpoints2: (
+  mobile: rem(767),
+  tablet: rem(1280),
+  desktop: rem(1435),
+);
+
+// Mixin for breakpoints min-width
 @mixin breakpoint($point) {
   @if map-has-key($breakpoints, $point) {
     @media (min-width: map-get($breakpoints, $point)) {
+      @content;
+    }
+  } @else {
+    @warn "No breakpoint defined for `#{$point}`.";
+  }
+}
+
+// Mixin for breakpoints max-width
+@mixin breakpoint2($point) {
+  @if map-has-key($breakpoints2, $point) {
+    @media (max-width: map-get($breakpoints2, $point)) {
       @content;
     }
   } @else {
