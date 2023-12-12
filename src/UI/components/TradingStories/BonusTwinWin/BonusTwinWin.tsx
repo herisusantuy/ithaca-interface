@@ -125,20 +125,11 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
     const legs = [buyForwardLeg, buyPutLeg, sellPutLeg, sellBinaryPutLeg];
 
-    const order: ClientConditionalOrder = {
+    const order = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: calculateNetPrice(
-        legs,
-        [
-          buyForwardContract.referencePrice,
-          buyPutContract.referencePrice,
-          sellPutContract.referencePrice,
-          sellBinaryPutContract.referencePrice,
-        ],
-        currencyPrecision.strike
-      ),
+      totalNetPrice: getNumber(price).toFixed(currencyPrecision.strike),
       legs,
-    };
+    } as ClientConditionalOrder;
 
     const payoffMap = estimateOrderPayoff([
       {
