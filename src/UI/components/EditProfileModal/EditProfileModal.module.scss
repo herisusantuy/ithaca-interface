@@ -19,6 +19,7 @@ button.transparentBtn {
 
   &::before {
     @extend .transparentBtn;
+    display: none !important;
   }
   &:hover,
   &:active {
