@@ -172,7 +172,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   }, [insideOrOutside]);
 
   const renderInstruction = () => {
-    return <>{!compact && showInstructions && <BetInstructions type={insideOrOutside} />}</>;
+    return <>{!compact && showInstructions && <BetInstructions type={insideOrOutside} currentExpiryDate={currentExpiryDate.toString()} />}</>;
   };
 
   return (
@@ -235,7 +235,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Target Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>}>
+          <LabeledInput label='Target Earn' lowerLabel={<span>Expected APR<span className='color-white ml-6'>{getAPY()}</span></span>}>
             <Input
               type='number'
               value={targetEarn}

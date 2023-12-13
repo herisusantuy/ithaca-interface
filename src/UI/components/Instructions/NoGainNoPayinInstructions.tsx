@@ -8,12 +8,14 @@ import ChevronLeftHighlighted from '@/UI/components/Icons/ChevronLeftHighlighted
 
 // Styles
 import styles from './Instructions.module.scss';
+import dayjs from 'dayjs';
 
 type NoGainNoPayinInstructionsProps = {
   type?: string;
+  currentExpiryDate: string;
 };
 
-const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsProps) => {
+const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainNoPayinInstructionsProps) => {
   return (
     <div className={styles.container}>
       <p>
@@ -32,7 +34,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
         move from <LogoEth /> Price Reference.
       </p>
       <p className='pl-54'>
-        (maximum potential <LogoUsdc /> loss if <LogoEth /> Price at Expiry = <LogoEth /> Price Reference)
+        (maximum potential <LogoUsdc /> loss if <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> = <LogoEth /> Price Reference)
       </p>
       <p>
         iii. Post minimum expected <LogoEth className='ml-10' />
@@ -47,7 +49,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
         as collateral.
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price at Expiry
+        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
         <ChevronRightHighlighted />
         <LogoEth className='ml-6' />
         Price Reference <Add />
@@ -59,7 +61,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
             min Downside
           </span>
         </span>
-        , receive <LogoEth /> Price at Expiry <Subtract />
+        , receive <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> <Subtract />
         <span className='flex-column-center'>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Upside
@@ -71,7 +73,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
         .
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price at Expiry <ChevronLeftHighlighted />
+        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> <ChevronLeftHighlighted />
         <LogoEth className='ml-6' />
         Price Reference, receive collateral back.
       </p>

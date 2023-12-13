@@ -47,3 +47,8 @@
   color: var(--green-30);
   font-family: $lato;
 }
+
+.disabled {
+  color: var(--white-20) !important;
+  cursor: inherit;
+}

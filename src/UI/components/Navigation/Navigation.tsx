@@ -44,10 +44,10 @@ const Navigation = ({ onClick }: NavigationProps) => {
       {NAVIGATION_ITEMS.map(nav => (
         <Link
           key={nav.titleKey}
-          href={nav.path}
-          className={checkIsActivePath(nav.path) ? styles.isActive : ''}
+          href={!nav.disabled ? nav.path : router.pathname}
+          className={checkIsActivePath(nav.path) ? styles.isActive : nav.disabled ? styles.disabled : ''}
           title={nav.titleKey}
-          onClick={onClick}
+          onClick={() => { if (!nav.disabled && onClick) onClick() }}
         >
           {nav.displayText}
           {nav.displayText === 'More' && <ChevronDown />}

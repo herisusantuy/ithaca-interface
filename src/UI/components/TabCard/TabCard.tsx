@@ -25,6 +25,10 @@ export type MainTab = {
   radioOptions?: {
     option: string;
     value: string;
+  }[],
+  underText?: {
+    value: string,
+    label: string
   }[]
 };
 
@@ -86,6 +90,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             onChange={setRadioChosen}
             width={300}
           />}
+          
           <div className={styles.toggleWrapper}>
             <Toggle
               size='sm'
@@ -94,6 +99,11 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
               rightLabelClass='white-80'
               onChange={() => setShowInstructions(!showInstructions)}
             />
+          </div>
+          <div className={styles.underTextWrapper}>
+            {activeTab.underText?.map((label) => 
+              <span key={label.value} className={`${styles.underTextLabel} ${radioChosen === label.value ? styles.selected : ''}`}>{label.label}</span>
+            )}
           </div>
         </div>
         {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}

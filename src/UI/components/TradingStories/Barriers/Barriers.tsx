@@ -22,16 +22,16 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -128,7 +128,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     }
 
     let legs: Leg[];
-    let referencePrices: number[];
+    // let referencePrices: number[];
     let estimatePayoffData: OptionLeg[];
     if (upOrDown === 'UP') {
       if (inOrOut === 'IN') {
@@ -145,7 +145,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           side: buyOrSell,
         };
         legs = [buyCallLeg, buyBinaryCallLeg];
-        referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
+        // referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
         estimatePayoffData = [
           {
             ...buyCallContract,
@@ -182,11 +182,11 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         };
 
         legs = [buyCallLeg, sellCallLeg, sellBinaryCallLeg];
-        referencePrices = [
-          buyCallContract.referencePrice,
-          sellCallContract.referencePrice,
-          sellBinaryCallContract.referencePrice,
-        ];
+        // referencePrices = [
+        //   buyCallContract.referencePrice,
+        //   sellCallContract.referencePrice,
+        //   sellBinaryCallContract.referencePrice,
+        // ];
 
         estimatePayoffData = [
           {
@@ -223,7 +223,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         };
 
         legs = [buyPutLeg, buyBinaryPutLeg];
-        referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
+        // referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
         estimatePayoffData = [
           {
             ...buyPutContract,
@@ -260,11 +260,11 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         };
 
         legs = [buyPutLeg, sellPutLeg, sellBinaryPutLeg];
-        referencePrices = [
-          buyPutContract.referencePrice,
-          sellPutContract.referencePrice,
-          sellBinaryPutContract.referencePrice,
-        ];
+        // referencePrices = [
+        //   buyPutContract.referencePrice,
+        //   sellPutContract.referencePrice,
+        //   sellBinaryPutContract.referencePrice,
+        // ];
         estimatePayoffData = [
           {
             ...buyPutContract,
