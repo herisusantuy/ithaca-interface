@@ -153,6 +153,7 @@
 .rightPanelHeader {
   @include spacing(margin, 21, 'bottom');
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
 
@@ -265,5 +266,19 @@
     box-shadow: 0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15), 0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset, 0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
     -webkit-backdrop-filter: blur(0.625rem);
     backdrop-filter: blur(0.625rem);
+  }
+}
+.underTextWrapper {
+  position: absolute;
+  bottom: rem(20);
+}
+.underTextLabel {
+  padding-left: rem(30);
+  padding-right: rem(16);
+  @include font-size('text-xs', 'regular');
+  font-style: italic;
+  color: var(--white-80);
+  &.selected {
+    color: var(--white);
   }
 }

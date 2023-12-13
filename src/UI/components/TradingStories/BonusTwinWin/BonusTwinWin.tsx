@@ -221,12 +221,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
                 />
               </LabeledControl>
             </div>
-            <Flex direction='row-center' gap='gap-4' margin='mt-22'>
+            {/* <Flex direction='row-center' gap='gap-4' margin='mt-22'>
               <LogoEth />
               <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
-            </Flex>
+            </Flex> */}
             <div className='width-80 mr-15'>
-              <LabeledControl label='Price'>
+              <LabeledControl label='Protection Cost Inclusive Price' labelClassName='nowrap'>
                 <Input
                   type='number'
                   value={price}

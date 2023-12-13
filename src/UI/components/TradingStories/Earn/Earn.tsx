@@ -353,10 +353,10 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               }]}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={<span>Expected APR<span className='color-white ml-6'>{getAPY()}</span></span>}>
             <Input
               type='number'
-              width={80}
+              width={100}
               value={targetEarn}
               onChange={({ target }) => handleTargetEarnChange(target.value)}
               icon={<LogoUsdc />}
@@ -376,7 +376,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected Return<span className='color-white ml-6'>{getAPY()}</span></span>} labelClassName='ml-40'>
+          <LabeledInput label='Earn' lowerLabel={<span>Expected APR<span className='color-white ml-6'>{getAPY()}</span></span>}>
             <Input
               type='number'
               width={80}

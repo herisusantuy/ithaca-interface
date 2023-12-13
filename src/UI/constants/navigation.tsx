@@ -3,6 +3,7 @@ export type NavigationItems = {
   path: string;
   titleKey: string;
   displayText: string;
+  disabled?: boolean
 };
 
 export const NAVIGATION_ITEMS: NavigationItems[] = [
@@ -21,11 +22,12 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
   //   titleKey: 'Click to visit leaderboard',
   //   displayText: 'Leaderboard',
   // },
-  // {
-  //   path: '/analytics',
-  //   titleKey: 'Click to visit analytics',
-  //   displayText: 'Analytics',
-  // },
+  {
+    path: '/analytics',
+    titleKey: 'Click to visit analytics',
+    displayText: 'Analytics',
+    disabled: true
+  },
   // {
   //   path: '#',
   //   titleKey: 'Click to view more',

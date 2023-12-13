@@ -1,4 +1,4 @@
-export const systemInfo = {
+export const OFFLINE_SYSTEM_INFO = {
     "chainId": 421613,
     "fundlockAddress": "0x65af755b235f50c3de9859d1c904f4d73ac438d9",
     "tokenManagerAddress": "0xf37ee3e6c9e634da02bea0b748f9403506484854",
@@ -17,11 +17,11 @@ export const systemInfo = {
     "networks": []
 };
 
-export const nextAuction = 1702336200000
+export const OFFLINE_NEXT_AUCTIONS = 1702336200000
 
-export const spotPrices = {"WETH/USDC":2222.5900}
+export const OFFLINE_SPOT_PRICES = {"WETH/USDC":2222.5900}
 
-export const contractList = [
+export const OFFLINE_CONTRACT_LIST = [
         {
             "contractId": 1,
             "payoff": "Spot",
@@ -2153,7 +2153,7 @@ export const contractList = [
         }
     ];
 
-export const referencePrices = [
+export const OFFLINE_REFERENCE_PRICES = [
         {
             "contractId": 1,
             "referencePrice": 2222.3100,

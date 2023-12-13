@@ -33,7 +33,7 @@ import { ClientConditionalOrder, Leg, createClientOrderId, toPrecision } from '@
 import useToast from '@/UI/hooks/useToast';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -144,7 +144,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   }, []);
 
   const renderInstruction = () => {
-    return <>{!compact && showInstructions && <NoGainNoPayinInstructions type={callOrPut} />}</>;
+    return <>{!compact && showInstructions && <NoGainNoPayinInstructions type={callOrPut} currentExpiryDate={currentExpiryDate.toString()} />}</>;
   };
 
   return (
@@ -193,7 +193,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               </LabeledControl>
 
 
-              <LabeledControl label={`Price Reference + ${callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'}`} labelClassName='mb-16 color-white'>
+              <LabeledControl  icon={<LogoEth />} label={<span>Breakeven Price <span className='italic'>{`(Price Reference + ${callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'})`}</span></span>} labelClassName='mb-16 color-white'>
                 <Flex>
                   <span className='fs-md-bold color-white'>
                     {priceReference &&

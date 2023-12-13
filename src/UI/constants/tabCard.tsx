@@ -8,6 +8,10 @@ type Tab = {
   radioOptions?: {
     option: string;
     value: string;
+  }[],
+  underText?: {
+    value: string,
+    label: string
   }[]
 };
 
@@ -17,7 +21,7 @@ export const TRADING_MARKET_TABS: Tab[] = [
     title: 'Options',
     selectedTitle: 'Option',
     description:
-      'A Call Option is a contract allowing a user to buy an asset at a fixed price at contract expiry, while a Put Option provides the user with the right to sell. ',
+      'A Call Option is a contract providing the user with the right to buy an asset at a fixed price at contract expiry, while a Put Option provides the user with the equivalent right to sell.',
     contentId: 'optionsChart',
   },
   {
@@ -49,7 +53,7 @@ export const TRADING_STORIES_TABS: Tab[] = [
   {
     id: 'earn',
     title: 'Risky Earn | Riskless Earn',
-    description: 'Earn risky yield on your capital at risk. Define an asset price target.',
+    description: 'Earn yield on your collateralized loan ( no margin liquidation risk ).',
     contentId: 'earnChart',
     radioOptions: [{
       option: 'Risky Earn',
@@ -57,12 +61,19 @@ export const TRADING_STORIES_TABS: Tab[] = [
     },{
       option: 'Riskless Earn',
       value: 'Riskless Earn'
+    }],
+    underText: [{
+      label: 'Capital At Risk',
+      value: 'Risky Earn'
+    },{
+      label: 'Collateralized Lending',
+      value: 'Riskless Earn'
     }]
   },
   {
     id: 'noGainNoPayin',
     title: 'No Gain, No Payin’',
-    description: 'Buy an option with maximum downside amount to be lost if asset price ends up at the strike.',
+    description: 'Buy an option WITHOUT spending premium with maximum downside amount to be lost if asset price ends up at the strike; if you do not get the direction right, you also get your collateral back!',
     contentId: 'noGainNoPayinChart',
   },
   {
