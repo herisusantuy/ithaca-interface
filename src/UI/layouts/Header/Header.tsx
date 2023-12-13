@@ -8,7 +8,7 @@ import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
-import Rewards from '@/UI/components/Icons/Rewards';
+// import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 
 // Hooks
@@ -41,9 +41,9 @@ const Header = ({ className }: HeaderProps) => {
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const rewardsDropdownRef = useRef(null);
 
-  const toggleRewardsDropdown = () => {
-    setIsRewardsOpen(!isRewardsOpen);
-  };
+  // const toggleRewardsDropdown = () => {
+  //   setIsRewardsOpen(!isRewardsOpen);
+  // };
 
   // Close dropdown callback
   const closeRewardsDropdown = () => {

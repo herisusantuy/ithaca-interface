@@ -102,7 +102,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
           </div>
           <div className={styles.underTextWrapper}>
             {activeTab.underText?.map((label) => 
-              <span className={`${styles.underTextLabel} ${radioChosen === label.value ? styles.selected : ''}`}>{label.label}</span>
+              <span key={label.value} className={`${styles.underTextLabel} ${radioChosen === label.value ? styles.selected : ''}`}>{label.label}</span>
             )}
           </div>
         </div>

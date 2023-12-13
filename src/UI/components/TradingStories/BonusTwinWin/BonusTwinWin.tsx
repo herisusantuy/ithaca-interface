@@ -9,7 +9,6 @@ import Flex from '@/UI/layouts/Flex/Flex';
 // Components
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import LogoEth from '@/UI/components/Icons/LogoEth';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
@@ -28,7 +27,7 @@ import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, calculateNetPrice, createClientOrderId } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';

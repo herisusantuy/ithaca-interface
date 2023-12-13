@@ -19,7 +19,6 @@ import {
 
 // Utils
 import {
-  formatCurrencyPair,
   getSideIcon,
   orderDateSort,
   orderLimitSort,
