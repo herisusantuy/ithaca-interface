@@ -207,6 +207,17 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     });
   };
 
+  // Function to handle the actual delete operation
+  const handleCancelAllOrder = () => {
+    setIsDeleting(true);
+    ithacaSDK.orders.orderCancelAll().then(() => {
+      setData([]);
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setRowToCancelOrder(null);
+    });
+  };
+
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -383,7 +394,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           <Button
             title='Click to cancel all orders'
             className={styles.cancelAllBtn}
-            onClick={() => console.log('Cancel All')}
+            onClick={handleCancelAllOrder}
             variant='link'
           >
             Cancel All
