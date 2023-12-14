@@ -1,6 +1,6 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 
 // Lib
@@ -376,6 +376,28 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   };
 
+  const getHeaderTemplate = useCallback((header: string) => {
+    switch (header) {
+      case 'Cancel All':
+        return (
+          <Button
+            title='Click to cancel all orders'
+            className={styles.cancelAllBtn}
+            onClick={() => console.log('Cancel All')}
+            variant='link'
+          >
+            Cancel All
+          </Button>
+        );
+      default:
+        return (
+          <>
+            {header} {getHeaderIcon(header)}
+          </>
+        );
+    }
+  }, []);
+
   // Get table header icons
   const getHeaderIcon = (header: string) => {
     switch (header) {
@@ -516,7 +538,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         <div className={`${styles.row} ${styles.header}`}>
           {TABLE_ORDER_HEADERS.map((header, idx) => (
             <div className={styles.cell} key={idx}>
-              {header} {getHeaderIcon(header)}
+              {getHeaderTemplate(header)}
             </div>
           ))}
         </div>

@@ -34,7 +34,7 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Tenor',
   'Collateral Amount',
   'Order Limit',
-  '',
+  'Cancel All',
 ];
 
 // Table order expanded headers
