@@ -197,10 +197,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 <Flex>
                   <span className='fs-md-bold color-white'>
                     {priceReference &&
-                      !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                      getNumberFormat(
-                        toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
-                      )}
+                      !isInvalidNumber(getNumber(maxPotentialLoss)) && toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)}
                   </span>
                   <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
                 </Flex>
