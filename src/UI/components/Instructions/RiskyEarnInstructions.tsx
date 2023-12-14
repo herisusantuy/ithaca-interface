@@ -8,8 +8,12 @@ import Add from '@/UI/components/Icons/Add';
 
 // Styles
 import styles from './Instructions.module.scss';
+import CurlyBracketLeft from '../Icons/CurlyBracketLeft';
+import CurlyBracketRight from '../Icons/CurlyBracketRight';
+import dayjs from 'dayjs';
 
 const RiskyEarnInstructions = () => {
+  const RISKY_EXPIRE_DATE = '20231120'; // TO-DO: Pass as props
   return (
     <div className={styles.container}>
       <p>
@@ -22,12 +26,25 @@ const RiskyEarnInstructions = () => {
           <LogoEth />
           <LogoUsdc />
         </span>
+        <span className={styles.spacer} />
+        <em>Now</em>
         <ArrowRight />
-        Earn
+        <CurlyBracketLeft />
+        Risk
+        <span className={styles.stackedLogo}>
+          <LogoEth />
+          <LogoUsdc />
+        </span>
+        + Return
         <LogoUsdc />
-        Return.
+        <CurlyBracketRight />@{' '}
+        <span className={`${styles.italic} hide-psuedo p-0`}>
+          {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')}
+        </span>
       </p>
-      <p>iii. - If at expiry <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth /> <Add />
+      <p>
+        iii. - If at expiry <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth />{' '}
+        <Add />
         Return in <LogoUsdc /> .
       </p>
       <p className='pl-18'>

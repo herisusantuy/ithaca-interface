@@ -47,7 +47,7 @@
     border-radius: rem(30);
   }
 
-  >* {
+  > * {
     z-index: 1;
     position: relative;
   }
@@ -151,7 +151,7 @@
 }
 
 .rightPanelHeader {
-  @include spacing(margin, 21, 'bottom');
+  @include spacing(margin, 14, 'bottom');
   display: flex;
   position: relative;
   justify-content: space-between;
@@ -173,40 +173,40 @@
   div {
     width: unset;
   }
-} 
+}
 
 @media (max-width: $desktop) {
   .tabInfo {
-    h3{
+    h3 {
       font-size: 0.875rem;
     }
-    p{
+    p {
       font-size: 0.625rem;
       line-height: 0.75rem;
     }
   }
-  .tabInfo{
+  .tabInfo {
     width: 75%;
   }
   .tabChart {
     width: 25%;
   }
-  .dropDownPanel{
-    background: #1C2028;
+  .dropDownPanel {
+    background: #1c2028;
     border-radius: 1.875rem;
     border: 1px solid #cccccc61;
     position: relative;
     overflow: hidden;
-    transition: .3s all;
-    .tab{
+    transition: 0.3s all;
+    .tab {
       background-color: transparent;
       gap: 3rem;
       padding-right: 3rem !important;
       height: 151px;
-      &::after{
+      &::after {
         display: none;
       }
-      &:first-child{
+      &:first-child {
         background: linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%);
       }
     }
@@ -214,21 +214,21 @@
   .container {
     flex-direction: column;
   }
-  .rightPanel{
+  .rightPanel {
     width: 100%;
-    background: #1C2028;
+    background: #1c2028;
     border: 1px solid #cccccc61;
     padding: 2rem 1.2rem;
     .rightPanelHeader {
       h2 {
-        font-size: 1rem
+        font-size: 1rem;
       }
-      p{
+      p {
         font-size: 0.625rem;
       }
-    } 
+    }
   }
-  .openStoriesDropdown{
+  .openStoriesDropdown {
     position: absolute;
     top: 4rem;
     right: 1rem;
@@ -236,7 +236,7 @@
     width: 16px;
     height: 16px;
     border: none;
-    background-color: #35333E;
+    background-color: #35333e;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -248,30 +248,46 @@
 @media (max-width: $mobile) {
   .dropDownPanel {
     background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
-    box-shadow: 0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15), 0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset, 0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
+    box-shadow:
+      0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15),
+      0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset,
+      0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
     -webkit-backdrop-filter: blur(0.625rem);
     backdrop-filter: blur(0.625rem);
-    .tab{
+    .tab {
       gap: 1rem;
-      .tabInfo{
+      .tabInfo {
         width: 60%;
       }
-      .tabChart{
+      .tabChart {
         width: 40%;
       }
     }
   }
-  .rightPanel{
+  .rightPanel {
     background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
-    box-shadow: 0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15), 0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset, 0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
+    box-shadow:
+      0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15),
+      0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset,
+      0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
     -webkit-backdrop-filter: blur(0.625rem);
     backdrop-filter: blur(0.625rem);
   }
 }
-.underTextWrapper {
-  position: absolute;
-  bottom: rem(20);
+
+.headerWrapper {
+  display: flex;
+  width: 100%;
+  gap: rem(0.125);
+  flex-direction: column;
 }
+
+.headerAndToggleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .underTextLabel {
   padding-left: rem(30);
   padding-right: rem(16);
