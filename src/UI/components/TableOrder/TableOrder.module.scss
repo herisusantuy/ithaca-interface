@@ -17,11 +17,11 @@
     &::-webkit-scrollbar {
       height: rem(2);
     }
-    
+
     &::-webkit-scrollbar-track {
-      background-color: #1C2028;
+      background-color: #1c2028;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background-color: #ffffff99;
     }
@@ -98,10 +98,10 @@
 }
 
 .dropdown {
-  background: none;
   padding: 0;
   height: auto;
-  border-radius: 0;
+  background: var(--white-rgba-10);
+  border-radius: rem(4);
 
   &:hover {
     background: none;

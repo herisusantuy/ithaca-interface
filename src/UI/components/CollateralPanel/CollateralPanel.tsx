@@ -43,7 +43,6 @@ const CollateralPanel = () => {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
-
   const [collateralSummary, setCollateralSummary] = useState(TABLE_COLLATERAL_SUMMARY);
   const [selectedCurrency, setSelectedCurrency] = useState<{ name: string; value: string }>();
   const [modalAmount, setModalAmount] = useState('');
@@ -131,7 +130,7 @@ const CollateralPanel = () => {
 
   return (
     <>
-      <Panel margin='p-30 p-tablet-16'>
+      <Panel margin='p-desktop-30 p-tablet-16'>
         <h3>Collateral</h3>
         <Toast toastList={toastList} position={position} />
         <TableCollateral

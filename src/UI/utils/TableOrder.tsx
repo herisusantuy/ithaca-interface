@@ -9,6 +9,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Plus from '@/UI/components/Icons/Plus';
 import Minus from '@/UI/components/Icons/Minus';
+import PlusMinus from '@/UI/components/Icons/PlusMinus';
 
 // Styles
 import styles from '../components/TableOrder/TableOrder.module.scss';
@@ -104,7 +105,15 @@ export const formatCurrencyPair = (currencyPair: string) => (
 
 // Get side icon
 export const getSideIcon = (side: string) => {
-  return side === '+' || side === 'BUY' ? <Plus /> : side === '-' || side === 'SELL' ? <Minus /> : '';
+  return side === '+' || side === 'BUY' ? (
+    <Plus />
+  ) : side === '-' || side === 'SELL' ? (
+    <Minus />
+  ) : side === '' ? (
+    <PlusMinus />
+  ) : (
+    ''
+  );
 };
 
 // Split the dates and render as spans
