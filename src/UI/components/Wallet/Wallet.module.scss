@@ -23,8 +23,8 @@
 .connectWallet {
   @include font-size('text-xs', 'bold');
   font-family: $roboto;
-  background: var(--green-20) !important;
-  padding: rem(10) rem(16) !important;
+  background: #419165 !important;
+  padding: rem(9.5) rem(15.5) !important;
   color: var(--white);
   border-width: rem(0);
   white-space: nowrap;
@@ -34,6 +34,9 @@
 
   @include breakpoint(tablet) {
     border-radius: rem(14);
+  }
+  &:hover {
+    background: #49a570 !important;
   }
 
   &:before {
