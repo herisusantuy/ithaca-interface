@@ -21,10 +21,9 @@ type NavigationProps = {
 };
 
 const Navigation = ({ onClick }: NavigationProps) => {
-  const [orderList, setOrderList] = useState<string[]>(['','']);
-  // const [orderList, setOrderList] = useState<Order[]>([]);
   const router = useRouter();
-  const { ithacaSDK, isAuthenticated } = useAppStore();
+  const [totalOpenOrders, setTotalOpenOrders] = useState<number>(0);
+  const { ithacaSDK, isAuthenticated, openOrdersCount } = useAppStore();
 
   const checkIsActivePath = (path: string) => {
     return path === '/' ? router.pathname === path : router.pathname.includes(path.split('/')[1]);
@@ -32,12 +31,13 @@ const Navigation = ({ onClick }: NavigationProps) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      ithacaSDK.orders.clientOpenOrders().then(res => {
-        setOrderList(res);
-      });
+      ithacaSDK.orders.clientOpenOrders().then(res => setTotalOpenOrders(res.length));
+    } else {
+      setTotalOpenOrders(0)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
+  useEffect(() => setTotalOpenOrders(openOrdersCount), [openOrdersCount]);
 
   return (
     <nav className={styles.nav}>
@@ -51,9 +51,8 @@ const Navigation = ({ onClick }: NavigationProps) => {
         >
           {nav.displayText}
           {nav.displayText === 'More' && <ChevronDown />}
-          {/** TO DO: If user has open orders show the number in the badge, else hide the badge */}
-          {nav.displayText === 'Dashboard' && orderList.length > 0 && (
-            <span className={styles.badge}>{orderList.length}</span>
+          {nav.displayText === 'Dashboard' && totalOpenOrders > 0 && (
+            <span className={styles.badge}>{totalOpenOrders}</span>
           )}
         </Link>
       ))}
