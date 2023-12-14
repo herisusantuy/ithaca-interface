@@ -14,6 +14,9 @@ import TabCard from '@/UI/components/TabCard/TabCard';
 import { TRADING_STORIES_TABS } from '@/UI/constants/tabCard';
 import { Currency } from '@/UI/components/Currency';
 
+// Styles
+import styles from './stories.module.scss';
+
 const Index = () => {
   const [showInstructions, setShowInstructions] = useState(true);
 
@@ -25,12 +28,12 @@ const Index = () => {
           <TradingLayout />
           <Currency
             onExpiryChange={() => {
-              console.log()
+              console.log();
             }}
           />
           <TabCard
-            className='mt-39'
-            tabClassName='ptb-15 plr-20'
+            className={`mt-39 ${styles.tabCard}`}
+            tabClassName='ptb-5 plr-20'
             tabs={TRADING_STORIES_TABS}
             showInstructions={showInstructions}
             setShowInstructions={setShowInstructions}

@@ -102,7 +102,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         <TabCardDesktop tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} tabClassName={tabClassName} />
       )}
       <div className={`tabCard--${activeTab.id} ${styles.rightPanel}`}>
-        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader}`}>
+        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader} ${activeTab.underText?.length ? `${styles.hasSubtitles}` : ''}`}>
           {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? (
             <h2>{activeTab.selectedTitle || activeTab.title}</h2>
           ) : (
