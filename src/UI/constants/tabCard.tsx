@@ -57,7 +57,7 @@ export const TRADING_STORIES_TABS: Tab[] = [
     contentId: 'earnChart',
     radioOptions: [
       {
-        option: 'Risky Earn1',
+        option: 'Risky Earn',
         value: 'Risky Earn',
       },
       {
