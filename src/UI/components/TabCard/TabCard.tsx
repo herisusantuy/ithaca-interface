@@ -1,5 +1,5 @@
 // Packages
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 // Utils
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
@@ -57,6 +57,36 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
 
   useEffect(() => {}, [openOptions, activeDropdown]);
 
+  const getRadioOptionTemplate = useCallback(() => {
+    return (activeTab.radioOptions || []).map(({ option, value }, index) => {
+      return {
+        option: (
+          <div className={styles.radioOptionLbl}>
+            <>{option}</>
+            {getRadioOptionSubTitleTemplate(index)}
+          </div>
+        ),
+        value,
+      };
+    });
+  }, [activeTab, radioChosen]);
+
+  const getRadioOptionSubTitleTemplate = (index: number) => {
+    return (
+      <>
+        {activeTab.underText && index < activeTab.underText.length && (
+          <span
+            className={`${styles.underTextLabel} ${
+              radioChosen === activeTab.underText[index].value ? styles.selected : ''
+            }`}
+          >
+            {activeTab.underText[index].label}
+          </span>
+        )}
+      </>
+    );
+  };
+
   return (
     <div className={`tabCard--${lastSegment} ${styles.container} ${className}`}>
       {device !== 'desktop' ? (
@@ -72,41 +102,28 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         <TabCardDesktop tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} tabClassName={tabClassName} />
       )}
       <div className={`tabCard--${activeTab.id} ${styles.rightPanel}`}>
-        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader}`}>
-          <div className={styles.headerWrapper}>
-            <div className={styles.headerAndToggleWrapper}>
-              {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? (
-                <h2>{activeTab.selectedTitle || activeTab.title}</h2>
-              ) : (
-                <RadioButton
-                  size='large'
-                  options={activeTab.radioOptions || []}
-                  selectedOption={radioChosen}
-                  name={`${activeTab.id}-type`}
-                  onChange={setRadioChosen}
-                  width={300}
-                />
-              )}
-              <div className={styles.toggleWrapper}>
-                <Toggle
-                  size='sm'
-                  defaultState={showInstructions ? 'right' : 'left'}
-                  rightLabel='Show Instructions'
-                  rightLabelClass='white-80'
-                  onChange={() => setShowInstructions(!showInstructions)}
-                />
-              </div>
-            </div>
-            <div className={styles.underTextWrapper}>
-              {activeTab.underText?.map(label => (
-                <span
-                  key={label.value}
-                  className={`${styles.underTextLabel} ${radioChosen === label.value ? styles.selected : ''}`}
-                >
-                  {label.label}
-                </span>
-              ))}
-            </div>
+        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader} ${activeTab.underText?.length ? `${styles.hasSubtitles}` : ''}`}>
+          {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? (
+            <h2>{activeTab.selectedTitle || activeTab.title}</h2>
+          ) : (
+            <RadioButton
+              size='large'
+              options={getRadioOptionTemplate()}
+              selectedOption={radioChosen}
+              name={`${activeTab.id}-type`}
+              onChange={setRadioChosen}
+              width={300}
+            />
+          )}
+
+          <div className={styles.toggleWrapper}>
+            <Toggle
+              size='sm'
+              defaultState={showInstructions ? 'right' : 'left'}
+              rightLabel='Descriptions'
+              rightLabelClass='white-80'
+              onChange={() => setShowInstructions(!showInstructions)}
+            />
           </div>
         </div>
         {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}

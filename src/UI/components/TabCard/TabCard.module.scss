@@ -78,6 +78,11 @@
   gap: rem(15);
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+
+  &:not(:last-child) {
+    border-bottom: rem(0.5) solid var(--white-10);
+  }
 
   &:first-child {
     border-top-left-radius: rem(30);
@@ -89,15 +94,15 @@
     border-bottom-right-radius: rem(30);
   }
 
-  &:after {
-    content: '';
-    height: rem(0.5);
-    background: #35333e;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+  // &:after {
+  //   content: '';
+  //   height: rem(0.5);
+  //   background: #35333e;
+  //   position: absolute;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  // }
 
   &:last-child:after {
     display: none;
@@ -111,7 +116,7 @@
 .isActive {
   background: linear-gradient(270deg, rgba(94, 225, 145, 0) 43.44%, rgba(94, 225, 154, 0.5) 100%);
   p {
-    color: var(--white-80) !important;
+    color: var(--white) !important;
   }
   cursor: default;
 
@@ -135,14 +140,15 @@
     color: var(--white);
     font-family: $lato;
     margin-bottom: 0;
+    white-space: pre-line;
   }
 
   p {
     @include font-size('text-xs', 'regular');
     font-family: $lato;
-    text-align: justify;
     color: var(--white-60);
-    line-height: rem(16.8);
+    line-height: normal;
+    white-space: pre-line;
   }
 }
 
@@ -151,11 +157,15 @@
 }
 
 .rightPanelHeader {
-  @include spacing(margin, 14, 'bottom');
+  @include spacing(margin, 12, 'bottom');
   display: flex;
   position: relative;
   justify-content: space-between;
   align-items: center;
+
+  &.hasSubtitles {
+    @include spacing(margin, 34, 'bottom');
+  }
 
   h2 {
     @include font-size('text-xl', 'semibold');
@@ -289,12 +299,19 @@
 }
 
 .underTextLabel {
-  padding-left: rem(30);
-  padding-right: rem(16);
-  @include font-size('text-xs', 'regular');
+  position: absolute;
+  top: calc(100% + rem(2));
+  font-family: $lato;
+  white-space: nowrap;
+  @include font-size('text-sm', 'regular');
   font-style: italic;
   color: var(--white-80);
   &.selected {
     color: var(--white);
   }
+}
+.radioOptionLbl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

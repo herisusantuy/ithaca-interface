@@ -8,11 +8,11 @@ type Tab = {
   radioOptions?: {
     option: string;
     value: string;
-  }[],
+  }[];
   underText?: {
-    value: string,
-    label: string
-  }[]
+    value: string;
+    label: string;
+  }[];
 };
 
 export const TRADING_MARKET_TABS: Tab[] = [
@@ -47,33 +47,40 @@ export const TRADING_STORIES_TABS: Tab[] = [
     id: 'bet',
     title: 'Bet',
     description:
-      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range. If order filled expected return shown on your Bet Capital at risk.',
+      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range.\nIf order filled expected return shown on your Bet Capital at risk.',
     contentId: 'betChart',
   },
   {
     id: 'earn',
-    title: 'Risky Earn | Riskless Earn',
-    description: 'Earn risky yield on your capital at risk. Define an asset price target.',
+    title: 'Risky Earn\nRiskless Earn',
+    description: 'Earn risky yield on your capital at risk.\n Define an asset price target.',
     contentId: 'earnChart',
-    radioOptions: [{
-      option: 'Risky Earn',
-      value: 'Risky Earn'
-    },{
-      option: 'Riskless Earn',
-      value: 'Riskless Earn'
-    }],
-    underText: [{
-      label: 'Capital At Risk',
-      value: 'Risky Earn'
-    },{
-      label: 'Collateralized Lending',
-      value: 'Riskless Earn'
-    }]
+    radioOptions: [
+      {
+        option: 'Risky Earn',
+        value: 'Risky Earn',
+      },
+      {
+        option: 'Riskless Earn',
+        value: 'Riskless Earn',
+      },
+    ],
+    underText: [
+      {
+        label: 'Capital At Risk',
+        value: 'Risky Earn',
+      },
+      {
+        label: 'Collateralized Lending',
+        value: 'Riskless Earn',
+      },
+    ],
   },
   {
     id: 'noGainNoPayin',
     title: 'No Gain, No Payin’',
-    description: 'Buy an option WITHOUT spending premium with maximum downside amount to be lost if asset price ends up at the strike; if you do not get the direction right, you also get your collateral back!',
+    description:
+      'Buy an option WITHOUT spending premium with maximum downside amount to be lost if asset price ends up at the strike; if you do not get the direction right, you also get your collateral back!',
     contentId: 'noGainNoPayinChart',
   },
   {
@@ -81,13 +88,16 @@ export const TRADING_STORIES_TABS: Tab[] = [
     title: 'Bonus | Twin-Win',
     description: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
     contentId: 'bonusTwinWinChart',
-    radioOptions: [{
-      option: 'Bonus',
-      value: 'Bonus'
-    },{
-      option: 'Twin-Win',
-      value: 'Twin Win'
-    }]
+    radioOptions: [
+      {
+        option: 'Bonus',
+        value: 'Bonus',
+      },
+      {
+        option: 'Twin-Win',
+        value: 'Twin Win',
+      },
+    ],
   },
   {
     id: 'barriers',

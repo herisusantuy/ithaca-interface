@@ -193,14 +193,11 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               </LabeledControl>
 
 
-              <LabeledControl  icon={<LogoEth />} label={<span>Breakeven Price <span className='italic'>{`(Price Reference + ${callOrPut === 'Call' ? 'Min Upside' : 'Max Loss'})`}</span></span>} labelClassName='mb-16 color-white'>
+              <LabeledControl  icon={<LogoEth />} label={<span>Breakeven Price <span className='italic'>{`(Price Reference ${callOrPut === 'Call' ? ' + Min Upside' : ' - Min Downside'})`}</span></span>} labelClassName='mb-16 color-white'>
                 <Flex>
                   <span className='fs-md-bold color-white'>
                     {priceReference &&
-                      !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                      getNumberFormat(
-                        toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
-                      )}
+                      !isInvalidNumber(getNumber(maxPotentialLoss)) && toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)}
                   </span>
                   <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
                 </Flex>

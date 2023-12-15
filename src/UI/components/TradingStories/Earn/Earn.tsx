@@ -43,26 +43,34 @@ import RadioButton from '../../RadioButton/RadioButton';
 import { RISKY_RISKLESS_EARN_OPTIONS } from '@/UI/constants/options';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import styles from './Earn.module.scss'
+import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
-dayjs.extend(duration)
+dayjs.extend(duration);
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
-  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, spotContract} = useAppStore();
+  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, spotContract } =
+    useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const nextAuctionForwardContract = spotContract;
 
   const [currency, setCurrency] = useState('WETH');
-  const [strikes, setStrikeList] = useState<number[]>(callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
-    const isValidStrike =
-      currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
-    if (isValidStrike) strikeArr.push(parseFloat(currStrike));
-    return strikeArr;
-  }, []) : []);
+  const [strikes, setStrikeList] = useState<number[]>(
+    callContracts
+      ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
+          const isValidStrike =
+            currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
+          if (isValidStrike) strikeArr.push(parseFloat(currStrike));
+          return strikeArr;
+        }, [])
+      : []
+  );
 
   const [riskyOrRiskless, setRiskyOrRiskless] = useState<'Risky Earn' | 'Riskless Earn'>('Risky Earn');
-  const [strike, setStrike] = useState({ min: strikes[Math.ceil(strikes.length / 2) - 1], max: strikes[Math.ceil(strikes.length / 2) - 1] });
+  const [strike, setStrike] = useState({
+    min: strikes[Math.ceil(strikes.length / 2) - 1],
+    max: strikes[Math.ceil(strikes.length / 2) - 1],
+  });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('101');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -70,26 +78,30 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   const { toastList, position, showToast } = useToast();
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
-    setRiskyOrRiskless(option)
-  }
+    setRiskyOrRiskless(option);
+  };
 
   useEffect(() => {
-    const strikeList = callContracts ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
-      const isValidStrike =
-        currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
-      if (isValidStrike) strikeArr.push(parseFloat(currStrike));
-      return strikeArr;
-    }, []) : [];
-    strikeList.unshift(strikeList[0] - 100)
-    setStrikeList(strikeList)
-    setStrike({ min: strikeList[Math.ceil(strikeList.length / 2) - 1], max: strikeList[Math.ceil(strikeList.length / 2) - 1] })
-  }, [currency, currentExpiryDate])
+    const strikeList = callContracts
+      ? Object.keys(callContracts).reduce<number[]>((strikeArr, currStrike) => {
+          const isValidStrike =
+            currency === 'WETH' ? parseFloat(currStrike) > currentSpotPrice : parseFloat(currStrike) < currentSpotPrice;
+          if (isValidStrike) strikeArr.push(parseFloat(currStrike));
+          return strikeArr;
+        }, [])
+      : [];
+    strikeList.unshift(strikeList[0] - 100);
+    setStrikeList(strikeList);
+    setStrike({
+      min: strikeList[Math.ceil(strikeList.length / 2) - 1],
+      max: strikeList[Math.ceil(strikeList.length / 2) - 1],
+    });
+  }, [currency, currentExpiryDate]);
 
   useEffect(() => {
     if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
-    }
-    else {
+    } else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
   }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless])
@@ -101,24 +113,29 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   const handleRisklessChange = async (risk: string, earn: string) => {
     if (isInvalidNumber(getNumber(earn)) || isInvalidNumber(getNumber(risk))) return;
-    const closest = Object.keys(callContracts).filter((contract) => Number(contract) > currentSpotPrice).sort()[0];
+    const closest = Object.keys(callContracts)
+      .filter(contract => Number(contract) > currentSpotPrice)
+      .sort()[0];
 
     const quantity = (Number(risk) / strike.max).toFixed(2).toString();
 
-    const legs = [{
+    const legs = [
+      {
         contractId: nextAuctionForwardContract?.contractId,
         quantity,
         side: 'BUY',
-      },          
+      },
       {
-      contractId: callContracts[closest].contractId,
-      quantity,
-      side: 'SELL',
-    }, {
-      contractId: putContracts[closest].contractId,
-      quantity,
-      side: 'BUY',
-    }];
+        contractId: callContracts[closest].contractId,
+        quantity,
+        side: 'SELL',
+      },
+      {
+        contractId: putContracts[closest].contractId,
+        quantity,
+        side: 'BUY',
+      },
+    ];
 
     const order = {
       clientOrderId: createClientOrderId(),
@@ -130,7 +147,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     const payoffMap = estimateOrderPayoff([
       { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
       { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
-      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 }
+      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 },
     ]);
     setPayoffMap(payoffMap);
 
@@ -146,23 +163,30 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     }
   };
 
-  const handleRiskyChange = async (strike: { min: number; max: number }, currency: string, capitalAtRisk: string, targetEarn: string) => {
+  const handleRiskyChange = async (
+    strike: { min: number; max: number },
+    currency: string,
+    capitalAtRisk: string,
+    targetEarn: string
+  ) => {
     if (isInvalidNumber(getNumber(targetEarn)) || isInvalidNumber(getNumber(capitalAtRisk))) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
     }
-    const contract = currency === 'WETH' ? callContracts[strike.max] : putContracts[strike.max]    
-    
+    const contract = currency === 'WETH' ? callContracts[strike.max] : putContracts[strike.max];
+
     const quantity =
-      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+      currency === 'WETH'
+        ? `${capitalAtRisk}`
+        : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
     const legs = [
       {
         contractId: contract.contractId,
         quantity: quantity,
         side: 'SELL',
-    }
-  ]
+      },
+    ];
 
     const order = {
       clientOrderId: createClientOrderId(),
@@ -171,22 +195,25 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
-    const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
+    const strikeDiff = (strikes[strikes.length - 1] - strikes[0]) / 7 / 4;
 
     const payOffQuantity =
-      currency === 'WETH' ? `${capitalAtRisk}` : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
+      currency === 'WETH'
+        ? `${capitalAtRisk}`
+        : `${toPrecision(getNumber(capitalAtRisk) / strike.max, currencyPrecision.strike)}`;
 
     const payOffLeg = {
       contractId: putContracts[strike.max].contractId,
       quantity: payOffQuantity,
       side: 'SELL',
     };
-    const payoffMap = estimateOrderPayoff([
-      { ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn), quantity: '1' },
-    ], {
-      min: strikes[0],
-      max: strikes[strikes.length -1] + strikeDiff
-    });
+    const payoffMap = estimateOrderPayoff(
+      [{ ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn), quantity: '1' }],
+      {
+        min: strikes[0],
+        max: strikes[strikes.length - 1] + strikeDiff,
+      }
+    );
     setPayoffMap(payoffMap);
 
     try {
@@ -205,8 +232,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
-    }
-    else {
+    } else {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
     }
@@ -287,7 +313,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     }
 
     const risk = currency === 'WETH' ? getNumber(capitalAtRisk) * strike.max : getNumber(capitalAtRisk);
-    const apy = calculateAPY(`${callContracts[strike.max].economics.expiry}`, risk, getNumber(targetEarn))
+    const apy = calculateAPY(`${callContracts[strike.max].economics.expiry}`, risk, getNumber(targetEarn));
     return `${apy}%`;
   };
 
@@ -297,7 +323,13 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   return (
     <>
-      {!compact && showInstructions && (radioChosen === 'Risky Earn' ? <RiskyEarnInstructions /> : <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />)}
+      {!compact &&
+        showInstructions &&
+        (radioChosen === 'Risky Earn' ? (
+          <RiskyEarnInstructions />
+        ) : (
+          <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
+        ))}
 
       {compact && <Flex margin='mb-10 z-max'>
         <RadioButton
@@ -310,26 +342,30 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         />
       </Flex>}
 
-      {!compact && (
+      {!compact && (radioChosen === 'Risky Earn') && (
         <h3 className='mbi-16 flex-row gap-4 fs-lato-md mb-12 mt-16'>
           Select Target Price <LogoEth />
         </h3>
       )}
-      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? <Flex margin='special-slider mb-7'>
-        <Slider
-          value={strike}
-          extended={!compact}
-          min={strikes[0]}
-          lockFirst={true}
-          max={strikes[strikes.length - 1]}
-          label={strikes.length}
-          step={100}
-          showLabel={!compact}
-          onChange={strike => {
-            setStrike(strike);
-          }}
-        />
-      </Flex> : ''}
+      {(riskyOrRiskless === 'Risky Earn' && compact) || radioChosen === 'Risky Earn' ? (
+        <Flex margin='special-slider mb-7'>
+          <Slider
+            value={strike}
+            extended={!compact}
+            min={strikes[0]}
+            lockFirst={true}
+            max={strikes[strikes.length - 1]}
+            label={strikes.length}
+            step={100}
+            showLabel={!compact}
+            onChange={strike => {
+              setStrike(strike);
+            }}
+          />
+        </Flex>
+      ) : (
+        ''
+      )}
 
       {!compact && radioChosen === 'Risky Earn' && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
@@ -339,21 +375,31 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               width={100}
               value={capitalAtRisk}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
-              icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc/>}
+              icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc />}
               hasDropdown={true}
-              onDropdownChange={(option) => setCurrency(option)}
-              dropDownOptions={[{
-                label: 'USDC',
-                value: 'USDC',
-                icon: <LogoUsdc/>
-              },{
-                label: 'WETH',
-                value: 'WETH',
-                icon: <LogoEth/>
-              }]}
+              onDropdownChange={option => setCurrency(option)}
+              dropDownOptions={[
+                {
+                  label: 'USDC',
+                  value: 'USDC',
+                  icon: <LogoUsdc />,
+                },
+                {
+                  label: 'WETH',
+                  value: 'WETH',
+                  icon: <LogoEth />,
+                },
+              ]}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected APR<span className='color-white ml-6'>{getAPY()}</span></span>}>
+          <LabeledInput
+            label='Earn'
+            lowerLabel={
+              <span>
+                Expected APR<span className='color-white ml-6'>{getAPY()}</span>
+              </span>
+            }
+          >
             <Input
               type='number'
               width={100}
@@ -376,7 +422,14 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Earn' lowerLabel={<span>Expected APR<span className='color-white ml-6'>{getAPY()}</span></span>}>
+          <LabeledInput
+            label='Earn'
+            lowerLabel={
+              <span>
+                Expected APR<span className='color-white ml-6'>{getAPY()}</span>
+              </span>
+            }
+          >
             <Input
               type='number'
               width={80}
@@ -393,7 +446,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
         chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={!compact && radioChosen === 'Riskless Earn' ? showInstructions ?  96 : 362 : chartHeight}
+        height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
         showPortial={!compact}
       />

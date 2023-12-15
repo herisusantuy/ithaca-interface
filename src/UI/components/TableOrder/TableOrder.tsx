@@ -1,6 +1,6 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 
 // Lib
@@ -107,9 +107,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         currencyPair: row.collateral?.currencyPair || row.details[0].currencyPair,
         product: row.orderDescr,
         side: row.details.length === 1 ? row.details[0].side : '',
-        tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DDMMMYY'),
-        wethAmount: row.collateral?.numeraireAmount,
-        usdcAmount: row.collateral?.underlierAmount,
+        tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
+        wethAmount: row.collateral?.underlierAmount,
+        usdcAmount: row.collateral?.numeraireAmount,
         orderLimit: row.netPrice,
         expandedInfo: row.details.map(leg => ({
           type: leg.contractDto.payoff,
@@ -202,6 +202,17 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     ithacaSDK.orders.orderCancel(rowToCancelOrder?.clientOrderId || 0).then(() => {
       const newData = slicedData.filter(row => row !== rowToCancelOrder);
       setData(newData);
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setRowToCancelOrder(null);
+    });
+  };
+
+  // Function to handle the actual delete operation
+  const handleCancelAllOrder = () => {
+    setIsDeleting(true);
+    ithacaSDK.orders.orderCancelAll().then(() => {
+      setData([]);
       setIsDeleting(false);
       setIsModalOpen(false);
       setRowToCancelOrder(null);
@@ -377,6 +388,28 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   };
 
+  const getHeaderTemplate = useCallback((header: string) => {
+    switch (header) {
+      case 'Cancel All':
+        return (
+          <Button
+            title='Click to cancel all orders'
+            className={styles.cancelAllBtn}
+            onClick={handleCancelAllOrder}
+            variant='link'
+          >
+            Cancel All
+          </Button>
+        );
+      default:
+        return (
+          <>
+            {header} {getHeaderIcon(header)}
+          </>
+        );
+    }
+  }, []);
+
   // Get table header icons
   const getHeaderIcon = (header: string) => {
     switch (header) {
@@ -517,7 +550,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         <div className={`${styles.row} ${styles.header}`}>
           {TABLE_ORDER_HEADERS.map((header, idx) => (
             <div className={styles.cell} key={idx}>
-              {header} {getHeaderIcon(header)}
+              {getHeaderTemplate(header)}
             </div>
           ))}
         </div>

@@ -31,6 +31,7 @@ import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-financ
 import useToast from '@/UI/hooks/useToast';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
+import LogoEth from '../../Icons/LogoEth';
 
 const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus' }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
@@ -206,12 +207,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
       {!compact && (
         <Flex direction='column' margin='mt-20 mb-14' gap='gap-12'>
           <Flex gap='gap-15'>
-            <div className='width-90 mr-15'>
+            <div>
               <LabeledControl label='Price Reference'>
                 <DropdownMenu width={80} disabled options={[]} value={{ name: priceReference, value: priceReference }} />
               </LabeledControl>
             </div>
-            <div className='width-80 mr-15'>
+            <div>
               <LabeledControl label='KO Barrier'>
                 <DropdownMenu
                   options={barrierStrikes.slice(0, -1).map(strike => ({ name: strike, value: strike }))}
@@ -224,8 +225,8 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
               <LogoEth />
               <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
             </Flex> */}
-            <div className='width-80 mr-15'>
-              <LabeledControl label='Protection Cost Inclusive Price' labelClassName='nowrap'>
+            <div>
+              <LabeledControl label={<><LogoEth /> Protection Cost Inclusive Price</>} labelClassName='nowrap'>
                 <Input
                   type='number'
                   value={price}
@@ -233,20 +234,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
                 />
               </LabeledControl>
             </div>
-          </Flex>
-
-          <Flex>
-            <LabeledControl label='Size (Multiplier)' labelClassName='mr-20'>
+         
+            <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
-            <LabeledControl label='Total Premium' labelClassName='mr-20 color-white mb-16'>
-              <Flex>
-                <span className='fs-md-bold color-white'>400</span>
-                <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
-              </Flex>
-            </LabeledControl>
-            <LabeledControl label='Total Price' labelClassName='color-white mb-16'>
-              <Flex>
+            <LabeledControl label='Total Protection Cost Inclusive Price' labelClassName='color-white mb-16'>
+              <Flex gap='gap-10'>
                 <span className='fs-md-bold color-white'>
                   {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
                 </span>

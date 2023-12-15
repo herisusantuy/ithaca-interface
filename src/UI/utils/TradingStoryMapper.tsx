@@ -19,7 +19,7 @@ const storyMap: {
   },
   bonusTwinWinChart: {
     component: BonusTwinWin,
-    height: { compact: 75, normal: { withInstructions: 233, withoutInstructions: 328 } },
+    height: { compact: 75, normal: { withInstructions: 320, withoutInstructions: 408 } },
   },
   barriersChart: {
     component: Barriers,
