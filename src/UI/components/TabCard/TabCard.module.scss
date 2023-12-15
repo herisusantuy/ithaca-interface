@@ -13,6 +13,7 @@
     0px 0px rem(4) 0px rgba(43, 46, 58, 0.15) inset,
     0px 0px rem(15) 0px rgba(43, 46, 58, 0.15) inset;
   border-radius: rem(30);
+  position: relative;
 
   &:before {
     content: '';
