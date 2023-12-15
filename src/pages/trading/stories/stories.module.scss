@@ -1,3 +1,5 @@
-div.tabCard {
-    height: rem(700);
+@include breakpoint (desktop) {
+    .tabCard {
+        height: rem(700);
+    }
 }
