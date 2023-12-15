@@ -59,8 +59,8 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     IthacaNetwork.ARBITRUM_GOERLI,
     undefined,
     undefined,
-    process.env.API_URL,
-    process.env.WS_URL
+    process.env.NEXT_PUBLIC_BACKEND_URL,
+    process.env.NEXT_PUBLIC_WS_URL
   ),
   systemInfo: {
     chainId: 0,
@@ -129,9 +129,9 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
         },
       },
       // undefined,
-      process.env.API_URL,
-      process.env.WS_URL
-    );
+      process.env.NEXT_PUBLIC_BACKEND_URL,
+      process.env.NEXT_PUBLIC_WS_URL
+      );
     
     if (walletClient) {
       const ithacaSession = localStorage.getItem('ithaca.session');
