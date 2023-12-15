@@ -137,7 +137,7 @@ const Input = ({
           {isLinked ? <Link /> : <UnLink />}
         </Button>}
         <Flex direction='column'>
-          <Flex>
+          <Flex direction='row-center'>
             <input
               id={id}
               type={type}

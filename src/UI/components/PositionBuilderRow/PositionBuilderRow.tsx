@@ -131,7 +131,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   };
 
   const calcIv = () => {
-    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
+    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '- %';
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
     const diff = current.diff(expiry)
