@@ -12,7 +12,6 @@
     rem(2) rem(2) rem(4) 0px rgba(0, 0, 0, 0.15),
     0px 0px rem(4) 0px rgba(43, 46, 58, 0.15) inset,
     0px 0px rem(15) 0px rgba(43, 46, 58, 0.15) inset;
-  backdrop-filter: blur(rem(10));
   border-radius: rem(30);
 
   &:before {
@@ -63,6 +62,7 @@
 .rightPanel {
   @include spacing(padding, 42, 'left+right');
   @include spacing(padding, 32, 'top+bottom');
+  backdrop-filter: blur(rem(10));
   width: 63.22%;
   min-width: 63.22%;
 }
@@ -78,6 +78,7 @@
   gap: rem(15);
   cursor: pointer;
   position: relative;
+  backdrop-filter: blur(rem(10));
   overflow: hidden;
 
   &:not(:last-child) {
