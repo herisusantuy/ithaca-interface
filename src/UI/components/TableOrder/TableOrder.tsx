@@ -108,8 +108,8 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         product: row.orderDescr,
         side: row.details.length === 1 ? row.details[0].side : '',
         tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
-        wethAmount: row.collateral?.numeraireAmount,
-        usdcAmount: row.collateral?.underlierAmount,
+        wethAmount: row.collateral?.underlierAmount,
+        usdcAmount: row.collateral?.numeraireAmount,
         orderLimit: row.netPrice,
         expandedInfo: row.details.map(leg => ({
           type: leg.contractDto.payoff,

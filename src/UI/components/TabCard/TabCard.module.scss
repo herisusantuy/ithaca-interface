@@ -157,7 +157,7 @@
 }
 
 .rightPanelHeader {
-  @include spacing(margin, 13, 'bottom');
+  @include spacing(margin, 12, 'bottom');
   display: flex;
   position: relative;
   justify-content: space-between;
