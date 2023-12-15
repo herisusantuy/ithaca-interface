@@ -134,7 +134,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
-    const diff = expiry.diff(current)
+    const diff = current.diff(expiry)
     const params = {
       rate: 0,
       price: unitPrice,
@@ -143,6 +143,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       isCall: payoff === 'Call',
       underlying:currentSpotPrice
     }
+    console.log(ithacaSDK.calculation.calcSigma(params))
     return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
   }
 
