@@ -86,13 +86,13 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   }, [currency, currentExpiryDate])
 
   useEffect(() => {
-    if (radioChosen === 'Risky Earn') {
+    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
     }
     else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
-  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen])
+  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless])
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -202,7 +202,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   };
 
   const handleTargetEarnChange = async (amount: string) => {
-    if (radioChosen === 'Risky Earn') {
+    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
     }
@@ -299,7 +299,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     <>
       {!compact && showInstructions && (radioChosen === 'Risky Earn' ? <RiskyEarnInstructions /> : <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />)}
 
-      {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
+      {compact && <Flex margin='mb-10 z-max'>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
           width={compact ? 140 : 186}
