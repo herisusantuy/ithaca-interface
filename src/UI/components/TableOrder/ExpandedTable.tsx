@@ -19,29 +19,35 @@ type ExpandedTableProps = {
 
 const ExpandedTable = ({ data }: ExpandedTableProps) => {
   return (
-    <div className={styles.table}>
-      <div className={`${styles.row} ${styles.header}`}>
-        {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (
-          <div className={styles.cell} key={idx}>
-            {header}
+    <div className={styles.transactionDetail}>
+      <span className={styles.title}>Strategy</span>
+      <div className={styles.table}>
+        <div className={`${styles.row} ${styles.header}`}>
+          {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (
+            <div className={styles.cell} key={idx}>
+              {header}
+            </div>
+          ))}
+        </div>
+        {data.map((item, index) => (
+          <div className={styles.rowBody} key={index}>
+            <div className={styles.cell}>{item.type}</div>
+            <div className={styles.cell}>{getSideIcon(item.side)}</div>
+            <div className={styles.cell}>
+              <span className={styles.date}>{item.expiryDate}</span>
+            </div>
+            <div className={styles.cell}>
+              <CurrencyDisplay amount={item.size} symbol={<LogoEth />} currency='WETH' />
+            </div>
+            <div className={styles.cell}>
+              <CurrencyDisplay amount={item.strike} symbol={<LogoUsdc />} currency='USDC' />
+            </div>
+            <div className={styles.cell}>
+              <CurrencyDisplay amount={item.enterPrice} symbol={<LogoUsdc />} currency='USDC' />
+            </div>
           </div>
         ))}
       </div>
-      {data.map((item, index) => (
-        <div className={styles.rowBody} key={index}>
-          <div className={styles.cell}>{item.type}</div>
-          <div className={styles.cell}>{getSideIcon(item.side)}</div>
-          <div className={styles.cell}>
-            <CurrencyDisplay amount={item.size} symbol={<LogoEth />} currency='WETH' />
-          </div>
-          <div className={styles.cell}>
-            <CurrencyDisplay amount={item.strike} symbol={<LogoUsdc />} currency='USDC' />
-          </div>
-          <div className={styles.cell}>
-            <CurrencyDisplay amount={item.enterPrice} symbol={<LogoUsdc />} currency='USDC' />
-          </div>
-        </div>
-      ))}
     </div>
   );
 };

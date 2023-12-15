@@ -40,7 +40,8 @@ export interface IthacaSDKSlice {
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
   toastNotifications: Omit<Order, "collateral">[];
-  newToast?:  Omit<Order, "collateral">;
+  openOrdersCount: number;
+  newToast?: Omit<Order, "collateral">;
   spotContract: Contract & ReferencePrice;
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
@@ -98,9 +99,10 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       currencyPair: 'WETH/USDC',
       expiry: 0,
       priceCurrency: '',
-      qtyCurrency: ''
-    }
+      qtyCurrency: '',
+    },
   },
+  openOrdersCount: 0,
   toastNotifications: [],
   newToast: undefined,
   initIthacaSDK: async (publicClient, walletClient) => {
@@ -108,19 +110,23 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
       {
-        onClose: (ev: CloseEvent) => { 
-          console.log(ev)
-         },
-        onError: (ev: Event) => { 
-          console.log(ev)
-         },
-        onMessage: (payload: Omit<Order, "collateral">) => { 
-          set({newToast: payload});
-          set({toastNotifications: [...get().toastNotifications, payload]})
-         },
-        onOpen: (ev: Event) => { 
-          console.log(ev)
-         }
+        onClose: (ev: CloseEvent) => {
+          console.log(ev);
+        },
+        onError: (ev: Event) => {
+          console.log(ev);
+        },
+        // TODO: add totalOpenOrdersCount in the Order object if needed
+        onMessage: (payload: Omit<Order, "collateral"> & { totalOpenOrdersCount?: number }) => {
+          set({
+            openOrdersCount: payload?.totalOpenOrdersCount,
+            newToast: payload,
+            toastNotifications: [...get().toastNotifications, payload],
+          });
+        },
+        onOpen: (ev: Event) => {
+          console.log(ev);
+        },
       },
       // undefined,
       process.env.API_URL,
@@ -198,12 +204,12 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       },
       {}
     );
-    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[],expiry) => {
+    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[], expiry) => {
       if (Object.keys(filteredContractList[currentCurrencyPair][expiry]).length > 4) {
         arr.push(parseInt(expiry))
       }
       return arr;
-    },[]);
+    }, []);
     const currentExpiryDate = expiryList[0];
     const currentSpotPrice = spotPrices[currentCurrencyPair];
 

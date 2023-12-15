@@ -642,3 +642,13 @@
 .z-unset {
   z-index: unset !important;
 }
+
+.p-desktop-30 {
+  @include breakpoint(desktop) {
+    padding: rem(30) !important;
+  }
+}
+
+.z-max {
+  z-index: 999999;
+}

@@ -53,7 +53,7 @@ export const TRADING_STORIES_TABS: Tab[] = [
   {
     id: 'earn',
     title: 'Risky Earn\nRiskless Earn',
-    description: 'Earn yield on your collateralized loan ( no margin liquidation risk ).',
+    description: 'Earn risky yield on your capital at risk. Define an asset price target.',
     contentId: 'earnChart',
     radioOptions: [
       {

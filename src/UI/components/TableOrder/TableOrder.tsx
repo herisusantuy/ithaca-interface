@@ -114,6 +114,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         expandedInfo: row.details.map(leg => ({
           type: leg.contractDto.payoff,
           side: leg.side,
+          expiryDate: dayjs(leg.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
           size: leg.originalQty,
           strike: leg.contractDto.economics.strike,
           enterPrice: leg.execPrice,

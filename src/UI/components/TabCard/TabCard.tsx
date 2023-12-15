@@ -127,6 +127,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
           </div>
         </div>
         {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}
+        
       </div>
     </div>
   );

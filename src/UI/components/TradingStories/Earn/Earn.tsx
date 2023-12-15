@@ -99,12 +99,12 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   }, [currency, currentExpiryDate]);
 
   useEffect(() => {
-    if (radioChosen === 'Risky Earn') {
+    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
     } else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
-  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen]);
+  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless])
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -229,7 +229,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   };
 
   const handleTargetEarnChange = async (amount: string) => {
-    if (radioChosen === 'Risky Earn') {
+    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
       const targetEarn = getNumberValue(amount);
       setTargetEarn(targetEarn);
     } else {
@@ -331,18 +331,16 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
 
-      {compact && (
-        <Flex margin={compact ? 'mb-10' : 'mb-12'}>
-          <RadioButton
-            size={compact ? 'compact' : 'regular'}
-            width={compact ? 140 : 186}
-            options={RISKY_RISKLESS_EARN_OPTIONS}
-            selectedOption={riskyOrRiskless}
-            name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
-            onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
-          />
-        </Flex>
-      )}
+      {compact && <Flex margin='mb-10 z-max'>
+        <RadioButton
+          size={compact ? 'compact' : 'regular'}
+          width={compact ? 140 : 186}
+          options={RISKY_RISKLESS_EARN_OPTIONS}
+          selectedOption={riskyOrRiskless}
+          name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
+          onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
+        />
+      </Flex>}
 
       {!compact && (radioChosen === 'Risky Earn') && (
         <h3 className='mbi-16 flex-row gap-4 fs-lato-md mb-12 mt-16'>

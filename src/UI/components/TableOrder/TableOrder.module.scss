@@ -117,10 +117,10 @@
 }
 
 .dropdown {
-  background: none;
   padding: 0;
   height: auto;
-  border-radius: 0;
+  background: var(--white-rgba-10);
+  border-radius: rem(4);
 
   &:hover {
     background: none;
