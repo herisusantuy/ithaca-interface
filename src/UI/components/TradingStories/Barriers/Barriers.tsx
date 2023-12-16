@@ -485,6 +485,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           buyOrSell={buyOrSell}
           inOrOut={inOrOut}
           currentExpiryDate={currentExpiryDate.toString()}
+          strikeAmount={strike}
+          barrierAmount={barrier}
         />
       )}
 
