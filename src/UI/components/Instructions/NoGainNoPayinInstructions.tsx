@@ -26,7 +26,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
           <p >ii. Select minimum Expected <LogoEth /></p>
           <p className='text-end'>(maximum potential <LogoUsdc /></p>
         </div>
-        <div className='d-flex flex-column justify-content-start' style={{marginRight:'10px',marginLeft:'10px'}}>
+        <div className='d-flex flex-column justify-content-start' style={{marginRight:'5px',marginLeft:'5px'}}>
           <p>
             <span className='flex-column-center'>
             <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
