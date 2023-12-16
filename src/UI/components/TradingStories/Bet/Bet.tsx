@@ -230,7 +230,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={capitalAtRisk}
-              width={85}
+              width={110}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
               icon={<LogoUsdc />}
             />
@@ -240,7 +240,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={targetEarn}
-              width={85}
+              width={110}
               onChange={({ target }) => handleTargetEarnChange(target.value)}
               icon={<LogoUsdc />}
             />
