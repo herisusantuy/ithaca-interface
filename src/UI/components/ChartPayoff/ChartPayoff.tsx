@@ -356,10 +356,9 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        // x={width - (upSide ? 67 : (getNumberFormat(maximize).length + 1) * 7)}
                         x={width - (upSide ? 100 : (getNumberFormat(maximize).length + 2) * 10)}
                         y={10}
-                        fill={'#5EE192'} // Assuming you want to change the color when it's not unlimited
+                        fill={'#5EE192'}
                         fontSize={12}
                         textAnchor='right'
                       >
@@ -373,7 +372,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                         <></>
                       ) : (
                         <LogoUsdc
-                          x={width - (getNumberFormat(maximize).length + 2) * 3} // Adjust the X position as needed
+                          x={width - (getNumberFormat(maximize).length + 2) * 3} 
                           y={-3}
                         />
                       )}
