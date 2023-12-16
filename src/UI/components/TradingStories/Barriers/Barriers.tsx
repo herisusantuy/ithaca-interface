@@ -49,25 +49,29 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const { toastList, position, showToast } = useToast();
 
-  const strikes = callContracts ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
-    const isValidStrike = barrier
-      ? upOrDown === 'UP'
-        ? parseFloat(currStrike) < parseFloat(barrier)
-        : parseFloat(currStrike) > parseFloat(barrier)
-      : true;
-    if (isValidStrike) strikeArr.push(currStrike);
-    return strikeArr;
-  }, []) : [];
+  const strikes = callContracts
+    ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+        const isValidStrike = barrier
+          ? upOrDown === 'UP'
+            ? parseFloat(currStrike) < parseFloat(barrier)
+            : parseFloat(currStrike) > parseFloat(barrier)
+          : true;
+        if (isValidStrike) strikeArr.push(currStrike);
+        return strikeArr;
+      }, [])
+    : [];
 
-  const barrierStrikes = callContracts ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
-    const isValidStrike = strike
-      ? upOrDown === 'UP'
-        ? parseFloat(currStrike) > parseFloat(strike)
-        : parseFloat(currStrike) < parseFloat(strike)
-      : true;
-    if (isValidStrike) strikeArr.push(currStrike);
-    return strikeArr;
-  }, []) : [];
+  const barrierStrikes = callContracts
+    ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
+        const isValidStrike = strike
+          ? upOrDown === 'UP'
+            ? parseFloat(currStrike) > parseFloat(strike)
+            : parseFloat(currStrike) < parseFloat(strike)
+          : true;
+        if (isValidStrike) strikeArr.push(currStrike);
+        return strikeArr;
+      }, [])
+    : [];
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
@@ -77,10 +81,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
-    setBarrier(undefined);
-    setUnitPrice('-');
-    setOrderDetails(undefined);
-    setPayoffMap(undefined);
+    if (!strike || !barrier) return;
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
@@ -110,7 +112,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handlePriceChange = (price: string) => {
     setUnitPrice(price);
-  }
+  };
 
   const prepareOrderLegs = async (
     buyOrSell: 'BUY' | 'SELL',
@@ -333,15 +335,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   useEffect(() => {
     renderInstruction();
-  }, [buyOrSell])
+  }, [buyOrSell]);
 
   const renderInstruction = () => {
     return (
       <>
-        {!compact && showInstructions && <BarrierInstructions upOrDown={upOrDown} inOrOut={inOrOut} currentExpiry={currentExpiryDate.toString()} />}
+        {!compact && showInstructions && (
+          <BarrierInstructions upOrDown={upOrDown} inOrOut={inOrOut} currentExpiry={currentExpiryDate.toString()} />
+        )}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -443,7 +447,14 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         </Flex>
       )}
 
-      {!compact && showInstructions && <BarrierDescription upOrDown={upOrDown} buyOrSell={buyOrSell} inOrOut={inOrOut} currentExpiryDate={currentExpiryDate.toString()} />}
+      {!compact && showInstructions && (
+        <BarrierDescription
+          upOrDown={upOrDown}
+          buyOrSell={buyOrSell}
+          inOrOut={inOrOut}
+          currentExpiryDate={currentExpiryDate.toString()}
+        />
+      )}
 
       <Toast toastList={toastList} position={position} />
 
