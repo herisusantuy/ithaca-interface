@@ -71,6 +71,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
+  const [maximize, setMaximize] = useState<number>(0);
   const [modifiedData, setModifiedData] = useState<PayoffDataProps[]>([]);
   const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
@@ -155,6 +156,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     const dashedColorIndex = key.findIndex((k) => k.value === dashed.label.value)
 
     setDashedColor(dashedColorArray[dashedColorIndex - 1]);
+    setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
     isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
     isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
@@ -354,14 +356,27 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        x={width - 67}
-                        y={8}
-                        fill={upSide ? '#5EE192' : 'transparent'}
+                        // x={width - (upSide ? 67 : (getNumberFormat(maximize).length + 1) * 7)}
+                        x={width - (upSide ? 100 : (getNumberFormat(maximize).length + 2) * 10)}
+                        y={10}
+                        fill={'#5EE192'} // Assuming you want to change the color when it's not unlimited
                         fontSize={12}
-                        textAnchor='middle'
+                        textAnchor='right'
                       >
-                        Unlimited Upside
+                        {upSide
+                          ? 'Unlimited Upside'
+                          : maximize >= 0
+                          ? '+' + getNumberFormat(maximize)
+                          : '-' + getNumberFormat(maximize)}
                       </text>
+                      {upSide ? (
+                        <></>
+                      ) : (
+                        <LogoUsdc
+                          x={width - (getNumberFormat(maximize).length + 2) * 3} // Adjust the X position as needed
+                          y={-3}
+                        />
+                      )}
                     </>
                   }
                   position='insideBottom'
