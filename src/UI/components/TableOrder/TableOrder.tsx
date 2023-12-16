@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // SDK
-import { Order, Position } from '@ithaca-finance/sdk';
+import { Order, PortfolioCollateral, Position } from '@ithaca-finance/sdk';
 
 // Constants
 import {
@@ -15,6 +15,7 @@ import {
   TableRowData,
   TableRowDataWithExpanded,
   TABLE_ORDER_DATA_WITH_EXPANDED,
+  TableDescriptionProps,
 } from '@/UI/constants/tableOrder';
 
 // Utils
@@ -80,6 +81,12 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
   const [slicedData, setSlicedData] = useState<TableRowDataWithExpanded[]>([]);
+  const [collateralData, setCollateralData] = useState<TableDescriptionProps>({
+    possibleReleaseX: 0,
+    possibleReleaseY: 0,
+    postOptimisationX: 0,
+    postOptimisationY: 0
+  });
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -158,6 +165,18 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             dataToRows(res);
             setLoading(false);
           });
+          if (description) {
+            ithacaSDK.calculation.calcPortfolioCollateral().then((d: PortfolioCollateral) => {
+              if (d) {
+                setCollateralData({
+                  possibleReleaseX: d.actual.underlierAmount,
+                  possibleReleaseY: d.actual.numeraireAmount,
+                  postOptimisationX: d.potential.underlierAmount,
+                  postOptimisationY: d.potential.numeraireAmount
+                })
+              }
+            })
+          }
           break;
         case TABLE_TYPE.ORDER:
           ithacaSDK.client.currentPositions().then(res => {
@@ -620,10 +639,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       <Flex direction='row-space-between' margin='mt-35'>
         {description ? (
           <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
+            {...collateralData}
             // totalCollateral={30}
           />
         ) : (

@@ -38,6 +38,14 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Cancel All',
 ];
 
+export type TableDescriptionProps = {
+  possibleReleaseX: number;
+  possibleReleaseY: number;
+  postOptimisationX: number;
+  postOptimisationY: number;
+  // totalCollateral: number;
+};
+
 // Table order expanded headers
 export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Expiry Date', 'Size', 'Strike', 'Enter Price'];
 
