@@ -120,7 +120,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             <Toggle
               size='sm'
               defaultState={showInstructions ? 'right' : 'left'}
-              rightLabel='Descriptions'
+              rightLabel='Description'
               rightLabelClass='white-80'
               onChange={() => setShowInstructions(!showInstructions)}
             />
