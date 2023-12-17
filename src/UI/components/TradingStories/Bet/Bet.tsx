@@ -54,14 +54,15 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
 
+  const handleBetTypeChange = (betType: 'INSIDE' | 'OUTSIDE') => {
+    setInsideOrOutside(betType);
+  };
+
   const handleCapitalAtRiskChange = (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
     setCapitalAtRisk(capitalAtRisk);
   };
 
-  const handleBetTypeChange = (betType: 'INSIDE' | 'OUTSIDE') => {
-    setInsideOrOutside(betType);
-  };
 
   useEffect(() => {
     handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn))
@@ -70,7 +71,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const handleTargetEarnChange = async (amount:string) => {
     const targetEarn = getNumberValue(amount);
     setTargetEarn(targetEarn);
-    // await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk));
+    await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn));
 
   };
 
@@ -114,14 +115,16 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       totalNetPrice: capitalAtRisk.toFixed(currencyPrecision.strike),
       legs: [legMin, legMax],
     } as ClientConditionalOrder;
+
     const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
     const payoffMap = estimateOrderPayoff([
-      { ...minContract, ...legMin, premium: minContract.referencePrice },
-      { ...maxContract, ...legMax, premium: maxContract.referencePrice },
+      { ...minContract, ...legMin, premium: capitalAtRisk / targetEarn },
+      { ...maxContract, ...legMax, premium: 0 },
     ], {
       min: strikes[0] - strikeDiff,
       max: strikes[strikes.length -1] +strikeDiff
     });
+
     setPayoffMap(payoffMap);
 
     try {
@@ -163,7 +166,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   useEffect(() => {
-    handleCapitalAtRiskChange('100');
+    handleCapitalAtRiskChange('10');
     handleTargetEarnChange('100');
   }, []);
 
@@ -247,6 +250,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           </LabeledInput>
         </Flex>
       )}
+
 
       <ChartPayoff
         // id='bet-chart'
