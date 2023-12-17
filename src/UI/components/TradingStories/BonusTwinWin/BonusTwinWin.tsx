@@ -270,7 +270,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
-        infoPopup={true}
+        infoPopup={{ type: 'barrier', price: price, barrier: koBarrier, strike: priceReference }}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

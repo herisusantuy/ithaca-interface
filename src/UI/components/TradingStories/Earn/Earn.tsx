@@ -451,7 +451,17 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
         showPortial={!compact}
-        infoPopup={radioChosen !== 'Riskless Earn'}
+        infoPopup={
+          radioChosen !== 'Riskless Earn'
+            ? {
+                type: 'risky',
+                price: strike.max,
+                risk: capitalAtRisk,
+                currency: currency,
+                earn: targetEarn,
+              }
+            : undefined
+        }
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

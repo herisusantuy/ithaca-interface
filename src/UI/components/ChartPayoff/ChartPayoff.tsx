@@ -10,7 +10,7 @@ import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
 import Flex from '@/UI/layouts/Flex/Flex';
-import InfoPopup from '@/UI/components/InfoPopup/InfoPopup';
+import { InfoPopup, InfoPopupProps } from '@/UI/components/InfoPopup/InfoPopup';
 
 // Constants
 import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KeyType, KeyOption } from '@/UI/constants/charts/charts';
@@ -41,7 +41,7 @@ type ChartDataProps = {
   showPortial?: boolean;
   showUnlimited?: boolean;
   compact?: boolean;
-  infoPopup?: boolean;
+  infoPopup?: InfoPopupProps;
 };
 
 type DomainType = {
@@ -246,7 +246,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </div>
             </Flex>
           )}
-          {!compact && infoPopup && <InfoPopup />}
+          {!compact && infoPopup && <InfoPopup {...infoPopup} />}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}
