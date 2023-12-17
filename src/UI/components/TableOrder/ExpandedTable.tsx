@@ -20,7 +20,6 @@ type ExpandedTableProps = {
 const ExpandedTable = ({ data }: ExpandedTableProps) => {
   return (
     <div className={styles.transactionDetail}>
-      <span className={styles.title}>Strategy</span>
       <div className={styles.table}>
         <div className={`${styles.row} ${styles.header}`}>
           {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (

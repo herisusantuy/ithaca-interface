@@ -22,13 +22,19 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import LogoEth from '../../Icons/LogoEth';
+import PriceLabel from '../../PriceLabel/PriceLabel';
+import LogoUsdc from '../../Icons/LogoUsdc';
+
+// Styles
+import styles from './Barriers.module.scss';
 
 const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -380,33 +386,37 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           />
         </Flex>
       ) : (
-        <Flex direction='column' margin='mt-20 mb-14' gap='gap-16'>
+        <Flex direction='column' margin='mt-20 mb-20' gap='gap-16'>
           <Flex direction='row-center' gap='gap-10'>
             {/** Needs hooking up */}
 
             <LabeledControl label='Side'>
-              <Flex gap='gap-10'>
-                <RadioButton
-                  width={42}
-                  options={SIDE_OPTIONS}
-                  selectedOption={buyOrSell}
-                  name='buyOrSell'
-                  orientation='vertical'
-                  onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
-                />
-                <RadioButton
-                  width={50}
-                  options={UP_DOWN_OPTIONS}
-                  selectedOption={upOrDown}
-                  name='upOrDown'
-                  orientation='vertical'
-                  onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
-                />
-              </Flex>
+              <RadioButton
+                width={42}
+                options={SIDE_OPTIONS}
+                selectedOption={buyOrSell}
+                name='buyOrSell'
+                orientation='vertical'
+                onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
+              />
+            </LabeledControl>
+            <LabeledControl label=''>
+              <RadioButton
+                width={50}
+                options={UP_DOWN_OPTIONS}
+                selectedOption={upOrDown}
+                name='upOrDown'
+                orientation='vertical'
+                onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
+                radioButtonClassName={styles.radioButtonClassName}
+                optionClassName={styles.optionClassName}
+                labelClassName={styles.labelClassName}
+              />
             </LabeledControl>
 
             <LabeledControl label='Strike'>
               <DropdownMenu
+                width={80}
                 options={strikes.map(strike => ({ name: strike, value: strike }))}
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={handleStrikeChange}
@@ -415,7 +425,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
             <h5 className='mt-22 color-white'>Knock</h5>
 
-            <div className='mt-22'>
+            <LabeledControl label=''>
               <RadioButton
                 width={50}
                 options={IN_OUT_OPTIONS}
@@ -423,13 +433,17 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
                 name='inOrOut'
                 orientation='vertical'
                 onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
+                radioButtonClassName={styles.radioButtonClassName}
+                optionClassName={styles.optionClassName}
+                labelClassName={styles.labelClassName}
               />
-            </div>
+            </LabeledControl>
 
             <p className='mt-22'>@</p>
 
             <LabeledControl label='Barrier'>
               <DropdownMenu
+                width={80}
                 options={barrierStrikes.map(strike => ({ name: strike, value: strike }))}
                 value={barrier ? { name: barrier, value: barrier } : undefined}
                 onChange={handleBarrierChange}
@@ -437,11 +451,27 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             </LabeledControl>
 
             <LabeledControl label='Size'>
-              <Input type='number' value={size} onChange={({ target }) => handleSizeChange(target.value)} />
+              <Input type='number' value={size} onChange={({ target }) => handleSizeChange(target.value)} width={80} />
             </LabeledControl>
 
             <LabeledControl label='Unit Price'>
-              <Input type='number' value={unitPrice} onChange={({ target }) => handlePriceChange(target.value)} />
+              <Input
+                type='number'
+                value={unitPrice}
+                onChange={({ target }) => handlePriceChange(target.value)}
+                width={80}
+              />
+            </LabeledControl>
+            <LabeledControl label='Collateral' labelClassName='justify-end'>
+              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} label='338.3K' />
+            </LabeledControl>
+
+            <LabeledControl label='Premium' labelClassName='justify-end'>
+              <PriceLabel
+                className='height-34 min-width-71 color-white-60'
+                icon={<LogoUsdc />}
+                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+              />
             </LabeledControl>
           </Flex>
         </Flex>
@@ -453,6 +483,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           buyOrSell={buyOrSell}
           inOrOut={inOrOut}
           currentExpiryDate={currentExpiryDate.toString()}
+          strikeAmount={strike}
+          barrierAmount={barrier}
         />
       )}
 
