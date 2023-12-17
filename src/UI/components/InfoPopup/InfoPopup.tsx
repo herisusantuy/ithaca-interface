@@ -37,7 +37,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
   const { type, price } = props;
 
   switch (type) {
-    case 'barrier':
+    case 'barrier': {
       const { barrier, strike } = props as BarrierPopup;
       return (
         <div className={styles.popupContainer}>
@@ -58,7 +58,8 @@ export const InfoPopup = (props: InfoPopupProps) => {
           </p>
         </div>
       );
-    case 'risky':
+    }
+    case 'risky': {
       const { risk, currency, earn } = props as RiskyPopup;
       const currencyIcon = currency === 'USDC' ? <LogoUsdc /> : <LogoEth />;
 
@@ -69,5 +70,6 @@ export const InfoPopup = (props: InfoPopupProps) => {
           </p>
         </div>
       );
+    }
   }
 };
