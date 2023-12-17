@@ -156,14 +156,27 @@
 }
 
 .description {
+  display: grid;
+  grid-template-columns: rem(186) rem(136) rem(216) rem(36) rem(94) auto;
+  column-gap: rem(4);
   margin-bottom: rem(16);
-
-  p {
-    @include font-size('text-sm', 'regular');
+  @include font-size('text-sm', 'regular');
+  color: var(--white-60);
+  span {
     display: flex;
     align-items: center;
-    gap: rem(3);
-    color: var(--white-80);
+    gap: rem(4);
+    &:nth-of-type(5) {
+      justify-content: flex-end;
+    }
+    &:nth-of-type(6) {
+      svg {
+        margin: 0 rem(-6);
+      }
+    }
+    &:last-of-type {
+      grid-column: 1 / span 2;
+    }
   }
   .italic {
     font-style: italic;

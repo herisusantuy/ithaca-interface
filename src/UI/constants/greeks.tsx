@@ -10,5 +10,5 @@ export const GREEK_SYMBOLS: GreekSymbolType[] = [
   { symbol: '&nu;', name: 'Vega', id: 'vega' },
   { symbol: '&Gamma;', name: 'Gamma', id: 'gamma' },
   { symbol: '&theta;', name: 'Theta', id: 'theta' },
-  { symbol: '&Rho;', name: 'Rho', id: 'price' },
+  // { symbol: '&Rho;', name: 'Rho', id: 'price' },
 ];

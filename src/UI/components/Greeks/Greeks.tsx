@@ -18,7 +18,7 @@ const Greeks = ({greeks}: GreekSymbolProps) => {
             <span dangerouslySetInnerHTML={{ __html: symbol }}></span>
             {name}
           </label>
-          {greeks ? greeks[id].toFixed(2) : '-'}
+          {greeks ? greeks[id].toFixed(3) : '-'}
         </div>
       ))}
     </div>
