@@ -197,7 +197,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             <LabeledControl label='Size'>
               <Input
                 type='number'
-                icon={<LogoEth />}
+                icon={<LogoUsdc />}
                 width={105}
                 increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
                 value={size}
