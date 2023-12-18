@@ -15,7 +15,7 @@ import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Constants
-import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Styles
 import styles from './Header.module.scss';
@@ -30,6 +30,7 @@ type HeaderProps = {
 
 const Header = ({ className }: HeaderProps) => {
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
 
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
@@ -61,23 +62,30 @@ const Header = ({ className }: HeaderProps) => {
       <header className={`${styles.header} ${className || ''}`}>
         <div className={styles.container}>
           <div className={styles.left}>
-              <span className={styles.logo} onClick={() => { 
-            router.push('/trading/position-builder')
-            }}>
-            <Logo />
+            <span
+              className={styles.logo}
+              onClick={() => {
+                router.push('/trading/position-builder');
+              }}
+            >
+              <Logo />
             </span>
-            {!tabletBreakpoint && <Navigation />}
+            {!tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
             <Bell />
-            {/* <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} /> */}
+            {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
             <Wallet />
-            {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
+            {(tabletBreakpoint || mobileBreakpoint) && (
+              <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />
+            )}
             {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
           </div>
         </div>
       </header>
-      {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
+      {(tabletBreakpoint || mobileBreakpoint) && (
+        <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />
+      )}
     </>
   );
 };

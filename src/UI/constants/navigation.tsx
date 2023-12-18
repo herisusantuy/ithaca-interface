@@ -3,7 +3,8 @@ export type NavigationItems = {
   path: string;
   titleKey: string;
   displayText: string;
-  disabled?: boolean
+  disabled?: boolean;
+  children?: NavigationItems[];
 };
 
 export const NAVIGATION_ITEMS: NavigationItems[] = [
@@ -13,29 +14,35 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     displayText: 'Trading',
   },
   {
+    path: '/analytics',
+    titleKey: 'Click to visit analytics',
+    displayText: 'Analytics',
+  },
+  {
     path: '/dashboard',
     titleKey: 'Click to visit dashboard',
     displayText: 'Dashboard',
   },
   // {
-  //   path: '/leaderboard',
-  //   titleKey: 'Click to visit leaderboard',
-  //   displayText: 'Leaderboard',
-  // },
-  {
-    path: '/analytics',
-    titleKey: 'Click to visit analytics',
-    displayText: 'Analytics',
-    disabled: true
-  },
-  // {
   //   path: '#',
   //   titleKey: 'Click to view more',
   //   displayText: 'More',
-  // },
-  // {
-  //   path: '/components',
-  //   titleKey: 'Click to visit components',
-  //   displayText: 'Components',
+  //   children: [
+  //     {
+  //       path: '/profile',
+  //       titleKey: 'Click to visit profile',
+  //       displayText: 'Profile',
+  //     },
+  //     {
+  //       path: '/rewards',
+  //       titleKey: 'Click to visit rewards earned',
+  //       displayText: 'Rewards Earned',
+  //     },
+  //     {
+  //       path: '#',
+  //       titleKey: 'Click to switch dark to light mode',
+  //       displayText: 'Light mode',
+  //     },
+  //   ],
   // },
 ];
