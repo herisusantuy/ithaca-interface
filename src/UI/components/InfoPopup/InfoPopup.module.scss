@@ -2,7 +2,8 @@
   position: absolute !important;
   box-sizing: border-box;
   z-index: 999999;
-  background: var(--gradient-panel-bg);
+  background: #212027;
+  box-shadow: 0 0 rem(16) 0 #2B2E3A26 inset;
   border-radius: rem(16);
   padding: rem(4) rem(16);
 
