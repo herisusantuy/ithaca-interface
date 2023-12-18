@@ -21,11 +21,14 @@ type StrategyTableProps = {
   hideClear?: boolean;
 };
 
-const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: StrategyTableProps) => {
+const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: StrategyTableProps) => {
   return (
     <>
       <div className={styles.table}>
-        <div className={styles.header}>
+        <div
+          style={{ gridTemplateColumns: !hideClear ? 'repeat(8, minmax(0, 1fr))' : ' repeat(7, minmax(0, 1fr))' }}
+          className={styles.header}
+        >
           {TABLE_STRATEGY_HEADERS.map((header, idx) => {
             return (
               <div className={styles.cell} key={idx}>
@@ -36,22 +39,30 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear=false }: Str
         </div>
         {strategies.length ? (
           strategies.map((strategy, idx) => (
-            <div className={styles.row} key={idx}>
+            <div
+              style={{ gridTemplateColumns: !hideClear ? 'repeat(8, minmax(0, 1fr))' : ' repeat(7, minmax(0, 1fr))' }}
+              className={styles.row}
+              key={idx}
+            >
               <div className={styles.cell}>
                 <div className={styles.dot}>
                   <Dot type={`leg${idx + 1}`} />
-                  <div className={styles.strategy}>{strategy.payoff === 'NEXT_AUCTION' ? 'Forward(Next Auction)' : strategy.payoff}</div>
+                  <div className={styles.strategy}>
+                    {strategy.payoff === 'NEXT_AUCTION' ? 'Forward(Next Auction)' : strategy.payoff}
+                  </div>
                 </div>
               </div>
               <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
               <div className={styles.cell}>{strategy.leg.quantity}</div>
               <div className={styles.cell}>{Number(strategy.strike)}</div>
               <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
-              {!hideClear && <div className={styles.cell}>
-                <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
-                  <Remove />
-                </Button>
-              </div>}
+              {!hideClear && (
+                <div className={styles.cell}>
+                  <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>
+                    <Remove />
+                  </Button>
+                </div>
+              )}
             </div>
           ))
         ) : (
