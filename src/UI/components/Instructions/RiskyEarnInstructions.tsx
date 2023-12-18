@@ -16,11 +16,9 @@ const RiskyEarnInstructions = () => {
   const RISKY_EXPIRE_DATE = '20231120'; // TO-DO: Pass as props
   return (
     <div className={styles.container}>
+      
       <p>
-        i. Select <LogoEth /> Target Price.
-      </p>
-      <p>
-        ii. Risk
+        i. Risk
         <span className={styles.spacer} />
         <span className={styles.stackedLogo}>
           <LogoEth />
@@ -39,18 +37,27 @@ const RiskyEarnInstructions = () => {
         <LogoUsdc />
         <CurlyBracketRight />@{' '}
         <span className={`${styles.italic} hide-psuedo p-0`}>
-          {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')}
+          {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')}.
         </span>
       </p>
-      <p>
-        iii. - If at expiry <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth />{' '}
-        <Add />
-        Return in <LogoUsdc /> .
+      <p className='mb-5'>
+        ii. Select <LogoEth /> Target Price.
       </p>
-      <p className='pl-18'>
-        - If at expiry <LogoEth /> <ChevronRight /> Target Price, receive Risk equivalent worth of <LogoUsdc /> <Add />
-        Return in <LogoUsdc /> .
-      </p>
+      <div className='d-flex flex-row' style={{alignItems:'start'}}>
+        <p className='mr-4'>iii.</p>
+        <div className='pt-5'>
+          <p>
+          - If at {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth />{' '}
+          <Add />
+          Return in <LogoUsdc /> .
+          </p>
+          <p>
+            - If at {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronRight /> Target Price, receive Risk equivalent worth of <LogoUsdc /> <Add />
+            Return in <LogoUsdc /> .
+          </p>
+        </div> 
+      </div>
+      
     </div>
   );
 };
