@@ -39,7 +39,7 @@ import {
 import useToast from '@/UI/hooks/useToast';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 
-const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => { 
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
 
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
@@ -47,7 +47,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   const strikes = binaryPutContracts ? Object.keys(binaryPutContracts).map(strike => parseFloat(strike)) : [];
 
   const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('INSIDE');
-  const [strike, setStrike] = useState({ min: strikes[(strikes.length/2)-1], max: strikes[strikes.length/2] });
+  const [strike, setStrike] = useState({ min: strikes[Math.floor((strikes.length/2))], max: strikes[strikes.length > 1 ? Math.ceil(strikes.length/2) : 0] });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -158,7 +158,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   const getAPY = () => {
-    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn))) {
+    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn)) || !strike.max || !strike.min) {
       return <span>-%</span>;
     }
     const apy = calculateAPY(`${binaryCallContracts[strike.max].economics.expiry}`, getNumber(capitalAtRisk), getNumber(targetEarn))
@@ -203,7 +203,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 221}
+          width={compact ? 186 : 221}
           options={BET_OPTIONS}
           selectedOption={insideOrOutside}
           name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
@@ -233,7 +233,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={capitalAtRisk}
-              width={85}
+              width={110}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
               icon={<LogoUsdc />}
             />
@@ -243,7 +243,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={targetEarn}
-              width={85}
+              width={110}
               onChange={({ target }) => handleTargetEarnChange(target.value)}
               icon={<LogoUsdc />}
             />

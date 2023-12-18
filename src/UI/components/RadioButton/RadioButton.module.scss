@@ -165,6 +165,9 @@
     gap: 0;
     min-width: rem(30);
     height: rem(34);
+    @include breakpoint(desktop){
+      height: auto;
+    }
 
     label {
       @include spacing(padding, 3, 'top+bottom');
@@ -183,7 +186,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 100%; 
 
   input[type='radio'] {
     position: absolute;
@@ -193,7 +196,7 @@
   }
 
   label {
-    font-size: rem(9);
+    font-size: 12px;
     line-height: normal;
     font-weight: 500;
     @include spacing(padding, 2, 'top+bottom');

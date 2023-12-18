@@ -21,21 +21,36 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
       <p>
         i. Select <LogoEth /> Price Reference.
       </p>
-      <p>
-        ii. Select minimum Expected <LogoEth />
-        <span className='flex-column-center'>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Upside
+      <div className='d-flex flex-row'>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'end'}}>
+          <p >ii. Select minimum Expected <LogoEth /></p>
+          <p className='text-end'>(maximum potential <LogoUsdc /></p>
+        </div>
+        <div className='d-flex flex-column justify-content-start' style={{marginRight:'5px',marginLeft:'5px'}}>
+          <p>
+            <span className='flex-column-center'>
+            <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+              Upside
+            </span>
+            <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+              Downside
+            </span>
           </span>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Downside
-          </span>
-        </span>
-        move from <LogoEth /> Price Reference.
-      </p>
-      <p className='pl-54'>
-        (maximum potential <LogoUsdc /> loss if <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> = <LogoEth /> Price Reference)
-      </p>
+            move from 
+          </p>
+          <p>
+            loss if <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> =
+          </p>
+        </div>
+        <div className='d-flex flex-column justify-content-start'>
+          <p>
+            <LogoEth /> Price Reference.
+          </p>
+          <p>
+            <LogoEth /> Price Reference)
+          </p>
+        </div>
+      </div> 
       <p>
         iii. Post minimum expected <LogoEth className='ml-10' />
         <span className='flex-column-center'>
@@ -55,7 +70,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
         Price Reference <Add />
         <span className='flex-column-center'>
           <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            min Upside
+            min Upside 
           </span>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Downside
