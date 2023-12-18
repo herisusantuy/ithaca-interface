@@ -25,6 +25,7 @@ export type MainTab = {
   radioOptions?: {
     option: string;
     value: string;
+    description: string;
   }[];
   underText?: {
     value: string;
