@@ -11,13 +11,13 @@ import Add from '@/UI/components/Icons/Add';
 
 import styles from './InfoPopup.module.scss';
 
-type InfoPopupType = 'barrier' | 'risky';
+type InfoPopupType = 'bonusTwinWin' | 'risky';
 
 type CommonProperties = {
   type: InfoPopupType;
 };
 
-type BarrierPopup = CommonProperties & {
+type BonusTwinWinPopup = CommonProperties & {
   price: string;
   barrier: string;
   strike: string;
@@ -30,15 +30,15 @@ type RiskyPopup = CommonProperties & {
   earn: string;
 };
 
-export type InfoPopupProps = BarrierPopup | RiskyPopup;
+export type InfoPopupProps = BonusTwinWinPopup | RiskyPopup;
 
 export const InfoPopup = (props: InfoPopupProps) => {
   const { currentExpiryDate } = useAppStore();
   const { type, price } = props;
 
   switch (type) {
-    case 'barrier': {
-      const { barrier, strike } = props as BarrierPopup;
+    case 'bonusTwinWin': {
+      const { barrier, strike } = props as BonusTwinWinPopup;
       return (
         <div className={styles.popupContainer}>
           <p>
