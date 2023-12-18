@@ -334,11 +334,12 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       {compact && <Flex margin='mb-10 z-max'>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 186}
+          width={ 186}
           options={RISKY_RISKLESS_EARN_OPTIONS}
           selectedOption={riskyOrRiskless}
           name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
           onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
+          radioButtonClassName={styles.earnRadioButtonClassName}
         />
       </Flex>}
 

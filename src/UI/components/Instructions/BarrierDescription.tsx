@@ -4,27 +4,151 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 // Styles
 import styles from './Instructions.module.scss';
 import dayjs from 'dayjs';
+import ChevronRight from '../Icons/ChevronRight';
+import ChevronLeft from '../Icons/ChevronLeft';
 
 type BarrierDescriptionProps = {
-  inOrOut: string,
-  buyOrSell: string,
-  upOrDown: string,
-  currentExpiryDate: string
-}
+  inOrOut: string; // Possible values: 'IN', 'OUT'
+  buyOrSell: string; // Possible values: 'BUY', 'SELL'
+  upOrDown: string; // Possible values: 'UP', 'DOWN'
+  currentExpiryDate: string;
+  strikeAmount?: string;
+  barrierAmount?: string;
+};
 
-const BarrierDescription = ({inOrOut, buyOrSell, upOrDown, currentExpiryDate} : BarrierDescriptionProps) => {
-  return (
-    <div className={styles.description}>
-      <p>
-        {buyOrSell === 'BUY' ? 'BUY' : 'SELL'} {upOrDown === 'UP' ? 'UP' : 'DOWN'} and {inOrOut === 'IN' ? 'IN' : 'OUT'} {upOrDown === 'UP' ? 'Call' : 'Put'} if <LogoEth /> will end up @<span className={styles.italic}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> {upOrDown === 'UP' ? 'UP' : 'DOWN'} from the strike price and NOT {inOrOut === 'IN' ? 'IN' : 'OUT'}side &lt;
-        the barrier, if not, premium {upOrDown === 'UP' ? 'lost.' :''} 
-      </p>
-      <p>
-        {upOrDown === 'DOWN' ? ' lost.' :''} ( Sell and earn premium if <LogoEth /> @<span className={styles.italic}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> ends up below that strike or above the strike but still below
-        the barrier )
-      </p>
-    </div>
-  );
+const BarrierDescription = ({
+  inOrOut,
+  buyOrSell,
+  upOrDown,
+  currentExpiryDate,
+  strikeAmount = '',
+  barrierAmount = '',
+}: BarrierDescriptionProps) => {
+  let description = <></>;
+
+  if (buyOrSell === 'BUY' && upOrDown === 'UP' && inOrOut === 'IN') {
+    description = (
+      <>
+        <span>Buy UP and IN and pay</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> UP from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>and not INside</span>
+        <span>(<ChevronRight/>) {barrierAmount};</span>
+        <span>if not, premium lost.</span>
+      </>
+    );
+  } else if (buyOrSell === 'BUY' && upOrDown === 'DOWN' && inOrOut === 'IN') {
+    description = (
+      <>
+        <span>Buy DOWN and IN and pay</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> DOWN from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>and INside</span>
+        <span>(<ChevronLeft/>) {barrierAmount};</span>
+        <span>if not, premium lost.</span>
+      </>
+    );
+  } else if (buyOrSell === 'BUY' && upOrDown === 'UP' && inOrOut === 'OUT') {
+    description = (
+      <>
+        <span>Buy UP and OUT and pay</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> UP from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>and INside</span>
+        <span>(<ChevronLeft/>) {barrierAmount}; </span>
+        <span>if not, premium lost.</span>
+      </>
+    );
+  } else if (buyOrSell === 'BUY' && upOrDown === 'DOWN' && inOrOut === 'OUT') {
+    description = (
+      <>
+        <span>Buy DOWN and OUT and pay</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> DOWN from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>and INside</span>
+        <span>(<ChevronRight/>) {barrierAmount}; </span>
+        <span>if not, premium lost.</span>
+      </>
+    );
+  } else if (buyOrSell === 'SELL' && upOrDown === 'UP' && inOrOut === 'IN') {
+    description = (
+      <>
+        <span>Sell UP and IN and earn</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> NOT UP from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>or INside</span>
+        <span>(<ChevronLeft/>) {barrierAmount};</span>
+        <span>
+          if not, pay <LogoEth /> - strike.
+        </span>
+      </>
+    );
+  } else if (buyOrSell === 'SELL' && upOrDown === 'DOWN' && inOrOut === 'IN') {
+    description = (
+      <>
+        <span>Sell DOWN and IN and earn</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> NOT DOWN from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>or NOT INside</span>
+        <span>(<ChevronRight/>) {barrierAmount};</span>
+        <span>
+          if not, pay <LogoEth /> - strike.
+        </span>
+      </>
+    );
+  } else if (buyOrSell === 'SELL' && upOrDown === 'UP' && inOrOut === 'OUT') {
+    description = (
+      <>
+        <span>Sell UP and OUT and earn</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> NOT UP from
+        </span>
+        <span>{strikeAmount}</span>
+        <span>or NOT INside</span>
+        <span>(<ChevronRight/>) {barrierAmount};</span>
+        <span>
+          if not, pay <LogoEth /> - strike.
+        </span>
+      </>
+    );
+  } else if (buyOrSell === 'SELL' && upOrDown === 'DOWN' && inOrOut === 'OUT') {
+    description = (
+      <>
+        <span>Sell DOWN and OUT and earn</span>
+        <span>premium if you think</span>
+        <span>
+          <LogoEth /> @ <i>{dayjs(currentExpiryDate).format('DD MMM YY')}</i> NOT DOWN
+        </span>
+        <span>{strikeAmount}</span>
+        <span>or NOT INside</span>
+        <span>(<ChevronLeft/>) {barrierAmount}; </span>
+        <span>
+          if not, pay <LogoEth /> - strike.
+        </span>
+      </>
+    );
+  }
+
+  return <p className={styles.description}>{description}</p>;
 };
 
 export default BarrierDescription;

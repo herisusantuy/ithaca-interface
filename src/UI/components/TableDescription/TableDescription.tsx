@@ -7,6 +7,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 
 // Styles
 import styles from './TableDescription.module.scss';
+import { TableDescriptionProps } from '@/UI/constants/tableOrder';
 
 // Types
 type ValueWithIcon = {
@@ -14,13 +15,6 @@ type ValueWithIcon = {
   Icon?: ComponentType;
 };
 
-type TableDescriptionProps = {
-  possibleReleaseX: number;
-  possibleReleaseY: number;
-  postOptimisationX: number;
-  postOptimisationY: number;
-  // totalCollateral: number;
-};
 
 const TableDescription = ({
   possibleReleaseX,

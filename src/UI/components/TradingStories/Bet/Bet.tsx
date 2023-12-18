@@ -39,7 +39,7 @@ import {
 import useToast from '@/UI/hooks/useToast';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 
-const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => { 
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
 
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
@@ -203,7 +203,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
         <RadioButton
           size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 221}
+          width={compact ? 186 : 221}
           options={BET_OPTIONS}
           selectedOption={insideOrOutside}
           name={compact ? 'insideOrOutsideCompact' : 'insideOrOutside'}
@@ -233,7 +233,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={capitalAtRisk}
-              width={85}
+              width={110}
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
               icon={<LogoUsdc />}
             />
@@ -243,7 +243,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
             <Input
               type='number'
               value={targetEarn}
-              width={85}
+              width={110}
               onChange={({ target }) => handleTargetEarnChange(target.value)}
               icon={<LogoUsdc />}
             />
