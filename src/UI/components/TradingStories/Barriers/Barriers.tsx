@@ -87,10 +87,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
-    setBarrier(undefined);
-    setUnitPrice('-');
-    setOrderDetails(undefined);
-    setPayoffMap(undefined);
+    if (!strike || !barrier) return;
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
@@ -366,7 +364,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={buyOrSell}
             name='buyOrSellCompact'
             orientation='vertical'
-            onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
+            onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')} 
+            radioButtonClassName={styles.sideRadioButtonClassName}
           />
 
           <RadioButton
@@ -375,7 +374,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={upOrDown}
             name='upOrDownCompact'
             orientation='vertical'
-            onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
+            onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}   
           />
 
           <RadioButton
@@ -384,7 +383,7 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             selectedOption={inOrOut}
             name='inOrOutCompact'
             orientation='vertical'
-            onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
+            onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}   
           />
         </Flex>
       ) : (

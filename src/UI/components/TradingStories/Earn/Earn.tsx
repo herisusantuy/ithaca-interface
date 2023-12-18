@@ -104,7 +104,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
     } else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
-  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless]);
+  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless])
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -331,20 +331,19 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
 
-      {compact && (
-        <Flex margin='mb-10 z-max'>
-          <RadioButton
-            size={compact ? 'compact' : 'regular'}
-            width={compact ? 140 : 186}
-            options={RISKY_RISKLESS_EARN_OPTIONS}
-            selectedOption={riskyOrRiskless}
-            name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
-            onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
-          />
-        </Flex>
-      )}
+      {compact && <Flex margin='mb-10 z-max'>
+        <RadioButton
+          size={compact ? 'compact' : 'regular'}
+          width={ 186}
+          options={RISKY_RISKLESS_EARN_OPTIONS}
+          selectedOption={riskyOrRiskless}
+          name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
+          onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
+          radioButtonClassName={styles.earnRadioButtonClassName}
+        />
+      </Flex>}
 
-      {!compact && radioChosen === 'Risky Earn' && (
+      {!compact && (radioChosen === 'Risky Earn') && (
         <h3 className='mbi-16 flex-row gap-4 fs-lato-md mb-12 mt-16'>
           Select Target Price <LogoEth />
         </h3>
@@ -451,17 +450,6 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
         showPortial={!compact}
-        infoPopup={
-          radioChosen !== 'Riskless Earn'
-            ? {
-                type: 'risky',
-                price: strike.max,
-                risk: capitalAtRisk,
-                currency: currency,
-                earn: targetEarn,
-              }
-            : undefined
-        }
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

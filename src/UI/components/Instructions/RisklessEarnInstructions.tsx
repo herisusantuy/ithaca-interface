@@ -28,7 +28,7 @@ const RisklessEarnInstructions = ({ currentExpiry }: props) => {
         </span>
       </p>
       <p className='flex-row'>
-        <p style={{ color: '#394050' }} className={styles.risklessPay}>
+        <p style={{ color: '#394050',fontStyle:'italic' }} className={styles.risklessPay}>
           i. Pay
         </p>
         <p className={styles.greyText}>
@@ -38,20 +38,30 @@ const RisklessEarnInstructions = ({ currentExpiry }: props) => {
                 <SquareBracketLeft color='#394050' />
               </span>
               <span className='flex-column-center flex-start hide-psuedo p-0'>
-                <span className='hide-psuedo p-0'>+ Call Spread</span>
-                <span className='hide-psuedo p-0'>+ Put Spread</span>
+                <span className={`hide-psuedo p-0 ${styles.italic}`}>+ Call Spread</span>
+                <span className={`hide-psuedo p-0 ${styles.italic}`}>+ Put Spread</span>
               </span>
               <span className={`hide-psuedo ${styles.squareBracketSm} p-0`}>
                 <SquareBracketRight color='#394050' />
               </span>
             </span>
-            <span className='hide-psuedo flex-row'>
+            <span className='hide-psuedo flex-row justify-content-center'>
               <span className={`hide-psuedo ${styles.squareBracketSm} p-0`}>
                 <SquareBracketLeft color='#394050' />
-              </span>
-              <span className='hide-psuedo flex-column-center'>
+              </span>   
+              <div className='hide-psuedo flex-column-between'>
                 <span className='hide-psuedo p-0'>
-                  (Call <Minus color='#343050' /> Call) + (Put <Minus color='#343050' /> Put)
+                  (Call <Minus color='#343050' />
+                </span>
+                <span className='hide-psuedo p-0'>
+                  Call) +
+                </span>
+                 
+                <span className='hide-psuedo p-0'>
+                 {' '} (Put <Minus color='#343050' />
+                </span>
+                <span className='hide-psuedo p-0'>
+                  Put)
                 </span>
                 <h6 className='hide-psuedo p-0'>
                   <span className={`hide-psuedo ${styles.largerGap}`}>Lower</span>
@@ -59,7 +69,7 @@ const RisklessEarnInstructions = ({ currentExpiry }: props) => {
                   <span className={`hide-psuedo ${styles.largerGap}`}>Upper</span>
                   <span className={`hide-psuedo ${styles.largerGap}`}>Lower</span>
                 </h6>
-              </span>
+              </div>
               <span className={`hide-psuedo ${styles.squareBracketSm} p-0`}>
                 <SquareBracketRight color='#394050' />
               </span>
@@ -73,14 +83,14 @@ const RisklessEarnInstructions = ({ currentExpiry }: props) => {
             <LogoUsdc /> Now,
           </p>
           <span className='flex-column-center flex-start hide-psuedo p-0 mb-24'>
-            <p className={styles.greyText}>
+            <p className={`${styles.greyText}`}>
               Receive (Lower Strike - Upper Strike) @{' '}
               <span className={`${styles.italic} hide-psuedo p-0`}>
                 {dayjs(currentExpiry, 'YYYYMMDD').format('DD MMM YY')}
               </span>
               .
             </p>
-            <p>
+            <p className={styles.italic}>
               <p className={styles.greyText}>Riskless Return</p>
               <span className={`hide-psuedo ${styles.curlySide} p-0`}>
                 <CurlyBracketLeft color='#394050' />
