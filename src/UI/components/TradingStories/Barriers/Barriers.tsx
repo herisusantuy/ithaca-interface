@@ -87,10 +87,8 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
-    setBarrier(undefined);
-    setUnitPrice('-');
-    setOrderDetails(undefined);
-    setPayoffMap(undefined);
+    if (!strike || !barrier) return;
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
