@@ -8,6 +8,7 @@ type Tab = {
   radioOptions?: {
     option: string;
     value: string;
+    description: string;
   }[];
   underText?: {
     value: string;
@@ -59,10 +60,12 @@ export const TRADING_STORIES_TABS: Tab[] = [
       {
         option: 'Risky Earn',
         value: 'Risky Earn',
+        description: 'Earn risky yield on your capital at risk.\n Define an asset price target.',
       },
       {
         option: 'Riskless Earn',
         value: 'Riskless Earn',
+        description: 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
       },
     ],
     underText: [
@@ -92,10 +95,12 @@ export const TRADING_STORIES_TABS: Tab[] = [
       {
         option: 'Bonus',
         value: 'Bonus',
+        description: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
       },
       {
         option: 'Twin-Win',
         value: 'Twin Win',
+        description: 'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
       },
     ],
   },

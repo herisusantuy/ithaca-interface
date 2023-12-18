@@ -33,7 +33,7 @@ import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
 
-const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus' }: TradingStoriesProps) => {
+const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus', onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
@@ -46,10 +46,11 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     : [];
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
-  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>((radioChosen as 'Bonus') || 'Bonus');
-  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[3]);
+  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
+  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 1]);
   const [multiplier, setMultiplier] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState('100');
+  const [total, setTotal] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
@@ -60,35 +61,40 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     }
   }, [radioChosen]);
 
-  const handleBonusOrTwinWinChange = async (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
+  const handleBonusOrTwinWinChange = (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
+    if(onRadioChange) onRadioChange(bonusOrTwinWin)
     if (!koBarrier) return;
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
-  const handleMultiplierChange = async (amount: string) => {
+  const handleMultiplierChange = (amount: string) => {
     const multiplier = getNumberValue(amount);
     setMultiplier(multiplier);
     if (!koBarrier) return;
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
-  const handleKOBarrierChange = async (koBarrier: string) => {
+  const handleKOBarrierChange = (koBarrier: string) => {
     setKoBarrier(koBarrier);
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
   const handlePriceChange = (price: string) => {
     setPrice(price);
+    if (!koBarrier) return;
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
   const handlePriceReferenceChange = async (
     bonusOrTwinWin: 'Bonus' | 'Twin Win',
     priceReference: string,
     koBarrier: string,
-    multiplier: number
+    multiplier: number,
+    price: number
   ) => {
-    if (isInvalidNumber(multiplier)) {
+    if (isInvalidNumber(multiplier) || isInvalidNumber(price)) {
+      setTotal('-')
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -126,10 +132,11 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     };
 
     const legs = [buyForwardLeg, buyPutLeg, sellPutLeg, sellBinaryPutLeg];
-
+    const totalPrice = (price * multiplier).toFixed(currencyPrecision.strike);
+    setTotal(totalPrice);
     const order = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: getNumber(price).toFixed(currencyPrecision.strike),
+      totalNetPrice: totalPrice,
       legs,
     } as ClientConditionalOrder;
 
@@ -253,7 +260,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
             <LabeledControl label='Total Protection Cost Inclusive Price' labelClassName='color-white mb-16'>
               <Flex gap='gap-10'>
                 <span className='fs-md-bold color-white'>
-                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                  {!isInvalidNumber(getNumber(total)) ? getNumberFormat(total) : '-'}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>

@@ -3,12 +3,12 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Add from '@/UI/components/Icons/Add';
 import Subtract from '@/UI/components/Icons/Subtract';
-import ChevronRightHighlighted from '@/UI/components/Icons/ChevronRightHighlighted';
-import ChevronLeftHighlighted from '@/UI/components/Icons/ChevronLeftHighlighted';
+import ChevronLeftRight from '@/UI/components/Icons/ChevronLeftRight';
 
 // Styles
 import styles from './Instructions.module.scss';
 import dayjs from 'dayjs';
+import Minus from '../Icons/Minus';
 
 type NoGainNoPayinInstructionsProps = {
   type?: string;
@@ -65,14 +65,14 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
       </p>
       <p className='pl-18'>
         - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
-        <ChevronRightHighlighted />
+        <ChevronLeftRight colorGreater={type === 'Call' ? '#54565b' : 'white'} colorLess={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
-        Price Reference <Add />
+        Price Reference {type === 'Call' ? <Add /> : <Minus color='#c5c5d9'/> }
         <span className='flex-column-center'>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Upside 
           </span>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Downside
           </span>
         </span>
@@ -88,7 +88,8 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
         .
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> <ChevronLeftHighlighted />
+        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> 
+        <ChevronLeftRight colorLess={type === 'Call' ? '#54565b' : 'white'} colorGreater={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
         Price Reference, receive collateral back.
       </p>

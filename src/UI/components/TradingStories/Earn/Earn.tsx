@@ -47,7 +47,7 @@ import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 dayjs.extend(duration);
 
-const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
+const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChange }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, spotContract } =
     useAppStore();
   const callContracts = getContractsByPayoff('Call');
@@ -79,6 +79,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
     setRiskyOrRiskless(option);
+    if(onRadioChange) onRadioChange(option)
   };
 
   useEffect(() => {
@@ -448,6 +449,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         // id='earn-chart'
         id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
+        // chartData={((!compact && radioChosen === 'Risky Earn') ||(compact && riskyOrRiskless === 'Risky Earn')) && payoffMap ? payoffMap : CHART_FAKE_DATA}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
