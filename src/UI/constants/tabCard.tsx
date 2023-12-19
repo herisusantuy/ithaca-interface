@@ -37,8 +37,8 @@ export const TRADING_STORIES_TABS: MainTab[] = [
   },
   {
     id: 'earn',
-    title: 'Risky Earn\nRiskless Earn',
-    description: 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+    title: 'Risky Earn | Riskless Earn',
+    description: 'Define an asset price target.\nEarn risky yield on your capital at risk.',
     contentId: 'earnChart',
     radioOptions: [
       {
