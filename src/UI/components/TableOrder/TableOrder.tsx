@@ -89,7 +89,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     postOptimisationX: 0,
     postOptimisationY: 0,
   });
-  const [headers, setHeaders] = useState<string[]>(TABLE_ORDER_HEADERS);
+  // const [headers, setHeaders] = useState<string[]>(TABLE_ORDER_HEADERS);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -442,6 +442,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           </>
         );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Get table header icons

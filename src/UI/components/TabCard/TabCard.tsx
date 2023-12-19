@@ -25,7 +25,6 @@ export type MainTab = {
   radioOptions?: {
     option: string;
     value: string;
-    description: string;
   }[];
   underText?: {
     value: string;
@@ -70,6 +69,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         value,
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, radioChosen]);
 
   const getRadioOptionSubTitleTemplate = (index: number) => {

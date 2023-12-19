@@ -41,6 +41,7 @@ type ChartDataProps = {
   showUnlimited?: boolean;
   compact?: boolean;
   infoPopup?: InfoPopupProps;
+  customDomain?: DomainType
 };
 
 type DomainType = {
@@ -53,7 +54,7 @@ import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, infoPopup } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, infoPopup, customDomain } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -152,7 +153,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    setDomain(findOverallMinMaxValues(chartData));
+    setDomain(customDomain || findOverallMinMaxValues(chartData));
     const tempData = makingChartData(
       chartData,
       bridge.label,
@@ -188,7 +189,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     if (typeof off === 'number') {
-      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value));
+      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value, !customDomain));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off, color, dashedColor, selectedLeg]);

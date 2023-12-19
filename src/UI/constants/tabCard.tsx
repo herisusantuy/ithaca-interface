@@ -44,12 +44,10 @@ export const TRADING_STORIES_TABS: MainTab[] = [
       {
         option: 'Risky Earn',
         value: 'Risky Earn',
-        description: '',
       },
       {
         option: 'Riskless Earn',
         value: 'Riskless Earn',
-        description: '',
       },
     ],
     underText: [
@@ -79,12 +77,10 @@ export const TRADING_STORIES_TABS: MainTab[] = [
       {
         option: 'Bonus',
         value: 'Bonus',
-        description: '',
       },
       {
         option: 'Twin-Win',
         value: 'Twin Win',
-        description: '',
       },
     ],
   },
