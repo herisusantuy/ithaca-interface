@@ -32,9 +32,8 @@ const SubmitModal = ({
   auctionSubmission,
   closeModal,
   positionBuilderStrategies,
-  orderSummary
+  orderSummary,
 }: SubmitModalProps) => {
-
   const { currencyPrecision } = useAppStore();
   const [multiPrice, setMultiPrice] = useState(true);
   return (
@@ -43,25 +42,21 @@ const SubmitModal = ({
       isOpen={isOpen}
       hideFooter={true}
       onCloseModal={() => closeModal(false)}
-    // isLoading={transactionInProgress}
+      // isLoading={transactionInProgress}
     >
       <>
         {positionBuilderStrategies.length === 1 &&
-          positionBuilderStrategies.findIndex((p) => p.payoff !== 'Call' &&
-            p.payoff !== 'Put') === -1 &&
-          <div className={styles.toggleWrapper}>
-            <Toggle
-              size='sm'
-              defaultState={multiPrice ? 'right' : 'left'}
-              rightLabel='*'
-              onChange={(val) => setMultiPrice(val === 'right')}
-            />
-          </div>
-        }
-        <TableStrategy
-          strategies={positionBuilderStrategies}
-          hideClear={true}
-        />
+          positionBuilderStrategies.findIndex(p => p.payoff !== 'Call' && p.payoff !== 'Put') === -1 && (
+            <div className={styles.toggleWrapper}>
+              <Toggle
+                size='sm'
+                defaultState={multiPrice ? 'right' : 'left'}
+                rightLabel='*'
+                onChange={val => setMultiPrice(val === 'right')}
+              />
+            </div>
+          )}
+        <TableStrategy strategies={positionBuilderStrategies} hideClear={true} />
         <Button
           className={`${styles.confirmButton}`}
           onClick={() => {
@@ -75,7 +70,7 @@ const SubmitModal = ({
         <div className={styles.divider}></div>
         <Flex margin='mb-14'>
           <h5 className='flexGrow'>Order Limit</h5>
-          <div>
+          <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
               {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
             </span>
@@ -86,24 +81,23 @@ const SubmitModal = ({
         <Flex margin='mb-14'>
           <h5 className='flexGrow'>Collateral Requirement</h5>
           <div>
-            <div>
+            <div className={styles.valueWrapper}>
               <span className={styles.amountLabel}>
                 {orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
               </span>
               <LogoEth />
               <span className={styles.currencyLabel}>WETH</span>
             </div>
-            <div>
+            <div className={styles.valueWrapper}>
               <span className={styles.amountLabel}>
                 {orderSummary
                   ? formatNumber(
-                    toPrecision(
-                      orderSummary.orderLock.numeraireAmount -
-                      getNumber(orderSummary.order.totalNetPrice),
-                      currencyPrecision.strike
-                    ),
-                    'string'
-                  )
+                      toPrecision(
+                        orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                        currencyPrecision.strike
+                      ),
+                      'string'
+                    )
                   : '-'}
               </span>{' '}
               <LogoUsdc />
@@ -113,7 +107,7 @@ const SubmitModal = ({
         </Flex>
         <Flex margin='mb-14'>
           <h5 className='flexGrow color-white'>Total Premium</h5>
-          <div>
+          <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
               {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
             </span>
@@ -124,7 +118,7 @@ const SubmitModal = ({
         <div className={styles.divider}></div>
         <Flex margin='mb-14'>
           <h5 className='flexGrow'>Platform Fee</h5>
-          <div>
+          <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>1.5</span>
             <LogoUsdc />
             <span className={styles.currencyLabel}>USDC</span>
@@ -132,27 +126,26 @@ const SubmitModal = ({
         </Flex>
 
         {positionBuilderStrategies.length === 1 &&
-          positionBuilderStrategies.findIndex((p) => p.payoff !== 'Call' &&
-            p.payoff !== 'Put') === -1 &&
-          <Flex>
-            <div className='color-white-60'>*</div>
-            <Flex direction='column'>
-              <div className='mb-4 ml-6'>
-                <Flex>
-                  <SliderLeft /> <h6 className='ml-2 color-white-60'>Multi-Price Portfolio Dominance</h6>
-                </Flex>
-              </div>
-              <div className='ml-6'>
-              <Flex>
-                <SliderRight /> <h6 className='color-white-60 ml-2'>Clearing</h6>
+          positionBuilderStrategies.findIndex(p => p.payoff !== 'Call' && p.payoff !== 'Put') === -1 && (
+            <Flex>
+              <div className='color-white-60'>*</div>
+              <Flex direction='column'>
+                <div className='mb-4 ml-6'>
+                  <Flex>
+                    <SliderLeft /> <h6 className='ml-2 color-white-60'>Multi-Price Portfolio Dominance</h6>
+                  </Flex>
+                </div>
+                <div className='ml-6'>
+                  <Flex>
+                    <SliderRight /> <h6 className='color-white-60 ml-2'>Clearing</h6>
+                  </Flex>
+                </div>
               </Flex>
-              </div>
             </Flex>
-          </Flex>
-        }
+          )}
       </>
     </Modal>
-  )
+  );
 };
 
 export default SubmitModal;

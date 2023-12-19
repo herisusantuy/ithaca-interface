@@ -25,13 +25,8 @@
   }
 
   &.isActive {
-    @include font-size('text-sm', 'semibold');
     cursor: default;
     color: var(--white);
-
-    @include breakpoint(tablet) {
-      @include font-size('text-sm', 'semibold');
-    }
   }
 }
 

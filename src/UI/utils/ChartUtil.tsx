@@ -75,7 +75,7 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
   return max / (max - min);
 };
 
-export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string) => {
+export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string, notStraightLine = true) => {
   return (
     <defs>
       {/* Area gradient */}
@@ -105,7 +105,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
             <stop offset='0%' stopColor={selectedLeg === 'total' ? '#4bb475' : color} stopOpacity={1} />
           </>) : ''}
         {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={selectedLeg === 'total' ? '#4bb475' : color}  stopOpacity={1} />: ''}
-        <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} />
+        {notStraightLine ? <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} /> : ''}
         {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />: ''}
         {off !== 0 ? (
           <>

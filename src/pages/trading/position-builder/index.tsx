@@ -62,8 +62,7 @@ const Index = () => {
   const { toastList, position, showToast } = useToast();
 
   // Store
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff, spotContract } =
-    useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, spotContract } = useAppStore();
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: PositionBuilderStrategy[]) => {
     const { legs, referencePrices, strikes, payoffs } = positionBuilderStrategies.reduce<{
@@ -91,7 +90,11 @@ const Index = () => {
     const chartData = estimateOrderPayoff(
       strikes.map((strike, idx) => {
         const contracts = payoffs[idx] === 'NEXT_AUCTION' ? spotContract : getContractsByPayoff(payoffs[idx])[strike];
-        return { ...contracts, ...legs[idx], premium: payoffs[idx] === 'NEXT_AUCTION' ? spotContract.referencePrice : referencePrices[idx] };
+        return {
+          ...contracts,
+          ...legs[idx],
+          premium: payoffs[idx] === 'NEXT_AUCTION' ? spotContract.referencePrice : referencePrices[idx],
+        };
       })
     );
     setChartData(chartData);
@@ -100,7 +103,7 @@ const Index = () => {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
       setOrderSummary({
         order,
-        orderLock
+        orderLock,
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
@@ -112,9 +115,16 @@ const Index = () => {
     getPositionBuilderSummary(newPositionBuilderStrategies);
   };
 
+  const handleClearAll = () => {
+    setPositionBuilderStrategies([]);
+    setOrderSummary(undefined);
+    setChartData(undefined);
+  };
+
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
       await ithacaSDK.orders.newOrder(order, orderDescr);
+      handleClearAll();
     } catch (error) {
       showToast(
         {
@@ -146,9 +156,7 @@ const Index = () => {
                       setChartData(undefined);
                     }}
                   />
-                  <MainInfo
-                    handleAddStrategy={handleAddStrategy}
-                  />
+                  <MainInfo handleAddStrategy={handleAddStrategy} />
                 </>
               }
               orderSummary={
@@ -159,12 +167,12 @@ const Index = () => {
                     collatarelUSDC={
                       orderSummary
                         ? formatNumber(
-                          toPrecision(
-                            orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                            currencyPrecision.strike
-                          ),
-                          'string'
-                        )
+                            toPrecision(
+                              orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
+                              currencyPrecision.strike
+                            ),
+                            'string'
+                          )
                         : '-'
                     }
                     premium={orderSummary?.order.totalNetPrice}
@@ -181,7 +189,7 @@ const Index = () => {
                   />
                   <SubmitModal
                     isOpen={submitModal}
-                    closeModal={(val) => setSubmitModal(val)}
+                    closeModal={val => setSubmitModal(val)}
                     submitOrder={() => {
                       if (!auctionSubmission) return;
                       submitToAuction(auctionSubmission.order, auctionSubmission.type);
@@ -190,7 +198,8 @@ const Index = () => {
                     }}
                     auctionSubmission={auctionSubmission}
                     positionBuilderStrategies={positionBuilderStrategies}
-                    orderSummary={orderSummary} />
+                    orderSummary={orderSummary}
+                  />
                   <Toast toastList={toastList} position={position} />
                 </>
               }
@@ -199,11 +208,7 @@ const Index = () => {
                   <h3 className='mb-13'>Strategy</h3>
                   <TableStrategy
                     strategies={positionBuilderStrategies}
-                    clearAll={() => {
-                      setPositionBuilderStrategies([]);
-                      setOrderSummary(undefined);
-                      setChartData(undefined);
-                    }}
+                    clearAll={handleClearAll}
                     removeRow={(index: number) => {
                       const newPositionBuilderStrategies = [...positionBuilderStrategies];
                       newPositionBuilderStrategies.splice(index, 1);

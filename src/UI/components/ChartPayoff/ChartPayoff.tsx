@@ -9,6 +9,7 @@ import CustomLabel from '@/UI/components/ChartPayoff/CustomLabel';
 import CustomDot from '@/UI/components/ChartPayoff/CustomDot';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Key from '@/UI/components/ChartPayoff/Key';
+import { InfoPopup, InfoPopupProps } from '@/UI/components/InfoPopup/InfoPopup';
 
 // Constants
 import { PayoffDataProps, PAYOFF_DUMMY_DATA, SpecialDotLabel, KeyType, KeyOption } from '@/UI/constants/charts/charts';
@@ -40,6 +41,8 @@ type ChartDataProps = {
   showUnlimited?: boolean;
   compact?: boolean;
   caller?: string;
+  infoPopup?: InfoPopupProps;
+  customDomain?: DomainType
 };
 
 type DomainType = {
@@ -52,7 +55,8 @@ import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller } = props;
+
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller, infoPopup, customDomain } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -152,7 +156,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    setDomain(findOverallMinMaxValues(chartData));
+    setDomain(customDomain || findOverallMinMaxValues(chartData));
     const tempData = makingChartData(
       chartData,
       bridge.label,
@@ -194,7 +198,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   useEffect(() => {
     if (typeof off === 'number') {
-      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value));
+      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value, !customDomain));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off, color, dashedColor, selectedLeg]);
@@ -242,7 +246,7 @@ const ChartPayoff = (props: ChartDataProps) => {
         <>
           {!compact && (
             <Flex direction='row-space-between' margin='mb-10 mt-15 z-unset'>
-              <h3 className='mb-0 mt-12'>Payoff Diagram</h3>
+              <h3 className='mb-0'>Payoff Diagram</h3>
               <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
                 <h3>Potential P&L:</h3>
                 <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
@@ -252,6 +256,7 @@ const ChartPayoff = (props: ChartDataProps) => {
               </div>
             </Flex>
           )}
+          {!compact && infoPopup && <InfoPopup {...infoPopup} />}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
               data={modifiedData}

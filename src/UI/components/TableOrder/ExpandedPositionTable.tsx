@@ -1,8 +1,5 @@
 // Constants
-import { TABLE_ORDER_EXPANDED_HEADERS, TableExpandedRowData } from '@/UI/constants/tableOrder';
-
-// Utils
-import { getSideIcon } from '@/UI/utils/TableOrder';
+import { TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS, TableExpandedRowData } from '@/UI/constants/tableOrder';
 
 // Components
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
@@ -17,12 +14,12 @@ type ExpandedTableProps = {
   data: TableExpandedRowData[];
 };
 
-const ExpandedTable = ({ data }: ExpandedTableProps) => {
+const ExpandedPositionTable = ({ data }: ExpandedTableProps) => {
   return (
     <div className={styles.transactionDetail}>
-      <div className={styles.table}>
+      <div className={`${styles.table} ${styles.positionTable}`}>
         <div className={`${styles.row} ${styles.header}`}>
-          {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (
+          {TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS.map((header, idx) => (
             <div className={styles.cell} key={idx}>
               {header}
             </div>
@@ -31,19 +28,13 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
         {data.map((item, index) => (
           <div className={styles.rowBody} key={index}>
             <div className={styles.cell}>{item.type}</div>
-            <div className={styles.cell}>{getSideIcon(item.side)}</div>
-            <div className={styles.cell}>
-              <span className={styles.date}>{item.expiryDate}</span>
-            </div>
             <div className={styles.cell}>
               <CurrencyDisplay amount={item.size} symbol={<LogoEth />} currency='WETH' />
             </div>
             <div className={styles.cell}>
               <CurrencyDisplay amount={item.strike} symbol={<LogoUsdc />} currency='USDC' />
             </div>
-            <div className={styles.cell}>
-              <CurrencyDisplay amount={item.enterPrice} symbol={<LogoUsdc />} currency='USDC' />
-            </div>
+            <div className={styles.cell}>{item.enterPrice}</div>
           </div>
         ))}
       </div>
@@ -51,4 +42,4 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
   );
 };
 
-export default ExpandedTable;
+export default ExpandedPositionTable;

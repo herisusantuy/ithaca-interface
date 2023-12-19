@@ -87,15 +87,19 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
           </Button>
         </div>
         <div className={styles.modalContent}>{children}</div>
-        {!hideFooter && onSubmitOrder ? <div className={styles.modalFooter}>
-          <Button
-            className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
-            onClick={onSubmitOrder}
-            title='Click to confirm'
-          >
-            {isLoading ? <Loader /> : 'Confirm'}
-          </Button>
-        </div> : ''}
+        {!hideFooter && onSubmitOrder ? (
+          <div className={styles.modalFooter}>
+            <Button
+              className={`${styles.confirmButton} ${isLoading ? styles.buttonLoading : ''}`}
+              onClick={onSubmitOrder}
+              title='Click to confirm'
+            >
+              {isLoading ? <Loader /> : 'Confirm'}
+            </Button>
+          </div>
+        ) : (
+          ''
+        )}
       </motion.div>
     </motion.div>
   );

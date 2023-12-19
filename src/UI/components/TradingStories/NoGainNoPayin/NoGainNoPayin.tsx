@@ -139,7 +139,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   };
 
   useEffect(() => {
-    setMaxPotentialLoss('10');
+    setMaxPotentialLoss('200');
     handleMultiplierChange('1');
   }, []);
 
@@ -184,7 +184,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-              <LabeledControl label={`${callOrPut === 'Put' ? 'Min' : 'Max'} Potential Loss`}>
+              <LabeledControl label={callOrPut === 'Call' ? 'Min Upside' : 'Min Downside'}>
                 <Input
                   type='number'
                   value={maxPotentialLoss}
@@ -197,7 +197,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 <Flex>
                   <span className='fs-md-bold color-white'>
                     {priceReference &&
-                      !isInvalidNumber(getNumber(maxPotentialLoss)) && toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)}
+                      !isInvalidNumber(getNumber(maxPotentialLoss)) ? callOrPut === 'Call' ? toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
+                    :  toPrecision(getNumber(priceReference) - getNumber(maxPotentialLoss), currencyPrecision.strike)
+                  : ''}
                   </span>
                   <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
                 </Flex>

@@ -161,7 +161,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const renderInstruction = () => {
     return (
       <>
-        {!compact && showInstructions && <DigitalInstructions/>}
+        {!compact && showInstructions && <DigitalInstructions />}
       </>
     )
   }
@@ -170,6 +170,15 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
     <>
       {renderInstruction()}
       <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
+        {compact && (
+          <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 120 : 110}
+            options={DIGITAL_OPTIONS}
+            name={compact ? 'binaryCallOrPutCompact' : 'binaryCallOrPut'}
+            selectedOption={binaryCallOrPut}
+            onChange={value => handleBinaryCallOrPutChange(value as 'BinaryCall' | 'BinaryPut')}
+          />)}
         {!compact && (
           <>
             <LabeledControl label='Type'>
@@ -197,9 +206,9 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             <LabeledControl label='Size'>
               <Input
                 type='number'
-                icon={<LogoEth />}
+                icon={<LogoUsdc />}
                 width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
+                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />

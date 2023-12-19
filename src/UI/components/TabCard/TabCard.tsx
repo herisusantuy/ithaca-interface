@@ -69,6 +69,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         value,
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, radioChosen]);
 
   const getRadioOptionSubTitleTemplate = (index: number) => {
@@ -120,7 +121,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             <Toggle
               size='sm'
               defaultState={showInstructions ? 'right' : 'left'}
-              rightLabel='Descriptions'
+              rightLabel='Description'
               rightLabelClass='white-80'
               onChange={() => setShowInstructions(!showInstructions)}
             />

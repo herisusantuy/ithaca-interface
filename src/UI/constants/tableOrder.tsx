@@ -38,8 +38,20 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Cancel All',
 ];
 
+export const TABLE_ORDER_HEADERS_FOR_POSITIONS: string[] = ['Details', 'Product', 'Strike', 'Type', 'Quantity'];
+
+export type TableDescriptionProps = {
+  possibleReleaseX: number;
+  possibleReleaseY: number;
+  postOptimisationX: number;
+  postOptimisationY: number;
+  // totalCollateral: number;
+};
+
 // Table order expanded headers
 export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Expiry Date', 'Size', 'Strike', 'Enter Price'];
+
+export const TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS: string[] = ['Type', 'Collateral (ETH)', 'Collateral (USDC)', 'Order Limit'];
 
 // Table order data
 function getRandomInt(min: number, max: number): number {

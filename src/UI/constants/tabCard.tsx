@@ -1,21 +1,6 @@
-// Types
-type Tab = {
-  id: string;
-  title: string;
-  selectedTitle?: string;
-  description: string;
-  contentId: string;
-  radioOptions?: {
-    option: string;
-    value: string;
-  }[];
-  underText?: {
-    value: string;
-    label: string;
-  }[];
-};
+import { MainTab } from '../components/TabCard/TabCard';
 
-export const TRADING_MARKET_TABS: Tab[] = [
+export const TRADING_MARKET_TABS: MainTab[] = [
   {
     id: 'options',
     title: 'Options',
@@ -42,12 +27,12 @@ export const TRADING_MARKET_TABS: Tab[] = [
   },
 ];
 
-export const TRADING_STORIES_TABS: Tab[] = [
+export const TRADING_STORIES_TABS: MainTab[] = [
   {
     id: 'bet',
     title: 'Bet',
     description:
-      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range.\nIf order filled expected return shown on your Bet Capital at risk.',
+      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range.\nBet on whether the market will finish above or below your defined level and get paid accordingly.',
     contentId: 'betChart',
   },
   {
@@ -103,7 +88,23 @@ export const TRADING_STORIES_TABS: Tab[] = [
     id: 'barriers',
     title: 'Barriers',
     description:
-      'Set the upper and lower barriers and control if the price of the underlying asset falls in or outside that range.',
+      'Up-and-In Call Option: The Sniper\nCheapen right to buy, which springs to life when asset price rises past a barrier; like a sniper waiting for just the right market climb to take its shot.',
     contentId: 'barriersChart',
   },
 ];
+
+export const DESCRIPTION_OPTIONS = {
+  'Twin Win':
+    'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
+  Bonus: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
+  'Risky Earn': 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+  'Riskless Earn': 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
+  UP_IN:
+    'Up-and-In Call Option: The Sniper\nCheapen right to buy, which springs to life when asset price rises past a barrier; like a sniper waiting for just the right market climb to take its shot.',
+  UP_OUT:
+    'Up-and-Out Call Option: The Highwire Act\nCheapen Right to buy when a modest rise expected but not a leap, walking a fine line between profit and knockout.',
+  DOWN_IN:
+    'Down-and-In Put Option: Guardian Angel Depth Charge Cheapen downside protection by activating right to sell when market sinks below a certain level and detonating like a finely calibrated depth charge acting as a guardian angel; stepping in when the market falls too much.',
+  DOWN_OUT:
+    'Down-and-Out Put Option: The Bungee Jumper\nCheapen downside protection, risking Knock-out if the prices plunges past the barrier: ideal for a modest downdraft, not a rout.',
+};

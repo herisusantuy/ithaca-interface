@@ -5,6 +5,7 @@ export interface TradingStoriesProps {
   compact: boolean;
   chartHeight: number;
   radioChosen?: string;
+  onRadioChange?: (option: string) => void;
 }
 
 export interface OrderDetails {
