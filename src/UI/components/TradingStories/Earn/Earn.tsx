@@ -393,11 +393,13 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
               icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc />}
               hasDropdown={true}
               onDropdownChange={option => {
-                setCurrency(option);
-                if (option === 'USDC') {
-                  setCapitalAtRisk((parseFloat(capitalAtRisk) * spot).toString());
-                } else if (option === 'WETH') {
-                  setCapitalAtRisk((parseFloat(capitalAtRisk) / spot).toString());
+                if (option !== currency) {
+                  setCurrency(option);
+                  if (option === 'USDC') {
+                    setCapitalAtRisk((parseFloat(capitalAtRisk) * spot).toString());
+                  } else if (option === 'WETH') {
+                    setCapitalAtRisk((parseFloat(capitalAtRisk) / spot).toString());
+                  }
                 }
               }}
               dropDownOptions={[
