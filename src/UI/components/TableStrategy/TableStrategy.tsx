@@ -24,7 +24,7 @@ type StrategyTableProps = {
 const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: StrategyTableProps) => {
   return (
     <>
-      <div className={styles.table}>
+      <div className={`${styles.table} mb-15`}>
         <div
           style={{ gridTemplateColumns: !hideClear ? 'repeat(8, minmax(0, 1fr))' : ' repeat(7, minmax(0, 1fr))' }}
           className={styles.header}

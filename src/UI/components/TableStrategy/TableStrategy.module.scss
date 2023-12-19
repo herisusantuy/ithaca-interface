@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: rem(4);
   color: var(--white);
+  min-height: rem(184);
 }
 
 .header {
@@ -111,10 +112,10 @@
 
 
 .emptyContainer {
-  @include spacing(padding, 74, 'top+bottom');
   @include font-size('text-sm', 'regular');
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: $lato;
+  flex: 1;
 }
