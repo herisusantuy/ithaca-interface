@@ -10,6 +10,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Add from '@/UI/components/Icons/Add';
 
 import styles from './InfoPopup.module.scss';
+import { getNumber, getNumberValue } from '@/UI/utils/Numbers';
 
 type InfoPopupType = 'bonusTwinWin' | 'risky';
 
@@ -33,7 +34,9 @@ type RiskyPopup = CommonProperties & {
 export type InfoPopupProps = BonusTwinWinPopup | RiskyPopup;
 
 export const InfoPopup = (props: InfoPopupProps) => {
-  const { currentExpiryDate } = useAppStore();
+  const { currentExpiryDate, spotPrices } = useAppStore();
+  const spot = spotPrices['WETH/USDC'];
+
   const { type, price } = props;
 
   switch (type) {
@@ -60,15 +63,26 @@ export const InfoPopup = (props: InfoPopupProps) => {
       );
     }
     case 'risky': {
-      const { risk, currency, earn } = props as RiskyPopup;
-      const currencyIcon = currency === 'USDC' ? <LogoUsdc /> : <LogoEth />;
+      const { risk, earn, currency } = props as RiskyPopup;
+
+      const riskEth = currency !== 'WETH' ? getNumber((parseFloat(risk) / spot).toString()) : getNumber(risk);
+      const riskUsdc = currency !== 'USDC' ? getNumber((parseFloat(risk) * spot).toString()) : getNumber(risk);
 
       return (
-        <div className={styles.popupContainer}>
-          <p>
-            If <LogoEth /> <ChevronLeft /> {price}, receive {risk} {currencyIcon} <Add /> {earn} {currencyIcon}
-          </p>
-        </div>
+        <>
+          <div className={styles.popupContainer}>
+            <p>
+              If <LogoEth /> <ChevronLeft /> {price}, receive{' '}
+              {riskEth - Math.floor(riskEth) !== 0 ? riskEth.toFixed(3) : riskEth} <LogoEth /> <Add /> {earn}{' '}
+              <LogoUsdc />
+            </p>
+          </div>
+          <div className={`${styles.popupContainer} ${styles.popupBottomContainer}`}>
+            <p>
+              If <LogoEth /> <ChevronRight /> {price}, receive {riskUsdc} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
+            </p>
+          </div>
+        </>
       );
     }
   }
