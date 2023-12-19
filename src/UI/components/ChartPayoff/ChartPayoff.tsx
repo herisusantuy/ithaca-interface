@@ -39,6 +39,7 @@ type ChartDataProps = {
   showPortial?: boolean;
   showUnlimited?: boolean;
   compact?: boolean;
+  caller?: string;
 };
 
 type DomainType = {
@@ -46,27 +47,28 @@ type DomainType = {
   max: number;
 };
 
-
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id } = props;
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
   const [bridge] = useState<KeyType>({
     label: {
       option: 'Total',
-      value: 'total'
-    }, type: 'leg1'
+      value: 'total',
+    },
+    type: 'leg1',
   });
   const [dashed, setDashed] = useState<KeyType>({
     label: {
       option: '',
-      value: ''
-    }, type: 'leg1'
+      value: '',
+    },
+    type: 'leg1',
   });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
@@ -76,13 +78,15 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
   const [width, setWidth] = useState<number>(0);
-  const [key, setKey] = useState<KeyOption[]>([{
-    option: 'Total',
-    value: 'total'
-  }]);
+  const [key, setKey] = useState<KeyOption[]>([
+    {
+      option: 'Total',
+      value: 'total',
+    },
+  ]);
   const [selectedLeg, setSelectedLeg] = useState<KeyOption>({
     option: 'Total',
-    value: 'total'
+    value: 'total',
   });
   const [color, setColor] = useState<string>('#5EE192');
   const [dashedColor, setDashedColor] = useState<string>('#B5B5F8');
@@ -135,31 +139,39 @@ const ChartPayoff = (props: ChartDataProps) => {
   }, [chartData]);
 
   useEffect(() => {
-    const keyIndex = key.findIndex((k) => {
-      return k.value === selectedLeg.value
-    }
-    )
+    const keyIndex = key.findIndex(k => {
+      return k.value === selectedLeg.value;
+    });
     if (selectedLeg.value !== 'total' && keyIndex === -1) {
       setSelectedLeg({
         option: 'Total',
-        value: 'total'
-      })
+        value: 'total',
+      });
     }
-  }, [key, selectedLeg])
+  }, [key, selectedLeg]);
 
   // Update chartData and updating graph
   useEffect(() => {
     setDomain(findOverallMinMaxValues(chartData));
-    const tempData = makingChartData(chartData, bridge.label, selectedLeg.value !== 'total' ? selectedLeg : dashed.label);
-    const colorIndex = key.findIndex((k) => k.value === selectedLeg.value)
+    const tempData = makingChartData(
+      chartData,
+      bridge.label,
+      selectedLeg.value !== 'total' ? selectedLeg : dashed.label
+    );
+    const colorIndex = key.findIndex(k => k.value === selectedLeg.value);
     setColor(colorArray[colorIndex - 1]);
-    const dashedColorIndex = key.findIndex((k) => k.value === dashed.label.value)
+    const dashedColorIndex = key.findIndex(k => k.value === dashed.label.value);
 
     setDashedColor(dashedColorArray[dashedColorIndex - 1]);
     setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
-    isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
-    isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    if (caller === 'Forwards') {
+      setUpSide(true);
+      isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    } else {
+      isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
+      isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    }
     setBreakPoints(breakPointList(tempData));
     const modified = tempData.map(item => ({
       ...item,
@@ -196,7 +208,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const settingToChildLeg = (key: KeyType) => {
-    setSelectedLeg(key.label)
+    setSelectedLeg(key.label);
   };
 
   const updateChange = (val: number) => {
@@ -283,7 +295,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                       dataList={modifiedData}
                       height={height}
                       labelPosition={labelPosition}
-                    // updateLabelPosition={updateLabelPosition}
+                      // updateLabelPosition={updateLabelPosition}
                     />
                   )
                 }
@@ -337,8 +349,8 @@ const ChartPayoff = (props: ChartDataProps) => {
                         {downSide
                           ? 'Unlimited Downside'
                           : minimize >= 0
-                            ? '+' + '' + getNumberFormat(minimize)
-                            : '-' + getNumberFormat(minimize)}
+                          ? '+' + '' + getNumberFormat(minimize)
+                          : '-' + getNumberFormat(minimize)}
                       </text>
                       {downSide ? (
                         <></>
@@ -368,14 +380,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                           ? '+' + getNumberFormat(maximize)
                           : '-' + getNumberFormat(maximize)}
                       </text>
-                      {upSide ? (
-                        <></>
-                      ) : (
-                        <LogoUsdc
-                          x={width - (getNumberFormat(maximize).length + 2) * 3} 
-                          y={-3}
-                        />
-                      )}
+                      {upSide ? <></> : <LogoUsdc x={width - (getNumberFormat(maximize).length + 2) * 3} y={-3} />}
                     </>
                   }
                   position='insideBottom'
