@@ -48,6 +48,7 @@ const CollateralPanel = () => {
   const [modalAmount, setModalAmount] = useState('');
   const [modalTab, setModalTab] = useState<string>('deposit');
   const [transactionInProgress, setTransactionInProgress] = useState(false);
+  const [hasSummaryLoaded, setHasSummaryLoaded] = useState(false);
 
   const { toastList, position, showToast } = useToast();
 
@@ -119,9 +120,15 @@ const CollateralPanel = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      setHasSummaryLoaded(false);
+      return;
+    } else if (hasSummaryLoaded) {
+      return;
+    }
     fetchFundlockState();
-  }, [isAuthenticated, fetchFundlockState]);
+    setHasSummaryLoaded(true);
+  }, [isAuthenticated, fetchFundlockState, hasSummaryLoaded]);
 
   const showModal = (type: string) => {
     setModalTab(type);
