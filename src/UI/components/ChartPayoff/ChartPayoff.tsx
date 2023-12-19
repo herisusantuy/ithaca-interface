@@ -167,7 +167,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     setMinimize(Math.min(...tempData.map(i => i.value)));
     if (caller === 'Forwards') {
       setUpSide(true);
-      isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+      setDownSide(true);
     } else {
       isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
       isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
