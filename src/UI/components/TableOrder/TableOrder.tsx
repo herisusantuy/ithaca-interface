@@ -7,14 +7,16 @@ import dayjs from 'dayjs';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // SDK
-import { Order, Position } from '@ithaca-finance/sdk';
+import { Order, PortfolioCollateral, Position } from '@ithaca-finance/sdk';
 
 // Constants
 import {
   TABLE_ORDER_HEADERS,
+  TABLE_ORDER_HEADERS_FOR_POSITIONS,
   TableRowData,
   TableRowDataWithExpanded,
   TABLE_ORDER_DATA_WITH_EXPANDED,
+  TableDescriptionProps,
 } from '@/UI/constants/tableOrder';
 
 // Utils
@@ -59,6 +61,7 @@ import styles from './TableOrder.module.scss';
 import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
 import DropdownOutlined from '../Icons/DropdownOutlined';
+import ExpandedPositionTable from './ExpandedPositionTable';
 
 // Types
 type TableOrderProps = {
@@ -80,6 +83,13 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
   const [slicedData, setSlicedData] = useState<TableRowDataWithExpanded[]>([]);
+  const [collateralData, setCollateralData] = useState<TableDescriptionProps>({
+    possibleReleaseX: 0,
+    possibleReleaseY: 0,
+    postOptimisationX: 0,
+    postOptimisationY: 0,
+  });
+  // const [headers, setHeaders] = useState<string[]>(TABLE_ORDER_HEADERS);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -138,13 +148,16 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           // wethAmount: row.collateral?.numeraireAmount, // Missing
           // usdcAmount: row.collateral?.underlierAmount, // Missing
           // orderLimit: row.netPrice, // Missing
-          // expandedInfo: row.details.map(leg => ({ // Missing
-          //   type: leg.contractDto.payoff,
-          //   side: leg.side,
-          //   size: leg.originalQty,
-          //   strike: leg.contractDto.economics.strike,
-          //   enterPrice: leg.execPrice,
-          // })),
+          expandedInfo: [
+            {
+              // Dummy data to be replaced with actual data
+              type: 'CALL',
+              side: 'BUY',
+              size: 2000,
+              strike: 400,
+              enterPrice: 400,              
+            },
+          ],
         };
       }) as TableRowDataWithExpanded[]
     );
@@ -158,6 +171,18 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             dataToRows(res);
             setLoading(false);
           });
+          if (description) {
+            ithacaSDK.calculation.calcPortfolioCollateral().then((d: PortfolioCollateral) => {
+              if (d) {
+                setCollateralData({
+                  possibleReleaseX: d.actual.underlierAmount,
+                  possibleReleaseY: d.actual.numeraireAmount,
+                  postOptimisationX: d.potential.underlierAmount,
+                  postOptimisationY: d.potential.numeraireAmount,
+                });
+              }
+            });
+          }
           break;
         case TABLE_TYPE.ORDER:
           ithacaSDK.client.currentPositions().then(res => {
@@ -388,6 +413,15 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   };
 
+  const getTableHeaders = useCallback(() => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return TABLE_ORDER_HEADERS_FOR_POSITIONS;
+      default:
+        return TABLE_ORDER_HEADERS;
+    }
+  }, [type]);
+
   const getHeaderTemplate = useCallback((header: string) => {
     switch (header) {
       case 'Cancel All':
@@ -408,6 +442,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           </>
         );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Get table header icons
@@ -542,13 +577,65 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   };
 
   // Get table className
-  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''}`;
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''} ${
+    type === TABLE_TYPE.ORDER ? styles.isOrder : ''
+  }`;
+
+  const getTableRowTemplate = (row: TableRowDataWithExpanded, rowIndex: number) => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return (
+          <>
+            <div className={`${styles.cell}`}>{row.product}</div>
+            <div className={styles.cell}>{row.usdcAmount}</div>
+            <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
+            <div className={styles.cell}>{row.orderLimit}</div>
+          </>
+        );
+      default:
+        return (
+          <>
+            <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
+            <div className={styles.cell}>
+              <div className={styles.currency}>{row.currencyPair}</div>
+            </div>
+            <div className={styles.cell}>{row.product}</div>
+            <div className={styles.cell}>{getSideIcon(row.side)}</div>
+            <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
+            <div className={styles.cell}>
+              <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
+            </div>
+            <div className={styles.cell}>{row.orderLimit}</div>
+            <div className={styles.cell}>
+              {cancelOrder && (
+                <Button
+                  title='Click to cancel order'
+                  className={styles.delete}
+                  onClick={() => handleCancelOrderClick(rowIndex)}
+                >
+                  <Delete />
+                </Button>
+              )}
+            </div>
+          </>
+        );
+    }
+  };
+
+  const getExpandedTableTemplate = (row: TableRowDataWithExpanded) => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return <ExpandedPositionTable data={row.expandedInfo || []} />;
+      default:
+        return <ExpandedTable data={row.expandedInfo || []} />;
+    }
+  };
 
   return (
     <>
       <div className={tableClass.trim()}>
         <div className={`${styles.row} ${styles.header}`}>
-          {TABLE_ORDER_HEADERS.map((header, idx) => (
+          {getTableHeaders().map((header, idx) => (
             <div className={styles.cell} key={idx}>
               {getHeaderTemplate(header)}
             </div>
@@ -569,28 +656,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       <DropdownOutlined />
                     </Button>
                   </div>
-                  <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
-                  <div className={styles.cell}>
-                    <div className={styles.currency}>{row.currencyPair}</div>
-                  </div>
-                  <div className={styles.cell}>{row.product}</div>
-                  <div className={styles.cell}>{getSideIcon(row.side)}</div>
-                  <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
-                  <div className={styles.cell}>
-                    <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
-                  </div>
-                  <div className={styles.cell}>{row.orderLimit}</div>
-                  <div className={styles.cell}>
-                    {cancelOrder && (
-                      <Button
-                        title='Click to cancel order'
-                        className={styles.delete}
-                        onClick={() => handleCancelOrderClick(rowIndex)}
-                      >
-                        <Delete />
-                      </Button>
-                    )}
-                  </div>
+                  {getTableRowTemplate(row, rowIndex)}
                 </div>
                 <AnimatePresence>
                   {isRowExpanded && (
@@ -601,7 +667,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       exit='closed'
                       variants={variants}
                     >
-                      {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
+                      {row.expandedInfo && getExpandedTableTemplate(row)}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -620,10 +686,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       <Flex direction='row-space-between' margin='mt-35'>
         {description ? (
           <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
+            {...collateralData}
             // totalCollateral={30}
           />
         ) : (

@@ -24,6 +24,7 @@ import 'src/UI/stylesheets/_global.scss';
 import Toast from '@/UI/components/Toast/Toast';
 import useToast from '@/UI/hooks/useToast';
 import { IthacaSDK } from '@ithaca-finance/sdk';
+import Avatar from '@/UI/components/Icons/Avatar';
 
 const STATUS_MAP: Record<string, string> = {
   'NEW': 'info',
@@ -71,6 +72,7 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
         modalSize='compact'
         appInfo={appInfo}
         chains={chains}
+        avatar={() => <div className='customUsetAvatar'><Avatar /></div>}
         theme={darkTheme({
           accentColor: 'rgba(94, 225, 146, 0.60)',
           accentColorForeground: 'white',

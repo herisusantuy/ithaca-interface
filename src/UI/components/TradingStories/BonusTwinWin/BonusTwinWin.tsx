@@ -32,61 +32,70 @@ import useToast from '@/UI/hooks/useToast';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
-const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus' }: TradingStoriesProps) => {
+const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus', onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
-  const barrierStrikes = putContracts ? Object.keys(putContracts).reduce<string[]>((strikes, currStrike) => {
-    if (parseFloat(currStrike) < currentSpotPrice) strikes.push(currStrike);
-    return strikes;
-  }, []) : [];
+  const barrierStrikes = putContracts
+    ? Object.keys(putContracts).reduce<string[]>((strikes, currStrike) => {
+        if (parseFloat(currStrike) < currentSpotPrice) strikes.push(currStrike);
+        return strikes;
+      }, [])
+    : [];
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
-  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[3]);
+  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 1]);
   const [multiplier, setMultiplier] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState('100');
+  const [total, setTotal] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
 
   useEffect(() => {
     if (radioChosen) {
-      handleBonusOrTwinWinChange(radioChosen as 'Bonus' | 'Twin Win')
+      handleBonusOrTwinWinChange(radioChosen as 'Bonus' | 'Twin Win');
     }
-  }, [radioChosen])
+  }, [radioChosen]);
 
-  const handleBonusOrTwinWinChange = async (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
+  const handleBonusOrTwinWinChange = (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
+    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[bonusOrTwinWin])
     if (!koBarrier) return;
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
-  const handleMultiplierChange = async (amount: string) => {
+  const handleMultiplierChange = (amount: string) => {
     const multiplier = getNumberValue(amount);
     setMultiplier(multiplier);
     if (!koBarrier) return;
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
-  const handleKOBarrierChange = async (koBarrier: string) => {
+  const handleKOBarrierChange = (koBarrier: string) => {
     setKoBarrier(koBarrier);
-    await handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier));
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
   const handlePriceChange = (price: string) => {
     setPrice(price);
+    if (!koBarrier) return;
+    handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
 
   const handlePriceReferenceChange = async (
     bonusOrTwinWin: 'Bonus' | 'Twin Win',
     priceReference: string,
     koBarrier: string,
-    multiplier: number
+    multiplier: number,
+    price: number
   ) => {
-    if (isInvalidNumber(multiplier)) {
+    if (isInvalidNumber(multiplier) || isInvalidNumber(price)) {
+      setTotal('-')
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -124,10 +133,11 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     };
 
     const legs = [buyForwardLeg, buyPutLeg, sellPutLeg, sellBinaryPutLeg];
-
+    const totalPrice = (price * multiplier).toFixed(currencyPrecision.strike);
+    setTotal(totalPrice);
     const order = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: getNumber(price).toFixed(currencyPrecision.strike),
+      totalNetPrice: totalPrice,
       legs,
     } as ClientConditionalOrder;
 
@@ -191,16 +201,18 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
   return (
     <>
-      {compact && <Flex margin={compact ? 'mb-10' : 'mb-12'}>
-        <RadioButton
-          size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 186}
-          options={BONUS_TWIN_WIN_OPTIONS}
-          selectedOption={bonusOrTwinWin}
-          name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
-          onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
-        />
-      </Flex>}
+      {compact && (
+        <Flex margin={compact ? 'mb-10' : 'mb-12'}>
+          <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 140 : 186}
+            options={BONUS_TWIN_WIN_OPTIONS}
+            selectedOption={bonusOrTwinWin}
+            name={compact ? 'bonusOrTwinWinCompact' : 'bonusOrTwinWin'}
+            onChange={value => handleBonusOrTwinWinChange(value as 'Bonus' | 'Twin Win')}
+          />
+        </Flex>
+      )}
 
       {!compact && showInstructions && (bonusOrTwinWin === 'Bonus' ? <BonusInstructions /> : <TwinWinInstructions />)}
 
@@ -209,7 +221,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
           <Flex gap='gap-15'>
             <div>
               <LabeledControl label='Price Reference'>
-                <DropdownMenu width={80} disabled options={[]} value={{ name: priceReference, value: priceReference }} />
+                <DropdownMenu
+                  width={80}
+                  disabled
+                  options={[]}
+                  value={{ name: priceReference, value: priceReference }}
+                />
               </LabeledControl>
             </div>
             <div>
@@ -226,22 +243,25 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
               <p className='fs-sm mr-10'>Protection Cost Inclusive</p>
             </Flex> */}
             <div>
-              <LabeledControl label={<><LogoEth /> Protection Cost Inclusive Price</>} labelClassName='nowrap'>
-                <Input
-                  type='number'
-                  value={price}
-                  onChange={({ target }) => handlePriceChange(target.value)}
-                />
+              <LabeledControl
+                label={
+                  <>
+                    <LogoEth /> Protection Cost Inclusive Price
+                  </>
+                }
+                labelClassName='nowrap'
+              >
+                <Input type='number' value={price} onChange={({ target }) => handlePriceChange(target.value)} />
               </LabeledControl>
             </div>
-         
+
             <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
             <LabeledControl label='Total Protection Cost Inclusive Price' labelClassName='color-white mb-16'>
               <Flex gap='gap-10'>
                 <span className='fs-md-bold color-white'>
-                  {orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                  {!isInvalidNumber(getNumber(total)) ? getNumberFormat(total) : '-'}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>
@@ -258,6 +278,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
+        infoPopup={{ type: 'bonusTwinWin', price: price, barrier: koBarrier, strike: priceReference }}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

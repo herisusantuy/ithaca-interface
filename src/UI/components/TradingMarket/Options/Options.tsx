@@ -159,23 +159,23 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
-    const diff = current.diff(expiry)
+    const diff = expiry.diff(current)
     const params = {
       rate: 0,
       price: unitPrice,
       strike: strike,
       time: dayjs.duration(diff).asYears(),
       isCall: callOrPut === 'Call',
-      underlying:currentSpotPrice
+      underlying: currentSpotPrice
     }
     const sigma = (ithacaSDK.calculation.calcSigma(params))
-    setIv(sigma*100);
+    setIv(sigma * 100);
     setGreeks(ithacaSDK.calculation.calcOption({
       rate: 0,
       sigma,
       strike,
       time: dayjs.duration(diff).asYears(),
-      isCall:callOrPut === 'Call',
+      isCall: callOrPut === 'Call',
       underlying: currentSpotPrice
     }));
   }
@@ -201,7 +201,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const renderInstruction = () => {
     return (
       <>
-        {!compact && showInstructions && <OptionInstructions/>}
+        {!compact && showInstructions && <OptionInstructions />}
       </>
     )
   }
@@ -210,17 +210,19 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     <>
       {renderInstruction()}
       <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
+        {compact && (
+          <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 120 : 110}
+            options={TYPE_OPTIONS}
+            name={compact ? 'callOrPutCompact' : 'callOrPut'}
+            selectedOption={callOrPut}
+            onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+          />
+        )}
         {!compact && (
           <>
             <LabeledControl label='Type'>
-              <RadioButton
-                size={compact ? 'compact' : 'regular'}
-                width={compact ? 120 : 110}
-                options={TYPE_OPTIONS}
-                name={compact ? 'callOrPutCompact' : 'callOrPut'}
-                selectedOption={callOrPut}
-                onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
-              />
             </LabeledControl>
 
             <LabeledControl label='Side'>
@@ -239,7 +241,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 type='number'
                 icon={<LogoEth />}
                 width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
+                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -300,7 +302,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         showPortial={!compact}
       />
 
-      {!compact && <Greeks greeks={greeks}/>}
+      {!compact && <Greeks greeks={greeks} />}
     </>
   );
 };

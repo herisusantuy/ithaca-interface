@@ -45,9 +45,10 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 dayjs.extend(duration);
 
-const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingStoriesProps) => {
+const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChange }: TradingStoriesProps) => {
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff, spotContract } =
     useAppStore();
   const callContracts = getContractsByPayoff('Call');
@@ -79,6 +80,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
     setRiskyOrRiskless(option);
+    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[option])
   };
 
   useEffect(() => {
@@ -99,12 +101,12 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
   }, [currency, currentExpiryDate]);
 
   useEffect(() => {
-    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
+    if ((!compact && radioChosen === 'Risky Earn') || (compact && riskyOrRiskless === 'Risky Earn')) {
       handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
     } else {
       handleRisklessChange(capitalAtRisk, targetEarn);
     }
-  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless])
+  }, [capitalAtRisk, targetEarn, strike, currency, radioChosen, riskyOrRiskless]);
 
   const handleCapitalAtRiskChange = async (amount: string) => {
     const capitalAtRisk = getNumberValue(amount);
@@ -144,11 +146,18 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
-    const payoffMap = estimateOrderPayoff([
-      { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
-      { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
-      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 },
-    ]);
+    // const payoffMap = estimateOrderPayoff([
+    //   { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
+    //   { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
+    //   { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 },
+    // ]);
+    const payoffMap = [];
+    for (let i = 0; i < 1000; i++) {
+      payoffMap.push({
+        x: i+1600,
+        total: i+40000
+      });
+    }
     setPayoffMap(payoffMap);
 
     try {
@@ -331,18 +340,21 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
 
-      {compact && <Flex margin='mb-10 z-max'>
-        <RadioButton
-          size={compact ? 'compact' : 'regular'}
-          width={compact ? 140 : 186}
-          options={RISKY_RISKLESS_EARN_OPTIONS}
-          selectedOption={riskyOrRiskless}
-          name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
-          onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
-        />
-      </Flex>}
+      {compact && (
+        <Flex margin='mb-10 z-max'>
+          <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={186}
+            options={RISKY_RISKLESS_EARN_OPTIONS}
+            selectedOption={riskyOrRiskless}
+            name={compact ? 'riskyOrRisklessCompact' : 'riskyOrRiskless'}
+            onChange={value => handleRiskyRisklessChange(value as 'Risky Earn' | 'Riskless Earn')}
+            radioButtonClassName={styles.earnRadioButtonClassName}
+          />
+        </Flex>
+      )}
 
-      {!compact && (radioChosen === 'Risky Earn') && (
+      {!compact && radioChosen === 'Risky Earn' && (
         <h3 className='mbi-16 flex-row gap-4 fs-lato-md mb-12 mt-16'>
           Select Target Price <LogoEth />
         </h3>
@@ -445,10 +457,26 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen }: TradingSt
         // id='earn-chart'
         id={`earn-chart${compact ? '-compact' : ''}`}
         compact={compact}
+        // chartData={((!compact && radioChosen === 'Risky Earn') ||(compact && riskyOrRiskless === 'Risky Earn')) && payoffMap ? payoffMap : CHART_FAKE_DATA}
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
-        showPortial={!compact}
+        showPortial={radioChosen === 'Risky Earn'}
+        infoPopup={
+          radioChosen !== 'Riskless Earn'
+            ? {
+                type: 'risky',
+                price: strike.max,
+                risk: capitalAtRisk,
+                currency: currency,
+                earn: targetEarn,
+              }
+            : undefined
+        }
+        customDomain={(!compact && radioChosen === 'Riskless Earn') || (compact && riskyOrRiskless === 'Riskless Earn') ? {
+          min: 0,
+          max: 80000
+        } : undefined}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
