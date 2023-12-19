@@ -32,7 +32,7 @@ export const TRADING_STORIES_TABS: MainTab[] = [
     id: 'bet',
     title: 'Bet',
     description:
-      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range.\nBet on whether the market will finish above or below your defined level and get paid accordingly.',
+      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range and get paid accordingly.',
     contentId: 'betChart',
   },
   {
