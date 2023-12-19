@@ -17,6 +17,7 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     path: '/analytics',
     titleKey: 'Click to visit analytics',
     displayText: 'Analytics',
+    disabled: true
   },
   {
     path: '/dashboard',
