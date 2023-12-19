@@ -51,6 +51,8 @@ export type TableDescriptionProps = {
 // Table order expanded headers
 export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Expiry Date', 'Size', 'Strike', 'Enter Price'];
 
+export const TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS: string[] = ['Type', 'Collateral (ETH)', 'Collateral (USDC)', 'Order Limit'];
+
 // Table order data
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;

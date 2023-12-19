@@ -93,6 +93,24 @@
       }
     }
   }
+  &.positionTable {
+    .row, .rowBody {
+      .cell {
+        display: flex;
+        width: 25%;
+        &:nth-child(2) {
+          justify-content: flex-end;
+        }
+        &:nth-child(3) {
+          justify-content: flex-end;
+        }
+        &:nth-child(4) {
+          width: 25%;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
 }
 
 .currency {

@@ -61,6 +61,7 @@ import styles from './TableOrder.module.scss';
 import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
 import DropdownOutlined from '../Icons/DropdownOutlined';
+import ExpandedPositionTable from './ExpandedPositionTable';
 
 // Types
 type TableOrderProps = {
@@ -147,13 +148,16 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           // wethAmount: row.collateral?.numeraireAmount, // Missing
           // usdcAmount: row.collateral?.underlierAmount, // Missing
           // orderLimit: row.netPrice, // Missing
-          // expandedInfo: row.details.map(leg => ({ // Missing
-          //   type: leg.contractDto.payoff,
-          //   side: leg.side,
-          //   size: leg.originalQty,
-          //   strike: leg.contractDto.economics.strike,
-          //   enterPrice: leg.execPrice,
-          // })),
+          expandedInfo: [
+            {
+              // Dummy data to be replaced with actual data
+              type: 'CALL',
+              side: 'BUY',
+              size: 2000,
+              strike: 400,
+              enterPrice: 400,              
+            },
+          ],
         };
       }) as TableRowDataWithExpanded[]
     );
@@ -572,7 +576,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   };
 
   // Get table className
-  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''} ${type === TABLE_TYPE.ORDER ? styles.isOrder : ''}`;
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''} ${
+    type === TABLE_TYPE.ORDER ? styles.isOrder : ''
+  }`;
 
   const getTableRowTemplate = (row: TableRowDataWithExpanded, rowIndex: number) => {
     switch (type) {
@@ -615,6 +621,15 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   };
 
+  const getExpandedTableTemplate = (row: TableRowDataWithExpanded) => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return <ExpandedPositionTable data={row.expandedInfo || []} />;
+      default:
+        return <ExpandedTable data={row.expandedInfo || []} />;
+    }
+  };
+
   return (
     <>
       <div className={tableClass.trim()}>
@@ -651,7 +666,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       exit='closed'
                       variants={variants}
                     >
-                      {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
+                      {row.expandedInfo && getExpandedTableTemplate(row)}
                     </motion.div>
                   )}
                 </AnimatePresence>
