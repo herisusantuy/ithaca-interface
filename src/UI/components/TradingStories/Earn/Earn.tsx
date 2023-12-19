@@ -45,6 +45,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 dayjs.extend(duration);
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChange }: TradingStoriesProps) => {
@@ -79,7 +80,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
     setRiskyOrRiskless(option);
-    if(onRadioChange) onRadioChange(option)
+    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[option])
   };
 
   useEffect(() => {

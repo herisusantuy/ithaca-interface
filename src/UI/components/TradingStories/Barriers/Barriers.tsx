@@ -35,8 +35,9 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 
 // Styles
 import styles from './Barriers.module.scss';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
-const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
@@ -87,12 +88,14 @@ const Barriers = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`])
     if (!strike || !barrier) return;
     await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
     setInOrOut(inOrOut);
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`])
     if (!strike || !barrier) return;
     await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };

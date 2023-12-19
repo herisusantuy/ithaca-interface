@@ -32,6 +32,7 @@ import useToast from '@/UI/hooks/useToast';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
 const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus', onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
@@ -63,7 +64,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
   const handleBonusOrTwinWinChange = (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
-    if(onRadioChange) onRadioChange(bonusOrTwinWin)
+    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[bonusOrTwinWin])
     if (!koBarrier) return;
     handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
