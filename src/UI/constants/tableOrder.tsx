@@ -38,6 +38,8 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Cancel All',
 ];
 
+export const TABLE_ORDER_HEADERS_FOR_POSITIONS: string[] = ['Details', 'Product', 'Strike', 'Type', 'Quantity'];
+
 export type TableDescriptionProps = {
   possibleReleaseX: number;
   possibleReleaseY: number;
