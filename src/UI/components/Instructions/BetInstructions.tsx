@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import dayjs from 'dayjs';
@@ -11,10 +12,22 @@ type BetInstructionType = {
 };
 
 const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionType) => {
+  const renderCurrentExpiryDate = useMemo(() => {
+    return (
+      <>
+        @
+        <span className={`${styles.italic}  hide-psuedo p-0`}>
+          {dayjs(currentExpiryDate).format('DD MMM YY')}
+        </span>
+      </>
+    )
+  }, [currentExpiryDate])
+
   return (
     <div className={styles.container}>
       <p>
-        Bet & Earn Return if <LogoEth /> @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
+        Bet & Earn Return if <LogoEth />
+        {renderCurrentExpiryDate}
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Inside
@@ -26,7 +39,8 @@ const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionT
         Range.
       </p>
       <p>
-        i. Bet on
+        i. Bet Capital at Risk; <LogoEth />
+        {renderCurrentExpiryDate}
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Inside
@@ -35,12 +49,12 @@ const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionT
             Outside
           </span>
         </span>
-        Range; Capital at Risk.
+        Range?
       </p>
-      <p className='pb-2'>ii. Select Range. </p>
+      <p className={styles.listParagraphStyle}>ii. Select Range. </p>
       <p>iii. Enter Target Earn.</p>
       <p>
-        iv. Expected Return reflects the probability of{' '}
+        iv. Expected Return reflects the probability of <LogoEth />
         <span className='flex-column-center'>
           <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             Inside
@@ -49,7 +63,7 @@ const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionT
             Outside
           </span>
         </span>
-        Range @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>.
+        Range {renderCurrentExpiryDate}.
       </p>
     </div>
   );
