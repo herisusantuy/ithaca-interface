@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
@@ -9,62 +11,56 @@ import ChevronLeftRight from '@/UI/components/Icons/ChevronLeftRight';
 import styles from './Instructions.module.scss';
 import dayjs from 'dayjs';
 import Minus from '../Icons/Minus';
+import UpsideDownside from './UpsideDownside';
 
 type NoGainNoPayinInstructionsProps = {
-  type?: string;
+  type?: 'Call' | 'Put';
   currentExpiryDate: string;
 };
 
 const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainNoPayinInstructionsProps) => {
+
+  const renderCurrentExpiryDate = useMemo(() => {
+    return (
+      <>
+        Price @
+        <span className={`${styles.italic}  hide-psuedo p-0`}>
+          {dayjs(currentExpiryDate).format('DD MMM YY')}
+        </span>
+      </>
+    )
+  }, [currentExpiryDate]);
+  
   return (
     <div className={styles.container}>
       <p>
         i. Select <LogoEth /> Price Reference.
       </p>
-      <div className='d-flex flex-row'>
-        <div style={{display:'flex',flexDirection:'column',alignItems:'end'}}>
-          <p >ii. Select minimum Expected <LogoEth /></p>
-          <p className='text-end'>(maximum potential <LogoUsdc /></p>
-        </div>
-        <div className='d-flex flex-column justify-content-start' style={{marginRight:'5px',marginLeft:'5px'}}>
-          <p>
-            <span className='flex-column-center'>
-            <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-              Upside
-            </span>
-            <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-              Downside
-            </span>
-          </span>
-            move from 
-          </p>
-          <p>
-            loss if <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> =
-          </p>
-        </div>
-        <div className='d-flex flex-column justify-content-start'>
-          <p>
-            <LogoEth /> Price Reference.
-          </p>
-          <p>
-            <LogoEth /> Price Reference)
-          </p>
-        </div>
-      </div> 
+    
+      <div className={styles.gridContainer}>
+        {/* First row */}
+        <p>ii. Select minimum expected</p>
+        <p className='ml-6 mr-6'><LogoEth /></p>
+        <p>
+          <UpsideDownside type={type} />
+          move from
+        </p>
+        <p className='ml-6'><LogoEth /> Price Reference.</p>
+
+        {/* Second row */}
+        <p className='justify-end'>(maximum potential</p>
+        <p className='ml-6 mr-6'><LogoUsdc /></p>
+        <p>loss if <LogoEth /> {renderCurrentExpiryDate}=</p>
+        <p className='ml-6'><LogoEth /> Price Reference.</p>
+      </div>
+
       <p>
         iii. Post minimum expected <LogoEth className='ml-10' />
-        <span className='flex-column-center'>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Upside
-          </span>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Downside
-          </span>
-        </span>
+        <UpsideDownside type={type} />
         as collateral.
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
+        - If <LogoEth /> {renderCurrentExpiryDate}
         <ChevronLeftRight colorGreater={type === 'Call' ? '#54565b' : 'white'} colorLess={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
         Price Reference {type === 'Call' ? <Add /> : <Minus color='#c5c5d9'/> }
@@ -76,7 +72,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
             min Downside
           </span>
         </span>
-        , receive <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> <Subtract />
+        , receive <LogoEth /> {renderCurrentExpiryDate} <Subtract />
         <span className='flex-column-center'>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Upside
@@ -88,7 +84,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
         .
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span> 
+        - If <LogoEth /> {renderCurrentExpiryDate} 
         <ChevronLeftRight colorLess={type === 'Call' ? '#54565b' : 'white'} colorGreater={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
         Price Reference, receive collateral back.
@@ -98,3 +94,4 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
 };
 
 export default NoGainNoPayinInstructions;
+  
