@@ -5,9 +5,10 @@ import dayjs from 'dayjs';
 
 // Styles
 import styles from './Instructions.module.scss';
+import InsideOutside from './InsideOutside';
 
 type BetInstructionType = {
-  type?: string;
+  type?: 'INSIDE' | 'OUTSIDE';
   currentExpiryDate: string;
 };
 
@@ -26,43 +27,25 @@ const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionT
   return (
     <div className={styles.container}>
       <p>
-        Bet & Earn Return if <LogoEth />
+        Bet & Earn Return if
+        <LogoEth />
         {renderCurrentExpiryDate}
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
+        <InsideOutside type={type} />
         Range.
       </p>
       <p>
-        i. Bet Capital at Risk; <LogoEth />
+        i. Bet Capital at Risk;
+        <LogoEth />
         {renderCurrentExpiryDate}
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
+        <InsideOutside type={type} />
         Range?
       </p>
-      <p className={styles.listParagraphStyle}>ii. Select Range. </p>
+      <p className="mb-4">ii. Select Range. </p>
       <p>iii. Enter Target Earn.</p>
       <p>
-        iv. Expected Return reflects the probability of <LogoEth />
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
+        iv. Expected Return reflects the probability of
+        <LogoEth />
+        <InsideOutside type={type} />
         Range {renderCurrentExpiryDate}.
       </p>
     </div>
