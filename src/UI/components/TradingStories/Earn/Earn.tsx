@@ -80,8 +80,11 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
 
   const handleRiskyRisklessChange = (option: 'Risky Earn' | 'Riskless Earn') => {
     setRiskyOrRiskless(option);
-    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[option])
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[option]);
   };
+
+  const { spotPrices } = useAppStore();
+  const spot = spotPrices['WETH/USDC'];
 
   useEffect(() => {
     const strikeList = callContracts
@@ -154,8 +157,8 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
     const payoffMap = [];
     for (let i = 0; i < 1000; i++) {
       payoffMap.push({
-        x: i+1600,
-        total: i+40000
+        x: i + 1600,
+        total: i + 40000,
       });
     }
     setPayoffMap(payoffMap);
@@ -389,7 +392,14 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
               onChange={({ target }) => handleCapitalAtRiskChange(target.value)}
               icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc />}
               hasDropdown={true}
-              onDropdownChange={option => setCurrency(option)}
+              onDropdownChange={option => {
+                setCurrency(option);
+                if (option === 'USDC') {
+                  setCapitalAtRisk((parseFloat(capitalAtRisk) * spot).toString());
+                } else if (option === 'WETH') {
+                  setCapitalAtRisk((parseFloat(capitalAtRisk) / spot).toString());
+                }
+              }}
               dropDownOptions={[
                 {
                   label: 'USDC',
@@ -473,10 +483,14 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
               }
             : undefined
         }
-        customDomain={(!compact && radioChosen === 'Riskless Earn') || (compact && riskyOrRiskless === 'Riskless Earn') ? {
-          min: 0,
-          max: 80000
-        } : undefined}
+        customDomain={
+          (!compact && radioChosen === 'Riskless Earn') || (compact && riskyOrRiskless === 'Riskless Earn')
+            ? {
+                min: 0,
+                max: 80000,
+              }
+            : undefined
+        }
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
