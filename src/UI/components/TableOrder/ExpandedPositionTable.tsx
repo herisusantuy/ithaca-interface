@@ -1,8 +1,5 @@
 // Constants
-import { TABLE_ORDER_EXPANDED_HEADERS, TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS, TableExpandedRowData } from '@/UI/constants/tableOrder';
-
-// Utils
-import { getSideIcon } from '@/UI/utils/TableOrder';
+import { TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS, TableExpandedRowData } from '@/UI/constants/tableOrder';
 
 // Components
 import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';

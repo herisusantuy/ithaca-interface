@@ -184,7 +184,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-              <LabeledControl label={`${callOrPut === 'Put' ? 'Min' : 'Max'} Potential Loss`}>
+              <LabeledControl label={callOrPut === 'Call' ? 'Min Upside' : 'Min Downside'}>
                 <Input
                   type='number'
                   value={maxPotentialLoss}

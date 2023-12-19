@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -19,7 +19,6 @@ type ModalAcknowledgeTermsProps = {
 };
 
 const ModalAcknowledgeTerms = ({
-  children,
   isOpen,
   isLoading,
   onCloseModal,

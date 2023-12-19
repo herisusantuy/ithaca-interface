@@ -101,7 +101,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
   }, [currency, currentExpiryDate]);
 
   useEffect(() => {
-    if (radioChosen === 'Risky Earn' || riskyOrRiskless === 'Risky Earn') {
+    if ((!compact && radioChosen === 'Risky Earn') || (compact && riskyOrRiskless === 'Risky Earn')) {
       handleRiskyChange(strike, currency, capitalAtRisk, targetEarn);
     } else {
       handleRisklessChange(capitalAtRisk, targetEarn);
@@ -146,11 +146,18 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       addCollateral: currency === 'WETH',
     } as ClientConditionalOrder;
 
-    const payoffMap = estimateOrderPayoff([
-      { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
-      { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
-      { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 },
-    ]);
+    // const payoffMap = estimateOrderPayoff([
+    //   { ...callContracts[closest], ...legs[0], premium: callContracts[closest].referencePrice },
+    //   { ...putContracts[closest], ...legs[1], premium: putContracts[closest].referencePrice },
+    //   { ...nextAuctionForwardContract, ...legs[2], premium: nextAuctionForwardContract?.referencePrice || 0 },
+    // ]);
+    const payoffMap = [];
+    for (let i = 0; i < 1000; i++) {
+      payoffMap.push({
+        x: i+1600,
+        total: i+40000
+      });
+    }
     setPayoffMap(payoffMap);
 
     try {
@@ -454,7 +461,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
         chartData={payoffMap ?? CHART_FAKE_DATA}
         height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
         showKeys={false}
-        showPortial={!compact}
+        showPortial={radioChosen === 'Risky Earn'}
         infoPopup={
           radioChosen !== 'Riskless Earn'
             ? {
@@ -466,6 +473,10 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
               }
             : undefined
         }
+        customDomain={(!compact && radioChosen === 'Riskless Earn') || (compact && riskyOrRiskless === 'Riskless Earn') ? {
+          min: 0,
+          max: 80000
+        } : undefined}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
