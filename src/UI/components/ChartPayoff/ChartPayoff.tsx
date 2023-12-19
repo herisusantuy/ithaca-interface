@@ -53,6 +53,7 @@ type DomainType = {
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
+import ProfitLoss from './ProfitLoss';
 
 const ChartPayoff = (props: ChartDataProps) => {
 
@@ -99,6 +100,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
   const [gradient, setGradient] = useState<ReactElement>();
+  const [isChartHovered, setIsChartHovered] = useState<boolean>(false);
 
   const baseValue = 0;
   const colorArray = [
@@ -235,17 +237,15 @@ const ChartPayoff = (props: ChartDataProps) => {
             <Flex direction='row-space-between' margin='mb-10 mt-15 z-unset'>
               <h3 className='mb-0'>Payoff Diagram</h3>
               <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
-                <h3>Potential P&L:</h3>
-                <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-                  {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
-                </p>
-                <LogoUsdc />
+                <ProfitLoss value={changeVal} isChartHovered={isChartHovered} />
               </div>
             </Flex>
           )}
           {!compact && infoPopup && <InfoPopup {...infoPopup} />}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
+              onMouseEnter={() => setIsChartHovered(true)}
+              onMouseLeave={() => setIsChartHovered(false)}
               data={modifiedData}
               onMouseMove={handleMouseMove}
               margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
