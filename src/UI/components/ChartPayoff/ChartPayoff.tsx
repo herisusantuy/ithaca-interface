@@ -185,16 +185,10 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
     // set gradient value
     setOff(gradientOffset(xAxisPosition, height, modified));
-    // setOff(gradientOffset(modified));
-    // setXAxisPosition(0);
     setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed, selectedLeg]);
 
-  // useEffect(() => {
-  //   setOff(gradientOffset(xAxisPosition, height, modifiedData));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [xAxisPosition]);
 
   useEffect(() => {
     if (typeof off === 'number') {
@@ -232,13 +226,6 @@ const ChartPayoff = (props: ChartDataProps) => {
   const updateDashed = (val: KeyType) => {
     setDashed(val);
   };
-
-  // const updateLabelPosition = (positionObj: LabelPositionProp) => {
-  //   const updatedPositions = [...labelPosition, ...[positionObj]];
-  //   setTimeout(() => {
-  //     setLabelPosition(updatedPositions);
-  //   }, 10);
-  // };
 
   return (
     <>
