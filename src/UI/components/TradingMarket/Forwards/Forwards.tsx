@@ -39,8 +39,7 @@ import useToast from '@/UI/hooks/useToast';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } =
-    useAppStore();
+  const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } = useAppStore();
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
   const nextAuctionForwardContract = spotContract;
 
@@ -153,18 +152,13 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     handleStrikeChange(currentOrNextAuction, buyOrSell, 1, `${contract.referencePrice}`);
   }, []);
 
-
   const renderInstruction = () => {
-    return (
-      <>
-        {!compact && showInstructions && <ForwardInstructions/>}
-      </>
-    )
-  }
+    return <>{!compact && showInstructions && <ForwardInstructions />}</>;
+  };
 
   return (
     <>
-    {renderInstruction()}
+      {renderInstruction()}
       {!compact && (
         <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
           <LabeledControl label='Type'>
@@ -172,7 +166,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               width={200}
               options={[
                 { option: 'Next Auction', value: 'NEXT' },
-                { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' }
+                { option: dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY'), value: 'CURRENT' },
               ]}
               name={compact ? 'currentOrNextAuctionCompact' : 'currentOrNextAuction'}
               selectedOption={currentOrNextAuction}
@@ -196,7 +190,9 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               type='number'
               icon={<LogoEth />}
               width={105}
-              increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
+              increment={direction =>
+                size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
+              }
               value={size}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
@@ -232,6 +228,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
+        caller='Forwards'
       />
     </>
   );

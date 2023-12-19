@@ -40,6 +40,7 @@ type ChartDataProps = {
   showPortial?: boolean;
   showUnlimited?: boolean;
   compact?: boolean;
+  caller?: string;
   infoPopup?: InfoPopupProps;
   customDomain?: DomainType
 };
@@ -54,7 +55,8 @@ import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, infoPopup, customDomain } = props;
+
+  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller, infoPopup, customDomain } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -75,6 +77,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
+  const [maximize, setMaximize] = useState<number>(0);
   const [modifiedData, setModifiedData] = useState<PayoffDataProps[]>([]);
   const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
@@ -164,9 +167,15 @@ const ChartPayoff = (props: ChartDataProps) => {
     const dashedColorIndex = key.findIndex(k => k.value === dashed.label.value);
 
     setDashedColor(dashedColorArray[dashedColorIndex - 1]);
+    setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
-    isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
-    isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    if (caller === 'Forwards') {
+      setUpSide(true);
+      setDownSide(true);
+    } else {
+      isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
+      isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    }
     setBreakPoints(breakPointList(tempData));
     const modified = tempData.map(item => ({
       ...item,
@@ -364,14 +373,19 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        x={width - 67}
-                        y={8}
-                        fill={upSide ? '#5EE192' : 'transparent'}
+                        x={width - (upSide ? 100 : (getNumberFormat(maximize).length + 2) * 10)}
+                        y={10}
+                        fill={'#5EE192'}
                         fontSize={12}
-                        textAnchor='middle'
+                        textAnchor='right'
                       >
-                        Unlimited Upside
+                        {upSide
+                          ? 'Unlimited Upside'
+                          : maximize >= 0
+                          ? '+' + getNumberFormat(maximize)
+                          : '-' + getNumberFormat(maximize)}
                       </text>
+                      {upSide ? <></> : <LogoUsdc x={width - (getNumberFormat(maximize).length + 2) * 3} y={-3} />}
                     </>
                   }
                   position='insideBottom'
