@@ -213,6 +213,11 @@
     &:hover {
       color: var(--white);
     }
+    @include breakpoint(desktop){
+      &.microLabels {
+        font-size: rem(8);
+      }
+    }
     @media (max-width: $desktop) {
       font-size: 0.5rem;
       white-space: nowrap

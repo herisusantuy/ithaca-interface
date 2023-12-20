@@ -49,3 +49,10 @@ h5 {
   color: var(--white-60);
   font-family: $lato;
 }
+
+li {
+  @include font-size('text-sm', 'regular');
+  color: var(--white);
+  font-family: $lato;
+  line-height: 1.5rem;
+}

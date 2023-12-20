@@ -73,15 +73,13 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
   }, [activeTab, radioChosen]);
 
   const getRadioOptionSubTitleTemplate = (index: number) => {
+    const isChoosen = radioChosen === activeTab?.underText?.[index].value;
+    const shouldRenderUnderText = isChoosen && activeTab.underText && index < activeTab.underText.length
     return (
       <>
-        {activeTab.underText && index < activeTab.underText.length && (
-          <span
-            className={`${styles.underTextLabel} ${
-              radioChosen === activeTab.underText[index].value ? styles.selected : ''
-            }`}
-          >
-            {activeTab.underText[index].label}
+        {shouldRenderUnderText && (
+          <span className={`${styles.underTextLabel}`}>
+            {activeTab?.underText?.[index].label}
           </span>
         )}
       </>

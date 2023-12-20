@@ -103,6 +103,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [sideChecked, setSideChecked] = useState<boolean>(false);
   const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
 
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
+
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
@@ -155,7 +158,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               side: 'BUY',
               size: 2000,
               strike: 400,
-              enterPrice: 400,              
+              enterPrice: 400,
             },
           ],
         };
@@ -288,6 +291,19 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     filterData = currencyFilter(filterData, currencyArray);
     setSlicedData(filterData.slice(pageStart, pageEnd));
   }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setDataLoaded(true);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!isSorted && slicedData.length > 0) {
+      updateSort('Order Date', false);
+      setIsSorted(true);
+    }
+  }, [dataLoaded, isSorted]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
@@ -422,28 +438,31 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   }, [type]);
 
-  const getHeaderTemplate = useCallback((header: string) => {
-    switch (header) {
-      case 'Cancel All':
-        return (
-          <Button
-            title='Click to cancel all orders'
-            className={styles.cancelAllBtn}
-            onClick={handleCancelAllOrder}
-            variant='link'
-          >
-            Cancel All
-          </Button>
-        );
-      default:
-        return (
-          <>
-            {header} {getHeaderIcon(header)}
-          </>
-        );
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const getHeaderTemplate = useCallback(
+    (header: string) => {
+      switch (header) {
+        case 'Cancel All':
+          return (
+            <Button
+              title='Click to cancel all orders'
+              className={styles.cancelAllBtn}
+              onClick={handleCancelAllOrder}
+              variant='link'
+            >
+              Cancel All
+            </Button>
+          );
+        default:
+          return (
+            <>
+              {header} {getHeaderIcon(header)}
+            </>
+          );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [handleCancelAllOrder]
+  );
 
   // Get table header icons
   const getHeaderIcon = (header: string) => {

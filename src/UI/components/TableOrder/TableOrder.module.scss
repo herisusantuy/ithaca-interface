@@ -12,7 +12,6 @@
     align-items: center;
     gap: rem(38);
     border-top: rem(1) solid var(--white-rgba-10);
-    overflow: auto;
 
     &::-webkit-scrollbar {
       height: rem(2);

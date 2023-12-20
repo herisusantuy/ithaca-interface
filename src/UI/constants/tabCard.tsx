@@ -14,7 +14,7 @@ export const TRADING_MARKET_TABS: MainTab[] = [
     title: 'Digital Options',
     selectedTitle: 'Digital Option',
     description:
-      'A Digital Call Option pays off if underlying asset price ends up above a certain level at expiry, while a Digital Put Option pays off if underlying asset price ends up below a certain level at expiry. Bet on whether the market will finish above or below your defined level and get paid accordingly.',
+      'A Digital Call Option pays off if underlying asset price ends up above the strike at expiry, while a Digital Put Option pays off if underlying asset price ends up below the strike at expiry. Bet on whether the market will finish above or below the strike and get paid accordingly.',
     contentId: 'digitalOptionsChart',
   },
   {
@@ -32,13 +32,13 @@ export const TRADING_STORIES_TABS: MainTab[] = [
     id: 'bet',
     title: 'Bet',
     description:
-      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range.\nBet on whether the market will finish above or below your defined level and get paid accordingly.',
+      'Place a Bet on whether an asset price ends up at expiry date inside or outside a user defined range and get paid accordingly.',
     contentId: 'betChart',
   },
   {
     id: 'earn',
-    title: 'Risky Earn\nRiskless Earn',
-    description: 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+    title: 'Risky Earn | Riskless Earn',
+    description: 'Define an asset price target.\nEarn risky yield on your capital at risk.',
     contentId: 'earnChart',
     radioOptions: [
       {
