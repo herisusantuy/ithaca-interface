@@ -39,20 +39,36 @@ import useToast from '@/UI/hooks/useToast';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
-  const binaryCallContracts = getContractsByPayoff('BinaryCall');
-  const binaryPutContracts = getContractsByPayoff('BinaryPut');
-  const strikes = Object.keys(binaryCallContracts).map(strike => ({ name: strike, value: strike }));
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
+  const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
+  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }))
+  const [strikes, setStrikes] = useState(strikeList)
 
   const [binaryCallOrPut, setBinaryCallOrPut] = useState<'BinaryCall' | 'BinaryPut'>('BinaryCall');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikes[5].value);
+  const [strike, setStrike] = useState<string>(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
   const { toastList, position, showToast } = useToast();
+
+
+  useEffect(() => {
+    setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
+    setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
+    const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
+    setStrikes(strikeList);
+    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
+  }, [currentExpiryDate]);
+
+  useEffect(() => {
+    const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
+  }, [strike]);
 
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
@@ -221,9 +237,6 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[value] : binaryPutContracts[value];
-                  setUnitPrice(`${contract.referencePrice}`);
-                  handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>

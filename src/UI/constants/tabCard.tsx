@@ -1,5 +1,39 @@
 import { MainTab } from '../components/TabCard/TabCard';
 
+
+
+export const DESCRIPTION_OPTIONS = {
+  'Twin Win':'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
+  Bonus: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
+  'Risky Earn': 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+  'Riskless Earn': 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
+  UP_IN: (
+    <>
+      <div className='fs-xs-semibold'>Up-and-In Call Option: <span className='italic'>The Sniper</span></div>
+      <div>Cheapen right to buy, which springs to life when asset price rises past a barrier; like a sniper waiting for just the right market climb to take its shot.</div>
+    </>
+  ),
+  UP_OUT: (
+    <>
+      <div className='fs-xs-semibold'>Up-and-Out Call Option: <span className='italic'>The Highwire Act</span></div>
+      <div>Cheapen Right to buy when a modest rise expected but not a leap, walking a fine line between profit and knockout.</div>
+    </>
+  ),
+  DOWN_IN: (
+    <>
+      <div className='fs-xs-semibold nowrap'>Down-and-In Put Option:<span className='italic'>Guardian Angel Depth Charge</span></div>
+      <div>Cheapen downside protection by activating right to sell when market sinks below a certain level and detonating like a finely calibrated depth charge acting as a guardian angel; stepping in when the market falls too much.</div>
+    </>
+  ),
+  DOWN_OUT: (
+    <>
+      <div className='fs-xs-semibold'>Down-and-Out Put Option: <span className='italic'>The Bungee Jumper</span></div>
+      <div>Cheapen downside protection, risking Knock-out if the prices plunges past the barrier: ideal for a modest downdraft, not a rout.</div>
+    </>
+  )
+};
+
+
 export const TRADING_MARKET_TABS: MainTab[] = [
   {
     id: 'options',
@@ -38,7 +72,7 @@ export const TRADING_STORIES_TABS: MainTab[] = [
   {
     id: 'earn',
     title: 'Risky Earn | Riskless Earn',
-    description: 'Define an asset price target.\nEarn risky yield on your capital at risk.',
+    description: DESCRIPTION_OPTIONS['Risky Earn'],
     contentId: 'earnChart',
     radioOptions: [
       {
@@ -71,7 +105,7 @@ export const TRADING_STORIES_TABS: MainTab[] = [
   {
     id: 'bonusTwinWin',
     title: 'Bonus | Twin-Win',
-    description: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
+    description: DESCRIPTION_OPTIONS.Bonus,
     contentId: 'bonusTwinWinChart',
     radioOptions: [
       {
@@ -87,24 +121,7 @@ export const TRADING_STORIES_TABS: MainTab[] = [
   {
     id: 'barriers',
     title: 'Barriers',
-    description:
-      'Up-and-In Call Option: The Sniper\nCheapen right to buy, which springs to life when asset price rises past a barrier; like a sniper waiting for just the right market climb to take its shot.',
+    description: DESCRIPTION_OPTIONS.UP_IN,
     contentId: 'barriersChart',
   },
 ];
-
-export const DESCRIPTION_OPTIONS = {
-  'Twin Win':
-    'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
-  Bonus: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
-  'Risky Earn': 'Earn risky yield on your capital at risk.\n Define an asset price target.',
-  'Riskless Earn': 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
-  UP_IN:
-    'Up-and-In Call Option: The Sniper\nCheapen right to buy, which springs to life when asset price rises past a barrier; like a sniper waiting for just the right market climb to take its shot.',
-  UP_OUT:
-    'Up-and-Out Call Option: The Highwire Act\nCheapen Right to buy when a modest rise expected but not a leap, walking a fine line between profit and knockout.',
-  DOWN_IN:
-    'Down-and-In Put Option: Guardian Angel Depth Charge Cheapen downside protection by activating right to sell when market sinks below a certain level and detonating like a finely calibrated depth charge acting as a guardian angel; stepping in when the market falls too much.',
-  DOWN_OUT:
-    'Down-and-Out Put Option: The Bungee Jumper\nCheapen downside protection, risking Knock-out if the prices plunges past the barrier: ideal for a modest downdraft, not a rout.',
-};

@@ -169,8 +169,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   useEffect(() => {
-    handleCapitalAtRiskChange('10');
-    handleTargetEarnChange('100');
+    handleCapitalAtRiskChange('100');
+    handleTargetEarnChange('300');
   }, []);
 
   useEffect(() => {

@@ -57,7 +57,7 @@ const BonusTwinWin = ({
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>((radioChosen as 'Bonus') || 'Bonus');
-  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 1]);
+  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 3]);
   const [multiplier, setMultiplier] = useState('');
   const [price, setPrice] = useState('100');
   const [total, setTotal] = useState('-');
@@ -268,10 +268,10 @@ const BonusTwinWin = ({
             <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
-            <LabeledControl label='Total Protection Cost Inclusive Price' labelClassName='color-white mb-16'>
+            <LabeledControl label='Total Cost' labelClassName='color-white mb-16'>
               <Flex gap='gap-10'>
                 <span className='fs-md-bold color-white'>
-                  {!isInvalidNumber(getNumber(total)) ? getNumberFormat(total) : '-'}
+                  {!isInvalidNumber(getNumber(total)) ? getNumber(total).toFixed(0) : '-'}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>

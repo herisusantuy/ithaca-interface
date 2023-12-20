@@ -44,14 +44,15 @@ dayjs.extend(duration)
 
 const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, currentSpotPrice } = useAppStore();
-  const callContracts = getContractsByPayoff('Call');
-  const putContracts = getContractsByPayoff('Put');
-  const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
+  const [callContracts, setCallContracts] = useState(getContractsByPayoff('Call'));
+  const [putContracts, setPutContracts] = useState(getContractsByPayoff('Put'));
+  const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }))
+  const [strikes, setStrikes] = useState(strikeList)
 
   const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikes[4].value);
+  const [strike, setStrike] = useState<string>(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length -1].value);
   const [unitPrice, setUnitPrice] = useState('');
   const [iv, setIv] = useState(0);
   const [greeks, setGreeks] = useState();
@@ -67,6 +68,20 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     setUnitPrice(`${contract.referencePrice}`);
     await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
   };
+
+  useEffect(() => {
+    setCallContracts(getContractsByPayoff('Call'));
+    setPutContracts(getContractsByPayoff('Put'));
+    const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
+    setStrikes(strikeList);
+    setStrike(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length -1].value);
+  }, [currentExpiryDate]);
+
+  useEffect(() => {
+    const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
+  }, [strike]);
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
@@ -170,6 +185,14 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     }
     const sigma = (ithacaSDK.calculation.calcSigma(params))
     setIv(sigma * 100);
+    const test = ithacaSDK.calculation.calcOption({
+      rate: 0,
+      sigma,
+      strike,
+      time: dayjs.duration(diff).asYears(),
+      isCall: callOrPut === 'Call',
+      underlying: currentSpotPrice
+    });
     setGreeks(ithacaSDK.calculation.calcOption({
       rate: 0,
       sigma,
@@ -254,9 +277,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  const contract = callOrPut === 'Call' ? callContracts[value] : putContracts[value];
-                  setUnitPrice(`${contract.referencePrice}`);
-                  handleStrikeChange(callOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>
@@ -265,7 +285,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoUsdc />}
-                footerText={`IV ${iv.toFixed(1)}%`}
+                footerText={`IV ${iv > 10 ? iv.toFixed(1) : iv.toFixed(3)}%`}
                 value={unitPrice}
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
