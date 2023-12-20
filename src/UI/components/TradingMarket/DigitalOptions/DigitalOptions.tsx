@@ -36,32 +36,35 @@ import {
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import { useDevice } from '@/UI/hooks/useDevice';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const device = useDevice();
   const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
   const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
-  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }))
-  const [strikes, setStrikes] = useState(strikeList)
+  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
+  const [strikes, setStrikes] = useState(strikeList);
 
   const [binaryCallOrPut, setBinaryCallOrPut] = useState<'BinaryCall' | 'BinaryPut'>('BinaryCall');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
+  const [strike, setStrike] = useState<string>(
+    strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value
+  );
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
   const { toastList, position, showToast } = useToast();
 
-
   useEffect(() => {
     setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
     setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
     const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
     setStrikes(strikeList);
-    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
+    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value);
   }, [currentExpiryDate]);
 
   useEffect(() => {
@@ -175,12 +178,8 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   }, []);
 
   const renderInstruction = () => {
-    return (
-      <>
-        {!compact && showInstructions && <DigitalInstructions />}
-      </>
-    )
-  }
+    return <>{!compact && showInstructions && <DigitalInstructions />}</>;
+  };
 
   return (
     <>
@@ -194,7 +193,8 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             name={compact ? 'binaryCallOrPutCompact' : 'binaryCallOrPut'}
             selectedOption={binaryCallOrPut}
             onChange={value => handleBinaryCallOrPutChange(value as 'BinaryCall' | 'BinaryPut')}
-          />)}
+          />
+        )}
         {!compact && (
           <>
             <LabeledControl label='Type'>
@@ -223,8 +223,10 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
               <Input
                 type='number'
                 icon={<LogoUsdc />}
-                width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
+                width={device === 'desktop' ? 105 : undefined}
+                increment={direction =>
+                  size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
+                }
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -251,12 +253,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             </LabeledControl>
 
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
+              <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
-                className='height-34 min-width-71'
+                className='height-34'
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />

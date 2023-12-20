@@ -5,6 +5,19 @@
   align-items: center;
   gap: rem(24);
 
+  &.mobile {
+    gap: rem(12);
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .greeksContainer {
+    &.mobile {
+      width: 100%;
+      display: flex;
+    }
+  }
+
   h5 {
     @include font-size('text-md', 'medium');
     color: var(--white-60);

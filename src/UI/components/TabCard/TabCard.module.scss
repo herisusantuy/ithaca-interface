@@ -202,12 +202,15 @@
       line-height: 0.75rem;
     }
   }
+
   .tabInfo {
     width: 75%;
   }
+
   .tabChart {
     width: 25%;
   }
+
   .dropDownPanel {
     background: #1c2028;
     border-radius: 1.875rem;
@@ -228,14 +231,17 @@
       }
     }
   }
+
   .container {
     flex-direction: column;
   }
+
   .rightPanel {
     width: 100%;
     background: #1c2028;
     border: 1px solid #cccccc61;
     padding: 2rem 1.2rem;
+
     .rightPanelHeader {
       h2 {
         font-size: 1rem;
@@ -245,16 +251,16 @@
       }
     }
   }
+
   .openStoriesDropdown {
     position: absolute;
-    top: 4rem;
+    top: rem(calc(calc(119 / 2) - 12)); // container height / 2 - half of element width
     right: 1rem;
-    background-color: transparent;
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     border: none;
     background-color: #35333e;
-    border-radius: 4px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,22 +277,42 @@
       0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
     -webkit-backdrop-filter: blur(0.625rem);
     backdrop-filter: blur(0.625rem);
+
     .tab {
       gap: 1rem;
+      transition: $transition_all;
+      padding: rem(16);
+      height: 119px;
+
       .tabInfo {
-        width: 60%;
+        width: 63%;
+        max-width: 63%;
+        flex: unset;
+
+        p {
+          max-height: 100%;
+          width: 100%;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
+        }
       }
+
       .tabChart {
-        width: 40%;
+        width: 37%;
+        flex: unset;
       }
     }
   }
+
   .rightPanel {
+    padding: 16px !important;
     background: linear-gradient(180deg, rgba(28, 30, 38, 0.18) 0%, rgba(28, 30, 38, 0.6) 100%);
     box-shadow:
-      0.125rem 0.125rem 0.25rem 0px rgba(0, 0, 0, 0.15),
-      0px 0px 0.25rem 0px rgba(43, 46, 58, 0.15) inset,
-      0px 0px 0.9375rem 0px rgba(43, 46, 58, 0.15) inset;
+      0.125rem 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.15),
+      0 0 0.25rem 0 rgba(43, 46, 58, 0.15) inset,
+      0 0 0.9375rem 0 rgba(43, 46, 58, 0.15) inset;
     -webkit-backdrop-filter: blur(0.625rem);
     backdrop-filter: blur(0.625rem);
   }
@@ -314,6 +340,7 @@
   font-style: italic;
   color: var(--white);
 }
+
 .radioOptionLbl {
   display: flex;
   flex-direction: column;
