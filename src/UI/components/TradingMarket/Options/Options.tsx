@@ -49,13 +49,15 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, currentSpotPrice } = useAppStore();
   const [callContracts, setCallContracts] = useState(getContractsByPayoff('Call'));
   const [putContracts, setPutContracts] = useState(getContractsByPayoff('Put'));
-  const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }))
-  const [strikes, setStrikes] = useState(strikeList)
+  const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
+  const [strikes, setStrikes] = useState(strikeList);
 
   const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length -1].value);
+  const [strike, setStrike] = useState<string>(
+    strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length - 1].value
+  );
   const [unitPrice, setUnitPrice] = useState('');
   const [iv, setIv] = useState(0);
   const [greeks, setGreeks] = useState();
@@ -80,7 +82,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     setPutContracts(getContractsByPayoff('Put'));
     const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
     setStrikes(strikeList);
-    setStrike(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length -1].value);
+    setStrike(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length - 1].value);
   }, [currentExpiryDate]);
 
   useEffect(() => {
@@ -159,6 +161,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   };
 
   const handleSubmit = async () => {
+    if (!orderDetails) return;
     if (orderDetails)
       setAuctionSubmission({
         order: orderDetails?.order,
@@ -206,17 +209,19 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       strike,
       time: dayjs.duration(diff).asYears(),
       isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice
+      underlying: currentSpotPrice,
     });
-    setGreeks(ithacaSDK.calculation.calcOption({
-      rate: 0,
-      sigma,
-      strike,
-      time: dayjs.duration(diff).asYears(),
-      isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice
-    }));
-  }
+    setGreeks(
+      ithacaSDK.calculation.calcOption({
+        rate: 0,
+        sigma,
+        strike,
+        time: dayjs.duration(diff).asYears(),
+        isCall: callOrPut === 'Call',
+        underlying: currentSpotPrice,
+      })
+    );
+  };
 
   const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';

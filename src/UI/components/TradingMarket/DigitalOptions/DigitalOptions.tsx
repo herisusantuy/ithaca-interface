@@ -172,23 +172,6 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
     }
   };
 
-  // const handleSubmit = async () => {
-  //   if (!orderDetails) return;
-  //   try {
-  //     await ithacaSDK.orders.newOrder(orderDetails.order, binaryCallOrPut);
-  //   } catch (error) {
-  //     showToast(
-  //       {
-  //         id: Math.floor(Math.random() * 1000),
-  //         title: 'Transaction Failed',
-  //         message: 'Transaction Failed, please try again.',
-  //         type: 'error',
-  //       },
-  //       'top-right'
-  //     );
-  //   }
-  // };
-
   const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';
     const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
