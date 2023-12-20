@@ -42,7 +42,8 @@ type ChartDataProps = {
   compact?: boolean;
   caller?: string;
   infoPopup?: InfoPopupProps;
-  customDomain?: DomainType
+  customDomain?: DomainType;
+  showProfitLoss?: boolean;
 };
 
 type DomainType = {
@@ -56,8 +57,18 @@ import Flex from '@/UI/layouts/Flex/Flex';
 import ProfitLoss from './ProfitLoss';
 
 const ChartPayoff = (props: ChartDataProps) => {
-
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller, infoPopup, customDomain } = props;
+  const { 
+    chartData = PAYOFF_DUMMY_DATA,
+    height,
+    showKeys = true,
+    showPortial = true,
+    compact,
+    id,
+    caller,
+    infoPopup,
+    customDomain,
+    showProfitLoss = true 
+  } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -229,6 +240,8 @@ const ChartPayoff = (props: ChartDataProps) => {
     setDashed(val);
   };
 
+  const displayProfitLoss = showPortial && showProfitLoss
+
   return (
     <>
       {isClient && (
@@ -236,7 +249,7 @@ const ChartPayoff = (props: ChartDataProps) => {
           {!compact && (
             <Flex direction='row-space-between' margin='mb-10 mt-15 z-unset'>
               <h3 className='mb-0'>Payoff Diagram</h3>
-              <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
+              <div className={`${styles.unlimited} ${!displayProfitLoss ? styles.hide : ''}`}>
                 <ProfitLoss value={changeVal} isChartHovered={isChartHovered} />
               </div>
             </Flex>

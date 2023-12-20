@@ -228,6 +228,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
+        showProfitLoss={false}
         caller='Forwards'
       />
     </>
