@@ -2,7 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
-import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Components
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
@@ -38,12 +38,11 @@ import {
   createClientOrderId,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
-import SubmitModal from '../../SubmitModal/SubmitModal';
-import { AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
+
 dayjs.extend(duration);
 
 const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
@@ -62,12 +61,10 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const [submitModal, setSubmitModal] = useState<boolean>(false);
-  const [leg, setLeg] = useState<Leg>();
 
   const { toastList, position, showToast } = useToast();
 
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  // const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -119,7 +116,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       quantity: `${size}`,
       side: buyOrSell,
     };
-    // setLeg(leg);
 
     const referencePrice = unitPrice ? getNumber(unitPrice) : contract.referencePrice;
 
@@ -208,7 +204,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       quantity: size,
       side: buyOrSell,
     };
-    // setLeg({ ...leg, quantity: `${size}` as `${number}` });
     const collateral = calcCollateralRequirement(leg, callOrPut, getNumber(strike), currencyPrecision.strike);
     return getNumberFormat(collateral, 'double');
   };
