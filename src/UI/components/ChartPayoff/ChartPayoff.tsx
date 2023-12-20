@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, YAxis } from 'recharts';
 
 // Components
@@ -55,6 +55,8 @@ type DomainType = {
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
 import ProfitLoss from './ProfitLoss';
+import DownsideText from './DownsideText';
+import { chartColorArray, chartDashedColorArray } from './helpers';
 
 const ChartPayoff = (props: ChartDataProps) => {
   const { 
@@ -114,41 +116,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [isChartHovered, setIsChartHovered] = useState<boolean>(false);
 
   const baseValue = 0;
-  const colorArray = [
-    '#18b5b5',
-    '#b5b5f8',
-    '#ff772a',
-    '#a855f7',
-    '#7ad136',
-    '#ff3f57',
-    '#6545a4',
-    '#4bb475',
-    '#4421af',
-    '#d7658b',
-    '#7c1158',
-    '#786028',
-    '#50e991',
-    '#b33dc6',
-    '#00836e',
-  ];
-
-  const dashedColorArray = [
-    '#18b5b5',
-    '#b5b5f8',
-    '#ff772a',
-    '#a855f7',
-    '#7ad136',
-    '#ff3f57',
-    '#6545a4',
-    '#4bb475',
-    '#4421af',
-    '#d7658b',
-    '#7c1158',
-    '#786028',
-    '#50e991',
-    '#b33dc6',
-    '#00836e',
-  ];
+  
 
   useEffect(() => {
     setIsClient(true);
@@ -176,10 +144,10 @@ const ChartPayoff = (props: ChartDataProps) => {
       selectedLeg.value !== 'total' ? selectedLeg : dashed.label
     );
     const colorIndex = key.findIndex(k => k.value === selectedLeg.value);
-    setColor(colorArray[colorIndex - 1]);
+    setColor(chartColorArray[colorIndex - 1]);
     const dashedColorIndex = key.findIndex(k => k.value === dashed.label.value);
 
-    setDashedColor(dashedColorArray[dashedColorIndex - 1]);
+    setDashedColor(chartDashedColorArray[dashedColorIndex - 1]);
     setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
     if (caller === 'Forwards') {
@@ -248,6 +216,15 @@ const ChartPayoff = (props: ChartDataProps) => {
   };
 
   const displayProfitLoss = showPortial && showProfitLoss
+  const noDownSideStart = useMemo(() => {
+    const [first, second] = modifiedData
+    return first?.value === 0 && second?.value === 0
+  }, [modifiedData]);
+
+  const noDownSideEnd = useMemo(() => {
+    const chartDataLength = modifiedData.length
+    return modifiedData?.[chartDataLength - 1]?.value === 0 && modifiedData?.[chartDataLength - 2]?.value === 0
+  }, [modifiedData]);
 
   return (
     <>
@@ -348,6 +325,9 @@ const ChartPayoff = (props: ChartDataProps) => {
               )}
 
               <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`} height={1}>
+                {noDownSideStart && <Label content={<DownsideText y={xAxisPosition} x={0} />} />}
+                {noDownSideEnd && <Label content={<DownsideText y={xAxisPosition} x={width - 60} />} />}
+
                 <Label
                   content={
                     <>
