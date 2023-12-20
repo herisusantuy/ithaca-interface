@@ -155,7 +155,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               side: 'BUY',
               size: 2000,
               strike: 400,
-              enterPrice: 400,              
+              enterPrice: 400,
             },
           ],
         };
@@ -422,28 +422,31 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   }, [type]);
 
-  const getHeaderTemplate = useCallback((header: string) => {
-    switch (header) {
-      case 'Cancel All':
-        return (
-          <Button
-            title='Click to cancel all orders'
-            className={styles.cancelAllBtn}
-            onClick={handleCancelAllOrder}
-            variant='link'
-          >
-            Cancel All
-          </Button>
-        );
-      default:
-        return (
-          <>
-            {header} {getHeaderIcon(header)}
-          </>
-        );
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const getHeaderTemplate = useCallback(
+    (header: string) => {
+      switch (header) {
+        case 'Cancel All':
+          return (
+            <Button
+              title='Click to cancel all orders'
+              className={styles.cancelAllBtn}
+              onClick={handleCancelAllOrder}
+              variant='link'
+            >
+              Cancel All
+            </Button>
+          );
+        default:
+          return (
+            <>
+              {header} {getHeaderIcon(header)}
+            </>
+          );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [handleCancelAllOrder]
+  );
 
   // Get table header icons
   const getHeaderIcon = (header: string) => {
