@@ -307,10 +307,7 @@
   white-space: nowrap;
   @include font-size('text-sm', 'regular');
   font-style: italic;
-  color: var(--white-80);
-  &.selected {
-    color: var(--white);
-  }
+  color: var(--white);
 }
 .radioOptionLbl {
   display: flex;
