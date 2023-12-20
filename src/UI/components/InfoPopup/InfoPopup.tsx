@@ -10,9 +10,9 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Add from '@/UI/components/Icons/Add';
 
 import styles from './InfoPopup.module.scss';
-import { getNumber, getNumberValue } from '@/UI/utils/Numbers';
+import { getNumber } from '@/UI/utils/Numbers';
 
-type InfoPopupType = 'bonusTwinWin' | 'risky';
+type InfoPopupType = 'bonus' | 'twinWin' | 'risky';
 
 type CommonProperties = {
   type: InfoPopupType;
@@ -40,21 +40,47 @@ export const InfoPopup = (props: InfoPopupProps) => {
   const { type, price } = props;
 
   switch (type) {
-    case 'bonusTwinWin': {
+    case 'bonus': {
       const { barrier, strike } = props as BonusTwinWinPopup;
       return (
-        <div className={styles.popupContainer}>
+        <div className={`${styles.popupContainer} ${styles.bonusOrTwinWin}`}>
           <p>
-            <span className={styles.popupBuyEth}>Buy</span> <LogoEth /> at a{' '}
-            <span className={styles.italic}>{price}</span>
+            <span className={styles.popupBuyEth}>Buy</span>
+            <LogoEth />
+            <span className={styles.lato}>@</span>
+            {price}
           </p>
           <p>
             <span className={styles.popupIfEth}>If</span>
             <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
             <ChevronRight />
-            <span className={styles.italic}>{barrier}</span>(<ChevronLeft />
-            <span className={styles.italic}>{strike}</span>)<ArrowRight />
+            {barrier} (<ChevronLeft />
+            {strike} )<ArrowRight />
             BONUS;
+          </p>
+          <p>
+            Else <LogoEth />
+          </p>
+        </div>
+      );
+    }
+    case 'twinWin': {
+      const { barrier, strike } = props as BonusTwinWinPopup;
+      return (
+        <div className={`${styles.popupContainer} ${styles.bonusOrTwinWin}`}>
+          <p>
+            <span className={styles.popupBuyEth}>Buy</span>
+            <LogoEth />
+            <span className={styles.lato}>@</span>
+            {price}
+          </p>
+          <p>
+            <span className={styles.popupIfEth}>If</span>
+            <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
+            <ChevronRight />
+            {barrier} (<ChevronLeft />
+            {strike} )<ArrowRight />
+            TWIN WIN;
           </p>
           <p>
             Else <LogoEth />
@@ -70,14 +96,14 @@ export const InfoPopup = (props: InfoPopupProps) => {
 
       return (
         <>
-          <div className={styles.popupContainer}>
+          <div className={`${styles.popupContainer} ${styles.popupTopContainer}`}>
             <p>
               If <LogoEth /> <ChevronLeft /> {price}, receive{' '}
               {riskEth - Math.floor(riskEth) !== 0 ? riskEth.toFixed(3) : riskEth} <LogoEth /> <Add /> {earn}{' '}
               <LogoUsdc />
             </p>
           </div>
-          <div className={`${styles.popupContainer} ${styles.popupBottomContainer}`}>
+          <div className={`${styles.popupContainer}`}>
             <p>
               If <LogoEth /> <ChevronRight /> {price}, receive {riskUsdc} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
             </p>
