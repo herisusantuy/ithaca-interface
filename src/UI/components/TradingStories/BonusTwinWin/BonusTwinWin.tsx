@@ -34,6 +34,9 @@ import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
 const BonusTwinWin = ({
   showInstructions,
   compact,
@@ -210,6 +213,7 @@ const BonusTwinWin = ({
       {compact && (
         <Flex margin={compact ? 'mb-10' : 'mb-12'}>
           <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={compact ? 140 : 186}
             options={BONUS_TWIN_WIN_OPTIONS}

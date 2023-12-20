@@ -32,6 +32,9 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
@@ -155,6 +158,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         <Flex gap='gap-15' margin={compact ? '' : 'mt-17'}>
           {!compact && <LabeledControl label='Type' labelClassName='mt-2'>
             <RadioButton
+              labelClassName={radioButtonStyles.microLabels}
               size={compact ? 'compact' : 'regular'}
               width={compact ? 140 : 186}
               options={TYPE_OPTIONS}
@@ -164,6 +168,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
             />
           </LabeledControl>}
           {compact && <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={compact ? 140 : 186}
             options={TYPE_OPTIONS}

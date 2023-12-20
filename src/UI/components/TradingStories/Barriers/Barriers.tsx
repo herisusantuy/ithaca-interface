@@ -36,6 +36,7 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 // Styles
 import styles from './Barriers.module.scss';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -375,6 +376,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             orientation='vertical'
             onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
             radioButtonClassName={styles.sideRadioButtonClassName}
+            labelClassName={radioButtonStyles.microLabels}
           />
 
           <RadioButton
@@ -384,6 +386,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             name='upOrDownCompact'
             orientation='vertical'
             onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
+            labelClassName={radioButtonStyles.microLabels}
           />
 
           <RadioButton
@@ -393,6 +396,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             name='inOrOutCompact'
             orientation='vertical'
             onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
+            labelClassName={radioButtonStyles.microLabels}
           />
         </Flex>
       ) : (
@@ -402,6 +406,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
             <LabeledControl label='Side'>
               <RadioButton
+                labelClassName={radioButtonStyles.microLabels}
                 width={42}
                 options={SIDE_OPTIONS}
                 selectedOption={buyOrSell}
@@ -420,7 +425,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
                 radioButtonClassName={styles.radioButtonClassName}
                 optionClassName={styles.optionClassName}
-                labelClassName={styles.labelClassName}
+                labelClassName={`${styles.labelClassName} ${radioButtonStyles.microLabels}`}
               />
             </LabeledControl>
 
@@ -445,7 +450,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
                 radioButtonClassName={styles.radioButtonClassName}
                 optionClassName={styles.optionClassName}
-                labelClassName={styles.labelClassName}
+                labelClassName={`${styles.labelClassName} ${radioButtonStyles.microLabels}`}
               />
             </LabeledControl>
 
