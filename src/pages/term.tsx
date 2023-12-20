@@ -11,7 +11,7 @@ const TermAndCondition = () => {
       <Meta />
       <Main>
         <Container>
-          <h1 className='mb-20' style={{ fontSize: '24px' }}>
+          <h1 className='mb-20 mt-10' style={{ fontSize: '24px' }}>
             Terms and Conditions
           </h1>
           <h5 className='mb-20'>Updated 01Dec23</h5>
