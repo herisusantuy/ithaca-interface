@@ -202,13 +202,20 @@ const ChartPayoff = (props: ChartDataProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed, selectedLeg]);
 
+  useEffect(() => {
+    if (customDomain) {
+      setXAxisPosition(customDomain.min === 0 ? 0 : height );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartData])
+
 
   useEffect(() => {
     if (typeof off === 'number') {
       setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value, !customDomain));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [off, color, dashedColor, selectedLeg]);
+  }, [off, color, dashedColor, selectedLeg, customDomain]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
     if (!e) return; // Avoid null event in compact mode when tooltip is not rendered

@@ -1,5 +1,5 @@
 // Packages
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 // Components
 import { Barriers, Bet, BonusTwinWin, Earn, NoGainNoPayin, TradingStoriesProps } from '@/UI/components/TradingStories';
@@ -39,7 +39,7 @@ const storyMap: {
   },
 };
 
-export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false, radioChosen?: string, onRadioChange?: (option: string) => void) => {
+export const getTradingStoryMapper = (contentId: string, showInstructions: boolean, compact = false, radioChosen?: string, onRadioChange?: (option: string | ReactElement) => void) => {
   if (!storyMap[contentId]) return null;
   const { component: Component, height } = storyMap[contentId];
   return (

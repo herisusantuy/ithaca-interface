@@ -465,6 +465,11 @@
   font-family: $roboto;
 }
 
+.fs-xs-semibold {
+  @include font-size('text-xs', 'semibold');
+  font-family: $roboto;
+}
+
 .fs-sm {
   @include font-size('text-sm', 'regular');
 }
