@@ -103,6 +103,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [sideChecked, setSideChecked] = useState<boolean>(false);
   const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
 
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
+
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
@@ -288,6 +291,19 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     filterData = currencyFilter(filterData, currencyArray);
     setSlicedData(filterData.slice(pageStart, pageEnd));
   }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setDataLoaded(true);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!isSorted && slicedData.length > 0) {
+      updateSort('Order Date', false);
+      setIsSorted(true);
+    }
+  }, [dataLoaded, isSorted]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
