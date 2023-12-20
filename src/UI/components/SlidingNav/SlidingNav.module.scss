@@ -7,16 +7,15 @@
     0px 0px 15px 0px rgba(43, 46, 58, 0.15) inset;
   backdrop-filter: blur(10px);
   position: fixed;
-  top: rem(70);
-  transform: translate(100%);
+  top: 0;
   bottom: 0;
-  z-index: 5;
   left: 0;
   right: -100%;
+  transform: translate(100%);
+  z-index: 5;
   display: flex;
-  padding-left: rem(24);
-  padding-right: rem(24);
-  padding-top: rem(60);
+  width: 100%;
+  height: 100%;
 
   nav {
     display: flex;
@@ -24,6 +23,7 @@
     align-items: flex-start;
     gap: rem(32);
     width: 100%;
+    padding: rem(100) rem(24) rem(60) rem(24);
 
     a {
       @include font-size('text-lg', 'medium');

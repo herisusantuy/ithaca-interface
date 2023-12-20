@@ -40,7 +40,10 @@ type ChartDataProps = {
   showPortial?: boolean;
   showUnlimited?: boolean;
   compact?: boolean;
+  caller?: string;
   infoPopup?: InfoPopupProps;
+  customDomain?: DomainType;
+  showProfitLoss?: boolean;
 };
 
 type DomainType = {
@@ -51,9 +54,21 @@ type DomainType = {
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
+import ProfitLoss from './ProfitLoss';
 
 const ChartPayoff = (props: ChartDataProps) => {
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, infoPopup } = props;
+  const { 
+    chartData = PAYOFF_DUMMY_DATA,
+    height,
+    showKeys = true,
+    showPortial = true,
+    compact,
+    id,
+    caller,
+    infoPopup,
+    customDomain,
+    showProfitLoss = true 
+  } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -74,6 +89,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
   const [minimize, setMinimize] = useState<number>(0);
+  const [maximize, setMaximize] = useState<number>(0);
   const [modifiedData, setModifiedData] = useState<PayoffDataProps[]>([]);
   const [off, setOff] = useState<number | undefined>();
   const [breakPoints, setBreakPoints] = useState<SpecialDotLabel[]>([]);
@@ -95,6 +111,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
   const [gradient, setGradient] = useState<ReactElement>();
+  const [isChartHovered, setIsChartHovered] = useState<boolean>(false);
 
   const baseValue = 0;
   const colorArray = [
@@ -152,7 +169,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
   // Update chartData and updating graph
   useEffect(() => {
-    setDomain(findOverallMinMaxValues(chartData));
+    setDomain(customDomain || findOverallMinMaxValues(chartData));
     const tempData = makingChartData(
       chartData,
       bridge.label,
@@ -163,9 +180,15 @@ const ChartPayoff = (props: ChartDataProps) => {
     const dashedColorIndex = key.findIndex(k => k.value === dashed.label.value);
 
     setDashedColor(dashedColorArray[dashedColorIndex - 1]);
+    setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
-    isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
-    isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    if (caller === 'Forwards') {
+      setUpSide(true);
+      setDownSide(true);
+    } else {
+      isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
+      isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
+    }
     setBreakPoints(breakPointList(tempData));
     const modified = tempData.map(item => ({
       ...item,
@@ -175,20 +198,14 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
     // set gradient value
     setOff(gradientOffset(xAxisPosition, height, modified));
-    // setOff(gradientOffset(modified));
-    // setXAxisPosition(0);
     setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed, selectedLeg]);
 
-  // useEffect(() => {
-  //   setOff(gradientOffset(xAxisPosition, height, modifiedData));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [xAxisPosition]);
 
   useEffect(() => {
     if (typeof off === 'number') {
-      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value));
+      setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value, !customDomain));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [off, color, dashedColor, selectedLeg]);
@@ -223,12 +240,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     setDashed(val);
   };
 
-  // const updateLabelPosition = (positionObj: LabelPositionProp) => {
-  //   const updatedPositions = [...labelPosition, ...[positionObj]];
-  //   setTimeout(() => {
-  //     setLabelPosition(updatedPositions);
-  //   }, 10);
-  // };
+  const displayProfitLoss = showPortial && showProfitLoss
 
   return (
     <>
@@ -236,19 +248,17 @@ const ChartPayoff = (props: ChartDataProps) => {
         <>
           {!compact && (
             <Flex direction='row-space-between' margin='mb-10 mt-15 z-unset'>
-              <h3 className='mb-0 mt-12'>Payoff Diagram</h3>
-              <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
-                <h3>Potential P&L:</h3>
-                <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-                  {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
-                </p>
-                <LogoUsdc />
+              <h3 className='mb-0'>Payoff Diagram</h3>
+              <div className={`${styles.unlimited} ${!displayProfitLoss ? styles.hide : ''}`}>
+                <ProfitLoss value={changeVal} isChartHovered={isChartHovered} />
               </div>
             </Flex>
           )}
           {!compact && infoPopup && <InfoPopup {...infoPopup} />}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
+              onMouseEnter={() => setIsChartHovered(true)}
+              onMouseLeave={() => setIsChartHovered(false)}
               data={modifiedData}
               onMouseMove={handleMouseMove}
               margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
@@ -363,14 +373,19 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        x={width - 67}
-                        y={8}
-                        fill={upSide ? '#5EE192' : 'transparent'}
+                        x={width - (upSide ? 100 : (getNumberFormat(maximize).length + 2) * 10)}
+                        y={10}
+                        fill={'#5EE192'}
                         fontSize={12}
-                        textAnchor='middle'
+                        textAnchor='right'
                       >
-                        Unlimited Upside
+                        {upSide
+                          ? 'Unlimited Upside'
+                          : maximize >= 0
+                          ? '+' + getNumberFormat(maximize)
+                          : '-' + getNumberFormat(maximize)}
                       </text>
+                      {upSide ? <></> : <LogoUsdc x={width - (getNumberFormat(maximize).length + 2) * 3} y={-3} />}
                     </>
                   }
                   position='insideBottom'

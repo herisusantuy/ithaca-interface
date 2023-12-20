@@ -32,8 +32,15 @@ import useToast from '@/UI/hooks/useToast';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
+import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
-const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus', onRadioChange }: TradingStoriesProps) => {
+const BonusTwinWin = ({
+  showInstructions,
+  compact,
+  chartHeight,
+  radioChosen = 'Bonus',
+  onRadioChange,
+}: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
@@ -46,7 +53,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     : [];
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
-  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
+  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>((radioChosen as 'Bonus') || 'Bonus');
   const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 1]);
   const [multiplier, setMultiplier] = useState('');
   const [price, setPrice] = useState('100');
@@ -63,7 +70,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
   const handleBonusOrTwinWinChange = (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
-    if(onRadioChange) onRadioChange(bonusOrTwinWin)
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[bonusOrTwinWin]);
     if (!koBarrier) return;
     handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
@@ -94,7 +101,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     price: number
   ) => {
     if (isInvalidNumber(multiplier) || isInvalidNumber(price)) {
-      setTotal('-')
+      setTotal('-');
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -277,7 +284,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
-        infoPopup={{ type: 'bonusTwinWin', price: price, barrier: koBarrier, strike: priceReference }}
+        infoPopup={{
+          type: bonusOrTwinWin === 'Bonus' ? 'bonus' : 'twinWin',
+          price: price,
+          barrier: koBarrier,
+          strike: priceReference,
+        }}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

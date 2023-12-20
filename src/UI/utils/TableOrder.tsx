@@ -126,9 +126,11 @@ export const renderDate = (dateStr: string) => {
 
   return (
     <div className={styles.date}>
-      <span>{day}</span>
-      <span>{month}</span>
-      <span>{year}</span>
+      <span>
+        {day}
+        {month}
+        {year}
+      </span>
       {time && <span className={styles.time}>{time}</span>}
     </div>
   );

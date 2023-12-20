@@ -9,19 +9,19 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import styles from './TableDescription.module.scss';
 import { TableDescriptionProps } from '@/UI/constants/tableOrder';
 
+import { getNumberFormat } from '@/UI/utils/Numbers';
+
 // Types
 type ValueWithIcon = {
   value: number;
   Icon?: ComponentType;
 };
 
-
 const TableDescription = ({
   possibleReleaseX,
   possibleReleaseY,
   postOptimisationX,
-  postOptimisationY,
-  // totalCollateral,
+  postOptimisationY, // totalCollateral,
 }: TableDescriptionProps) => {
   const rows = [
     {
@@ -37,7 +37,7 @@ const TableDescription = ({
         { value: postOptimisationX, Icon: LogoEth },
         { value: postOptimisationY, Icon: LogoUsdc },
       ] as ValueWithIcon[],
-    }
+    },
   ];
 
   return (
@@ -48,7 +48,7 @@ const TableDescription = ({
           {row.values.map((val, idx) => (
             <Fragment key={idx}>
               <span>
-                {val.value} {val.Icon && <val.Icon />}
+                {getNumberFormat(val.value)} {val.Icon && <val.Icon />}
               </span>
               {idx < row.values.length - 1 && ', '}
             </Fragment>

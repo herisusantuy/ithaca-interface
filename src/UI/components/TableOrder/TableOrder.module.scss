@@ -114,6 +114,26 @@
       }
     }
   }
+  &.isOrder {
+    .row {
+      .cell {
+        flex-basis: 20%;
+        justify-content: flex-start;
+        &:nth-child(3) {
+          flex-basis: 10%;
+          justify-content: flex-end;
+        }
+        &:nth-child(4) {
+          flex-basis: 40%;
+          justify-content: center;
+        }
+        &:nth-child(5) {
+          flex-basis: 10%;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
 }
 
 .dropdown {

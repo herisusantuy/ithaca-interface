@@ -26,6 +26,7 @@ const Navigation = ({ onClick }: NavigationProps) => {
   const { ithacaSDK, isAuthenticated, openOrdersCount } = useAppStore();
 
   const checkIsActivePath = (path: string) => {
+    if (path === '#') return false;
     return path === '/' ? router.pathname === path : router.pathname.includes(path.split('/')[1]);
   };
 
@@ -33,29 +34,36 @@ const Navigation = ({ onClick }: NavigationProps) => {
     if (isAuthenticated) {
       ithacaSDK.orders.clientOpenOrders().then(res => setTotalOpenOrders(res.length));
     } else {
-      setTotalOpenOrders(0)
+      setTotalOpenOrders(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
+
   useEffect(() => setTotalOpenOrders(openOrdersCount), [openOrdersCount]);
 
   return (
     <nav className={styles.nav}>
-      {NAVIGATION_ITEMS.map(nav => (
-        <Link
-          key={nav.titleKey}
-          href={!nav.disabled ? nav.path : router.pathname}
-          className={checkIsActivePath(nav.path) ? styles.isActive : nav.disabled ? styles.disabled : ''}
-          title={nav.titleKey}
-          onClick={() => { if (!nav.disabled && onClick) onClick() }}
-        >
-          {nav.displayText}
-          {nav.displayText === 'More' && <ChevronDown />}
-          {nav.displayText === 'Dashboard' && totalOpenOrders > 0 && (
-            <span className={styles.badge}>{totalOpenOrders}</span>
-          )}
-        </Link>
-      ))}
+      {NAVIGATION_ITEMS.map(nav => {
+        const { titleKey, disabled, path, displayText } = nav;
+
+        return (
+          <Link
+            key={titleKey}
+            href={!disabled ? path : router.pathname}
+            className={checkIsActivePath(path) ? styles.isActive : disabled ? styles.disabled : ''}
+            title={titleKey}
+            onClick={() => {
+              if (!disabled && onClick && path !== '#') onClick();
+            }}
+          >
+            {displayText}
+            {displayText === 'More' && <ChevronDown />}
+            {displayText === 'Dashboard' && totalOpenOrders > 0 && (
+              <span className={styles.badge}>{totalOpenOrders}</span>
+            )}
+          </Link>
+        );
+      })}
     </nav>
   );
 };

@@ -24,32 +24,33 @@ import 'src/UI/stylesheets/_global.scss';
 import Toast from '@/UI/components/Toast/Toast';
 import useToast from '@/UI/hooks/useToast';
 import { IthacaSDK } from '@ithaca-finance/sdk';
+import Avatar from '@/UI/components/Icons/Avatar';
 
 const STATUS_MAP: Record<string, string> = {
-  'NEW': 'info',
-  'FILLED': 'success',
-  'REJECTED': 'error',
-  'CANCEL_REJECTED': 'error'
+  NEW: 'info',
+  FILLED: 'success',
+  REJECTED: 'error',
+  CANCEL_REJECTED: 'error',
 };
 
 const TITLE_MAP: Record<string, string> = {
-  'NEW': 'Transaction Sent',
-  'FILLED': 'Transaction Confirmed',
-  'REJECTED': 'Transaction Failed',
-  'CANCEL_REJECTED': 'Transaction Failed'
+  NEW: 'Transaction Sent',
+  FILLED: 'Transaction Confirmed',
+  REJECTED: 'Transaction Failed',
+  CANCEL_REJECTED: 'Transaction Failed',
 };
 
 const MESSAGE_MAP: Record<string, string> = {
-  'NEW': 'We have received your request',
-  'FILLED': 'Position details will be updated shortly',
-  'REJECTED': 'Transaction Failed, please try again',
-  'CANCEL_REJECTED': 'Transaction Failed, please try again'
+  NEW: 'We have received your request',
+  FILLED: 'Position details will be updated shortly',
+  REJECTED: 'Transaction Failed, please try again',
+  CANCEL_REJECTED: 'Transaction Failed, please try again',
 };
 
 const Ithaca = ({ Component, pageProps }: AppProps) => {
   const { toastList, showToast } = useToast();
 
-  const {newToast} = useAppStore();
+  const { newToast } = useAppStore();
 
   useEffect(() => {
     if (newToast) {
@@ -58,19 +59,24 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
           id: Math.floor(Math.random() * 1000),
           title: TITLE_MAP[newToast.orderStatus],
           message: MESSAGE_MAP[newToast.orderStatus],
-          type: STATUS_MAP[newToast.orderStatus]
+          type: STATUS_MAP[newToast.orderStatus],
         },
         'top-right'
       );
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newToast])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newToast]);
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
         modalSize='compact'
         appInfo={appInfo}
         chains={chains}
+        avatar={() => (
+          <div className='customUsetAvatar'>
+            <Avatar />
+          </div>
+        )}
         theme={darkTheme({
           accentColor: 'rgba(94, 225, 146, 0.60)',
           accentColorForeground: 'white',
@@ -91,12 +97,13 @@ const Ithaca = ({ Component, pageProps }: AppProps) => {
 };
 
 function App({ Component, pageProps, router }: AppProps) {
-  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol, ithacaSDK, isAuthenticated } = useAppStore();
+  const { nextAuction, fetchNextAuction, fetchSpotPrices, initIthacaProtocol, ithacaSDK, isAuthenticated } =
+    useAppStore();
 
   useEffect(() => {
     getTimeNextAuction(nextAuction.milliseconds || 0, fetchNextAuction, fetchSpotPrices);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[nextAuction]);
+  }, [nextAuction]);
 
   useEffect(() => {
     initIthacaProtocol();
@@ -104,11 +111,11 @@ function App({ Component, pageProps, router }: AppProps) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      heartBeat(ithacaSDK)
+      heartBeat(ithacaSDK);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
-  
+
   return <Ithaca Component={Component} pageProps={pageProps} router={router} />;
 }
 
@@ -116,7 +123,7 @@ const heartBeat = (ithacaSDK: IthacaSDK) => {
   setTimeout(() => {
     ithacaSDK.auth.heartbeat();
     heartBeat(ithacaSDK);
-  }, 10)
+  }, 10);
 };
 
 const getTimeNextAuction = async (
