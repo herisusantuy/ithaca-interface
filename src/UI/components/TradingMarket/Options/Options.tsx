@@ -154,21 +154,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         type: callOrPut,
       });
     setSubmitModal(true);
-    // if (!orderDetails) return;
-    // try {
-    //   await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
-    // } catch (error) {
-    //   showToast(
-    //     {
-    //       id: Math.floor(Math.random() * 1000),
-    //       title: 'Transaction Failed',
-    //       message: 'Transaction Failed, please try again.',
-    //       type: 'error',
-    //     },
-    //     'top-right'
-    //   );
-    //   console.error('Failed to submit order', error);
-    // }
   };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
