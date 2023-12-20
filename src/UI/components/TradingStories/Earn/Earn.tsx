@@ -46,6 +46,10 @@ import duration from 'dayjs/plugin/duration';
 import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
+
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
 dayjs.extend(duration);
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChange }: TradingStoriesProps) => {
@@ -346,6 +350,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       {compact && (
         <Flex margin='mb-10 z-max'>
           <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={186}
             options={RISKY_RISKLESS_EARN_OPTIONS}
