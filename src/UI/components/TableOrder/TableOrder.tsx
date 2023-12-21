@@ -17,6 +17,7 @@ import {
   TableRowDataWithExpanded,
   TABLE_ORDER_DATA_WITH_EXPANDED,
   TableDescriptionProps,
+  TABLE_ORDER_LIVE_ORDERS,
 } from '@/UI/constants/tableOrder';
 
 // Utils
@@ -433,6 +434,8 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     switch (type) {
       case TABLE_TYPE.ORDER:
         return TABLE_ORDER_HEADERS_FOR_POSITIONS;
+      case TABLE_TYPE.LIVE:
+        return TABLE_ORDER_LIVE_ORDERS
       default:
         return TABLE_ORDER_HEADERS;
     }

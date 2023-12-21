@@ -35,6 +35,10 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Tenor',
   'Collateral Amount',
   'Order Limit',
+];
+
+export const TABLE_ORDER_LIVE_ORDERS: string[] = [
+  ...TABLE_ORDER_HEADERS,
   'Cancel All',
 ];
 
