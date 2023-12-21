@@ -163,6 +163,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   };
 
   const handleSubmit = async () => {
+    if (!orderDetails) return;
     if (orderDetails)
       setAuctionSubmission({
         order: orderDetails?.order,
@@ -212,7 +213,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       isCall: callOrPut === 'Call',
       underlying: currentSpotPrice,
     });
-
+    
     setGreeks(
       ithacaSDK.calculation.calcOption({
         rate: 0,

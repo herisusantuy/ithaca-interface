@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -37,6 +38,7 @@ import {
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
@@ -56,9 +58,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
 
   const { toastList, position, showToast } = useToast();
 
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  
   useEffect(() => {
     setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
     setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
@@ -144,8 +149,17 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    if (orderDetails)
+      setAuctionSubmission({
+        order: orderDetails?.order,
+        type: binaryCallOrPut,
+      });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, binaryCallOrPut);
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -156,6 +170,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         },
         'top-right'
       );
+      console.error('Failed to submit order', error);
     }
   };
 
@@ -223,7 +238,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
               <Input
                 type='number'
                 icon={<LogoUsdc />}
-                width={device === 'desktop' ? 105 : undefined}
+                width={105}
                 increment={direction =>
                   size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
                 }
@@ -281,6 +296,26 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         showKeys={false}
         showPortial={!compact}
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={
+            [
+              { leg: orderDetails.order.legs[0], referencePrice: unitPrice, payoff: binaryCallOrPut, strike: strike },
+            ] as unknown as PositionBuilderStrategy[]
+          }
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
 
       {/* {!compact && <Greeks />} */}
     </>
