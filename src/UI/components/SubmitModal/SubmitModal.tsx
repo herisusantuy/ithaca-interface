@@ -2,7 +2,7 @@
 import { AuctionSubmission, OrderSummary, PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import Flex from '@/UI/layouts/Flex/Flex';
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { formatNumber, formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import { toPrecision } from '@ithaca-finance/sdk';
 import { useState } from 'react';
 import Button from '../Button/Button';
@@ -72,7 +72,7 @@ const SubmitModal = ({
           <h5 className='flexGrow'>Order Limit</h5>
           <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
-              {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
+              {formatNumberByCurrency(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string', 'USDC') || '-'}
             </span>
             <LogoUsdc />
             <span className={styles.currencyLabel}>USDC</span>
@@ -83,7 +83,7 @@ const SubmitModal = ({
           <div>
             <div className={styles.valueWrapper}>
               <span className={styles.amountLabel}>
-                {orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                {orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
               </span>
               <LogoEth />
               <span className={styles.currencyLabel}>WETH</span>
@@ -91,12 +91,13 @@ const SubmitModal = ({
             <div className={styles.valueWrapper}>
               <span className={styles.amountLabel}>
                 {orderSummary
-                  ? formatNumber(
+                  ? formatNumberByCurrency(
                       toPrecision(
                         orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                         currencyPrecision.strike
                       ),
-                      'string'
+                      'string',
+                      'USDC'
                     )
                   : '-'}
               </span>{' '}
@@ -109,7 +110,7 @@ const SubmitModal = ({
           <h5 className='flexGrow color-white'>Total Premium</h5>
           <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
-              {formatNumber(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string') || '-'}
+              {formatNumberByCurrency(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string', 'USDC') || '-'}
             </span>
             <LogoUsdc />
             <span className={styles.currencyLabel}>USDC</span>
@@ -119,7 +120,7 @@ const SubmitModal = ({
         <Flex margin='mb-14'>
           <h5 className='flexGrow'>Platform Fee</h5>
           <div className={styles.valueWrapper}>
-            <span className={styles.amountLabel}>1.5</span>
+            <span className={styles.amountLabel}>{formatNumberByCurrency(1.5, 'string', 'USDC')}</span>
             <LogoUsdc />
             <span className={styles.currencyLabel}>USDC</span>
           </div>

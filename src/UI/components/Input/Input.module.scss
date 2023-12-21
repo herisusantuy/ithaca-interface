@@ -21,8 +21,7 @@
   border-radius: rem(12);
   transition: $transition_all;
   position: relative;
-  height: rem(34);
-  
+  height: rem(36);
 
   &:before {
     content: '';
@@ -102,7 +101,7 @@
 }
 
 .footer {
-  height: rem(18);
+  height: rem(14);
   padding-left: rem(2);
   font-size: rem(12);
   font-style: italic;

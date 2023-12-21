@@ -792,7 +792,7 @@ export const breakPointList = (data: PayoffDataProps[]) => {
       return true;
     } else {
       const nextX = array[index + 1].x;
-      if (nextX - item.x > step) {
+      if (nextX - item.x >= step) {
         return true;
       } else {
         return Math.abs(array[index + 1].value - item.value) > deviation

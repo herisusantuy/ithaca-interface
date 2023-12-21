@@ -40,9 +40,19 @@ type ModalProps = {
   isLoading?: boolean;
   isOpen: boolean;
   hideFooter?: boolean;
+  showCloseIcon?: boolean;
 };
 
-const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen, hideFooter }: ModalProps) => {
+const Modal = ({
+  children,
+  title,
+  onCloseModal,
+  onSubmitOrder,
+  isLoading,
+  isOpen,
+  hideFooter,
+  showCloseIcon = true,
+}: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('is-active');
@@ -82,9 +92,11 @@ const Modal = ({ children, title, onCloseModal, onSubmitOrder, isLoading, isOpen
       >
         <div className={styles.modalHeader}>
           <h4 className={styles.modalTitle}>{title}</h4>
-          <Button onClick={onCloseModal} className={styles.buttonClose} title='Click to close modal'>
-            <ModalClose />
-          </Button>
+          {showCloseIcon ? (
+            <Button onClick={onCloseModal} className={styles.buttonClose} title='Click to close modal'>
+              <ModalClose />
+            </Button>
+          ) : null}
         </div>
         <div className={styles.modalContent}>{children}</div>
         {!hideFooter && onSubmitOrder ? (

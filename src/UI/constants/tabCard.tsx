@@ -5,7 +5,7 @@ import { MainTab } from '../components/TabCard/TabCard';
 export const DESCRIPTION_OPTIONS = {
   'Twin Win':'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
   Bonus: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
-  'Risky Earn': 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+  'Risky Earn': 'Define an asset price target.\nEarn risky yield on your capital at risk.',
   'Riskless Earn': 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
   UP_IN: (
     <>
@@ -48,7 +48,7 @@ export const TRADING_MARKET_TABS: MainTab[] = [
     title: 'Digital Options',
     selectedTitle: 'Digital Option',
     description:
-      'A Digital Call Option pays off if underlying asset price ends up above the strike at expiry, while a Digital Put Option pays off if underlying asset price ends up below the strike at expiry. Bet on whether the market will finish above or below the strike and get paid accordingly.',
+      'A Digital Call Option pays off if underlying asset price ends up above the strike at expiry, while a Digital Put Option pays off if underlying asset price ends up below the strike at expiry.\nBet on whether the market will finish above or below the strike and get paid accordingly.',
     contentId: 'digitalOptionsChart',
   },
   {

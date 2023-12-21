@@ -57,11 +57,19 @@ const ModalAcknowledgeTerms = ({
       isLoading={isLoading}
       onCloseModal={onCloseModal}
       hideFooter={false}
+      showCloseIcon={false}
     >
       <div className={styles.acknowledgeTerms}>
         <p className={styles.title}>
-          Check the boxes to confirm your agreement to the <a href='www.google.com'>Terms of Use</a> and{' '}
-          <a href='www.google.com'>Privacy Policy</a>:
+          Check the boxes to confirm your agreement to the{' '}
+          <a href='/term' target='_blank'>
+            Terms of Use
+          </a>{' '}
+          and{' '}
+          <a href='/privacy' target='_blank'>
+            Privacy Policy
+          </a>
+          :
         </p>
         {terms.map(term => (
           <CheckBox

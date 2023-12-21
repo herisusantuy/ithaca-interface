@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -36,32 +37,37 @@ import {
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
   const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
   const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
-  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }))
-  const [strikes, setStrikes] = useState(strikeList)
+  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
+  const [strikes, setStrikes] = useState(strikeList);
 
   const [binaryCallOrPut, setBinaryCallOrPut] = useState<'BinaryCall' | 'BinaryPut'>('BinaryCall');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
+  const [strike, setStrike] = useState<string>(
+    strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value
+  );
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
 
   const { toastList, position, showToast } = useToast();
 
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
 
   useEffect(() => {
     setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
     setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
     const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
     setStrikes(strikeList);
-    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length -1].value);
+    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value);
   }, [currentExpiryDate]);
 
   useEffect(() => {
@@ -141,8 +147,17 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    if (orderDetails)
+      setAuctionSubmission({
+        order: orderDetails?.order,
+        type: binaryCallOrPut,
+      });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, binaryCallOrPut);
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -153,6 +168,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         },
         'top-right'
       );
+      console.error('Failed to submit order', error);
     }
   };
 
@@ -175,12 +191,8 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   }, []);
 
   const renderInstruction = () => {
-    return (
-      <>
-        {!compact && showInstructions && <DigitalInstructions />}
-      </>
-    )
-  }
+    return <>{!compact && showInstructions && <DigitalInstructions />}</>;
+  };
 
   return (
     <>
@@ -194,7 +206,8 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             name={compact ? 'binaryCallOrPutCompact' : 'binaryCallOrPut'}
             selectedOption={binaryCallOrPut}
             onChange={value => handleBinaryCallOrPutChange(value as 'BinaryCall' | 'BinaryPut')}
-          />)}
+          />
+        )}
         {!compact && (
           <>
             <LabeledControl label='Type'>
@@ -224,7 +237,9 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
                 type='number'
                 icon={<LogoUsdc />}
                 width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
+                increment={direction =>
+                  size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
+                }
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -279,6 +294,26 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         showKeys={false}
         showPortial={!compact}
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={
+            [
+              { leg: orderDetails.order.legs[0], referencePrice: unitPrice, payoff: binaryCallOrPut, strike: strike },
+            ] as unknown as PositionBuilderStrategy[]
+          }
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
 
       {/* {!compact && <Greeks />} */}
     </>

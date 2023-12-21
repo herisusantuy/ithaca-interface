@@ -2,6 +2,8 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
+
 import dayjs from 'dayjs';
 
 // Layouts
@@ -16,6 +18,7 @@ import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
 import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Toast from '@/UI/components/Toast/Toast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -49,6 +52,8 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
 
   const { toastList, position, showToast } = useToast();
 
@@ -118,8 +123,17 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    if (orderDetails)
+      setAuctionSubmission({
+        order: orderDetails?.order,
+        type: 'Forward',
+      });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, 'Forward');
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -130,6 +144,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         },
         'top-right'
       );
+      console.error('Failed to submit order', error);
     }
   };
 
@@ -231,6 +246,33 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         showProfitLoss={false}
         caller='Forwards'
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={
+            [
+              {
+                leg: orderDetails.order.legs[0],
+                referencePrice: unitPrice,
+                payoff:
+                  currentOrNextAuction === 'CURRENT'
+                    ? `Forward (${dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DDMMMYY')})`
+                    : 'Forward (Next Auction)',
+              },
+            ] as unknown as PositionBuilderStrategy[]
+          }
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
     </>
   );
 };
