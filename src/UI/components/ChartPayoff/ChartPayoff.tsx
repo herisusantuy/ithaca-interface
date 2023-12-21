@@ -327,10 +327,8 @@ const ChartPayoff = (props: ChartDataProps) => {
               <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`} height={1}>
                 {noDownSideStart && <Label content={<DownsideText y={xAxisPosition} x={0} />} />}
                 {noDownSideEnd && <Label content={<DownsideText y={xAxisPosition} x={width - 60} />} />}
-
-                <Label
+                {downSide && <Label
                   content={
-                    <>
                       <text
                         x={10}
                         y={pnlLabelPosition + 20 > height ? height - 20 : pnlLabelPosition + 20}
@@ -338,24 +336,11 @@ const ChartPayoff = (props: ChartDataProps) => {
                         fontSize={12}
                         textAnchor='left'
                       >
-                        {downSide
-                          ? 'Unlimited Downside'
-                          : minimize >= 0
-                          ? '+' + '' + getNumberFormat(minimize)
-                          : '-' + getNumberFormat(minimize)}
+                        Unlimited Downside
                       </text>
-                      {downSide ? (
-                        <></>
-                      ) : (
-                        <LogoUsdc
-                          x={10 + (getNumberFormat(minimize).length + 1) * 7}
-                          y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7}
-                        />
-                      )}
-                    </>
                   }
                   position='insideBottom'
-                />
+                />}
                 <Label
                   content={
                     <>
