@@ -2,7 +2,7 @@
 import { AuctionSubmission, OrderSummary, PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import Flex from '@/UI/layouts/Flex/Flex';
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { formatNumber, formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import { toPrecision } from '@ithaca-finance/sdk';
 import { useState } from 'react';
 import Button from '../Button/Button';

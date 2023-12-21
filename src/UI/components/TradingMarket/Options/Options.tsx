@@ -202,15 +202,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     };
     const sigma = ithacaSDK.calculation.calcSigma(params);
     setIv(sigma * 100);
-
-    const test = ithacaSDK.calculation.calcOption({
-      rate: 0,
-      sigma,
-      strike,
-      time: dayjs.duration(diff).asYears(),
-      isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice,
-    });
     setGreeks(
       ithacaSDK.calculation.calcOption({
         rate: 0,
@@ -311,7 +302,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoUsdc />}
-                footerText={`IV ${iv > 10 ? iv.toFixed(1) : iv.toFixed(3)}%`}
+                footerText={`IV ${iv > 10 ? iv.toFixed(1) : iv.toFixed(2)}%`}
                 value={unitPrice}
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />

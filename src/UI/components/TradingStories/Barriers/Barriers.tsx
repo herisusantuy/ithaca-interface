@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Packages
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
 
 // Components
@@ -22,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -90,44 +90,46 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
-    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
     setInOrOut(inOrOut);
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleStrikeChange = async (strike: string) => {
     setStrike(strike);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleBarrierChange = async (barrier: string) => {
     setBarrier(barrier);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleSizeChange = async (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
-  const handlePriceChange = (price: string) => {
+  const handlePriceChange = async (price: string) => {
     setUnitPrice(price);
+    if (!strike || !barrier) return;
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(price));
   };
 
   const prepareOrderLegs = async (
@@ -136,10 +138,10 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     strike: string,
     inOrOut: 'IN' | 'OUT',
     barrier: string,
-    size: number
+    size: number,
+    price: number
   ) => {
-    if (isInvalidNumber(size)) {
-      setUnitPrice('-');
+    if (isInvalidNumber(size) || isInvalidNumber(price)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -306,9 +308,13 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     // const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     // setUnitPrice(getNumberFormat(unitPrice));
 
+    const totalPrice = legs.reduce((acc, leg) => {
+      acc = (getNumber(leg.quantity) * price) + acc;
+      return acc;
+    }, 0)
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: `${getNumber(unitPrice)}`,
+      totalNetPrice: `${totalPrice}`,
       legs,
     };
 
@@ -478,14 +484,15 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
               />
             </LabeledControl>
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} label='338.3K' />
+              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} 
+                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'}/>
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoUsdc />}
-                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'}
               />
             </LabeledControl>
           </Flex>

@@ -54,7 +54,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
             <span className={styles.popupIfEth}>If</span>
             <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
             <ChevronRight />
-            {barrier} (<ChevronLeft />
+            {formatNumberByCurrency(getNumber(barrier), 'string', 'WETH')} (<ChevronLeft />
             {strike} )<ArrowRight />
             BONUS;
           </p>
@@ -78,7 +78,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
             <span className={styles.popupIfEth}>If</span>
             <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
             <ChevronRight />
-            {barrier} (<ChevronLeft />
+            {formatNumberByCurrency(getNumber(barrier), 'string', 'WETH')} (<ChevronLeft />
             {strike} )<ArrowRight />
             TWIN WIN;
           </p>
