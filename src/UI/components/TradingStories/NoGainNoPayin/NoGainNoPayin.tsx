@@ -244,7 +244,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         showPortial={!compact}
       />
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} hidePreimum={true} />}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} hidePremium={true} />}
 
       <Toast toastList={toastList} position={position} />
     </>
