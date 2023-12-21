@@ -36,7 +36,7 @@ const DASHBOARD_TABS = [
   },
   {
     id: 'fundLockHistory',
-    label: 'Fund Lock History',
+    label: 'FundLock History',
     content: <TableFundLock />,
   },
 ];
