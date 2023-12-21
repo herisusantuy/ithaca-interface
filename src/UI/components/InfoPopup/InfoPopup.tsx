@@ -91,21 +91,21 @@ export const InfoPopup = (props: InfoPopupProps) => {
     case 'risky': {
       const { risk, earn, currency } = props as RiskyPopup;
 
-      const riskEth = currency !== 'WETH' ? getNumber((parseFloat(risk) / spot).toString()) : getNumber(risk);
-      const riskUsdc = currency !== 'USDC' ? getNumber((parseFloat(risk) * spot).toString()) : getNumber(risk);
+      const riskEth = currency !== 'WETH' ? formatNumberByCurrency((parseFloat(risk) / spot), '', 'WETH') : formatNumberByCurrency(Number(risk), '', 'WETH');
+      const riskUsdc = currency !== 'USDC' ? formatNumberByCurrency((parseFloat(risk) * spot), '', 'USDC') : formatNumberByCurrency(Number(risk), '', 'USDC');
 
       return (
         <>
           <div className={`${styles.popupContainer} ${styles.popupTopContainer}`}>
             <p>
               If <LogoEth /> <ChevronLeft /> {price}, receive{' '}
-              {formatNumberByCurrency(riskEth, 'string', 'WETH')} <LogoEth /> <Add /> {earn}{' '}
+              {riskEth} <LogoEth /> <Add /> {earn}{' '}
               <LogoUsdc />
             </p>
           </div>
           <div className={`${styles.popupContainer}`}>
             <p>
-              If <LogoEth /> <ChevronRight /> {price}, receive {formatNumberByCurrency(riskUsdc, 'string', 'USDC')} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
+              If <LogoEth /> <ChevronRight /> {price}, receive {riskUsdc} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
             </p>
           </div>
         </>
