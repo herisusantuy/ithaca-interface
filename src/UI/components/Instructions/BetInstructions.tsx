@@ -23,25 +23,23 @@ const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionT
       </>
     )
   }, [currentExpiryDate])
-
+  
   return (
     <div className={styles.container}>
-      <p>
-        Bet & Earn Return if
-        <LogoEth />
-        {renderCurrentExpiryDate}
-        <InsideOutside type={type} />
-        Range.
-      </p>
-      <p>
-        i. Bet Capital at Risk;
-        <LogoEth />
-        {renderCurrentExpiryDate}
-        <InsideOutside type={type} />
-        Range?
-      </p>
-      <p className="mb-4">ii. Select Range. </p>
-      <p>iii. Enter Target Earn.</p>
+      <div className={styles.gridContainer}>
+        <p>Bet & Earn Return if</p>
+        <p className='ml-6 mr-2'><LogoEth /></p>
+        <p>{renderCurrentExpiryDate}</p>
+        <p className='ml-6'><InsideOutside type={type} /> Range.</p>
+
+        <p>i. Bet Capital at Risk;</p>
+        <p className='ml-6'><LogoEth /></p>
+        <p>{renderCurrentExpiryDate}</p>
+        <p className='ml-6'><InsideOutside type={type} /> Range?</p>
+      </div>
+
+      <p className="mb-10">ii. Select Range. </p>
+      <p className='mb-4'>iii. Enter Target Earn.</p>
       <p>
         iv. Expected Return reflects the probability of
         <LogoEth />
