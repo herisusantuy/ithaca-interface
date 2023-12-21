@@ -1,0 +1,26 @@
+diff --git a/node_modules/recharts/es6/chart/generateCategoricalChart.js b/node_modules/recharts/es6/chart/generateCategoricalChart.js
+index 63208f8..e7e2d05 100644
+--- a/node_modules/recharts/es6/chart/generateCategoricalChart.js
++++ b/node_modules/recharts/es6/chart/generateCategoricalChart.js
+@@ -602,8 +602,8 @@ var calculateOffset = function calculateOffset(_ref5, prevLegendBBox) {
+     }
+     return result;
+   }, {
+-    left: margin.left || 0,
+-    right: margin.right || 0
++    left: 0,
++    right: 0
+   });
+   var offsetV = Object.keys(xAxisMap).reduce(function (result, id) {
+     var entry = xAxisMap[id];
+@@ -613,8 +613,8 @@ var calculateOffset = function calculateOffset(_ref5, prevLegendBBox) {
+     }
+     return result;
+   }, {
+-    top: margin.top || 0,
+-    bottom: margin.bottom || 0
++    top: 0,
++    bottom: 0
+   });
+   var offset = _objectSpread(_objectSpread({}, offsetV), offsetH);
+   var brushBottom = offset.bottom;
