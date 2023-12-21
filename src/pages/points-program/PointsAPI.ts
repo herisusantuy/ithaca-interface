@@ -11,7 +11,7 @@ const RequestHandle = async ({ method = 'POST', data, url }: { method?: string; 
   };
 
   try {
-    const response = await fetch(`http://192.168.0.20:8000/api/${url}`, requestOptions);
+    const response = await fetch(`http://localhost:8000/api/${url}`, requestOptions);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
