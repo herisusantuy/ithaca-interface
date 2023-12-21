@@ -342,7 +342,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       {!compact &&
         showInstructions &&
         (radioChosen === 'Risky Earn' ? (
-          <RiskyEarnInstructions />
+          <RiskyEarnInstructions currentExpiryDate={currentExpiryDate.toString()} />
         ) : (
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
@@ -484,7 +484,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
             ? {
                 type: 'risky',
                 price: strike.max,
-                risk: '1221',
+                risk: capitalAtRisk,
                 currency: currency,
                 earn: targetEarn,
               }

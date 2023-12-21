@@ -10,7 +10,7 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Add from '@/UI/components/Icons/Add';
 
 import styles from './InfoPopup.module.scss';
-import { getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 
 type InfoPopupType = 'bonus' | 'twinWin' | 'risky';
 
@@ -54,7 +54,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
             <span className={styles.popupIfEth}>If</span>
             <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
             <ChevronRight />
-            {barrier} (<ChevronLeft />
+            {formatNumberByCurrency(getNumber(barrier), 'string', 'WETH')} (<ChevronLeft />
             {strike} )<ArrowRight />
             BONUS;
           </p>
@@ -78,7 +78,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
             <span className={styles.popupIfEth}>If</span>
             <LogoEth />@<span className={styles.italic}>{dayjs(currentExpiryDate.toString()).format('DD MMM YY')}</span>
             <ChevronRight />
-            {barrier} (<ChevronLeft />
+            {formatNumberByCurrency(getNumber(barrier), 'string', 'WETH')} (<ChevronLeft />
             {strike} )<ArrowRight />
             TWIN WIN;
           </p>
@@ -99,13 +99,13 @@ export const InfoPopup = (props: InfoPopupProps) => {
           <div className={`${styles.popupContainer} ${styles.popupTopContainer}`}>
             <p>
               If <LogoEth /> <ChevronLeft /> {price}, receive{' '}
-              {riskEth - Math.floor(riskEth) !== 0 ? riskEth.toFixed(3) : riskEth} <LogoEth /> <Add /> {earn}{' '}
+              {formatNumberByCurrency(riskEth, 'string', 'WETH')} <LogoEth /> <Add /> {earn}{' '}
               <LogoUsdc />
             </p>
           </div>
           <div className={`${styles.popupContainer}`}>
             <p>
-              If <LogoEth /> <ChevronRight /> {price}, receive {riskUsdc} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
+              If <LogoEth /> <ChevronRight /> {price}, receive {formatNumberByCurrency(riskUsdc, 'string', 'USDC')} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
             </p>
           </div>
         </>
