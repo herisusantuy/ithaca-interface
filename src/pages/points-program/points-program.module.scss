@@ -46,6 +46,10 @@
   @include breakpoint2(tablet) {
     gap: rem(16);
   }
+
+  a {
+    cursor: pointer;
+  }
 }
 
 .listIcon {

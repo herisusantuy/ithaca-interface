@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { PublicClient, WalletClient } from 'wagmi';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat)
+dayjs.extend(customParseFormat);
 
 export interface AuctionTimes {
   hour: number;
@@ -39,8 +39,8 @@ export interface IthacaSDKSlice {
   expiryList: number[];
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
-  toastNotifications: Omit<Order, "collateral">[];
-  newToast?:  Omit<Order, "collateral">;
+  toastNotifications: Omit<Order, 'collateral'>[];
+  newToast?: Omit<Order, 'collateral'>;
   spotContract: Contract & ReferencePrice;
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
@@ -98,8 +98,8 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       currencyPair: 'WETH/USDC',
       expiry: 0,
       priceCurrency: '',
-      qtyCurrency: ''
-    }
+      qtyCurrency: '',
+    },
   },
   toastNotifications: [],
   newToast: undefined,
@@ -108,25 +108,25 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
       {
-        onClose: (ev: CloseEvent) => { 
-          console.log(ev)
-         },
-        onError: (ev: Event) => { 
-          console.log(ev)
-         },
-        onMessage: (payload: Omit<Order, "collateral">) => { 
-          set({newToast: payload});
-          set({toastNotifications: [...get().toastNotifications, payload]})
-         },
-        onOpen: (ev: Event) => { 
-          console.log(ev)
-         }
+        onClose: (ev: CloseEvent) => {
+          console.log(ev);
+        },
+        onError: (ev: Event) => {
+          console.log(ev);
+        },
+        onMessage: (payload: Omit<Order, 'collateral'>) => {
+          set({ newToast: payload });
+          set({ toastNotifications: [...get().toastNotifications, payload] });
+        },
+        onOpen: (ev: Event) => {
+          console.log(ev);
+        },
       },
       // undefined,
       process.env.API_URL,
       process.env.WS_URL
     );
-    
+
     if (walletClient) {
       const ithacaSession = localStorage.getItem('ithaca.session');
       if (ithacaSession) {
@@ -198,12 +198,12 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       },
       {}
     );
-    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[],expiry) => {
+    const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[], expiry) => {
       if (Object.keys(filteredContractList[currentCurrencyPair][expiry]).length > 4) {
-        arr.push(parseInt(expiry))
+        arr.push(parseInt(expiry));
       }
       return arr;
-    },[]);
+    }, []);
     const currentExpiryDate = expiryList[0];
     const currentSpotPrice = spotPrices[currentCurrencyPair];
 

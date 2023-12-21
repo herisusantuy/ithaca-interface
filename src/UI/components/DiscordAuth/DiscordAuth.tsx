@@ -43,6 +43,7 @@ const DiscordAuth: React.FC<DiscordAuthProps> = ({ children, onConnected }) => {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
     // Get the fragment identifier (values after the #)
     const fragment: string | undefined = router.asPath.split('#')[1];

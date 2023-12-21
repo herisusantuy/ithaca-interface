@@ -56,7 +56,7 @@ const Wallet = () => {
                 return (
                   <button onClick={openChainModal} type='button' className={styles.wrongNetwork}>
                     Wrong network
-                    <ChevronDown color='#fff'/>
+                    <ChevronDown color='#fff' />
                   </button>
                 );
               }

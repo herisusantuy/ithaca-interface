@@ -4,70 +4,35 @@ import { useState } from 'react';
 import Meta from '@/UI/components/Meta/Meta';
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
-import Panel from '@/UI/layouts/Panel/Panel';
-import Button from '@/UI/components/Button/Button';
+import Tabs from '@/UI/components/Tabs/Tabs';
+import Toast from '@/UI/components/Toast/Toast';
+import ReferralCode from '@/pages/referrals/ReferralCode';
+import LeaderBoard from '@/pages/referrals/LeaderBoard';
+
+// Utils
+import useToast from '@/UI/hooks/useToast';
+
 // Styles
 import styles from './referrals.module.scss';
-import Tabs from '@/UI/components/Tabs/Tabs';
-import useToast from '@/UI/hooks/useToast';
-import Toast from '@/UI/components/Toast/Toast';
-import TableReferralsLeaderBoard from '@/UI/components/TableReferralsLeaderBoard/TableReferralsLeaderBoard';
-import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
-import Card2 from '@/UI/components/Card/Card2';
+
 const Referrals = () => {
   const { toastList, showToast } = useToast();
+
   const REFERRALS_TABS = [
     {
       id: 'referralCode',
       label: 'Referral Code',
-      content: (
-        <div className={styles.referralPanel}>
-          <Panel margin={styles.mainPanel}>
-            <p>Your referral link to share:</p>
-            <a href='https://ithaca.domain/E1BAC' target='_blank'>
-              https://ithaca.domain/E1BAC
-            </a>
-            <Button
-              variant='secondary'
-              title=''
-              onClick={() => {
-                navigator.clipboard.writeText('https://ithaca.domain/E1BAC');
-                showToast(
-                  {
-                    id: new Date().getTime(),
-                    title: 'Copied',
-                    message: 'https://ithaca.domain/E1BAC',
-                    type: 'success',
-                  },
-                  'top-right'
-                );
-              }}
-            >
-              Copy Link
-            </Button>
-          </Panel>
-        </div>
-      ),
+      content: <ReferralCode showToast={showToast} />,
     },
     {
       id: 'leaderBoard',
       label: 'Leaderboard',
-
-      content: (
-        <div className={styles.leaderBoardPanel}>
-          <div className={styles.leaderBoardCardsContainer}>
-            <Card2 label='Your Current Ranking' value={1024} />
-            <Card2 label='Invited' value={50} />
-            <Card2 label='Accepted Invites' value={8} />
-          </div>
-          <Panel margin='p-30 p-tablet-16'>
-            <TableReferralsLeaderBoard data={TABLE_REFERRALS_LEADERBOARD_DATA} />
-          </Panel>
-        </div>
-      ),
+      content: <LeaderBoard />,
     },
   ];
+
   const [activeTab, setActiveTab] = useState(REFERRALS_TABS[0].id);
+
   return (
     <>
       <Meta />
