@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Packages
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
 
 // Components
@@ -22,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { formatNumberByCurrency, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -37,7 +37,6 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import styles from './Barriers.module.scss';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
-import OrderSummary from '../../OrderSummary/OrderSummary';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();

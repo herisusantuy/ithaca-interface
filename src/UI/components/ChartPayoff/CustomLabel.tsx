@@ -2,7 +2,6 @@
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
 import { LabelPositionProp } from '@/UI/utils/CalcChartPayoff';
 import { getNumberFormat } from '@/UI/utils/Numbers';
-import { useEffect } from 'react';
 import LogoUsdc from '../Icons/LogoUsdc';
 
 // Types
@@ -20,7 +19,7 @@ type LabelProps = {
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, index, special, dataList, height, labelPosition } = props;
+  const { x, y, index, special, dataList, height, labelPosition } = props;
 
   function renderLabel() {
     if (labelPosition.length == 0) {
