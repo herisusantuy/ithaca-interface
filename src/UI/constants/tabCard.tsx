@@ -5,7 +5,7 @@ import { MainTab } from '../components/TabCard/TabCard';
 export const DESCRIPTION_OPTIONS = {
   'Twin Win':'Pay a premium to be long the underlying while becoming short the underlying up to a barrier below the strike.',
   Bonus: 'Pay a premium to be long the underlying while protecting downside up to a barrier below the strike.',
-  'Risky Earn': 'Earn risky yield on your capital at risk.\n Define an asset price target.',
+  'Risky Earn': 'Define an asset price target.\nEarn risky yield on your capital at risk.',
   'Riskless Earn': 'Earn yield on your collateralized loan \n( no margin liquidation risk ).',
   UP_IN: (
     <>
