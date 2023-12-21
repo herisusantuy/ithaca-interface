@@ -51,7 +51,7 @@ const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainN
         <p className='justify-end'>(maximum potential</p>
         <p className='ml-6 mr-6'><LogoUsdc /></p>
         <p>loss if <LogoEth /> {renderCurrentExpiryDate}=</p>
-        <p className='ml-6'><LogoEth /> Price Reference.</p>
+        <p className='ml-6'><LogoEth /> Price Reference.)</p>
       </div>
 
       <p>

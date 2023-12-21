@@ -219,7 +219,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
 
-            <LabeledControl label='Collateral' labelClassName='mb-16 color-white'>
+            <LabeledControl label='Total Collateral' labelClassName='mb-16 color-white'>
               <Flex>
                 <span className='fs-md-bold color-white'>
                   {!isInvalidNumber(getNumber(multiplier)) &&
