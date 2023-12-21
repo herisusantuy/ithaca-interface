@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Components
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
@@ -37,28 +38,36 @@ import {
   createClientOrderId,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration)
+
+dayjs.extend(duration);
 
 const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, currentSpotPrice } = useAppStore();
-  const callContracts = getContractsByPayoff('Call');
-  const putContracts = getContractsByPayoff('Put');
-  const strikes = Object.keys(callContracts).map(strike => ({ name: strike, value: strike }));
+  const [callContracts, setCallContracts] = useState(getContractsByPayoff('Call'));
+  const [putContracts, setPutContracts] = useState(getContractsByPayoff('Put'));
+  const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
+  const [strikes, setStrikes] = useState(strikeList);
 
   const [callOrPut, setCallOrPut] = useState<'Call' | 'Put'>('Call');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikes[4].value);
+  const [strike, setStrike] = useState<string>(
+    strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length - 1].value
+  );
   const [unitPrice, setUnitPrice] = useState('');
   const [iv, setIv] = useState(0);
   const [greeks, setGreeks] = useState();
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
 
   const { toastList, position, showToast } = useToast();
+
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -67,6 +76,20 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     setUnitPrice(`${contract.referencePrice}`);
     await handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
   };
+
+  useEffect(() => {
+    setCallContracts(getContractsByPayoff('Call'));
+    setPutContracts(getContractsByPayoff('Put'));
+    const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
+    setStrikes(strikeList);
+    setStrike(strikeList.length > 4 ? strikeList[4].value : strikeList[strikeList.length - 1].value);
+  }, [currentExpiryDate]);
+
+  useEffect(() => {
+    const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleStrikeChange(callOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
+  }, [strike]);
 
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
@@ -99,7 +122,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       setIv(0);
-      setGreeks(undefined)
+      setGreeks(undefined);
       return;
     }
 
@@ -139,8 +162,17 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    if (orderDetails)
+      setAuctionSubmission({
+        order: orderDetails?.order,
+        type: callOrPut,
+      });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, callOrPut);
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -158,27 +190,38 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   const calcIv = (unitPrice: string, strike: string, callOrPut: string) => {
     if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
     const current = dayjs();
-    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
-    const diff = expiry.diff(current)
+    const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD');
+    const diff = expiry.diff(current);
     const params = {
       rate: 0,
       price: unitPrice,
       strike: strike,
       time: dayjs.duration(diff).asYears(),
       isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice
-    }
-    const sigma = (ithacaSDK.calculation.calcSigma(params))
+      underlying: currentSpotPrice,
+    };
+    const sigma = ithacaSDK.calculation.calcSigma(params);
     setIv(sigma * 100);
-    setGreeks(ithacaSDK.calculation.calcOption({
+
+    const test = ithacaSDK.calculation.calcOption({
       rate: 0,
       sigma,
       strike,
       time: dayjs.duration(diff).asYears(),
       isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice
-    }));
-  }
+      underlying: currentSpotPrice,
+    });
+    setGreeks(
+      ithacaSDK.calculation.calcOption({
+        rate: 0,
+        sigma,
+        strike,
+        time: dayjs.duration(diff).asYears(),
+        isCall: callOrPut === 'Call',
+        underlying: currentSpotPrice,
+      })
+    );
+  };
 
   const calcCollateral = () => {
     if (!strike || isInvalidNumber(getNumber(size))) return '-';
@@ -199,12 +242,8 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   }, []);
 
   const renderInstruction = () => {
-    return (
-      <>
-        {!compact && showInstructions && <OptionInstructions />}
-      </>
-    )
-  }
+    return <>{!compact && showInstructions && <OptionInstructions />}</>;
+  };
 
   return (
     <>
@@ -223,6 +262,14 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         {!compact && (
           <>
             <LabeledControl label='Type'>
+              <RadioButton
+                size={compact ? 'compact' : 'regular'}
+                width={compact ? 120 : 110}
+                options={TYPE_OPTIONS}
+                name={compact ? 'callOrPutCompact' : 'callOrPut'}
+                selectedOption={callOrPut}
+                onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+              />
             </LabeledControl>
 
             <LabeledControl label='Side'>
@@ -241,7 +288,9 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 type='number'
                 icon={<LogoEth />}
                 width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())}
+                increment={direction =>
+                  size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
+                }
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -254,9 +303,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  const contract = callOrPut === 'Call' ? callContracts[value] : putContracts[value];
-                  setUnitPrice(`${contract.referencePrice}`);
-                  handleStrikeChange(callOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>
@@ -265,12 +311,11 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoUsdc />}
-                footerText={`IV ${iv.toFixed(1)}%`}
+                footerText={`IV ${iv > 10 ? iv.toFixed(1) : iv.toFixed(3)}%`}
                 value={unitPrice}
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
             </LabeledControl>
-
 
             <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
@@ -301,7 +346,25 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         showKeys={false}
         showPortial={!compact}
       />
-
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={
+            [
+              { leg: orderDetails.order.legs[0], referencePrice: unitPrice, payoff: callOrPut, strike: strike },
+            ] as unknown as PositionBuilderStrategy[]
+          }
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
       {!compact && <Greeks greeks={greeks} />}
     </>
   );
