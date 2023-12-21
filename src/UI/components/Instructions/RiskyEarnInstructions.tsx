@@ -11,9 +11,10 @@ import styles from './Instructions.module.scss';
 import CurlyBracketLeft from '../Icons/CurlyBracketLeft';
 import CurlyBracketRight from '../Icons/CurlyBracketRight';
 import dayjs from 'dayjs';
-
-const RiskyEarnInstructions = () => {
-  const RISKY_EXPIRE_DATE = '20231120'; // TO-DO: Pass as props
+type props = {
+  currentExpiryDate: string
+}
+const RiskyEarnInstructions = ({currentExpiryDate}: props) => {
   return (
     <div className={styles.container}>
       
@@ -37,7 +38,7 @@ const RiskyEarnInstructions = () => {
         <LogoUsdc />
         <CurlyBracketRight />@{' '}
         <span className={`${styles.italic} hide-psuedo p-0`}>
-          {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')}.
+          {dayjs(currentExpiryDate, 'YYYYMMDD').format('DD MMM YY')}.
         </span>
       </p>
       <p className='mb-5'>
@@ -47,12 +48,12 @@ const RiskyEarnInstructions = () => {
         <p className='mr-4'>iii.</p>
         <div className='pt-5'>
           <p>
-          - If at {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth />{' '}
+          - If at {dayjs(currentExpiryDate, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronLeft /> Target Price, receive Risk equivalent worth of <LogoEth />{' '}
           <Add />
           Return in <LogoUsdc /> .
           </p>
           <p>
-            - If at {dayjs(RISKY_EXPIRE_DATE, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronRight /> Target Price, receive Risk equivalent worth of <LogoUsdc /> <Add />
+            - If at {dayjs(currentExpiryDate, 'YYYYMMDD').format('DD MMM YY')} <LogoEth /> <ChevronRight /> Target Price, receive Risk equivalent worth of <LogoUsdc /> <Add />
             Return in <LogoUsdc /> .
           </p>
         </div> 

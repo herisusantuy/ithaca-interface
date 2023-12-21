@@ -39,6 +39,9 @@ import {
 import useToast from '@/UI/hooks/useToast';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
 const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => { 
   const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
 
@@ -166,8 +169,8 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   useEffect(() => {
-    handleCapitalAtRiskChange('10');
-    handleTargetEarnChange('100');
+    handleCapitalAtRiskChange('100');
+    handleTargetEarnChange('300');
   }, []);
 
   useEffect(() => {
@@ -202,6 +205,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
       <Flex margin={`${compact ? 'mt-7 mb-4' : 'mt-10 mb-24'}`}>
         <RadioButton
+          labelClassName={radioButtonStyles.microLabels}
           size={compact ? 'compact' : 'regular'}
           width={compact ? 186 : 221}
           options={BET_OPTIONS}

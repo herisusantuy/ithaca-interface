@@ -14,15 +14,15 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     displayText: 'Trading',
   },
   {
+    path: '/dashboard',
+    titleKey: 'Click to visit dashboard',
+    displayText: 'Dashboard',
+  },
+  {
     path: '/analytics',
     titleKey: 'Click to visit analytics',
     displayText: 'Analytics',
     disabled: true
-  },
-  {
-    path: '/dashboard',
-    titleKey: 'Click to visit dashboard',
-    displayText: 'Dashboard',
   },
   // {
   //   path: '#',

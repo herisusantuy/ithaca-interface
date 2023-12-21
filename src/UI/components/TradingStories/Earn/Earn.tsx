@@ -46,6 +46,10 @@ import duration from 'dayjs/plugin/duration';
 import styles from './Earn.module.scss';
 import { calculateAPY } from '@/UI/utils/APYCalc';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
+
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
 dayjs.extend(duration);
 
 const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChange }: TradingStoriesProps) => {
@@ -73,7 +77,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
     max: strikes[Math.ceil(strikes.length / 2) - 1],
   });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
-  const [targetEarn, setTargetEarn] = useState('101');
+  const [targetEarn, setTargetEarn] = useState('150');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
@@ -220,7 +224,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       side: 'SELL',
     };
     const payoffMap = estimateOrderPayoff(
-      [{ ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn), quantity: '1' }],
+      [{ ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn) - getNumber(capitalAtRisk), quantity: '1' }],
       {
         min: strikes[0],
         max: strikes[strikes.length - 1] + strikeDiff,
@@ -338,7 +342,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       {!compact &&
         showInstructions &&
         (radioChosen === 'Risky Earn' ? (
-          <RiskyEarnInstructions />
+          <RiskyEarnInstructions currentExpiryDate={currentExpiryDate.toString()} />
         ) : (
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
@@ -346,6 +350,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       {compact && (
         <Flex margin='mb-10 z-max'>
           <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={186}
             options={RISKY_RISKLESS_EARN_OPTIONS}
@@ -393,11 +398,13 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
               icon={currency === 'WETH' ? <LogoEth /> : <LogoUsdc />}
               hasDropdown={true}
               onDropdownChange={option => {
-                setCurrency(option);
-                if (option === 'USDC') {
-                  setCapitalAtRisk((parseFloat(capitalAtRisk) * spot).toString());
-                } else if (option === 'WETH') {
-                  setCapitalAtRisk((parseFloat(capitalAtRisk) / spot).toString());
+                if (option !== currency) {
+                  setCurrency(option);
+                  if (option === 'USDC') {
+                    setCapitalAtRisk((parseFloat(capitalAtRisk) * spot).toString());
+                  } else if (option === 'WETH') {
+                    setCapitalAtRisk((parseFloat(capitalAtRisk) / spot).toString());
+                  }
                 }
               }}
               dropDownOptions={[

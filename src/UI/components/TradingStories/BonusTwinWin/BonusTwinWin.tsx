@@ -22,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { BONUS_TWIN_WIN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -34,7 +34,16 @@ import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 
-const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'Bonus', onRadioChange }: TradingStoriesProps) => {
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+
+const BonusTwinWin = ({
+  showInstructions,
+  compact,
+  chartHeight,
+  radioChosen = 'Bonus',
+  onRadioChange,
+}: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
@@ -47,8 +56,8 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     : [];
   const priceReference = barrierStrikes[barrierStrikes.length - 1];
 
-  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>(radioChosen as 'Bonus' || 'Bonus');
-  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 1]);
+  const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>((radioChosen as 'Bonus') || 'Bonus');
+  const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 3]);
   const [multiplier, setMultiplier] = useState('');
   const [price, setPrice] = useState('100');
   const [total, setTotal] = useState('-');
@@ -64,7 +73,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
 
   const handleBonusOrTwinWinChange = (bonusOrTwinWin: 'Bonus' | 'Twin Win') => {
     setBonusOrTwinWin(bonusOrTwinWin);
-    if(onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[bonusOrTwinWin])
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[bonusOrTwinWin]);
     if (!koBarrier) return;
     handlePriceReferenceChange(bonusOrTwinWin, priceReference, koBarrier, getNumber(multiplier), getNumber(price));
   };
@@ -95,7 +104,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
     price: number
   ) => {
     if (isInvalidNumber(multiplier) || isInvalidNumber(price)) {
-      setTotal('-')
+      setTotal('-');
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -204,6 +213,7 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
       {compact && (
         <Flex margin={compact ? 'mb-10' : 'mb-12'}>
           <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={compact ? 140 : 186}
             options={BONUS_TWIN_WIN_OPTIONS}
@@ -258,10 +268,10 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
             <LabeledControl label='Size (Multiplier)'>
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
-            <LabeledControl label='Total Protection Cost Inclusive Price' labelClassName='color-white mb-16'>
+            <LabeledControl label='Total Cost' labelClassName='color-white mb-16'>
               <Flex gap='gap-10'>
                 <span className='fs-md-bold color-white'>
-                  {!isInvalidNumber(getNumber(total)) ? getNumberFormat(total) : '-'}
+                  {!isInvalidNumber(getNumber(total)) ? getNumber(total).toFixed(0) : '-'}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>
@@ -278,7 +288,12 @@ const BonusTwinWin = ({ showInstructions, compact, chartHeight, radioChosen = 'B
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
-        infoPopup={{ type: 'bonusTwinWin', price: price, barrier: koBarrier, strike: priceReference }}
+        infoPopup={{
+          type: bonusOrTwinWin === 'Bonus' ? 'bonus' : 'twinWin',
+          price: price,
+          barrier: koBarrier,
+          strike: priceReference,
+        }}
       />
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}

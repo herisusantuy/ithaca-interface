@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { AreaChart, Area, Tooltip, ReferenceLine, XAxis, Label, ResponsiveContainer, YAxis } from 'recharts';
 
 // Components
@@ -42,7 +42,8 @@ type ChartDataProps = {
   compact?: boolean;
   caller?: string;
   infoPopup?: InfoPopupProps;
-  customDomain?: DomainType
+  customDomain?: DomainType;
+  showProfitLoss?: boolean;
 };
 
 type DomainType = {
@@ -53,10 +54,23 @@ type DomainType = {
 // Styles
 import styles from '@/UI/components/ChartPayoff/ChartPayoff.module.scss';
 import Flex from '@/UI/layouts/Flex/Flex';
+import ProfitLoss from './ProfitLoss';
+import DownsideText from './DownsideText';
+import { chartColorArray, chartDashedColorArray } from './helpers';
 
 const ChartPayoff = (props: ChartDataProps) => {
-
-  const { chartData = PAYOFF_DUMMY_DATA, height, showKeys = true, showPortial = true, compact, id, caller, infoPopup, customDomain } = props;
+  const { 
+    chartData = PAYOFF_DUMMY_DATA,
+    height,
+    showKeys = true,
+    showPortial = true,
+    compact,
+    id,
+    caller,
+    infoPopup,
+    customDomain,
+    showProfitLoss = true 
+  } = props;
   const [isClient, setIsClient] = useState(false);
   const [changeVal, setChangeVal] = useState(0);
   const [cursorX, setCursorX] = useState(0);
@@ -99,43 +113,10 @@ const ChartPayoff = (props: ChartDataProps) => {
   const [pnlLabelPosition, setPnlLabelPosition] = useState<number>(0);
   const [labelPosition, setLabelPosition] = useState<LabelPositionProp[]>([]);
   const [gradient, setGradient] = useState<ReactElement>();
+  const [isChartHovered, setIsChartHovered] = useState<boolean>(false);
 
   const baseValue = 0;
-  const colorArray = [
-    '#18b5b5',
-    '#b5b5f8',
-    '#ff772a',
-    '#a855f7',
-    '#7ad136',
-    '#ff3f57',
-    '#6545a4',
-    '#4bb475',
-    '#4421af',
-    '#d7658b',
-    '#7c1158',
-    '#786028',
-    '#50e991',
-    '#b33dc6',
-    '#00836e',
-  ];
-
-  const dashedColorArray = [
-    '#18b5b5',
-    '#b5b5f8',
-    '#ff772a',
-    '#a855f7',
-    '#7ad136',
-    '#ff3f57',
-    '#6545a4',
-    '#4bb475',
-    '#4421af',
-    '#d7658b',
-    '#7c1158',
-    '#786028',
-    '#50e991',
-    '#b33dc6',
-    '#00836e',
-  ];
+  
 
   useEffect(() => {
     setIsClient(true);
@@ -163,10 +144,10 @@ const ChartPayoff = (props: ChartDataProps) => {
       selectedLeg.value !== 'total' ? selectedLeg : dashed.label
     );
     const colorIndex = key.findIndex(k => k.value === selectedLeg.value);
-    setColor(colorArray[colorIndex - 1]);
+    setColor(chartColorArray[colorIndex - 1]);
     const dashedColorIndex = key.findIndex(k => k.value === dashed.label.value);
 
-    setDashedColor(dashedColorArray[dashedColorIndex - 1]);
+    setDashedColor(chartDashedColorArray[dashedColorIndex - 1]);
     setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
     if (caller === 'Forwards') {
@@ -185,23 +166,24 @@ const ChartPayoff = (props: ChartDataProps) => {
     setModifiedData(modified);
     // set gradient value
     setOff(gradientOffset(xAxisPosition, height, modified));
-    // setOff(gradientOffset(modified));
-    // setXAxisPosition(0);
     setLabelPosition([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge, chartData, dashed, selectedLeg]);
 
-  // useEffect(() => {
-  //   setOff(gradientOffset(xAxisPosition, height, modifiedData));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [xAxisPosition]);
+  useEffect(() => {
+    if (customDomain) {
+      setXAxisPosition(customDomain.min === 0 ? 0 : height );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartData])
+
 
   useEffect(() => {
     if (typeof off === 'number') {
       setGradient(showGradientTags(off, color, dashedColor, id, selectedLeg.value, !customDomain));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [off, color, dashedColor, selectedLeg]);
+  }, [off, color, dashedColor, selectedLeg, customDomain]);
   // mouse move handle events
   const handleMouseMove = (e: CategoricalChartState) => {
     if (!e) return; // Avoid null event in compact mode when tooltip is not rendered
@@ -233,12 +215,16 @@ const ChartPayoff = (props: ChartDataProps) => {
     setDashed(val);
   };
 
-  // const updateLabelPosition = (positionObj: LabelPositionProp) => {
-  //   const updatedPositions = [...labelPosition, ...[positionObj]];
-  //   setTimeout(() => {
-  //     setLabelPosition(updatedPositions);
-  //   }, 10);
-  // };
+  const displayProfitLoss = showPortial && showProfitLoss
+  const noDownSideStart = useMemo(() => {
+    const [first, second] = modifiedData
+    return first?.value === 0 && second?.value === 0
+  }, [modifiedData]);
+
+  const noDownSideEnd = useMemo(() => {
+    const chartDataLength = modifiedData.length
+    return modifiedData?.[chartDataLength - 1]?.value === 0 && modifiedData?.[chartDataLength - 2]?.value === 0
+  }, [modifiedData]);
 
   return (
     <>
@@ -247,18 +233,16 @@ const ChartPayoff = (props: ChartDataProps) => {
           {!compact && (
             <Flex direction='row-space-between' margin='mb-10 mt-15 z-unset'>
               <h3 className='mb-0'>Payoff Diagram</h3>
-              <div className={`${styles.unlimited} ${!showPortial ? styles.hide : ''}`}>
-                <h3>Potential P&L:</h3>
-                <p className={changeVal < 0 ? styles.redColor : styles.greenColor}>
-                  {changeVal >= 0 ? '+' + getNumberFormat(changeVal) : '-' + getNumberFormat(changeVal)}
-                </p>
-                <LogoUsdc />
+              <div className={`${styles.unlimited} ${!displayProfitLoss ? styles.hide : ''}`}>
+                <ProfitLoss value={changeVal} isChartHovered={isChartHovered} />
               </div>
             </Flex>
           )}
           {!compact && infoPopup && <InfoPopup {...infoPopup} />}
           <ResponsiveContainer width='100%' height={height} onResize={handleResize}>
             <AreaChart
+              onMouseEnter={() => setIsChartHovered(true)}
+              onMouseLeave={() => setIsChartHovered(false)}
               data={modifiedData}
               onMouseMove={handleMouseMove}
               margin={{ top: compact ? 0 : 18, right: 0, left: 0, bottom: compact ? 0 : 25 }}
@@ -341,9 +325,10 @@ const ChartPayoff = (props: ChartDataProps) => {
               )}
 
               <XAxis tick={false} axisLine={false} className={`${!showPortial ? styles.hide : ''}`} height={1}>
-                <Label
+                {noDownSideStart && <Label content={<DownsideText y={xAxisPosition} x={0} />} />}
+                {noDownSideEnd && <Label content={<DownsideText y={xAxisPosition} x={width - 60} />} />}
+                {downSide && <Label
                   content={
-                    <>
                       <text
                         x={10}
                         y={pnlLabelPosition + 20 > height ? height - 20 : pnlLabelPosition + 20}
@@ -351,24 +336,11 @@ const ChartPayoff = (props: ChartDataProps) => {
                         fontSize={12}
                         textAnchor='left'
                       >
-                        {downSide
-                          ? 'Unlimited Downside'
-                          : minimize >= 0
-                          ? '+' + '' + getNumberFormat(minimize)
-                          : '-' + getNumberFormat(minimize)}
+                        Unlimited Downside
                       </text>
-                      {downSide ? (
-                        <></>
-                      ) : (
-                        <LogoUsdc
-                          x={10 + (getNumberFormat(minimize).length + 1) * 7}
-                          y={pnlLabelPosition + 20 > height ? height - 33 : pnlLabelPosition + 7}
-                        />
-                      )}
-                    </>
                   }
                   position='insideBottom'
-                />
+                />}
                 <Label
                   content={
                     <>

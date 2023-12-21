@@ -1,55 +1,55 @@
+import { useMemo } from 'react';
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import dayjs from 'dayjs';
 
 // Styles
 import styles from './Instructions.module.scss';
+import InsideOutside from './InsideOutside';
 
 type BetInstructionType = {
-  type?: string;
+  type?: 'INSIDE' | 'OUTSIDE';
   currentExpiryDate: string;
 };
 
 const BetInstructions = ({ type = 'INSIDE', currentExpiryDate }: BetInstructionType) => {
+  const renderCurrentExpiryDate = useMemo(() => {
+    return (
+      <>
+        @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
+      </>
+    );
+  }, [currentExpiryDate]);
+
   return (
     <div className={styles.container}>
+      <div className={styles.gridContainer}>
+        <p>Bet & Earn Return if</p>
+        <p className='ml-6 mr-2'>
+          <LogoEth />
+        </p>
+        <p>{renderCurrentExpiryDate}</p>
+        <p className='ml-6'>
+          <InsideOutside type={type} /> Range.
+        </p>
+
+        <p>i. Bet Capital at Risk;</p>
+        <p className='ml-6'>
+          <LogoEth />
+        </p>
+        <p>{renderCurrentExpiryDate}</p>
+        <p className='ml-6'>
+          <InsideOutside type={type} /> Range?
+        </p>
+      </div>
+
+      <p className='mb-10'>ii. Select Range. </p>
+      <p className='mb-4'>iii. Enter Target Earn.</p>
       <p>
-        Bet & Earn Return if <LogoEth /> @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
-        Range.
-      </p>
-      <p>
-        i. Bet on
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
-        Range; Capital at Risk.
-      </p>
-      <p className='pb-2'>ii. Select Range. </p>
-      <p>iii. Enter Target Earn.</p>
-      <p>
-        iv. Expected Return reflects the probability of{' '}
-        <span className='flex-column-center'>
-          <span className={type == 'INSIDE' ? ' hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Inside
-          </span>
-          <span className={type == 'OUTSIDE' ? 'hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Outside
-          </span>
-        </span>
-        Range @<span className={`${styles.italic}  hide-psuedo p-0`}>{dayjs(currentExpiryDate).format('DD MMM YY')}</span>.
+        iv. Expected Return reflects the probability of
+        <LogoEth />
+        <InsideOutside type={type} />
+        Range {renderCurrentExpiryDate}.
       </p>
     </div>
   );

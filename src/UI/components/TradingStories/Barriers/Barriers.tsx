@@ -22,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -36,6 +36,7 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 // Styles
 import styles from './Barriers.module.scss';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -56,17 +57,23 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
   const { toastList, position, showToast } = useToast();
 
-  const strikes = callContracts
-    ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
-        const isValidStrike = barrier
-          ? upOrDown === 'UP'
-            ? parseFloat(currStrike) < parseFloat(barrier)
-            : parseFloat(currStrike) > parseFloat(barrier)
-          : true;
-        if (isValidStrike) strikeArr.push(currStrike);
-        return strikeArr;
-      }, [])
-    : [];
+  let strikes: string[];
+  if (callContracts) {
+    const strikeInitialData = Object.keys(callContracts);
+    strikeInitialData.pop();
+    strikeInitialData.shift();
+    strikes = strikeInitialData.reduce<string[]>((strikeArr, currStrike) => {
+      const isValidStrike = barrier
+        ? upOrDown === 'UP'
+          ? parseFloat(currStrike) < parseFloat(barrier)
+          : parseFloat(currStrike) > parseFloat(barrier)
+        : true;
+      if (isValidStrike) strikeArr.push(currStrike);
+      return strikeArr;
+    }, []);
+  } else {
+    strikes = [];
+  }
 
   const barrierStrikes = callContracts
     ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
@@ -83,44 +90,46 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
-    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
-    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`])
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
     setInOrOut(inOrOut);
-    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`])
+    if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleStrikeChange = async (strike: string) => {
     setStrike(strike);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleBarrierChange = async (barrier: string) => {
     setBarrier(barrier);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
   const handleSizeChange = async (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
   };
 
-  const handlePriceChange = (price: string) => {
+  const handlePriceChange = async (price: string) => {
     setUnitPrice(price);
+    if (!strike || !barrier) return;
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(price));
   };
 
   const prepareOrderLegs = async (
@@ -129,10 +138,10 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     strike: string,
     inOrOut: 'IN' | 'OUT',
     barrier: string,
-    size: number
+    size: number,
+    price: number
   ) => {
-    if (isInvalidNumber(size)) {
-      setUnitPrice('-');
+    if (isInvalidNumber(size) || isInvalidNumber(price)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
@@ -299,9 +308,13 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     // const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     // setUnitPrice(getNumberFormat(unitPrice));
 
+    const totalPrice = legs.reduce((acc, leg) => {
+      acc = (getNumber(leg.quantity) * price) + acc;
+      return acc;
+    }, 0)
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
-      totalNetPrice: `${getNumber(unitPrice)}`,
+      totalNetPrice: `${totalPrice}`,
       legs,
     };
 
@@ -367,8 +380,9 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             selectedOption={buyOrSell}
             name='buyOrSellCompact'
             orientation='vertical'
-            onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')} 
+            onChange={value => handleBuyOrSellChange(value as 'BUY' | 'SELL')}
             radioButtonClassName={styles.sideRadioButtonClassName}
+            labelClassName={radioButtonStyles.microLabels}
           />
 
           <RadioButton
@@ -377,7 +391,8 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             selectedOption={upOrDown}
             name='upOrDownCompact'
             orientation='vertical'
-            onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}   
+            onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
+            labelClassName={radioButtonStyles.microLabels}
           />
 
           <RadioButton
@@ -386,7 +401,8 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
             selectedOption={inOrOut}
             name='inOrOutCompact'
             orientation='vertical'
-            onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}   
+            onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
+            labelClassName={radioButtonStyles.microLabels}
           />
         </Flex>
       ) : (
@@ -396,6 +412,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
             <LabeledControl label='Side'>
               <RadioButton
+                labelClassName={radioButtonStyles.microLabels}
                 width={42}
                 options={SIDE_OPTIONS}
                 selectedOption={buyOrSell}
@@ -414,7 +431,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 onChange={value => handleUpOrDownChange(value as 'UP' | 'DOWN')}
                 radioButtonClassName={styles.radioButtonClassName}
                 optionClassName={styles.optionClassName}
-                labelClassName={styles.labelClassName}
+                labelClassName={`${styles.labelClassName} ${radioButtonStyles.microLabels}`}
               />
             </LabeledControl>
 
@@ -439,7 +456,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 onChange={value => handleInOrOutChange(value as 'IN' | 'OUT')}
                 radioButtonClassName={styles.radioButtonClassName}
                 optionClassName={styles.optionClassName}
-                labelClassName={styles.labelClassName}
+                labelClassName={`${styles.labelClassName} ${radioButtonStyles.microLabels}`}
               />
             </LabeledControl>
 
@@ -467,14 +484,15 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
               />
             </LabeledControl>
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} label='338.3K' />
+              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} 
+                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'}/>
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoUsdc />}
-                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
+                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'}
               />
             </LabeledControl>
           </Flex>

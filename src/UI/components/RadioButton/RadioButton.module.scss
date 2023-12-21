@@ -5,7 +5,7 @@
   gap: rem(5);
   position: relative;
   border-radius: rem(12);
-  height: rem(34);
+  height: rem(36);
 
   &:before {
     content: '';
@@ -37,17 +37,17 @@
     &:before {
       border-radius: rem(6);
     }
-      label {
-        @include spacing(padding, 2, 'top+bottom');
-        @include spacing(padding, 10, 'left+right');
-        height: rem(15);
-        border-radius: rem(5);
+    label {
+      @include spacing(padding, 2, 'top+bottom');
+      @include spacing(padding, 10, 'left+right');
+      height: rem(15);
+      border-radius: rem(5);
 
-        svg {
-          height: rem(16);
-          width: rem(16);
-        }
+      svg {
+        height: rem(16);
+        width: rem(16);
       }
+    }
 
     &.verticalCompact {
       label {
@@ -165,7 +165,7 @@
     gap: 0;
     min-width: rem(30);
     height: rem(34);
-    @include breakpoint(desktop){
+    @include breakpoint(desktop) {
       height: auto;
     }
 
@@ -186,7 +186,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; 
+  width: 100%;
 
   input[type='radio'] {
     position: absolute;
@@ -213,9 +213,14 @@
     &:hover {
       color: var(--white);
     }
+    @include breakpoint(desktop) {
+      &.microLabels {
+        font-size: rem(8);
+      }
+    }
     @media (max-width: $desktop) {
       font-size: 0.5rem;
-      white-space: nowrap
+      white-space: nowrap;
     }
   }
 
@@ -226,7 +231,6 @@
     cursor: default;
   }
 }
-
 
 .radioButtonLarge {
   @include spacing(padding, 4, 'all');
@@ -275,7 +279,6 @@
   }
 }
 
-
 .optionLarge {
   display: flex;
   justify-content: center;
@@ -322,11 +325,11 @@
   // }
   .radioButtonLarge {
     height: 1.75rem;
-    label{
+    label {
       font-size: 0.75rem;
     }
   }
-  .optionLarge input[type=radio]:checked + label{
+  .optionLarge input[type='radio']:checked + label {
     height: 1.25rem;
   }
 }

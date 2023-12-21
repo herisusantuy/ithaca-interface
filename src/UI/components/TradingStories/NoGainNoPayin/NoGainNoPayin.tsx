@@ -21,7 +21,7 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -31,6 +31,9 @@ import { TYPE_OPTIONS } from '@/UI/constants/options';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+
+//Styles
+import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -155,6 +158,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         <Flex gap='gap-15' margin={compact ? '' : 'mt-17'}>
           {!compact && <LabeledControl label='Type' labelClassName='mt-2'>
             <RadioButton
+              labelClassName={radioButtonStyles.microLabels}
               size={compact ? 'compact' : 'regular'}
               width={compact ? 140 : 186}
               options={TYPE_OPTIONS}
@@ -164,6 +168,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
             />
           </LabeledControl>}
           {compact && <RadioButton
+            labelClassName={radioButtonStyles.microLabels}
             size={compact ? 'compact' : 'regular'}
             width={compact ? 140 : 186}
             options={TYPE_OPTIONS}
@@ -214,13 +219,13 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
 
-            <LabeledControl label='Collateral' labelClassName='mb-16 color-white'>
+            <LabeledControl label='Total Collateral' labelClassName='mb-16 color-white'>
               <Flex>
                 <span className='fs-md-bold color-white'>
                   {!isInvalidNumber(getNumber(multiplier)) &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&
-                    getNumberFormat(
-                      toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike)
+                    formatNumberByCurrency(
+                      toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike), 'string', 'USDC'
                     )}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
@@ -239,7 +244,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         showPortial={!compact}
       />
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} hidePremium={true} />}
 
       <Toast toastList={toastList} position={position} />
     </>
