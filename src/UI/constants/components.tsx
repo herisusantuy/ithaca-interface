@@ -89,7 +89,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Balance',
-        component: <Balance fundLock={0} balance={'0'} margin='mtb-20' />,
+        component: <Balance selectedCurrency='USDC' fundLock={0} balance={'0'} margin='mtb-20' />,
         status: 'Approved',
       },
       {

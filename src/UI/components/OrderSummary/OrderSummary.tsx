@@ -17,7 +17,7 @@ import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
 import { useAccount, useBalance, usePublicClient } from 'wagmi';
 import Input from '../Input/Input';
-import Balance from '../Balance/Balance';
+import Balance, { Currency } from '../Balance/Balance';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { useDevice } from '@/UI/hooks/useDevice';
@@ -194,6 +194,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
         </Flex>
         {selectedCurrency && (
           <Balance
+            selectedCurrency={selectedCurrency.value as Currency}
             fundLock={collateralSummary[selectedCurrency.value].fundLockValue}
             balance={collateralSummary[selectedCurrency.value].walletBalance}
             margin='mtb-20'
