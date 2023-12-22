@@ -11,8 +11,9 @@ import Add from '@/UI/components/Icons/Add';
 
 import styles from './InfoPopup.module.scss';
 import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
+import Greeks from '../Greeks/Greeks';
 
-type InfoPopupType = 'bonus' | 'twinWin' | 'risky';
+type InfoPopupType = 'bonus' | 'twinWin' | 'risky' | 'options';
 
 type CommonProperties = {
   type: InfoPopupType;
@@ -31,17 +32,21 @@ type RiskyPopup = CommonProperties & {
   earn: string;
 };
 
-export type InfoPopupProps = BonusTwinWinPopup | RiskyPopup;
+type OptionsPopup = CommonProperties & {
+  greeks?: Record<string, number>
+}
+
+export type InfoPopupProps = BonusTwinWinPopup | RiskyPopup | OptionsPopup;
 
 export const InfoPopup = (props: InfoPopupProps) => {
   const { currentExpiryDate, spotPrices } = useAppStore();
   const spot = spotPrices['WETH/USDC'];
 
-  const { type, price } = props;
+  const { type } = props;
 
   switch (type) {
     case 'bonus': {
-      const { barrier, strike } = props as BonusTwinWinPopup;
+      const { barrier, strike, price } = props as BonusTwinWinPopup;
       return (
         <div className={`${styles.popupContainer} ${styles.bonusOrTwinWin}`}>
           <p>
@@ -65,7 +70,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
       );
     }
     case 'twinWin': {
-      const { barrier, strike } = props as BonusTwinWinPopup;
+      const { barrier, strike, price } = props as BonusTwinWinPopup;
       return (
         <div className={`${styles.popupContainer} ${styles.bonusOrTwinWin}`}>
           <p>
@@ -89,7 +94,7 @@ export const InfoPopup = (props: InfoPopupProps) => {
       );
     }
     case 'risky': {
-      const { risk, earn, currency } = props as RiskyPopup;
+      const { risk, earn, currency, price } = props as RiskyPopup;
 
       const riskEth = currency !== 'WETH' ? formatNumberByCurrency((parseFloat(risk) / spot), '', 'WETH') : formatNumberByCurrency(Number(risk), '', 'WETH');
       const riskUsdc = currency !== 'USDC' ? formatNumberByCurrency((parseFloat(risk) * spot), '', 'USDC') : formatNumberByCurrency(Number(risk), '', 'USDC');
@@ -107,6 +112,16 @@ export const InfoPopup = (props: InfoPopupProps) => {
             <p>
               If <LogoEth /> <ChevronRight /> {price}, receive {riskUsdc} <LogoUsdc /> <Add /> {earn} <LogoUsdc />
             </p>
+          </div>
+        </>
+      );
+    }
+    case 'options': {
+      const { greeks } = props as OptionsPopup;
+      return (
+        <>
+        <div className={`${styles.popupContainer} ${styles.popupGreeksContainer}`}>
+          <Greeks greeks={greeks}/>
           </div>
         </>
       );

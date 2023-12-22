@@ -620,6 +620,10 @@
   min-width: rem(140) !important;
 }
 
+.min-width-unset {
+  min-width: unset !important;
+}
+
 .height-25 {
   height: rem(25) !important;
 }

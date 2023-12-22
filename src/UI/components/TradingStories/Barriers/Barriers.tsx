@@ -22,12 +22,12 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId, calculateNetPrice } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import LogoEth from '../../Icons/LogoEth';
 import PriceLabel from '../../PriceLabel/PriceLabel';
@@ -39,7 +39,7 @@ import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
-  const { ithacaSDK, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const { ithacaSDK, getContractsByPayoff, currentExpiryDate, currencyPrecision } = useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -90,40 +90,40 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
-    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
     setInOrOut(inOrOut);
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleStrikeChange = async (strike: string) => {
     setStrike(strike);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleBarrierChange = async (barrier: string) => {
     setBarrier(barrier);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handleSizeChange = async (amount: string) => {
     const size = getNumberValue(amount);
     setSize(size);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size), getNumber(unitPrice));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
   };
 
   const handlePriceChange = async (price: string) => {
@@ -139,16 +139,16 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     inOrOut: 'IN' | 'OUT',
     barrier: string,
     size: number,
-    price: number
+    price?: number
   ) => {
-    if (isInvalidNumber(size) || isInvalidNumber(price)) {
+    if (isInvalidNumber(size)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
       return;
     }
 
     let legs: Leg[];
-    // let referencePrices: number[];
+    let referencePrices: number[];
     let estimatePayoffData: OptionLeg[];
     if (upOrDown === 'UP') {
       if (inOrOut === 'IN') {
@@ -165,17 +165,17 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
           side: buyOrSell,
         };
         legs = [buyCallLeg, buyBinaryCallLeg];
-        // referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
+        referencePrices = [buyCallContract.referencePrice, buyBinaryCallContract.referencePrice];
         estimatePayoffData = [
           {
             ...buyCallContract,
             ...buyCallLeg,
-            premium: buyCallContract.referencePrice,
+            premium: price || buyCallContract.referencePrice,
           },
           {
             ...buyBinaryCallContract,
             ...buyBinaryCallLeg,
-            premium: buyBinaryCallContract.referencePrice,
+            premium: price || buyBinaryCallContract.referencePrice,
           },
         ];
       } else {
@@ -202,27 +202,27 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         };
 
         legs = [buyCallLeg, sellCallLeg, sellBinaryCallLeg];
-        // referencePrices = [
-        //   buyCallContract.referencePrice,
-        //   sellCallContract.referencePrice,
-        //   sellBinaryCallContract.referencePrice,
-        // ];
+        referencePrices = [
+          buyCallContract.referencePrice,
+          sellCallContract.referencePrice,
+          sellBinaryCallContract.referencePrice,
+        ];
 
         estimatePayoffData = [
           {
             ...buyCallContract,
             ...buyCallLeg,
-            premium: buyCallContract.referencePrice,
+            premium: price || buyCallContract.referencePrice,
           },
           {
             ...sellCallContract,
             ...sellCallLeg,
-            premium: sellCallContract.referencePrice,
+            premium: price || sellCallContract.referencePrice,
           },
           {
             ...sellBinaryCallContract,
             ...sellBinaryCallLeg,
-            premium: sellBinaryCallContract.referencePrice,
+            premium: price || sellBinaryCallContract.referencePrice,
           },
         ];
       }
@@ -243,17 +243,17 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         };
 
         legs = [buyPutLeg, buyBinaryPutLeg];
-        // referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
+        referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
         estimatePayoffData = [
           {
             ...buyPutContract,
             ...buyPutLeg,
-            premium: buyPutContract.referencePrice,
+            premium: price || buyPutContract.referencePrice,
           },
           {
             ...buyBinaryPutContract,
             ...buyBinaryPutLeg,
-            premium: buyBinaryPutContract.referencePrice,
+            premium: price || buyBinaryPutContract.referencePrice,
           },
         ];
       } else {
@@ -280,38 +280,39 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         };
 
         legs = [buyPutLeg, sellPutLeg, sellBinaryPutLeg];
-        // referencePrices = [
-        //   buyPutContract.referencePrice,
-        //   sellPutContract.referencePrice,
-        //   sellBinaryPutContract.referencePrice,
-        // ];
+        referencePrices = [
+          buyPutContract.referencePrice,
+          sellPutContract.referencePrice,
+          sellBinaryPutContract.referencePrice,
+        ];
         estimatePayoffData = [
           {
             ...buyPutContract,
             ...buyPutLeg,
-            premium: buyPutContract.referencePrice,
+            premium: price || buyPutContract.referencePrice,
           },
           {
             ...sellPutContract,
             ...sellPutLeg,
-            premium: sellPutContract.referencePrice,
+            premium: price || sellPutContract.referencePrice,
           },
           {
             ...sellBinaryPutContract,
             ...sellBinaryPutLeg,
-            premium: sellBinaryPutContract.referencePrice,
+            premium: price || sellBinaryPutContract.referencePrice,
           },
         ];
       }
     }
 
-    // const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
-    // setUnitPrice(getNumberFormat(unitPrice));
-
-    const totalPrice = legs.reduce((acc, leg) => {
+    const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
+    if (price === undefined) {
+      setUnitPrice(getNumberFormat(unitPrice));
+    }
+    const totalPrice = price !== undefined ? legs.reduce((acc, leg) => {
       acc = (getNumber(leg.quantity) * price) + acc;
       return acc;
-    }, 0)
+    }, 0) : unitPrice
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: `${totalPrice}`,

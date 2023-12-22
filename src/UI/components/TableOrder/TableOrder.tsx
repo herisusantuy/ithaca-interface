@@ -63,6 +63,8 @@ import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
 import DropdownOutlined from '../Icons/DropdownOutlined';
 import ExpandedPositionTable from './ExpandedPositionTable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 // Types
 type TableOrderProps = {
@@ -121,7 +123,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         currencyPair: row.collateral?.currencyPair || row.details[0].currencyPair,
         product: row.orderDescr,
         side: row.details.length === 1 ? row.details[0].side : '',
-        tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
+        tenor: dayjs(row.details[0].expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'),
         wethAmount: row.collateral?.underlierAmount,
         usdcAmount: row.collateral?.numeraireAmount,
         orderLimit: row.netPrice,
@@ -148,7 +150,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           currencyPair: contract?.economics.currencyPair, // Look up from contract
           product: contract?.payoff, // Look up from Contract
           // side: row.details.length === 1 ? row.details[0].side : '', // Missing
-          tenor: dayjs(contract?.economics.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'), // Look up from contract
+          tenor: dayjs(contract?.economics.expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'), // Look up from contract
           // wethAmount: row.collateral?.numeraireAmount, // Missing
           // usdcAmount: row.collateral?.underlierAmount, // Missing
           // orderLimit: row.netPrice, // Missing

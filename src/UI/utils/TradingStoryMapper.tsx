@@ -60,14 +60,14 @@ const storyMap: {
     component: DigitalOptions,
     height: {
       compact: { mobile: 58, tablet: 64, desktop: 93 },
-      normal: { withInstructions: 214, withoutInstructions: 279 },
+      normal: { withInstructions: 153, withoutInstructions: 239 },
     },
   },
   forwardsChart: {
     component: Forwards,
     height: {
       compact: { mobile: 75, tablet: 84, desktop: 120 },
-      normal: { withInstructions: 198, withoutInstructions: 306 },
+      normal: { withInstructions: 179, withoutInstructions: 240 },
     },
   },
 };

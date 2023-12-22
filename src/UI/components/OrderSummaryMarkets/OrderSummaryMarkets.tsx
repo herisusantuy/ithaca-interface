@@ -7,7 +7,7 @@ import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
 import Panel from '@/UI/layouts/Panel/Panel';
-import styles from './OrderSummary.module.scss';
+import styles from './OrderSummaryMarkets.module.scss';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import Warning from '../Icons/Warning';
 import ArrowUpRight from '../Icons/ArrowUpRight';
@@ -17,13 +17,13 @@ import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
 import { useAccount, useBalance, usePublicClient } from 'wagmi';
 import Input from '../Input/Input';
-import Balance, { Currency } from '../Balance/Balance';
+import Balance from '../Balance/Balance';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
-type OrderSummaryProps = {
+type OrderSummaryMarketsProps = {
   limit: string | number;
   collatarelETH: string | number;
   collatarelUSDC: string | number;
@@ -32,7 +32,7 @@ type OrderSummaryProps = {
   submitAuction: () => void;
 };
 
-const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee, submitAuction }: OrderSummaryProps) => {
+const OrderSummaryMarkets = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee, submitAuction }: OrderSummaryMarketsProps) => {
   const { isAuthenticated, ithacaSDK, systemInfo } = useAppStore();
   const publicClient = usePublicClient();
   const { address } = useAccount();
@@ -93,12 +93,12 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
   }, [fetchFundlockState]);
 
   return (
-    <Panel margin={`'br-20 p-20 ${ (device === 'desktop') ? 'mt-125' : 'mt-16' }`}>
+    <>
+      <h3 className={`mb-12 mt-10 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
       <Flex 
         direction={ (device === 'desktop') ? 'row-space-between' : 'column-space-between' } 
         gap={(device !== 'desktop') ? 'gap-16' : 'gap-6' 
       }>
-        <h3 className={`mb-0 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
         <div className={styles.orderWrapper}>
           <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5>Order Limit</h5>
@@ -194,15 +194,14 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
         </Flex>
         {selectedCurrency && (
           <Balance
-            selectedCurrency={selectedCurrency.value as Currency}
             fundLock={collateralSummary[selectedCurrency.value].fundLockValue}
             balance={collateralSummary[selectedCurrency.value].walletBalance}
             margin='mtb-20'
           />
         )}
       </Modal>
-    </Panel>
+      </>
   );
 };
 
-export default OrderSummary;
+export default OrderSummaryMarkets;

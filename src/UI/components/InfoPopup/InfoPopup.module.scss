@@ -3,11 +3,11 @@
   right: rem(52);
   bottom: rem(126);
   box-sizing: border-box;
-  background: #212027;
+  background: rgba(33,32,39,0.8);
   box-shadow: rem(2) rem(2) rem(4) 0 rgba(0, 0, 0, 0.15), 0 0 rem(4) 0 rgba(43, 46, 58, 0.15) inset, 0 0 rem(15) 0 rgba(43, 46, 58, 0.15) inset;
   border-radius: rem(10);
   padding: rem(6) rem(12);
-  z-index: 0 !important;
+  z-index: 5 !important;
 
   svg {
     height: rem(16);
@@ -44,4 +44,10 @@
 .popupTopContainer {
   right: unset;
   bottom: unset;
+}
+
+.popupGreeksContainer {
+  right: rem(40);
+  bottom: rem(110);
+  padding: unset;
 }
