@@ -58,6 +58,9 @@ import ProfitLoss from './ProfitLoss';
 import DownsideText from './DownsideText';
 import { chartColorArray, chartDashedColorArray } from './helpers';
 
+const ROBOTO_AVERAGE_WIDTH = 6.5;
+const RIGHT_MARGIN_MAGIC_CONST = 17;
+const RIGHT_MARGIN_FOR_TEXT = RIGHT_MARGIN_MAGIC_CONST + 10;
 const ChartPayoff = (props: ChartDataProps) => {
   const { 
     chartData = PAYOFF_DUMMY_DATA,
@@ -228,6 +231,7 @@ const ChartPayoff = (props: ChartDataProps) => {
     return modifiedData?.[chartDataLength - 1]?.value === 0 && modifiedData?.[chartDataLength - 2]?.value === 0
   }, [modifiedData]);
 
+  
   return (
     <>
       {isClient && (
@@ -347,7 +351,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                   content={
                     <>
                       <text
-                        x={width - (upSide ? 100 : (getNumberFormat(maximize).length + 2) * 10)}
+                        x={width - (upSide ? 100 : (getNumberFormat(maximize).length) * ROBOTO_AVERAGE_WIDTH + RIGHT_MARGIN_FOR_TEXT)}
                         y={10}
                         fill={'#5EE192'}
                         fontSize={12}
@@ -359,7 +363,7 @@ const ChartPayoff = (props: ChartDataProps) => {
                           ? '+' + getNumberFormat(maximize)
                           : '-' + getNumberFormat(maximize)}
                       </text>
-                      {upSide ? <></> : <LogoUsdc x={width - (getNumberFormat(maximize).length + 2) * 3} y={-3} />}
+                      {upSide ? <></> : <LogoUsdc x={width - RIGHT_MARGIN_MAGIC_CONST} y={-3} />}
                     </>
                   }
                   position='insideBottom'
