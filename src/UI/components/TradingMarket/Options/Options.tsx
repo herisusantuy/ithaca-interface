@@ -193,7 +193,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD');
-    const diff = expiry.diff(current);
+    const diff = current.diff(expiry);
     const params = {
       rate: 0,
       price: unitPrice,
