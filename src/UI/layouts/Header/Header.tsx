@@ -1,5 +1,5 @@
 // Packages
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
@@ -22,6 +22,8 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
+import { useAccount, useWalletClient } from 'wagmi';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Types
 type HeaderProps = {
@@ -29,6 +31,8 @@ type HeaderProps = {
 };
 
 const Header = ({ className }: HeaderProps) => {
+  const { initIthacaSDK, disconnect } = useAppStore();
+  const { data: walletClient } = useWalletClient();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
   const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
 
@@ -56,6 +60,15 @@ const Header = ({ className }: HeaderProps) => {
 
   // Hook to close the dropdown on ESC key press
   useEscKey(closeRewardsDropdown);
+
+  useAccount({
+    onDisconnect: disconnect,
+  });
+
+  useEffect(() => {
+    if (!walletClient) return;
+    initIthacaSDK(walletClient);
+  }, [initIthacaSDK, walletClient]);
 
   return (
     <>

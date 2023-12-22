@@ -88,11 +88,12 @@ const CollateralPanel = () => {
   // Refetch fundlock state every X seconds
   useEffect(() => {
     const interval = setInterval(() => {
+      if (!isAuthenticated) return;
       fetchFundlockState();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchFundlockState, isAuthenticated]);
 
   const getFaucet = async (currency: string) => {
     if (!walletClient) return;
