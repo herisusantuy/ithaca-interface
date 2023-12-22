@@ -10,6 +10,8 @@ import styles from './TabCard.module.scss';
 // Types
 import { MainTab } from './TabCard';
 import { ReactNode, useEffect, useState } from 'react';
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 type TabCardMobileProps = {
   activeDropdown: boolean;
   activeTab: MainTab;
@@ -29,6 +31,9 @@ const TabCardMobile = ({
 }: TabCardMobileProps) => {
   const [description, setDescription] = useState(activeTab.description);
   const [openDescriptions, setOpenDescriptions] = useState<Record<string, ReactNode>>({});
+
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
   useEffect(() => {
     setDescription(activeTab.description);
@@ -57,7 +62,7 @@ const TabCardMobile = ({
           <div className={styles.tabChart}>
             {getTradingStoryMapper(activeTab.contentId, false, true, undefined, desc => {
               setDescription(desc);
-            })}
+            }, mobileBreakpoint, tabletBreakpoint)}
           </div>
         </div>
       }
@@ -79,7 +84,7 @@ const TabCardMobile = ({
                 ...openDescriptions,
                 [tab.id]: desc,
               });
-            })}
+            }, mobileBreakpoint, tabletBreakpoint)}
           </div>
         </div>
       ))}

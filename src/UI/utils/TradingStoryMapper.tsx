@@ -4,8 +4,6 @@ import React, { ReactElement } from 'react';
 // Components
 import { Barriers, Bet, BonusTwinWin, Earn, NoGainNoPayin, TradingStoriesProps } from '@/UI/components/TradingStories';
 import { DigitalOptions, Forwards, Options } from '@/UI/components/TradingMarket';
-import useMediaQuery from '@/UI/hooks/useMediaQuery';
-import { DESKTOP_BREAKPOINT, MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 const storyMap: {
   [key: string]: {
@@ -79,19 +77,18 @@ export const getTradingStoryMapper = (
   showInstructions: boolean,
   compact = false,
   radioChosen?: string,
-  onRadioChange?: (option: string | ReactElement) => void
+  onRadioChange?: (option: string | ReactElement) => void,
+  isMobile = false, 
+  isTablet = false
 ) => {
   if (!storyMap[contentId]) return null;
   const { component: Component, height } = storyMap[contentId];
 
-  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
-  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
-
   let chartHeight: number;
   if (compact) {
-    chartHeight = mobileBreakpoint
+    chartHeight = isMobile
       ? height.compact.mobile
-      : tabletBreakpoint
+      : isTablet
       ? height.compact.tablet
       : height.compact.desktop;
   } else {

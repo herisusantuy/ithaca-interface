@@ -9,7 +9,7 @@ import ChevronDown from '../Icons/ChevronDown';
 import ModalAcknowledgeTerms from '../ModalAcknowledgeTerms/ModalAcknowledgeTerms';
 
 const Wallet = () => {
-  const { ithacaSDK, initIthacaSDK, isAuthenticated, isLoading } = useAppStore();
+  const { ithacaSDK, initIthacaSDK, isAuthenticated, disconnect } = useAppStore();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
@@ -25,10 +25,7 @@ const Wallet = () => {
   };
 
   useAccount({
-    onDisconnect: async () => {
-      await ithacaSDK.auth.logout();
-      localStorage.removeItem('ithaca.session');
-    },
+    onDisconnect: disconnect,
   });
 
   useEffect(() => {

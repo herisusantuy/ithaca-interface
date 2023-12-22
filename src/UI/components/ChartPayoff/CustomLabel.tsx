@@ -24,42 +24,18 @@ const CustomLabel = (props: LabelProps) => {
   function renderLabel() {
     if (labelPosition.length == 0) {
       return (
-        <>
-          {dataList[Number(index)].value < 0 && (
-            <>
-              <text
-                x={Number(x) - (getNumberFormat(dataList[Number(index)].value).length + 1) * 7 - 20}
-                y={Number(y) >= height - 30 ? height - 30 : Number(y)}
-                dx={13}
-                dy={20}
-                textAnchor='middle'
-                key={index}
-                fill={'#FF3F57'}
-                fontSize={12}
-                fontWeight={600}
-              >
-                -{getNumberFormat(dataList[Number(index)].value)}
-              </text>
-              <LogoUsdc
-                x={Number(x) - (getNumberFormat(dataList[Number(index)].value).length + 1) * 7 + 10}
-                y={Number(y) >= height - 30 ? height - 30 + 6 : Number(y) + 6}
-              />
-            </>
-          )}
-
-          <text
-            x={x}
-            y={Number(y) >= height - 30 ? height - 30 : Number(y)}
-            dx={13}
-            dy={20}
-            fill='#9D9DAA'
-            fontSize={9}
-            textAnchor='middle'
-            key={index}
-          >
-            {Math.round(dataList[Number(index)].x)}
-          </text>
-        </>
+        <text
+          x={x}
+          y={Number(y) >= height - 30 ? height - 30 : Number(y)}
+          dx={13}
+          dy={20}
+          fill='#9D9DAA'
+          fontSize={9}
+          textAnchor='middle'
+          key={index}
+        >
+          {Math.round(dataList[Number(index)].x)}
+        </text>
       );
     } else {
       const PrevPosition: LabelPositionProp = labelPosition[labelPosition.length - 1];

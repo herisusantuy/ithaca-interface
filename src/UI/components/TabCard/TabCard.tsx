@@ -14,6 +14,8 @@ import TabCardDesktop from './TabCardDesktop';
 // Styles
 import styles from './TabCard.module.scss';
 import RadioButton from '../RadioButton/RadioButton';
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Types
 export type MainTab = {
@@ -48,6 +50,9 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
   const [radioChosen, setRadioChosen] = useState((activeTab.radioOptions && activeTab.radioOptions[0].value) || '');
   const [openOptions, setOpenOptions] = useState<MainTab[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
+
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
   useEffect(() => {
     setRadioChosen((activeTab.radioOptions && activeTab.radioOptions[0].value) || '');
@@ -127,7 +132,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             />
           </div>
         </div>
-        {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}
+        {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen, undefined, mobileBreakpoint, tabletBreakpoint)}
       </div>
     </div>
   );

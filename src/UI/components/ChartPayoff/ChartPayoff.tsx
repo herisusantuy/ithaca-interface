@@ -23,8 +23,8 @@ import {
   findOverallMinMaxValues,
   getLegs,
   gradientOffset,
-  isDecrementing,
-  isIncrementing,
+  isDecrementing, 
+  isIncrementingByBreakPoints,
   makingChartData,
   showGradientTags,
 } from '@/UI/utils/ChartUtil';
@@ -150,14 +150,16 @@ const ChartPayoff = (props: ChartDataProps) => {
     setDashedColor(chartDashedColorArray[dashedColorIndex - 1]);
     setMaximize(Math.max(...tempData.map(i => i.value)));
     setMinimize(Math.min(...tempData.map(i => i.value)));
+    const breakPoints = breakPointList(tempData)
+    setBreakPoints(breakPoints);
     if (caller === 'Forwards') {
       setUpSide(true);
       setDownSide(true);
     } else {
-      isIncrementing(tempData) ? setUpSide(true) : setUpSide(false);
+      isIncrementingByBreakPoints(tempData, breakPoints) ? setUpSide(true) : setUpSide(false);
       isDecrementing(tempData) ? setDownSide(true) : setDownSide(false);
     }
-    setBreakPoints(breakPointList(tempData));
+    
     const modified = tempData.map(item => ({
       ...item,
       value: selectedLeg.value !== 'total' && item.dashValue ? item.dashValue - baseValue : item.value - baseValue,

@@ -1,4 +1,6 @@
 // Utils
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
 import { getTradingStoryMapper } from '@/UI/utils/TradingStoryMapper';
 import { useState } from 'react';
 
@@ -18,6 +20,9 @@ type TabProps = {
 
 const Tab = ({ tab, isActive, onClick, tabClassName }: TabProps) => {
   const [description, setDescription] = useState(tab.description);
+
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
   return (
     <div
       className={`${styles.tab} ${isActive ? styles.isActive : ''} ${tabClassName}`}
@@ -30,7 +35,7 @@ const Tab = ({ tab, isActive, onClick, tabClassName }: TabProps) => {
       </div>
       <div className={styles.tabChart}>{getTradingStoryMapper(tab.contentId, false, true, undefined, (desc) => {
         setDescription(desc)
-      })}</div>
+      }, mobileBreakpoint, tabletBreakpoint)}</div>
     </div>
   )
 };
