@@ -17,8 +17,12 @@ export const TABLE_COLLATERAL_HEADERS: string[] = [
   '',
 ];
 
+export type TableCollateralSummary = {
+  [token: string]: CollateralSummary;
+};
+
 // Table strategy data
-export const TABLE_COLLATERAL_SUMMARY: { [token: string]: CollateralSummary } = {
+export const TABLE_COLLATERAL_SUMMARY: TableCollateralSummary = {
   WETH: {
     currency: 'WETH',
     currencyLogo: <LogoEth />,
