@@ -94,7 +94,7 @@ const OrderSummaryMarkets = ({ limit, collatarelETH, collatarelUSDC, premium = '
 
   return (
     <>
-      <h3 className={`mb-12 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
+      <h3 className={`mb-12 mt-10 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
       <Flex 
         direction={ (device === 'desktop') ? 'row-space-between' : 'column-space-between' } 
         gap={(device !== 'desktop') ? 'gap-16' : 'gap-6' 
