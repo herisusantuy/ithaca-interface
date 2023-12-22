@@ -338,6 +338,11 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         height={chartHeight}
         showKeys={false}
         showPortial={!compact}
+        infoPopup={{
+          type: 'options',
+          greeks
+        }
+        }
       />
       {orderDetails && (
         <SubmitModal
@@ -358,7 +363,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
           orderSummary={orderDetails as unknown as OrderSummary}
         />
       )}
-      {!compact && <Greeks greeks={greeks} />}
+      {/* {!compact && <Greeks greeks={greeks} />} */}
     </>
   );
 };

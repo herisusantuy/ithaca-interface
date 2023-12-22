@@ -25,7 +25,7 @@ const Greeks = ({ greeks }: GreekSymbolProps) => {
 
   return (
     <div className={`${styles.container} ${device === 'phone' && styles.mobile}`}>
-      <h5>Greeks</h5>
+      <h5 className='color-white min-width-unset'>Greeks</h5>
       {device === 'phone' ? (
         <div className={`${styles.greeksContainer} ${device === 'phone' && styles.mobile}`}>{greeksElements}</div>
       ) : (
