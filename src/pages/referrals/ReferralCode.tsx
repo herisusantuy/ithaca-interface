@@ -1,9 +1,11 @@
 // Libs
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 // Components
 import Panel from '@/UI/layouts/Panel/Panel';
 import Button from '@/UI/components/Button/Button';
+import Loader from '@/UI/components/Loader/Loader';
 
 // Constants
 import { ToastItemProp } from '@/UI/constants/toast';
@@ -13,7 +15,6 @@ import { GetOLMemberData } from '@/pages/points-program/PointsAPI';
 
 // Styles
 import styles from '@/pages/referrals/referrals.module.scss';
-import Loader from '@/UI/components/Loader/Loader';
 
 type ReferralCodeProps = {
   showToast: (newToast: ToastItemProp, position: string) => void;
@@ -23,8 +24,10 @@ const ReferralCode = ({ showToast }: ReferralCodeProps) => {
   const [referralToken, setReferralToken] = useState<string>();
 
   useEffect(() => {
+    // check ifAuth
     GetOLMemberData().then(res => {
-      if (res.referralToken) setReferralToken(res.referralToken);
+      if (res.referralToken)
+        setReferralToken(`${process.env.NEXT_PUBLIC_HOST}/points-program?refferal=${res.referralToken}`);
     });
   }, []);
 
@@ -34,19 +37,19 @@ const ReferralCode = ({ showToast }: ReferralCodeProps) => {
         <p>Your referral link to share:</p>
         {referralToken ? (
           <>
-            <a href={`https://ithaca.domain/${referralToken}`} target='_blank'>
-              https://ithaca.domain/{referralToken}
-            </a>
+            <Link href={referralToken} target='_blank'>
+              {referralToken}
+            </Link>
             <Button
               variant='secondary'
               title=''
               onClick={() => {
-                navigator.clipboard.writeText(`https://ithaca.domain/${referralToken}`);
+                navigator.clipboard.writeText(referralToken);
                 showToast(
                   {
                     id: new Date().getTime(),
                     title: 'Copied',
-                    message: `https://ithaca.domain/${referralToken}`,
+                    message: referralToken,
                     type: 'success',
                   },
                   'top-right'

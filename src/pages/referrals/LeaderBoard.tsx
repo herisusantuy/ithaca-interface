@@ -3,34 +3,49 @@ import Card2 from '@/UI/components/Card/Card2';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableReferralsLeaderBoard from '@/UI/components/TableReferralsLeaderBoard/TableReferralsLeaderBoard';
 
-// Constants
-import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
-
 // Utils
 
 // Styles
 import styles from '@/pages/referrals/referrals.module.scss';
 import { useEffect, useState } from 'react';
 import { GetReferrals } from '@/pages/points-program/PointsAPI';
+// import { useAppStore } from '@/UI/lib/zustand/store';
 
 type member = {
-  name: string;
+  user: string;
   acceptedInvites: number;
+  ranking: number;
+  invitedBy: string;
 };
 
+// type member = {
+// username: string;
+// acceptedInvites: number;
+// };
+
 const LeaderBoard = () => {
+  // const { isAuthenticated } = useAppStore();
   const [members, setMembers] = useState<member[]>([]);
 
   useEffect(() => {
     GetReferrals().then(res => {
       if (res) {
-        const users = Object.keys(res).map(referralToken => {
-          return { name: res[referralToken][0].invidedBy, acceptedInvites: res[referralToken].length };
+        const membersData: member[] = Object.keys(res).map(referralToken => {
+          return {
+            ranking: 0,
+            user: res[referralToken][0].invidedBy,
+            acceptedInvites: res[referralToken].length,
+            invitedBy: '',
+          };
         });
-        setMembers(users);
+
+        membersData
+          .sort((a, b) => b.acceptedInvites - a.acceptedInvites)
+          .forEach((member, index) => (member.ranking = index + 1));
+        setMembers(membersData);
       }
     });
-  });
+  }, []);
 
   return (
     <div className={styles.leaderBoardPanel}>
@@ -40,7 +55,7 @@ const LeaderBoard = () => {
         <Card2 label='Accepted Invites' value={8} />
       </div>
       <Panel margin='p-30 p-tablet-16'>
-        <TableReferralsLeaderBoard data={TABLE_REFERRALS_LEADERBOARD_DATA} />
+        <TableReferralsLeaderBoard data={members} />
       </Panel>
     </div>
   );

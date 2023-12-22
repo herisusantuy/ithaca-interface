@@ -35,7 +35,9 @@ async function joinGuild(memberId: string, guildId: string, accessToken: string)
     };
 
     // PUT request payload (empty for this example)
-    const data = {access_token: accessToken};
+    const data = {
+      access_token: accessToken,
+    };
 
     // Make the PUT request
     const response: AxiosResponse<GuildMember> = await axios.put(apiUrl, data, { headers });

@@ -1,4 +1,4 @@
-const RequestHandle = async ({ method = 'POST', data, url }: { method?: string; data?: object; url: string }) => {
+const RequestHandle = async ({ method = 'POST', data, path }: { method?: string; data?: object; path: string }) => {
   const headers = {
     'Content-Type': 'application/json;charset=UTF-8',
     Accept: 'application/json, text/plain, */*',
@@ -11,7 +11,7 @@ const RequestHandle = async ({ method = 'POST', data, url }: { method?: string; 
   };
 
   try {
-    const response = await fetch(`http://localhost:8000/api/${url}`, requestOptions);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_POINTS_URL}/api/${path}`, requestOptions);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -27,38 +27,31 @@ const getSessionInfo = () => {
   return JSON.parse(session);
 };
 
-export const JoinPointsProgram = async () => {
+export const JoinPointsProgram = async (referralToken?: string) => {
   const session = getSessionInfo();
 
   const data = {
     customer: {
       loyaltyCardNumber: session.ethAddress,
+      referrerToken: referralToken,
     },
   };
 
-  return await RequestHandle({ data: data, url: 'points/join' });
+  return await RequestHandle({ data: data, path: 'points/join' });
 };
 
-export const Test = async () => {
-  const eventSource = new EventSource('http://localhost:8000/sse');
-
-  eventSource.onmessage = function (event) {
-    console.log(event);
-  };
-};
-
-export const GetOLMemberData = async () => {
+export const GetOLMemberData = async (referralToken?: string) => {
   const session = getSessionInfo();
 
   const data = {
     card: session.ethAddress,
   };
 
-  const result = await RequestHandle({ data: data, url: 'ol/member' });
+  const result = await RequestHandle({ data: data, path: 'ol/member' });
 
   if (!result.isExist) {
-    await JoinPointsProgram();
-    const { member } = await RequestHandle({ data: data, url: 'ol/member' });
+    await JoinPointsProgram(referralToken);
+    const { member } = await RequestHandle({ data: data, path: 'ol/member' });
     return member;
   }
 
@@ -68,7 +61,7 @@ export const GetOLMemberData = async () => {
 export const JoinTwitter = async () => {
   const session = getSessionInfo();
 
-  return await RequestHandle({ method: 'GET', url: `auth/twitter/login?card=${session.ethAddress}` });
+  return await RequestHandle({ method: 'GET', path: `auth/twitter/login?card=${session.ethAddress}` });
 };
 
 export const JoinDiscord = async () => {
@@ -79,7 +72,7 @@ export const JoinDiscord = async () => {
     type: 'DISCORD',
   };
 
-  return await RequestHandle({ data: data, url: 'ol/event' });
+  return await RequestHandle({ data: data, path: 'ol/event' });
 };
 
 export const JoinTelegram = async () => {
@@ -90,9 +83,22 @@ export const JoinTelegram = async () => {
     type: 'TELEGRAM',
   };
 
-  return await RequestHandle({ data: data, url: 'ol/event' });
+  return await RequestHandle({ data: data, path: 'ol/event' });
 };
 
 export const GetReferrals = async () => {
-  return await RequestHandle({ url: `ol/referrals` });
+  const session = getSessionInfo();
+
+  return await RequestHandle({ path: `ol/referrals?card=${session.ethAddress}` });
+};
+
+export const UpdateUsername = async (name: string) => {
+  const session = getSessionInfo();
+
+  const data = {
+    loyaltyCardNumber: session.ethAddress,
+    firstName: name,
+  };
+
+  return await RequestHandle({ method: 'put', path: `ol/member`, data: data });
 };

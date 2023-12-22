@@ -1,26 +1,30 @@
-import React, { ReactElement, useState, useCallback, useEffect } from 'react';
-import { AuthClient } from '@ithaca-finance/sdk';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
-// Styles
-import styles from './EditProfileModal.module.scss';
+import { useAccount } from 'wagmi';
+
+//Components
 import Modal from '@/UI/components/Modal/Modal';
 import Button from '@/UI/components/Button/Button';
 import Avatar from '@/UI/components/Icons/Avatar';
 import Input from '@/UI/components/Input/Input';
+import Toast from '../Toast/Toast';
 import WalletIcon from '../Icons/Wallet';
 import CopyIcon from '../Icons/CopyIcon';
-import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
-import { useAccount } from 'wagmi';
+
+// Utils
+import { GetOLMemberData, UpdateUsername } from '@/pages/points-program/PointsAPI';
 import { formatEthAddress } from '@/UI/utils/Numbers';
 import useToast from '@/UI/hooks/useToast';
-import Toast from '../Toast/Toast';
+
+// Styles
+import styles from './EditProfileModal.module.scss';
 
 type EditProfileProps = {
   trigger: ReactElement;
 };
 
 const EditProfileModal = ({ trigger }: EditProfileProps) => {
-  const { ithacaSDK, isAuthenticated } = useAppStore();
+  const { isAuthenticated } = useAppStore();
   const [showTrigger, setShowTrigger] = useState(false);
   const { address, isConnected } = useAccount();
   const [leaderboardName, setLeaderboardName] = useState('');
@@ -41,19 +45,16 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
   const openDialog = () => {
     setIsOpen(true);
   };
-  // fetch current session and read accounts info
+
   const getAccountInfo = async () => {
     if (isAuthenticated) {
-      try {
-        const {
-          accountInfos: { sn_discord, sn_telegram, sn_twitter },
-        }: AuthClient & { accountInfos: Record<PointsProgramAccountsEnum, string> } = await ithacaSDK.auth.getSession();
-        setLeaderboardName(sn_discord ? sn_discord : sn_telegram ? sn_telegram : sn_twitter ? sn_twitter : '');
-      } catch {
-        setLeaderboardName('');
-      }
+      GetOLMemberData().then(member => {
+        const { firstName } = member;
+        setLeaderboardName(firstName);
+      });
     }
   };
+
   const copyAddress = () => {
     navigator.clipboard.writeText(`${address}`);
     showToast(
@@ -66,6 +67,21 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
       'top-right'
     );
   };
+
+  const handleSaveChanges = () => {
+    UpdateUsername(leaderboardName).then(() => {
+      showToast(
+        {
+          id: new Date().getTime(),
+          title: 'Saved',
+          message: `Profile information has been saved.`,
+          type: 'success',
+        },
+        'top-right'
+      );
+    });
+  };
+
   return (
     <>
       {showTrigger && (
@@ -83,9 +99,9 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
         <div className={styles.dialogBody}>
           <div className={styles.profilePhotoCtrl}>
             <Avatar />
-            <Button title='' variant='secondary' className={styles.hideAvatarBtn}>
-              Hide Avatar
-            </Button>
+            {/*<Button title='' variant='secondary' className={styles.hideAvatarBtn}>*/}
+            {/*  Hide Avatar*/}
+            {/*</Button>*/}
           </div>
           <Input
             id='leaderboardName'
@@ -111,7 +127,9 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
               )}
             </div>
           </div>
-          <Button title=''>Save Changes</Button>
+          <Button onClick={handleSaveChanges} title=''>
+            Save Changes
+          </Button>
         </div>
       </Modal>
       <Toast toastList={toastList} position='bottom-right' autoDelete={true} autoDeleteTime={2000} />

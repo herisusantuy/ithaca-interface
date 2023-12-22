@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { useAppStore } from '@/UI/lib/zustand/store';
 // Components
@@ -14,22 +15,28 @@ import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 // API
-import { GetOLMemberData, JoinDiscord, JoinPointsProgram, JoinTelegram, JoinTwitter, Test } from './PointsAPI';
-// SDK
-import { AuthClient } from '@ithaca-finance/sdk';
+import { GetOLMemberData, JoinDiscord, JoinTelegram, JoinTwitter } from './PointsAPI';
 // Styles
 import styles from './points-program.module.scss';
 import DiscordAuth from '@/UI/components/DiscordAuth/DiscordAuth';
+import Link from 'next/link';
 
-const TWITTER_LINK = 'https://twitter.com/ithacaprotocol';
 const DISCORD_LINK = 'https://discord.gg/ithaca';
 const TELEGRAM_LINK = 'https://t.me/+E7KmlGwmxmtkOWU1';
 
 type PointProgramActions = Record<keyof typeof PointsProgramAccountsEnum, boolean>;
+
+type OpenLoyaltyLabel = {
+  key: string;
+  value: string;
+};
+
 const PointsProgram = () => {
-  const { ithacaSDK, isAuthenticated } = useAppStore();
+  const { isAuthenticated } = useAppStore();
+  const searchParams = useSearchParams();
 
   const [isOLConnected, SetIsOLConnected] = useState<boolean | null>(null);
+  const [referralToken, setReferralToken] = useState<string>();
   const [actionsPerformed, setActionsPerformed] = useState<PointProgramActions>({
     WALLET: false,
     TWITTER: false,
@@ -37,19 +44,23 @@ const PointsProgram = () => {
     TELEGRAM: false,
   });
 
+  useEffect(() => {
+    const token = searchParams.get('referral');
+    if (token) setReferralToken(token);
+  }, [searchParams]);
+
   // update completed actions when authentication changes
   useEffect(() => {
     if (isAuthenticated) {
-      Test();
       SetIsOLConnected(false);
-
-      GetOLMemberData().then(data => {
+      GetOLMemberData(referralToken).then(data => {
         if (data) {
           SetIsOLConnected(true);
           if (data.labels && data.labels.length) {
             const actionPerforming: PointProgramActions = actionsPerformed;
-            Object.values(data.labels).forEach(({ key }: any) => {
-              switch (key) {
+            const labelsArray: OpenLoyaltyLabel[] = Object.values(data.labels);
+            labelsArray.forEach((value: OpenLoyaltyLabel) => {
+              switch (value.key) {
                 case 'connectionWallet':
                   actionPerforming.WALLET = true;
                   break;
@@ -87,28 +98,6 @@ const PointsProgram = () => {
     },
   });
 
-  // fetch current session and read accounts info to update completed actions
-  const updateCompletedActions = async () => {
-    if (isAuthenticated) {
-      try {
-        const {
-          accountInfos: { sn_discord, sn_telegram, sn_twitter },
-        }: AuthClient & { accountInfos: Record<PointsProgramAccountsEnum, string> } = await ithacaSDK.auth.getSession();
-
-        setActionsPerformed(state => {
-          return {
-            ...state,
-            TWITTER: !!sn_twitter,
-            DISCORD: !!sn_discord,
-            TELEGRAM: !!sn_telegram,
-          };
-        });
-      } catch {
-        resetActions();
-      }
-    }
-  };
-
   const resetActions = () => {
     setActionsPerformed(state => ({
       ...state,
@@ -122,16 +111,6 @@ const PointsProgram = () => {
     window.open(url, '_blank');
   };
 
-  // store completed actions on backend
-  const addAccountData = async (account: PointsProgramAccountsEnum, userName: string): Promise<boolean> => {
-    try {
-      await ithacaSDK.points.addAccountData(account, userName);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const handleTwitterClick = async () => {
     JoinTwitter().then(result => {
       if (result && result.url) {
@@ -140,25 +119,21 @@ const PointsProgram = () => {
         // TODO: change setActionsPerformed after checking OL API
       }
     });
-    // await updateCompletedActions();
   };
 
   const handleDiscordClick = async () => {
-    JoinDiscord().then(result => {
+    JoinDiscord().then(() => {
       setActionsPerformed(state => ({ ...state, DISCORD: true }));
-      // openUrl(DISCORD_LINK);
       // TODO: change setActionsPerformed after checking OL API
     });
-    // await updateCompletedActions();
   };
 
   const handleTelegramClick = async () => {
     openUrl(TELEGRAM_LINK);
-    JoinTelegram().then(result => {
+    JoinTelegram().then(() => {
       setActionsPerformed(state => ({ ...state, TELEGRAM: true }));
       // TODO: change setActionsPerformed after checking OL API
     });
-    // await updateCompletedActions();
   };
 
   const ActionCompleted = useCallback(({ action }: { action: boolean }) => {
@@ -277,7 +252,7 @@ const PointsProgram = () => {
                   </div>
                 </li>
               </ul>
-              {/* {actionsPerformed.WALLET && (
+              {actionsPerformed.WALLET && (
                 <div className={styles.regerralCodeContainer}>
                   <p>Registration successful thank you joining the Ithaca Points Program.</p>
                   <Link href='/referrals'>
@@ -286,7 +261,7 @@ const PointsProgram = () => {
                     </Button>
                   </Link>
                 </div>
-              )} */}
+              )}
             </Panel>
           </div>
         </Container>
