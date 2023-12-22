@@ -25,7 +25,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { SIDE_OPTIONS, TYPE_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -36,6 +36,7 @@ import {
   calcCollateralRequirement,
   calculateNetPrice,
   createClientOrderId,
+  toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
@@ -43,6 +44,7 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
 
 dayjs.extend(duration);
 
@@ -241,7 +243,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
+      <Flex direction='row' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
         {compact && (
           <RadioButton
             size={compact ? 'compact' : 'regular'}
@@ -309,8 +311,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
             </LabeledControl>
-
-            <LabeledControl label='Collateral' labelClassName='justify-end'>
+            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
@@ -320,12 +321,12 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
-            </LabeledControl>
+            </LabeledControl> */}
 
             {/** Add disabled logic, add wrong network and not connected logic */}
-            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
+            {/* <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
               Submit to Auction
-            </Button>
+            </Button> */}
           </>
         )}
       </Flex>
@@ -363,7 +364,23 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
           orderSummary={orderDetails as unknown as OrderSummary}
         />
       )}
-      {/* {!compact && <Greeks greeks={greeks} />} */}
+      {!compact && <OrderSummaryMarkets
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        premium={orderDetails?.order.totalNetPrice}
+        fee={1.5}
+        submitAuction={handleSubmit} />}
     </>
   );
 };

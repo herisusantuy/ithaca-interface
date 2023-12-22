@@ -21,7 +21,7 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -35,11 +35,13 @@ import {
   createClientOrderId,
   calculateNetPrice,
   calcCollateralRequirement,
+  toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
+import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -63,7 +65,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const { toastList, position, showToast } = useToast();
 
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  
+
   useEffect(() => {
     setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
     setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
@@ -199,7 +201,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
+      <Flex direction='row' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
         {compact && (
           <RadioButton
             size={compact ? 'compact' : 'regular'}
@@ -267,7 +269,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
               />
             </LabeledControl>
 
-            <LabeledControl label='Collateral' labelClassName='justify-end'>
+            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
@@ -277,12 +279,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
-            </LabeledControl>
+            </LabeledControl> */}
 
             {/** Add disabled logic, add wrong network and not connected logic */}
-            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
+            {/* <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
               Submit to Auction
-            </Button>
+            </Button> */}
           </>
         )}
       </Flex>
@@ -317,6 +319,23 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         />
       )}
 
+      {!compact && <OrderSummaryMarkets
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        premium={orderDetails?.order.totalNetPrice}
+        fee={1.5}
+        submitAuction={handleSubmit} />}
       {/* {!compact && <Greeks />} */}
     </>
   );

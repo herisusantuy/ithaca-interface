@@ -53,21 +53,21 @@ const storyMap: {
     component: Options,
     height: {
       compact: { mobile: 58, tablet: 64, desktop: 93 },
-      normal: { withInstructions: 178, withoutInstructions: 239 },
+      normal: { withInstructions: 188, withoutInstructions: 249 },
     },
   },
   digitalOptionsChart: {
     component: DigitalOptions,
     height: {
       compact: { mobile: 58, tablet: 64, desktop: 93 },
-      normal: { withInstructions: 214, withoutInstructions: 279 },
+      normal: { withInstructions: 184, withoutInstructions: 249 },
     },
   },
   forwardsChart: {
     component: Forwards,
     height: {
       compact: { mobile: 75, tablet: 84, desktop: 120 },
-      normal: { withInstructions: 198, withoutInstructions: 306 },
+      normal: { withInstructions: 142, withoutInstructions: 250 },
     },
   },
 };

@@ -25,7 +25,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -35,12 +35,14 @@ import {
   createClientOrderId,
   calculateNetPrice,
   calcCollateralRequirement,
+  toPrecision,
 } from '@ithaca-finance/sdk';
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
+import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } = useAppStore();
@@ -177,7 +179,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     <>
       {renderInstruction()}
       {!compact && (
-        <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-6'>
+        <Flex direction='row' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
           <LabeledControl label='Type'>
             <RadioButton
               width={200}
@@ -224,14 +226,14 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             />
           </LabeledControl>
 
-          <LabeledControl label='Collateral' labelClassName='justify-end'>
+          {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
             <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
-          </LabeledControl>
+          </LabeledControl> */}
 
           {/** Add disabled logic, add wrong network and not connected logic */}
-          <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
+          {/* <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
             Submit to Auction
-          </Button>
+          </Button> */}
         </Flex>
       )}
 
@@ -275,6 +277,23 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
           orderSummary={orderDetails as unknown as OrderSummary}
         />
       )}
+      {!compact && <OrderSummaryMarkets
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        premium={orderDetails?.order.totalNetPrice}
+        fee={1.5}
+        submitAuction={handleSubmit} />}
     </>
   );
 };
