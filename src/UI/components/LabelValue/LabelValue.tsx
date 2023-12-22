@@ -89,8 +89,14 @@ const LabelValue = ({
     );
   };
 
+  const handleClick = () => {
+    if (hasDropdown) {    
+      toggleDropdown();
+    }
+  }
+
   return (
-    <div className={`${styles.labelValue} ${getDropdownStyle(hasDropdown)}`} ref={containerRef}>
+    <div onClick={handleClick} className={`${styles.labelValue} ${getDropdownStyle(hasDropdown)}`} ref={containerRef}>
       <div className={styles.contentWrapper}>
         <span className={styles.label}>{label}</span>
         <span className={styles.value}>
@@ -99,7 +105,7 @@ const LabelValue = ({
         </span>
       </div>
       {hasDropdown && (
-        <div onClick={toggleDropdown} className={`${styles.dropdown} ${isDropdownOpen ? styles.isActive : ''}`}>
+        <div className={`${styles.dropdown} ${isDropdownOpen ? styles.isActive : ''}`}>
           <DropdownOutlined />
           {isDropdownOpen && renderDropdownOptions()}
         </div>
