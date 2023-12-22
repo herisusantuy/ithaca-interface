@@ -38,6 +38,7 @@ import {
   createClientOrderId,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import { useDevice } from '@/UI/hooks/useDevice';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
@@ -47,6 +48,7 @@ dayjs.extend(duration);
 
 const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, currentSpotPrice } = useAppStore();
+  const device = useDevice();
   const [callContracts, setCallContracts] = useState(getContractsByPayoff('Call'));
   const [putContracts, setPutContracts] = useState(getContractsByPayoff('Put'));
   const strikeList = Object.keys(getContractsByPayoff('Call')).map(strike => ({ name: strike, value: strike }));
@@ -239,7 +241,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
+      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
         {compact && (
           <RadioButton
             size={compact ? 'compact' : 'regular'}
@@ -278,7 +280,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
               <Input
                 type='number'
                 icon={<LogoEth />}
-                width={105}
+                width={device === 'desktop' ? 105 : undefined}
                 increment={direction =>
                   size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
                 }
@@ -309,12 +311,12 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
             </LabeledControl>
 
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
+              <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
-                className='height-34 min-width-71'
+                className='height-34'
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />

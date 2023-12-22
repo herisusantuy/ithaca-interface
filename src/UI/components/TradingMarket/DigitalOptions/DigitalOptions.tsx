@@ -37,11 +37,13 @@ import {
   calcCollateralRequirement,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import { useDevice } from '@/UI/hooks/useDevice';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const device = useDevice();
   const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
   const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
   const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
@@ -61,7 +63,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   const { toastList, position, showToast } = useToast();
 
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-
+  
   useEffect(() => {
     setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
     setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
@@ -266,12 +268,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             </LabeledControl>
 
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
+              <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
-                className='height-34 min-width-71'
+                className='height-34'
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />

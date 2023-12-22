@@ -39,10 +39,12 @@ import {
 import LabeledControl from '../../LabeledControl/LabeledControl';
 import { SIDE_OPTIONS } from '@/UI/constants/options';
 import useToast from '@/UI/hooks/useToast';
+import { useDevice } from '@/UI/hooks/useDevice';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } = useAppStore();
+  const device = useDevice();
   const currentForwardContract = getContractsByPayoff('Forward')['-'];
   const nextAuctionForwardContract = spotContract;
 
@@ -204,7 +206,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             <Input
               type='number'
               icon={<LogoEth />}
-              width={105}
+              width={device === 'desktop' ? 105 : undefined}
               increment={direction =>
                 size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
               }

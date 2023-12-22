@@ -14,6 +14,8 @@ import TabCardDesktop from './TabCardDesktop';
 // Styles
 import styles from './TabCard.module.scss';
 import RadioButton from '../RadioButton/RadioButton';
+import useMediaQuery from '@/UI/hooks/useMediaQuery';
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Types
 export type MainTab = {
@@ -49,6 +51,9 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
   const [openOptions, setOpenOptions] = useState<MainTab[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
 
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+
   useEffect(() => {
     setRadioChosen((activeTab.radioOptions && activeTab.radioOptions[0].value) || '');
     const options = tabs.filter(tab => tab.id !== activeTab.id);
@@ -69,18 +74,16 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         value,
       };
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, radioChosen]);
 
   const getRadioOptionSubTitleTemplate = (index: number) => {
     const isChoosen = radioChosen === activeTab?.underText?.[index].value;
-    const shouldRenderUnderText = isChoosen && activeTab.underText && index < activeTab.underText.length
+    const shouldRenderUnderText = isChoosen && activeTab.underText && index < activeTab.underText.length;
     return (
       <>
         {shouldRenderUnderText && (
-          <span className={`${styles.underTextLabel}`}>
-            {activeTab?.underText?.[index].label}
-          </span>
+          <span className={`${styles.underTextLabel}`}>{activeTab?.underText?.[index].label}</span>
         )}
       </>
     );
@@ -101,7 +104,11 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
         <TabCardDesktop tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} tabClassName={tabClassName} />
       )}
       <div className={`tabCard--${activeTab.id} ${styles.rightPanel}`}>
-        <div className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader} ${activeTab.underText?.length ? `${styles.hasSubtitles}` : ''}`}>
+        <div
+          className={`rightPanelHeader--${activeTab.id} ${styles.rightPanelHeader} ${
+            activeTab.underText?.length ? `${styles.hasSubtitles}` : ''
+          }`}
+        >
           {activeTab.id !== 'earn' && activeTab.id !== 'bonusTwinWin' ? (
             <h2>{activeTab.selectedTitle || activeTab.title}</h2>
           ) : (
@@ -125,8 +132,7 @@ const TabCard = ({ className, tabs, showInstructions, setShowInstructions, tabCl
             />
           </div>
         </div>
-        {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen)}
-        
+        {getTradingStoryMapper(activeTab.contentId, showInstructions, false, radioChosen, undefined, mobileBreakpoint, tabletBreakpoint)}
       </div>
     </div>
   );
