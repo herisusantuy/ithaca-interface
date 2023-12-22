@@ -33,6 +33,7 @@ type OpenLoyaltyLabel = {
 
 const PointsProgram = () => {
   const { isAuthenticated } = useAppStore();
+  const { isConnected } = useAccount();
   const searchParams = useSearchParams();
 
   const [isOLConnected, SetIsOLConnected] = useState<boolean | null>(null);
@@ -49,42 +50,39 @@ const PointsProgram = () => {
     if (token) setReferralToken(token);
   }, [searchParams]);
 
-  // update completed actions when authentication changes
   useEffect(() => {
-    if (isAuthenticated) {
-      SetIsOLConnected(false);
-      GetOLMemberData(referralToken).then(data => {
-        if (data) {
-          SetIsOLConnected(true);
-          if (data.labels && data.labels.length) {
-            const actionPerforming: PointProgramActions = actionsPerformed;
-            const labelsArray: OpenLoyaltyLabel[] = Object.values(data.labels);
-            labelsArray.forEach((value: OpenLoyaltyLabel) => {
-              switch (value.key) {
-                case 'connectionWallet':
-                  actionPerforming.WALLET = true;
-                  break;
-                case 'connectionX':
-                  actionPerforming.TWITTER = true;
-                  break;
-                case 'connectionDiscord':
-                  actionPerforming.DISCORD = true;
-                  break;
-                case 'connectionTelegram':
-                  actionPerforming.TELEGRAM = true;
-                  break;
-              }
-            });
+    if (!isConnected || !isAuthenticated) return;
+    SetIsOLConnected(false);
+    GetOLMemberData(referralToken).then(data => {
+      if (data) {
+        SetIsOLConnected(true);
+        if (data.labels && data.labels.length) {
+          const actionPerforming: PointProgramActions = actionsPerformed;
+          const labelsArray: OpenLoyaltyLabel[] = Object.values(data.labels);
+          labelsArray.forEach((value: OpenLoyaltyLabel) => {
+            switch (value.key) {
+              case 'connectionWallet':
+                actionPerforming.WALLET = true;
+                break;
+              case 'connectionX':
+                actionPerforming.TWITTER = true;
+                break;
+              case 'connectionDiscord':
+                actionPerforming.DISCORD = true;
+                break;
+              case 'connectionTelegram':
+                actionPerforming.TELEGRAM = true;
+                break;
+            }
+          });
 
-            setActionsPerformed(() => ({
-              ...actionPerforming,
-            }));
-          }
+          setActionsPerformed(() => ({
+            ...actionPerforming,
+          }));
         }
-      });
-    }
-    // updateCompletedActions();
-  }, [isAuthenticated]);
+      }
+    });
+  }, [isConnected, isAuthenticated]);
 
   // reset completed action on wallet disconnect
   useAccount({
@@ -255,7 +253,7 @@ const PointsProgram = () => {
               {actionsPerformed.WALLET && (
                 <div className={styles.regerralCodeContainer}>
                   <p>Registration successful thank you joining the Ithaca Points Program.</p>
-                  <Link href='/referrals'>
+                  <Link href='/referral-code'>
                     <Button title='Reveal Referral Code' variant='secondary'>
                       Reveal Referral Code
                     </Button>

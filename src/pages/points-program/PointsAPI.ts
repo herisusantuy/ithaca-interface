@@ -1,3 +1,5 @@
+// export type memberParams = any;
+
 const RequestHandle = async ({ method = 'POST', data, path }: { method?: string; data?: object; path: string }) => {
   const headers = {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -40,19 +42,14 @@ export const JoinPointsProgram = async (referralToken?: string) => {
   return await RequestHandle({ data: data, path: 'points/join' });
 };
 
-export const GetOLMemberData = async (referralToken?: string) => {
+export const GetOLMemberData = async (referralToken?: string): Promise<any> => {
   const session = getSessionInfo();
 
-  const data = {
-    card: session.ethAddress,
-  };
-
-  const result = await RequestHandle({ data: data, path: 'ol/member' });
+  const result = await RequestHandle({ method: 'GET', path: `ol/member?card=${session.ethAddress}` });
 
   if (!result.isExist) {
     await JoinPointsProgram(referralToken);
-    const { member } = await RequestHandle({ data: data, path: 'ol/member' });
-    return member;
+    return await GetOLMemberData(referralToken);
   }
 
   return result.member;

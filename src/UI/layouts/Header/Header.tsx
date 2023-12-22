@@ -74,9 +74,9 @@ const Header = ({ className }: HeaderProps) => {
             {!tabletBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            <Bell />
+            {/*<Bell />*/}
             {/* <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} /> */}
-            <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />
+            {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
             <EditProfileModal trigger={<UserProfileIcon />} />
             <Wallet />
             {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
