@@ -2,16 +2,13 @@
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect, useState } from 'react';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 import styles from './Wallet.module.scss';
 import ConnectWalletIcon from '../Icons/ConnectWalletIcon';
 import ChevronDown from '../Icons/ChevronDown';
 import ModalAcknowledgeTerms from '../ModalAcknowledgeTerms/ModalAcknowledgeTerms';
 
 const Wallet = () => {
-  const { ithacaSDK, initIthacaSDK, isAuthenticated, disconnect } = useAppStore();
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
+  const { ithacaSDK, isAuthenticated } = useAppStore();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -23,14 +20,6 @@ const Wallet = () => {
       }
     }
   };
-
-  useAccount({
-    onDisconnect: disconnect,
-  });
-
-  useEffect(() => {
-    initIthacaSDK(publicClient, walletClient ?? undefined);
-  }, [initIthacaSDK, publicClient, walletClient]);
 
   useEffect(() => {
     getSession();

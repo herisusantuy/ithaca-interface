@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand';
 import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
-import { PublicClient, WalletClient } from 'wagmi';
+import { WalletClient } from 'wagmi';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { isLocalhost } from '@/UI/utils/RainbowKit';
 dayjs.extend(customParseFormat);
@@ -44,7 +44,7 @@ export interface IthacaSDKSlice {
   openOrdersCount: number;
   newToast?: Omit<Order, 'collateral'>;
   spotContract: Contract & ReferencePrice;
-  initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
+  initIthacaSDK: (walletClient: WalletClient) => void;
   disconnect: () => void;
   initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
@@ -107,7 +107,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   openOrdersCount: 0,
   toastNotifications: [],
   newToast: undefined,
-  initIthacaSDK: async (publicClient, walletClient) => {
+  initIthacaSDK: async walletClient => {
     const ithacaSDK = new IthacaSDK(
       isLocalhost() ? IthacaNetwork.GANACHE : IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
@@ -135,30 +135,27 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       process.env.NEXT_PUBLIC_WS_URL
     );
 
-    if (walletClient) {
-      const ithacaSession = localStorage.getItem('ithaca.session');
-      if (ithacaSession) {
-        try {
-          const currentSession = await ithacaSDK.auth.getSession();
-          if (ithacaSession === JSON.stringify(currentSession)) {
-            set({ ithacaSDK, isAuthenticated: true });
-            return;
-          }
-        } catch (error) {
-          console.error('Session has timed out');
-        }
-      }
-
+    const ithacaSession = localStorage.getItem('ithaca.session');
+    if (ithacaSession) {
       try {
-        const newSession = await ithacaSDK.auth.login();
-        localStorage.setItem('ithaca.session', JSON.stringify(newSession));
-        set({ ithacaSDK, isAuthenticated: true });
-        return;
+        const currentSession = await ithacaSDK.auth.getSession();
+        if (ithacaSession === JSON.stringify(currentSession)) {
+          set({ ithacaSDK, isAuthenticated: true });
+          return;
+        }
       } catch (error) {
-        console.error('Failed to log in');
+        console.error('Session has timed out');
       }
     }
-    set({ ithacaSDK, isAuthenticated: false });
+
+    try {
+      const newSession = await ithacaSDK.auth.login();
+      localStorage.setItem('ithaca.session', JSON.stringify(newSession));
+      set({ ithacaSDK, isAuthenticated: true });
+      return;
+    } catch (error) {
+      console.error('Failed to log in');
+    }
   },
   disconnect: () => {
     const { ithacaSDK } = get();
