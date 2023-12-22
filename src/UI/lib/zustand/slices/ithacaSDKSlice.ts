@@ -45,6 +45,7 @@ export interface IthacaSDKSlice {
   newToast?: Omit<Order, 'collateral'>;
   spotContract: Contract & ReferencePrice;
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
+  disconnect: () => void;
   initIthacaProtocol: () => Promise<void>;
   fetchNextAuction: () => Promise<void>;
   fetchSpotPrices: () => Promise<void>;
@@ -158,6 +159,22 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       }
     }
     set({ ithacaSDK, isAuthenticated: false });
+  },
+  disconnect: () => {
+    const { ithacaSDK } = get();
+
+    ithacaSDK.auth.logout();
+    localStorage.removeItem('ithaca.session');
+    set({
+      ithacaSDK: new IthacaSDK(
+        IthacaNetwork.ARBITRUM_GOERLI,
+        undefined,
+        undefined,
+        process.env.NEXT_PUBLIC_BACKEND_URL,
+        process.env.NEXT_PUBLIC_WS_URL
+      ),
+      isAuthenticated: false,
+    });
   },
   initIthacaProtocol: async () => {
     const { ithacaSDK, currentCurrencyPair } = get();
