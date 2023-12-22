@@ -11,7 +11,7 @@ type BalanceProps = {
 const Balance = ({ fundLock, balance, margin = 'm-0' }: BalanceProps) => {
   return (
     <div className={`${styles.balance} ${margin && margin}`}>
-      <div>Fund Lock: {fundLock}</div>
+      <div>FundLock: {fundLock}</div>
       <div>Balance: {balance}</div>
     </div>
   );

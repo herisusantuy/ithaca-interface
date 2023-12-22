@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { PublicClient, WalletClient } from 'wagmi';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat)
+import { isLocalhost } from '@/UI/utils/RainbowKit';
+dayjs.extend(customParseFormat);
 
 export interface AuctionTimes {
   hour: number;
@@ -39,9 +40,9 @@ export interface IthacaSDKSlice {
   expiryList: number[];
   referencePrices: ReferencePrice[];
   spotPrices: { [currencyPair: string]: number };
-  toastNotifications: Omit<Order, "collateral">[];
+  toastNotifications: Omit<Order, 'collateral'>[];
   openOrdersCount: number;
-  newToast?: Omit<Order, "collateral">;
+  newToast?: Omit<Order, 'collateral'>;
   spotContract: Contract & ReferencePrice;
   initIthacaSDK: (publicClient: PublicClient, walletClient?: WalletClient) => void;
   initIthacaProtocol: () => Promise<void>;
@@ -56,7 +57,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   isLoading: true,
   isAuthenticated: false,
   ithacaSDK: new IthacaSDK(
-    IthacaNetwork.ARBITRUM_GOERLI,
+    isLocalhost() ? IthacaNetwork.GANACHE : IthacaNetwork.ARBITRUM_GOERLI,
     undefined,
     undefined,
     process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -107,7 +108,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
   newToast: undefined,
   initIthacaSDK: async (publicClient, walletClient) => {
     const ithacaSDK = new IthacaSDK(
-      IthacaNetwork.ARBITRUM_GOERLI,
+      isLocalhost() ? IthacaNetwork.GANACHE : IthacaNetwork.ARBITRUM_GOERLI,
       walletClient,
       {
         onClose: (ev: CloseEvent) => {
@@ -117,7 +118,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
           console.log(ev);
         },
         // TODO: add totalOpenOrdersCount in the Order object if needed
-        onMessage: (payload: Omit<Order, "collateral"> & { totalOpenOrdersCount?: number }) => {
+        onMessage: (payload: Omit<Order, 'collateral'> & { totalOpenOrdersCount?: number }) => {
           set({
             openOrdersCount: payload?.totalOpenOrdersCount,
             newToast: payload,
@@ -131,8 +132,8 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
       // undefined,
       process.env.NEXT_PUBLIC_BACKEND_URL,
       process.env.NEXT_PUBLIC_WS_URL
-      );
-    
+    );
+
     if (walletClient) {
       const ithacaSession = localStorage.getItem('ithaca.session');
       if (ithacaSession) {
@@ -206,7 +207,7 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
     );
     const expiryList = Object.keys(filteredContractList[currentCurrencyPair]).reduce((arr: number[], expiry) => {
       if (Object.keys(filteredContractList[currentCurrencyPair][expiry]).length > 4) {
-        arr.push(parseInt(expiry))
+        arr.push(parseInt(expiry));
       }
       return arr;
     }, []);

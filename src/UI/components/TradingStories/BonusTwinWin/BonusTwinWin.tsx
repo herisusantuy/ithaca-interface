@@ -22,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { BONUS_TWIN_WIN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK

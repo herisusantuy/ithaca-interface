@@ -86,6 +86,15 @@ const CollateralPanel = () => {
     }));
   }, [ithacaSDK]);
 
+  // Refetch fundlock state every X seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchFundlockState();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const getFaucet = async (currency: string) => {
     if (!walletClient) return;
     try {
@@ -96,15 +105,6 @@ const CollateralPanel = () => {
         args: [walletClient.account.address, parseUnits('100', systemInfo.tokenDecimals[currency])],
       });
       await publicClient.waitForTransactionReceipt({ hash });
-      // showToast(
-      //   {
-      //     id: Math.floor(Math.random() * 1000),
-      //     title: 'Faucet received',
-      //     message: 'We have received your Faucet',
-      //     type: 'info',
-      //   },
-      //   'top-right'
-      // );
     } catch (error) {
       showToast(
         {
@@ -194,14 +194,11 @@ const CollateralPanel = () => {
           const amount = parseUnits(modalAmount, systemInfo.tokenDecimals[selectedCurrency.value]);
 
           try {
-            let hash;
             if (modalTab === 'deposit') {
-              hash = await ithacaSDK.fundlock.deposit(currency, amount);
+              await ithacaSDK.fundlock.deposit(currency, amount);
             } else {
-              hash = await ithacaSDK.fundlock.withdraw(currency, amount);
+              await ithacaSDK.fundlock.withdraw(currency, amount);
             }
-            await publicClient.waitForTransactionReceipt({ hash });
-            setTimeout(fetchFundlockState, 5000);
           } catch (error) {
             console.log(`Failed to ${modalTab}`, error);
           }

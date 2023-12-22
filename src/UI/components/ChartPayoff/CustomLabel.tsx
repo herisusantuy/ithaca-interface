@@ -1,7 +1,8 @@
 // Props
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
 import { LabelPositionProp } from '@/UI/utils/CalcChartPayoff';
-import { useEffect } from 'react';
+import { getNumberFormat } from '@/UI/utils/Numbers';
+import LogoUsdc from '../Icons/LogoUsdc';
 
 // Types
 type LabelProps = {
@@ -15,59 +16,50 @@ type LabelProps = {
   dataList: PayoffDataProps[];
   height: number;
   labelPosition: LabelPositionProp[];
-  // updateLabelPosition: (labelPosition: LabelPositionProp) => void;
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, index, special, dataList, height, labelPosition } = props;
-
-  useEffect(() => {
-    if (
-      special.find(item => item.x == dataList[index ?? 0]?.x) ||
-      (value === 0 && dataList[index ? index - 1 : 0]?.value !== 0)
-    ) {
-      // updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
-      // if (labelPosition.length == 0) {
-      // } else {
-      //   let checkable = false;
-      //   let offset = 0;
-      //   for (let i = 0; i < labelPosition.length; i++) {
-      //     const PrevPosition: LabelPositionProp = labelPosition[i];
-      //     const prevX = PrevPosition.x;
-      //     const prevY = PrevPosition.y;
-      //     const prevOffset = PrevPosition.offset;
-      //     if (prevX - 10 < Number(x) && prevX + 10 >= Number(x)) {
-      //       if (prevY - 20 < Number(y) && prevY + 20 >= Number(y)) {
-      //         offset = prevOffset;
-      //         checkable = true;
-      //       }
-      //     }
-      //   }
-      //   if (checkable) {
-      //     updateLabelPosition({ x: Number(x), y: Number(y), offset: offset + 20 });
-      //   } else {
-      //     updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
-      //   }
-      // }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [x, y]);
+  const { x, y, index, special, dataList, height, labelPosition } = props;
 
   function renderLabel() {
     if (labelPosition.length == 0) {
       return (
-        <text
-          x={x}
-          y={Number(y) >= height - 30 ? height - 30 : Number(y)}
-          dx={13}
-          dy={20}
-          fill='#9D9DAA'
-          fontSize={9}
-          textAnchor='middle'
-          key={index}
-        >
-          {Math.round(dataList[Number(index)].x)}
-        </text>
+        <>
+          {dataList[Number(index)].value < 0 && (
+            <>
+              <text
+                x={Number(x) - (getNumberFormat(dataList[Number(index)].value).length + 1) * 7 - 20}
+                y={Number(y) >= height - 30 ? height - 30 : Number(y)}
+                dx={13}
+                dy={20}
+                textAnchor='middle'
+                key={index}
+                fill={'#FF3F57'}
+                fontSize={12}
+                fontWeight={600}
+              >
+                -{getNumberFormat(dataList[Number(index)].value)}
+              </text>
+              <LogoUsdc
+                x={Number(x) - (getNumberFormat(dataList[Number(index)].value).length + 1) * 7 + 10}
+                y={Number(y) >= height - 30 ? height - 30 + 6 : Number(y) + 6}
+              />
+            </>
+          )}
+
+          <text
+            x={x}
+            y={Number(y) >= height - 30 ? height - 30 : Number(y)}
+            dx={13}
+            dy={20}
+            fill='#9D9DAA'
+            fontSize={9}
+            textAnchor='middle'
+            key={index}
+          >
+            {Math.round(dataList[Number(index)].x)}
+          </text>
+        </>
       );
     } else {
       const PrevPosition: LabelPositionProp = labelPosition[labelPosition.length - 1];

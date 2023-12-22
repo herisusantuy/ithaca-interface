@@ -77,7 +77,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
     max: strikes[Math.ceil(strikes.length / 2) - 1],
   });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
-  const [targetEarn, setTargetEarn] = useState('101');
+  const [targetEarn, setTargetEarn] = useState('150');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
   const { toastList, position, showToast } = useToast();
@@ -224,7 +224,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       side: 'SELL',
     };
     const payoffMap = estimateOrderPayoff(
-      [{ ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn), quantity: '1' }],
+      [{ ...putContracts[strike.max], ...payOffLeg, premium: getNumber(targetEarn) - getNumber(capitalAtRisk), quantity: '1' }],
       {
         min: strikes[0],
         max: strikes[strikes.length - 1] + strikeDiff,
@@ -342,7 +342,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
       {!compact &&
         showInstructions &&
         (radioChosen === 'Risky Earn' ? (
-          <RiskyEarnInstructions />
+          <RiskyEarnInstructions currentExpiryDate={currentExpiryDate.toString()} />
         ) : (
           <RisklessEarnInstructions currentExpiry={currentExpiryDate.toString()} />
         ))}
