@@ -19,13 +19,13 @@ const Greeks = ({ greeks }: GreekSymbolProps) => {
         <span dangerouslySetInnerHTML={{ __html: symbol }}></span>
         {name}
       </label>
-      {greeks && !isInvalidNumber(greeks[id]) ? greeks[id].toFixed(3) : '0'}
+      <div className={styles.value}>{greeks && !isInvalidNumber(greeks[id]) ? greeks[id].toFixed(3) : '0'}</div>
     </div>
   ));
 
   return (
     <div className={`${styles.container} ${device === 'phone' && styles.mobile}`}>
-      <h5 className='color-white min-width-unset'>Greeks</h5>
+      <div className={styles.title}>Greeks</div>
       {device === 'phone' ? (
         <div className={`${styles.greeksContainer} ${device === 'phone' && styles.mobile}`}>{greeksElements}</div>
       ) : (
