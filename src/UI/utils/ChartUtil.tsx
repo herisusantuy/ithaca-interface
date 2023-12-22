@@ -1,10 +1,11 @@
 import { KeyOption, PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
-export const isIncrementing = (arr: PayoffDataProps[]) => {
+const isIncrementing = (arr: PayoffDataProps[]) => {
   let result = true;
+
   if (arr[0].value != arr[1].value) {
     for (let i = 0; i < arr.length - 2; i++) {
-      if (arr[i].value < arr[i + 1].value) {
+      if (arr[i].value > arr[i + 1].value) {
         result = false;
         break;
       }
@@ -21,6 +22,17 @@ export const isIncrementing = (arr: PayoffDataProps[]) => {
   }
 
   return result;
+}
+
+export const isIncrementingByBreakPoints = (arr: PayoffDataProps[], breakPoints: SpecialDotLabel[]) => {
+  if (breakPoints && breakPoints.length) {
+    const lastBreakPoint = breakPoints[breakPoints.length - 1];
+    const initialItemIndex = arr.findIndex(item => item.x === lastBreakPoint.x);
+
+    return isIncrementing(arr.slice(initialItemIndex+1));
+  }
+
+  return isIncrementing(arr)
 };
 
 export const isDecrementing = (arr: PayoffDataProps[]) => {
