@@ -92,6 +92,14 @@ const OrderSummaryMarkets = ({ limit, collatarelETH, collatarelUSDC, premium = '
     fetchFundlockState();
   }, [fetchFundlockState]);
 
+  const handleSubmitToAuction = () => {
+    if (Number(premium) >= collateralSummary['USDC'].fundLockValue) {
+      setModalOpen(true)
+    } else {
+      submitAuction()
+    }
+  }
+
   return (
     <>
       <h3 className={`mb-12 mt-10 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
@@ -123,13 +131,9 @@ const OrderSummaryMarkets = ({ limit, collatarelETH, collatarelUSDC, premium = '
           <CurrencyDisplay amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'} symbol={<LogoUsdc />} currency='USDC' />
         </Flex>
         <Flex direction='column'>
-          {Number(premium) >= collateralSummary['USDC'].fundLockValue ?
-            <Button size='lg' className='min-width-140' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
-              Deposit
-            </Button> :
-            <Button size='lg' title='Click to submit to auction' onClick={() => submitAuction()}>
-              Submit to Auction
-            </Button>}
+          <Button size='lg' title='Click to submit to auction' onClick={handleSubmitToAuction}>
+            Submit to Auction
+          </Button>
           {Number(premium) > collateralSummary['USDC'].fundLockValue && <div className={styles.balanceWarning}>
             <Warning /> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight />
           </div>}
