@@ -3,7 +3,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  width: rem(420);
+  height: rem(260);
+
   @include breakpoint2(tablet) {
     padding: rem(39) rem(60);
   }
@@ -12,6 +15,7 @@
     font-family: $lato;
     font-size: rem(18);
     margin-bottom: rem(32);
+
     @include breakpoint2(tablet) {
       font-size: rem(16);
       font-weight: 500;
@@ -46,4 +50,14 @@
 .referralPanel {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-family: $lato;
+    color: var(--white);
+    font-size: rem(24);
+    font-weight: 400;
+    padding: rem(40) 0;
+  }
 }

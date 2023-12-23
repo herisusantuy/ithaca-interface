@@ -40,6 +40,7 @@ type ModalProps = {
   isLoading?: boolean;
   isOpen: boolean;
   hideFooter?: boolean;
+  className?: string;
   showCloseIcon?: boolean;
 };
 
@@ -51,6 +52,7 @@ const Modal = ({
   isLoading,
   isOpen,
   hideFooter,
+  className,
   showCloseIcon = true,
 }: ModalProps) => {
   useEffect(() => {

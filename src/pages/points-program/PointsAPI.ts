@@ -86,15 +86,17 @@ export const JoinTelegram = async () => {
 export const GetReferrals = async () => {
   const session = getSessionInfo();
 
-  return await RequestHandle({ path: `ol/referrals?card=${session.ethAddress}` });
+  return await RequestHandle({ method: 'GET', path: `ol/referrals?card=${session.ethAddress}` });
 };
 
 export const UpdateUsername = async (name: string) => {
   const session = getSessionInfo();
 
   const data = {
-    loyaltyCardNumber: session.ethAddress,
-    firstName: name,
+    customer: {
+      loyaltyCardNumber: session.ethAddress,
+      firstName: name,
+    },
   };
 
   return await RequestHandle({ method: 'put', path: `ol/member`, data: data });

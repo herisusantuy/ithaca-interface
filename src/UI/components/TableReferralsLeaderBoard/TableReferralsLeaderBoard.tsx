@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 
 // Constants
 import {
-  RefferalsLeaderboardEntry,
+  ReferralsLeaderboardEntry,
   TABLE_REFERRALS_LEADERBOARD_HEADERS,
-  tabelReferralsLeaderBoardEnums,
+  tableReferralsLeaderBoardEnums,
 } from '@/UI/constants/referralsLeaderBoard';
 
 // Utils
@@ -25,11 +25,11 @@ import styles from './TableReferralsLeaderBoard.module.scss';
 
 // Types
 type TableReferralsLeaderBoardProps = {
-  data: RefferalsLeaderboardEntry[];
+  data: ReferralsLeaderboardEntry[];
 };
 
 type SortConfig = {
-  key: keyof RefferalsLeaderboardEntry;
+  key: keyof ReferralsLeaderboardEntry;
   direction: 'ascending' | 'descending';
 };
 
@@ -39,11 +39,11 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
     direction: 'ascending',
   };
 
-  const headerToKeyMap: Record<tabelReferralsLeaderBoardEnums, keyof RefferalsLeaderboardEntry> = {
+  const headerToKeyMap: Record<tableReferralsLeaderBoardEnums, keyof ReferralsLeaderboardEntry> = {
     Ranking: 'ranking',
     'Invited By': 'invitedBy',
     'Accepted Invites': 'acceptedInvites',
-    User: 'user',
+    User: 'username',
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,9 +58,9 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
 
   // Sort the data
   const sortableColumns = [
-    tabelReferralsLeaderBoardEnums.RANKING,
-    tabelReferralsLeaderBoardEnums.INVITED_BY,
-    tabelReferralsLeaderBoardEnums.ACCEPTED_INVITES,
+    tableReferralsLeaderBoardEnums.RANKING,
+    tableReferralsLeaderBoardEnums.INVITED_BY,
+    tableReferralsLeaderBoardEnums.ACCEPTED_INVITES,
   ];
 
   const sortedData = useMemo(() => {
@@ -80,7 +80,7 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
   }, [data, sortConfig]);
 
   // Handle sorting
-  const requestSort = (key: keyof RefferalsLeaderboardEntry) => {
+  const requestSort = (key: keyof ReferralsLeaderboardEntry) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
@@ -112,8 +112,8 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
           <div className={styles.row} key={idx}>
             <div className={styles.cell}>{leader.ranking}</div>
             <div className={styles.cell}>
-              <Avatar />
-              {leader.user}
+              <Avatar colors={leader.colors} />
+              {leader.username}
             </div>
             <div className={styles.cell}>{leader.invitedBy}</div>
             <div className={styles.cell}>{getNumberFormat(leader.acceptedInvites)}</div>

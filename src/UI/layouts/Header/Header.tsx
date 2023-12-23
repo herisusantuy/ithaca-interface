@@ -24,7 +24,7 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
 import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
 import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
-import { useAccount } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Types
@@ -34,6 +34,7 @@ type HeaderProps = {
 
 const Header = ({ className }: HeaderProps) => {
   const { initIthacaSDK, disconnect } = useAppStore();
+  const { data: walletClient } = useWalletClient();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
   const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
 

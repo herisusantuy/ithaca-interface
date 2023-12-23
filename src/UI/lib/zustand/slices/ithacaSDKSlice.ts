@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo } from '@ithaca-finance/sdk';
 import { WalletClient } from 'wagmi';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { isLocalhost } from '@/UI/utils/RainbowKit';
 
 dayjs.extend(customParseFormat);
 

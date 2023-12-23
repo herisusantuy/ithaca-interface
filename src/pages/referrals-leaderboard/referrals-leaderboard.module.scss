@@ -1,6 +1,14 @@
 .wrapper {
   text-align: center;
 
+  h1 {
+    font-family: $lato;
+    color: var(--white);
+    font-size: rem(24);
+    font-weight: 400;
+    padding: rem(40) 0;
+  }
+
   .connectButton {
     width: rem(125);
     font-size: rem(12);
@@ -23,7 +31,7 @@
 
   .loaderWrapper {
     width: 100%;
-    height: 100%;
+    height: rem(590);
     display: flex;
     justify-content: center;
     align-items: center;

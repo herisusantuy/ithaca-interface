@@ -102,3 +102,5 @@ export const formatNumberByCurrency = (value: number, type: string, currency: 'U
     }
   }
 };
+
+export const formatEthAddress = (text: string) => (text ? `${text.slice(0, 4)}...${text.slice(-4)}` : '');

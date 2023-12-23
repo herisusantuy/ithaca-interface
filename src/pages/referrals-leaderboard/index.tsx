@@ -19,28 +19,40 @@ import Loader from '@/UI/components/Loader/Loader';
 import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
 
 type member = {
-  user: string;
-  acceptedInvites: number;
   ranking: number;
+  referrerToken: string;
+  acceptedInvites: number;
+  username: string;
   invitedBy: string;
+  colors: [string, string];
+};
+
+const getRandomColor = (): string => {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
 
 const ReferralsLeaderboard = () => {
   const { isAuthenticated } = useAppStore();
   const { isConnected } = useAccount();
+  const [currentUser, setCurrentUser] = useState<member>();
   const [members, setMembers] = useState<member[]>([]);
 
   useEffect(() => {
     if (!isConnected || !isAuthenticated) return;
     GetReferrals().then(res => {
       if (res) {
-        console.log(res);
-        const membersData: member[] = Object.keys(res).map(referralToken => {
+        const { currentUser, referralsData } = res;
+
+        setCurrentUser({ ranking: 0, ...currentUser });
+        const membersData: member[] = (Object.values(referralsData) as member[]).map((userData: member) => {
+          const colors: [string, string] = [getRandomColor(), getRandomColor()];
           return {
             ranking: 0,
-            user: res[referralToken][0].invitedBy,
-            acceptedInvites: res[referralToken].length,
+            username: userData.username,
+            acceptedInvites: userData.acceptedInvites,
+            referrerToken: userData.referrerToken,
             invitedBy: '',
+            colors: colors,
           };
         });
 
@@ -51,6 +63,13 @@ const ReferralsLeaderboard = () => {
       }
     });
   }, [isConnected, isAuthenticated]);
+
+  useEffect(() => {
+    if (members.length && currentUser) {
+      const currentUserData: member | undefined = members.find(member => member.username === currentUser.username);
+      if (currentUserData) setCurrentUser(currentUserData);
+    }
+  }, [members]);
 
   useAccount({
     onDisconnect: () => {
@@ -64,11 +83,12 @@ const ReferralsLeaderboard = () => {
       <Main>
         <Container>
           <div className={styles.wrapper}>
+            <h1>Leaderboard</h1>
             {isConnected ? (
               <>
                 <div className={styles.leaderBoardCardsContainer}>
-                  <Card2 label='Your Current Ranking' value={1024} />
-                  <Card2 label='Accepted Invites' value={8} />
+                  <Card2 label='Your Current Ranking' value={currentUser ? currentUser.ranking : 0} />
+                  <Card2 label='Accepted Invites' value={currentUser ? currentUser.acceptedInvites : 0} />
                 </div>
                 <Panel margin='p-30 p-tablet-16'>
                   {members.length ? (

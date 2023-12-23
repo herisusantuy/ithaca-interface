@@ -46,6 +46,7 @@ const ReferralCode = () => {
       <Main>
         <Container>
           <div className={styles.referralPanel}>
+            <h1>Referrals</h1>
             <Panel margin={styles.mainPanel}>
               {isConnected ? (
                 <>
