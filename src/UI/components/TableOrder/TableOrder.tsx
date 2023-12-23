@@ -681,7 +681,6 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         {/* TBODY */}
         {slicedData.map((row, rowIndex) => {
           const isRowExpanded = expandedRow.includes(rowIndex);
-          // const isRowExpanded = true;
           return (
             <>
               {rowIndex > 0 && <div className={styles.line} style={{marginTop: 4, marginBottom: 7}} />}

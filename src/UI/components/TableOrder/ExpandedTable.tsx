@@ -64,7 +64,7 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
           </>
         ))}
         <div style={{gridColumn: 'a/j', marginTop: 15}}>
-            </div>
+        </div>
     </>
   );
 };
