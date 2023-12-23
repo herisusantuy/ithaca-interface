@@ -23,7 +23,7 @@ import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
-type OrderSummaryMarketsProps = {
+type OrderSummaryProps = {
   limit: string | number;
   collatarelETH: string | number;
   collatarelUSDC: string | number;
@@ -33,7 +33,7 @@ type OrderSummaryMarketsProps = {
   asContainer?: boolean;
 };
 
-const OrderSummaryMarkets = ({
+const OrderSummary = ({
   limit,
   collatarelETH,
   collatarelUSDC,
@@ -41,7 +41,7 @@ const OrderSummaryMarkets = ({
   fee,
   submitAuction,
   asContainer = true,
-}: OrderSummaryMarketsProps) => {
+}: OrderSummaryProps) => {
   const { isAuthenticated, ithacaSDK, systemInfo } = useAppStore();
   const publicClient = usePublicClient();
   const { address } = useAccount();
@@ -230,4 +230,4 @@ const OrderSummaryMarkets = ({
   );
 };
 
-export default OrderSummaryMarkets;
+export default OrderSummary;
