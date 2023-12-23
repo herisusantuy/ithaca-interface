@@ -1,10 +1,11 @@
 import { KeyOption, PayoffDataProps, SpecialDotLabel } from '../constants/charts/charts';
 
-export const isIncrementing = (arr: PayoffDataProps[]) => {
+const isIncrementing = (arr: PayoffDataProps[]) => {
   let result = true;
+
   if (arr[0].value != arr[1].value) {
     for (let i = 0; i < arr.length - 2; i++) {
-      if (arr[i].value < arr[i + 1].value) {
+      if (arr[i].value > arr[i + 1].value) {
         result = false;
         break;
       }
@@ -21,6 +22,17 @@ export const isIncrementing = (arr: PayoffDataProps[]) => {
   }
 
   return result;
+}
+
+export const isIncrementingByBreakPoints = (arr: PayoffDataProps[], breakPoints: SpecialDotLabel[]) => {
+  if (breakPoints && breakPoints.length) {
+    const lastBreakPoint = breakPoints[breakPoints.length - 1];
+    const initialItemIndex = arr.findIndex(item => item.x === lastBreakPoint.x);
+
+    return isIncrementing(arr.slice(initialItemIndex+1));
+  }
+
+  return isIncrementing(arr)
 };
 
 export const isDecrementing = (arr: PayoffDataProps[]) => {
@@ -75,7 +87,7 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
   return max / (max - min);
 };
 
-export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string) => {
+export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string, notStraightLine = true) => {
   return (
     <defs>
       {/* Area gradient */}
@@ -105,7 +117,7 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
             <stop offset='0%' stopColor={selectedLeg === 'total' ? '#4bb475' : color} stopOpacity={1} />
           </>) : ''}
         {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={selectedLeg === 'total' ? '#4bb475' : color}  stopOpacity={1} />: ''}
-        <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} />
+        {notStraightLine ? <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} /> : ''}
         {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />: ''}
         {off !== 0 ? (
           <>
@@ -792,7 +804,7 @@ export const breakPointList = (data: PayoffDataProps[]) => {
       return true;
     } else {
       const nextX = array[index + 1].x;
-      if (nextX - item.x > step) {
+      if (nextX - item.x >= step) {
         return true;
       } else {
         return Math.abs(array[index + 1].value - item.value) > deviation

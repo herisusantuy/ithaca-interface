@@ -1,28 +1,41 @@
 // Packages
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useEffect } from 'react';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
+import { useEffect, useState } from 'react';
 import styles from './Wallet.module.scss';
 import ConnectWalletIcon from '../Icons/ConnectWalletIcon';
 import ChevronDown from '../Icons/ChevronDown';
+import ModalAcknowledgeTerms from '../ModalAcknowledgeTerms/ModalAcknowledgeTerms';
 
 const Wallet = () => {
-  const { ithacaSDK, initIthacaSDK } = useAppStore();
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  useAccount({
-    onDisconnect: async () => {
-      await ithacaSDK.auth.logout();
-      localStorage.removeItem('ithaca.session');
-    },
-  });
+  const { ithacaSDK, isAuthenticated } = useAppStore();
+
+  const [showModal, setShowModal] = useState(false);
+
+  const getSession = async () => {
+    if (isAuthenticated) {
+      const result = await ithacaSDK.auth.getSession();
+      if (!result?.accountInfos?.tc_confirmation) {
+        setShowModal(true);
+      }
+    }
+  };
 
   useEffect(() => {
-    initIthacaSDK(publicClient, walletClient ?? undefined);
-  }, [initIthacaSDK, publicClient, walletClient]);
+    getSession();
+  }, [isAuthenticated]);
 
-  // return <ConnectButton showBalance={false} />;
+  const handleAgreeAndContinue = async () => {
+    try {
+      const response = await ithacaSDK.points.addAccountData('tc_confirmation', 'true');
+      if (response.result === 'OK') {
+        setShowModal(false);
+      }
+    } catch (error) {
+      setShowModal(false);
+    }
+  };
+
   return (
     <ConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
@@ -63,6 +76,12 @@ const Wallet = () => {
 
               return (
                 <div style={{ display: 'flex', gap: 12 }}>
+                  <ModalAcknowledgeTerms
+                    isOpen={showModal && connected}
+                    onCloseModal={() => setShowModal(false)}
+                    onDisconnectWallet={openAccountModal}
+                    onAgreeAndContinue={handleAgreeAndContinue}
+                  />
                   {/* <button onClick={openChainModal} style={{ display: 'flex', alignItems: 'center' }} type='button'>
                     {chain.hasIcon && (
                       <div

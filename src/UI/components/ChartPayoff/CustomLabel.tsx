@@ -1,7 +1,8 @@
 // Props
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
 import { LabelPositionProp } from '@/UI/utils/CalcChartPayoff';
-import { useEffect } from 'react';
+import { getNumberFormat } from '@/UI/utils/Numbers';
+import LogoUsdc from '../Icons/LogoUsdc';
 
 // Types
 type LabelProps = {
@@ -15,43 +16,10 @@ type LabelProps = {
   dataList: PayoffDataProps[];
   height: number;
   labelPosition: LabelPositionProp[];
-  // updateLabelPosition: (labelPosition: LabelPositionProp) => void;
 };
 
 const CustomLabel = (props: LabelProps) => {
-  const { x, y, value, index, special, dataList, height, labelPosition } = props;
-
-  useEffect(() => {
-    if (
-      special.find(item => item.x == dataList[index ?? 0]?.x) ||
-      (value === 0 && dataList[index ? index - 1 : 0]?.value !== 0)
-    ) {
-      // updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
-      // if (labelPosition.length == 0) {
-      // } else {
-      //   let checkable = false;
-      //   let offset = 0;
-      //   for (let i = 0; i < labelPosition.length; i++) {
-      //     const PrevPosition: LabelPositionProp = labelPosition[i];
-      //     const prevX = PrevPosition.x;
-      //     const prevY = PrevPosition.y;
-      //     const prevOffset = PrevPosition.offset;
-      //     if (prevX - 10 < Number(x) && prevX + 10 >= Number(x)) {
-      //       if (prevY - 20 < Number(y) && prevY + 20 >= Number(y)) {
-      //         offset = prevOffset;
-      //         checkable = true;
-      //       }
-      //     }
-      //   }
-      //   if (checkable) {
-      //     updateLabelPosition({ x: Number(x), y: Number(y), offset: offset + 20 });
-      //   } else {
-      //     updateLabelPosition({ x: Number(x), y: Number(y), offset: Number(y) });
-      //   }
-      // }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [x, y]);
+  const { x, y, index, special, dataList, height, labelPosition } = props;
 
   function renderLabel() {
     if (labelPosition.length == 0) {

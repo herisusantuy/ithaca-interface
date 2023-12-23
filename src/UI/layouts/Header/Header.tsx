@@ -1,5 +1,5 @@
 // Packages
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Components
 import Navigation from '@/UI/components/Navigation/Navigation';
@@ -8,14 +8,14 @@ import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
-import Rewards from '@/UI/components/Icons/Rewards';
+// import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Constants
-import { TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Styles
 import styles from './Header.module.scss';
@@ -24,6 +24,8 @@ import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
 import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
 import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
+import { useAccount } from 'wagmi';
+import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Types
 type HeaderProps = {
@@ -31,7 +33,9 @@ type HeaderProps = {
 };
 
 const Header = ({ className }: HeaderProps) => {
+  const { initIthacaSDK, disconnect } = useAppStore();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
+  const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
 
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
@@ -43,9 +47,9 @@ const Header = ({ className }: HeaderProps) => {
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const rewardsDropdownRef = useRef(null);
 
-  const toggleRewardsDropdown = () => {
-    setIsRewardsOpen(!isRewardsOpen);
-  };
+  // const toggleRewardsDropdown = () => {
+  //   setIsRewardsOpen(!isRewardsOpen);
+  // };
 
   // Close dropdown callback
   const closeRewardsDropdown = () => {
@@ -57,6 +61,15 @@ const Header = ({ className }: HeaderProps) => {
 
   // Hook to close the dropdown on ESC key press
   useEscKey(closeRewardsDropdown);
+
+  useAccount({
+    onDisconnect: disconnect,
+  });
+
+  useEffect(() => {
+    if (!walletClient) return;
+    initIthacaSDK(walletClient);
+  }, [initIthacaSDK, walletClient]);
 
   return (
     <>
@@ -71,20 +84,21 @@ const Header = ({ className }: HeaderProps) => {
             >
               <Logo />
             </span>
-            {!tabletBreakpoint && <Navigation />}
+            {!tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            {/*<Bell />*/}
-            {/* <Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} /> */}
-            {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
             <EditProfileModal trigger={<UserProfileIcon />} />
             <Wallet />
-            {tabletBreakpoint && <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />}
+            {(tabletBreakpoint || mobileBreakpoint) && (
+              <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />
+            )}
             {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}
           </div>
         </div>
       </header>
-      {tabletBreakpoint && <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />}
+      {(tabletBreakpoint || mobileBreakpoint) && (
+        <SlidingNav isActive={isHamburgerOpen} onClick={handleHamburgerClick} />
+      )}
     </>
   );
 };

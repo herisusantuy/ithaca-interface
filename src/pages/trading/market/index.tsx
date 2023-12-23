@@ -14,6 +14,9 @@ import TradingLayout from '@/UI/layouts/TradingLayout/TradingLayout';
 import { TRADING_MARKET_TABS } from '@/UI/constants/tabCard';
 import { Currency } from '@/UI/components/Currency';
 
+// Styles
+import styles from './market.module.scss';
+
 const Index = () => {
   const [showInstructions, setShowInstructions] = useState(true);
 
@@ -22,14 +25,14 @@ const Index = () => {
       <Meta />
       <Main>
         <Container>
-          <TradingLayout/>
+          <TradingLayout />
           <Currency
-          onExpiryChange={() => {
-            console.log()
-          }}
+            onExpiryChange={() => {
+              console.log();
+            }}
           />
           <TabCard
-            className='mt-39'
+            className={`mt-39 ${styles.tabCard}`}
             tabs={TRADING_MARKET_TABS}
             showInstructions={showInstructions}
             setShowInstructions={setShowInstructions}

@@ -1,25 +1,27 @@
 // Packages
 import { AnimatePresence, motion } from 'framer-motion';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 
 // Lib
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // SDK
-import { Order, Position } from '@ithaca-finance/sdk';
+import { Order, PortfolioCollateral, Position } from '@ithaca-finance/sdk';
 
 // Constants
 import {
   TABLE_ORDER_HEADERS,
+  TABLE_ORDER_HEADERS_FOR_POSITIONS,
   TableRowData,
   TableRowDataWithExpanded,
   TABLE_ORDER_DATA_WITH_EXPANDED,
+  TableDescriptionProps,
+  TABLE_ORDER_LIVE_ORDERS,
 } from '@/UI/constants/tableOrder';
 
 // Utils
 import {
-  formatCurrencyPair,
   getSideIcon,
   orderDateSort,
   orderLimitSort,
@@ -60,6 +62,9 @@ import styles from './TableOrder.module.scss';
 import Container from '@/UI/layouts/Container/Container';
 import Loader from '../Loader/Loader';
 import DropdownOutlined from '../Icons/DropdownOutlined';
+import ExpandedPositionTable from './ExpandedPositionTable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 // Types
 type TableOrderProps = {
@@ -81,6 +86,13 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [rowToCancelOrder, setRowToCancelOrder] = useState<TableRowData | null>(null);
   const [slicedData, setSlicedData] = useState<TableRowDataWithExpanded[]>([]);
+  const [collateralData, setCollateralData] = useState<TableDescriptionProps>({
+    possibleReleaseX: 0,
+    possibleReleaseY: 0,
+    postOptimisationX: 0,
+    postOptimisationY: 0,
+  });
+  // const [headers, setHeaders] = useState<string[]>(TABLE_ORDER_HEADERS);
   const [sortHeader, setSortHeader] = useState<string>('');
   const [filterHeader, setFilterHeader] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -93,6 +105,9 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const [sideArray, setSideArray] = useState<string[]>([]);
   const [sideChecked, setSideChecked] = useState<boolean>(false);
   const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
+
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -108,13 +123,14 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         currencyPair: row.collateral?.currencyPair || row.details[0].currencyPair,
         product: row.orderDescr,
         side: row.details.length === 1 ? row.details[0].side : '',
-        tenor: dayjs(row.details[0].expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
-        wethAmount: row.collateral?.numeraireAmount,
-        usdcAmount: row.collateral?.underlierAmount,
+        tenor: dayjs(row.details[0].expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'),
+        wethAmount: row.collateral?.underlierAmount,
+        usdcAmount: row.collateral?.numeraireAmount,
         orderLimit: row.netPrice,
         expandedInfo: row.details.map(leg => ({
           type: leg.contractDto.payoff,
           side: leg.side,
+          expiryDate: dayjs(leg.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
           size: leg.originalQty,
           strike: leg.contractDto.economics.strike,
           enterPrice: leg.execPrice,
@@ -134,17 +150,20 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           currencyPair: contract?.economics.currencyPair, // Look up from contract
           product: contract?.payoff, // Look up from Contract
           // side: row.details.length === 1 ? row.details[0].side : '', // Missing
-          tenor: dayjs(contract?.economics.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'), // Look up from contract
+          tenor: dayjs(contract?.economics.expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'), // Look up from contract
           // wethAmount: row.collateral?.numeraireAmount, // Missing
           // usdcAmount: row.collateral?.underlierAmount, // Missing
           // orderLimit: row.netPrice, // Missing
-          // expandedInfo: row.details.map(leg => ({ // Missing
-          //   type: leg.contractDto.payoff,
-          //   side: leg.side,
-          //   size: leg.originalQty,
-          //   strike: leg.contractDto.economics.strike,
-          //   enterPrice: leg.execPrice,
-          // })),
+          expandedInfo: [
+            {
+              // Dummy data to be replaced with actual data
+              type: 'CALL',
+              side: 'BUY',
+              size: 2000,
+              strike: 400,
+              enterPrice: 400,
+            },
+          ],
         };
       }) as TableRowDataWithExpanded[]
     );
@@ -158,6 +177,18 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             dataToRows(res);
             setLoading(false);
           });
+          if (description) {
+            ithacaSDK.calculation.calcPortfolioCollateral().then((d: PortfolioCollateral) => {
+              if (d) {
+                setCollateralData({
+                  possibleReleaseX: d.actual.underlierAmount,
+                  possibleReleaseY: d.actual.numeraireAmount,
+                  postOptimisationX: d.potential.underlierAmount,
+                  postOptimisationY: d.potential.numeraireAmount,
+                });
+              }
+            });
+          }
           break;
         case TABLE_TYPE.ORDER:
           ithacaSDK.client.currentPositions().then(res => {
@@ -208,6 +239,17 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     });
   };
 
+  // Function to handle the actual delete operation
+  const handleCancelAllOrder = () => {
+    setIsDeleting(true);
+    ithacaSDK.orders.orderCancelAll().then(() => {
+      setData([]);
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setRowToCancelOrder(null);
+    });
+  };
+
   // Page state
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -252,6 +294,19 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     filterData = currencyFilter(filterData, currencyArray);
     setSlicedData(filterData.slice(pageStart, pageEnd));
   }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setDataLoaded(true);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!isSorted && slicedData.length > 0) {
+      updateSort('Order Date', false);
+      setIsSorted(true);
+    }
+  }, [dataLoaded, isSorted]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
@@ -376,6 +431,43 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       }
     }
   };
+
+  const getTableHeaders = useCallback(() => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return TABLE_ORDER_HEADERS_FOR_POSITIONS;
+      case TABLE_TYPE.LIVE:
+        return TABLE_ORDER_LIVE_ORDERS
+      default:
+        return TABLE_ORDER_HEADERS;
+    }
+  }, [type]);
+
+  const getHeaderTemplate = useCallback(
+    (header: string) => {
+      switch (header) {
+        case 'Cancel All':
+          return (
+            <Button
+              title='Click to cancel all orders'
+              className={styles.cancelAllBtn}
+              onClick={handleCancelAllOrder}
+              variant='link'
+            >
+              Cancel All
+            </Button>
+          );
+        default:
+          return (
+            <>
+              {header} {getHeaderIcon(header)}
+            </>
+          );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [handleCancelAllOrder]
+  );
 
   // Get table header icons
   const getHeaderIcon = (header: string) => {
@@ -509,15 +601,67 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   };
 
   // Get table className
-  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''}`;
+  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''} ${
+    type === TABLE_TYPE.ORDER ? styles.isOrder : ''
+  }`;
+
+  const getTableRowTemplate = (row: TableRowDataWithExpanded, rowIndex: number) => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return (
+          <>
+            <div className={`${styles.cell}`}>{row.product}</div>
+            <div className={styles.cell}>{row.usdcAmount}</div>
+            <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
+            <div className={styles.cell}>{row.orderLimit}</div>
+          </>
+        );
+      default:
+        return (
+          <>
+            <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
+            <div className={styles.cell}>
+              <div className={styles.currency}>{row.currencyPair}</div>
+            </div>
+            <div className={styles.cell}>{row.product}</div>
+            <div className={styles.cell}>{getSideIcon(row.side)}</div>
+            <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
+            <div className={styles.cell}>
+              <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
+            </div>
+            <div className={styles.cell}>{row.orderLimit}</div>
+            <div className={styles.cell}>
+              {cancelOrder && (
+                <Button
+                  title='Click to cancel order'
+                  className={styles.delete}
+                  onClick={() => handleCancelOrderClick(rowIndex)}
+                >
+                  <Delete />
+                </Button>
+              )}
+            </div>
+          </>
+        );
+    }
+  };
+
+  const getExpandedTableTemplate = (row: TableRowDataWithExpanded) => {
+    switch (type) {
+      case TABLE_TYPE.ORDER:
+        return <ExpandedPositionTable data={row.expandedInfo || []} />;
+      default:
+        return <ExpandedTable data={row.expandedInfo || []} />;
+    }
+  };
 
   return (
     <>
       <div className={tableClass.trim()}>
         <div className={`${styles.row} ${styles.header}`}>
-          {TABLE_ORDER_HEADERS.map((header, idx) => (
+          {getTableHeaders().map((header, idx) => (
             <div className={styles.cell} key={idx}>
-              {header} {getHeaderIcon(header)}
+              {getHeaderTemplate(header)}
             </div>
           ))}
         </div>
@@ -536,28 +680,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       <DropdownOutlined />
                     </Button>
                   </div>
-                  <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
-                  <div className={styles.cell}>
-                    <div className={styles.currency}>{row.currencyPair}</div>
-                  </div>
-                  <div className={styles.cell}>{row.product}</div>
-                  <div className={styles.cell}>{getSideIcon(row.side)}</div>
-                  <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
-                  <div className={styles.cell}>
-                    <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
-                  </div>
-                  <div className={styles.cell}>{row.orderLimit}</div>
-                  <div className={styles.cell}>
-                    {cancelOrder && (
-                      <Button
-                        title='Click to cancel order'
-                        className={styles.delete}
-                        onClick={() => handleCancelOrderClick(rowIndex)}
-                      >
-                        <Delete />
-                      </Button>
-                    )}
-                  </div>
+                  {getTableRowTemplate(row, rowIndex)}
                 </div>
                 <AnimatePresence>
                   {isRowExpanded && (
@@ -568,7 +691,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
                       exit='closed'
                       variants={variants}
                     >
-                      {row.expandedInfo && <ExpandedTable data={row.expandedInfo} />}
+                      {row.expandedInfo && getExpandedTableTemplate(row)}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -587,10 +710,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       <Flex direction='row-space-between' margin='mt-35'>
         {description ? (
           <TableDescription
-            possibleReleaseX={10}
-            possibleReleaseY={20}
-            postOptimisationX={8}
-            postOptimisationY={18}
+            {...collateralData}
             // totalCollateral={30}
           />
         ) : (

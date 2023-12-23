@@ -63,6 +63,21 @@ a {
   left: 90%;
 }
 
+.customUsetAvatar {
+  height: 100%;
+  width: 100%;
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+}
+[role='dialog'] {
+  h2 {
+    white-space: nowrap;
+    word-wrap: initial;
+  }
+}
+
 @keyframes beforeMove {
   0% {
     top: 0;

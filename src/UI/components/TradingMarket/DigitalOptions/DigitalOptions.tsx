@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -20,7 +21,7 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -34,25 +35,50 @@ import {
   createClientOrderId,
   calculateNetPrice,
   calcCollateralRequirement,
+  toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import { useDevice } from '@/UI/hooks/useDevice';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
+import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
-  const binaryCallContracts = getContractsByPayoff('BinaryCall');
-  const binaryPutContracts = getContractsByPayoff('BinaryPut');
-  const strikes = Object.keys(binaryCallContracts).map(strike => ({ name: strike, value: strike }));
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const device = useDevice();
+  const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
+  const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
+  const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
+  const [strikes, setStrikes] = useState(strikeList);
 
   const [binaryCallOrPut, setBinaryCallOrPut] = useState<'BinaryCall' | 'BinaryPut'>('BinaryCall');
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [size, setSize] = useState('');
-  const [strike, setStrike] = useState<string>(strikes[5].value);
+  const [strike, setStrike] = useState<string>(
+    strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value
+  );
   const [unitPrice, setUnitPrice] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
 
   const { toastList, position, showToast } = useToast();
+
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+
+  useEffect(() => {
+    setBinaryCallContracts(getContractsByPayoff('BinaryCall'));
+    setBinaryPutContracts(getContractsByPayoff('BinaryPut'));
+    const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
+    setStrikes(strikeList);
+    setStrike(strikeList.length > 5 ? strikeList[5].value : strikeList[strikeList.length - 1].value);
+  }, [currentExpiryDate]);
+
+  useEffect(() => {
+    const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
+    setUnitPrice(`${contract.referencePrice}`);
+    handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), strike, `${contract.referencePrice}`);
+  }, [strike]);
 
   const handleBinaryCallOrPutChange = async (binaryCallOrPut: 'BinaryCall' | 'BinaryPut') => {
     setBinaryCallOrPut(binaryCallOrPut);
@@ -125,8 +151,17 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    if (orderDetails)
+      setAuctionSubmission({
+        order: orderDetails?.order,
+        type: binaryCallOrPut,
+      });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, binaryCallOrPut);
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -137,6 +172,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         },
         'top-right'
       );
+      console.error('Failed to submit order', error);
     }
   };
 
@@ -159,17 +195,23 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
   }, []);
 
   const renderInstruction = () => {
-    return (
-      <>
-        {!compact && showInstructions && <DigitalInstructions/>}
-      </>
-    )
-  }
+    return <>{!compact && showInstructions && <DigitalInstructions />}</>;
+  };
 
   return (
     <>
       {renderInstruction()}
-      <Flex direction='row-space-between' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-4'>
+      <Flex direction='row' margin={`${compact ? 'mb-12' : 'mb-34'}`} gap='gap-12'>
+        {compact && (
+          <RadioButton
+            size={compact ? 'compact' : 'regular'}
+            width={compact ? 120 : 110}
+            options={DIGITAL_OPTIONS}
+            name={compact ? 'binaryCallOrPutCompact' : 'binaryCallOrPut'}
+            selectedOption={binaryCallOrPut}
+            onChange={value => handleBinaryCallOrPutChange(value as 'BinaryCall' | 'BinaryPut')}
+          />
+        )}
         {!compact && (
           <>
             <LabeledControl label='Type'>
@@ -197,9 +239,11 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             <LabeledControl label='Size'>
               <Input
                 type='number'
-                icon={<LogoEth />}
+                icon={<LogoUsdc />}
                 width={105}
-                increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
+                increment={direction =>
+                  size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) - 1).toString())
+                }
                 value={size}
                 onChange={({ target }) => handleSizeChange(target.value)}
               />
@@ -212,9 +256,6 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
                 value={strike ? { name: strike, value: strike } : undefined}
                 onChange={value => {
                   setStrike(value);
-                  const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[value] : binaryPutContracts[value];
-                  setUnitPrice(`${contract.referencePrice}`);
-                  handleStrikeChange(binaryCallOrPut, buyOrSell, getNumber(size), value, `${contract.referencePrice}`);
                 }}
               />
             </LabeledControl>
@@ -228,22 +269,22 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
               />
             </LabeledControl>
 
-            <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71' icon={<LogoEth />} label={calcCollateral()} />
+            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
+              <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
-                className='height-34 min-width-71'
+                className='height-34'
                 icon={<LogoUsdc />}
                 label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
               />
-            </LabeledControl>
+            </LabeledControl> */}
 
             {/** Add disabled logic, add wrong network and not connected logic */}
-            <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
+            {/* <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
               Submit to Auction
-            </Button>
+            </Button> */}
           </>
         )}
       </Flex>
@@ -258,6 +299,43 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
         showPortial={!compact}
       />
 
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={
+            [
+              { leg: orderDetails.order.legs[0], referencePrice: unitPrice, payoff: binaryCallOrPut, strike: strike },
+            ] as unknown as PositionBuilderStrategy[]
+          }
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
+
+      {!compact && <OrderSummaryMarkets
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        premium={orderDetails?.order.totalNetPrice}
+        fee={1.5}
+        submitAuction={handleSubmit} />}
       {/* {!compact && <Greeks />} */}
     </>
   );

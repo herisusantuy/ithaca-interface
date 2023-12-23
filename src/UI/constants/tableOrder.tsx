@@ -15,6 +15,7 @@ export type TableRowData = {
 export type TableExpandedRowData = {
   type: string;
   side: string;
+  expiryDate: string;
   size: number;
   strike: number;
   enterPrice: number;
@@ -34,11 +35,27 @@ export const TABLE_ORDER_HEADERS: string[] = [
   'Tenor',
   'Collateral Amount',
   'Order Limit',
-  '',
 ];
 
+export const TABLE_ORDER_LIVE_ORDERS: string[] = [
+  ...TABLE_ORDER_HEADERS,
+  'Cancel All',
+];
+
+export const TABLE_ORDER_HEADERS_FOR_POSITIONS: string[] = ['Details', 'Product', 'Strike', 'Type', 'Quantity'];
+
+export type TableDescriptionProps = {
+  possibleReleaseX: number;
+  possibleReleaseY: number;
+  postOptimisationX: number;
+  postOptimisationY: number;
+  // totalCollateral: number;
+};
+
 // Table order expanded headers
-export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Size', 'Strike', 'Enter Price'];
+export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Expiry Date', 'Size', 'Strike', 'Enter Price'];
+
+export const TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS: string[] = ['Type', 'Collateral (ETH)', 'Collateral (USDC)', 'Order Limit'];
 
 // Table order data
 function getRandomInt(min: number, max: number): number {
@@ -92,12 +109,14 @@ function getRandomData(): TableRowData {
 // Table order expanded data
 function getRandomExpandedData(): TableExpandedRowData {
   const types = ['Call', 'Put'];
+  const expiryDate = getRandomDateParts();
   const size = getRandomInt(1, 20);
   const strike = getRandomInt(400, 500);
   const enterPrice = getRandomInt(400, 450);
 
   return {
     type: types[getRandomInt(0, types.length - 1)],
+    expiryDate: `${expiryDate.day} ${expiryDate.month} ${expiryDate.year}`,
     side: getRandomInt(0, 1) > 0 ? 'Buy' : 'Sell',
     size,
     strike,

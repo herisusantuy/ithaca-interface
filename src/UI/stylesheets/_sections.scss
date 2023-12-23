@@ -1,4 +1,4 @@
-// Styles by section 
+// Styles by section
 @media (max-width: $desktop) {
 
   // Stories Section
@@ -105,7 +105,7 @@
         width      : 16.125rem;
         margin-left: auto;
         position   : relative;
-        top        : -0.625rem;
+        //top        : -0.625rem;
       }
     }
   }
@@ -113,7 +113,7 @@
 
 @media (max-width: $tablet) {
 
-  // Analytics Sections 
+  // Analytics Sections
   .flex--analytics {
     flex-direction: row !important;
     flex-wrap     : wrap !important;
@@ -315,7 +315,7 @@
           width: 48%;
 
           .radioButton--market {
-            width: 100%;
+            width: 41px;
 
             .radioButton-option--market {
               width: 100%;
@@ -350,13 +350,9 @@
           width: 21%;
         }
 
-
-
         button {
           width: 100%;
-          top  : 0.5rem;
         }
-
       }
     }
 

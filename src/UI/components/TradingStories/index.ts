@@ -1,10 +1,12 @@
 import { ClientConditionalOrder, OrderLock } from '@ithaca-finance/sdk';
+import { ReactElement } from 'react';
 
 export interface TradingStoriesProps {
   showInstructions: boolean;
   compact: boolean;
   chartHeight: number;
   radioChosen?: string;
+  onRadioChange?: (option: string | ReactElement) => void;
 }
 
 export interface OrderDetails {

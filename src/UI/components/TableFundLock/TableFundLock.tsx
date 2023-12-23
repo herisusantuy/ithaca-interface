@@ -61,6 +61,7 @@ const TableFundLock = () => {
   const pageLimit = 9;
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     ithacaSDK.fundlock.fundlockHistory().then(res => {
       const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce(
         (obj, key) => {
@@ -125,9 +126,8 @@ const TableFundLock = () => {
       let filterData = currencyFilter(data, currencyArray);
       filterData = auctionFilter(filterData, auctionArray);
       setSlicedData(filterData.slice(pageStart, pageEnd));
-    }
-    else {
-      setSlicedData([])
+    } else {
+      setSlicedData([]);
     }
   }, [data, currencyArray, pageEnd, pageStart, auctionArray]);
 
@@ -335,13 +335,13 @@ const TableFundLock = () => {
               </div>
             </div>
           ))
-          )  : isLoading ? (
-            <Container size='loader' margin='ptb-150'>
-              <Loader type='lg' />
-            </Container>
-          ) : (
-            <p className={styles.emptyTable}>No results found</p>
-          )}
+        ) : isLoading ? (
+          <Container size='loader' margin='ptb-150'>
+            <Loader type='lg' />
+          </Container>
+        ) : (
+          <p className={styles.emptyTable}>No results found</p>
+        )}
       </div>
       {slicedData.length > 0 ? (
         <Flex direction='row-space-between' margin='mt-35'>
@@ -353,7 +353,7 @@ const TableFundLock = () => {
             onPageChange={handlePageChange}
           />
         </Flex>
-      )  : null }
+      ) : null}
       {!isAuthenticated && <DisconnectedWallet showButton={false} />}
     </>
   );

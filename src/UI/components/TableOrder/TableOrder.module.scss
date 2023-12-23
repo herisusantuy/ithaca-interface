@@ -12,16 +12,15 @@
     align-items: center;
     gap: rem(38);
     border-top: rem(1) solid var(--white-rgba-10);
-    overflow: auto;
 
     &::-webkit-scrollbar {
       height: rem(2);
     }
-    
+
     &::-webkit-scrollbar-track {
-      background-color: #1C2028;
+      background-color: #1c2028;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background-color: #ffffff99;
     }
@@ -49,6 +48,25 @@
         align-items: center;
         gap: rem(2);
         color: var(--white-60);
+
+        .isClickable {
+          cursor: pointer;
+        }
+
+        .cancelAllBtn {
+          color: var(--red-20);
+          font-family: $roboto;
+          font-size: rem(12);
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          text-align: right;
+          white-space: nowrap;
+          padding: 0;
+          &:hover {
+            background-color: transparent;
+          }
+        }
       }
     }
 
@@ -74,7 +92,7 @@
       }
 
       &:nth-child(9) {
-        width: 5%;
+        width: 7%;
       }
 
       &:nth-child(2),
@@ -95,13 +113,33 @@
       }
     }
   }
+  &.isOrder {
+    .row {
+      .cell {
+        flex-basis: 20%;
+        justify-content: flex-start;
+        &:nth-child(3) {
+          flex-basis: 10%;
+          justify-content: flex-end;
+        }
+        &:nth-child(4) {
+          flex-basis: 40%;
+          justify-content: center;
+        }
+        &:nth-child(5) {
+          flex-basis: 10%;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
 }
 
 .dropdown {
-  background: none;
   padding: 0;
   height: auto;
-  border-radius: 0;
+  background: var(--white-rgba-10);
+  border-radius: rem(4);
 
   &:hover {
     background: none;

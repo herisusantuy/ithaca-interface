@@ -17,7 +17,7 @@ import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
 import { useAccount, useBalance, usePublicClient } from 'wagmi';
 import Input from '../Input/Input';
-import Balance from '../Balance/Balance';
+import Balance, { Currency } from '../Balance/Balance';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { useDevice } from '@/UI/hooks/useDevice';
@@ -100,7 +100,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
       }>
         <h3 className={`mb-0 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
         <div className={styles.orderWrapper}>
-          <Flex direction={ (device === 'desktop') ? 'row' : 'row-space-between'} gap='gap-6'>
+          <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5>Order Limit</h5>
             <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
@@ -112,16 +112,16 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
             <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </Flex>
+        <div className={styles.platformWrapper}>
+          <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
+            <h5 className=''>Platform Fee</h5>
+            <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' />
+          </Flex>
+        </div>
         <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
           <h5 className='color-white'>Total Premium</h5>
           <CurrencyDisplay amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'} symbol={<LogoUsdc />} currency='USDC' />
         </Flex>
-        <div className={styles.platformWrapper}>
-          <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
-            <h5 className='fs-xxs'>Platform Fee</h5>
-            <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' size='sm' />
-          </Flex>
-        </div>
         <Flex direction='column'>
           {Number(premium) >= collateralSummary['USDC'].fundLockValue ?
             <Button size='lg' className='min-width-140' title='Click to submit to Deposit' onClick={() => setModalOpen(true)}>
@@ -194,6 +194,7 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
         </Flex>
         {selectedCurrency && (
           <Balance
+            selectedCurrency={selectedCurrency.value as Currency}
             fundLock={collateralSummary[selectedCurrency.value].fundLockValue}
             balance={collateralSummary[selectedCurrency.value].walletBalance}
             margin='mtb-20'

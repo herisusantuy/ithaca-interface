@@ -6,7 +6,7 @@ import styles from './LabeledControl.module.scss';
 
 // Types
 type LabeledControlProps = {
-  label: string;
+  label: string | ReactNode;
   icon?: ReactNode;
   children: ReactNode;
   labelClassName?: string;

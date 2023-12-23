@@ -8,4 +8,6 @@ coverage/
 .next/
 .env
 .eslintcache
+.vercel
+.env*.local
 .idea

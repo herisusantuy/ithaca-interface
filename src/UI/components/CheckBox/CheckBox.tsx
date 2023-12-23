@@ -13,10 +13,12 @@ type CheckBoxType = {
   checked?: boolean;
   clearCheckMark?: boolean;
   onChange?: (label: string, status: boolean) => void;
+  className?: string;
+  labelClassName?: string;
 };
 
 const CheckBox = (props: CheckBoxType) => {
-  const { component, label, checked = false, clearCheckMark, onChange } = props;
+  const { component, label, checked = false, clearCheckMark, onChange, labelClassName, className } = props;
   const [status, setStatus] = useState<boolean>(checked);
 
   const updateState = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +35,9 @@ const CheckBox = (props: CheckBoxType) => {
   }, [clearCheckMark]);
 
   return (
-    <label className={styles.container}>
+    <label className={`${styles.container} ${className}`}>
       <Flex>
-        {component} <p>{label}</p>
+        {component} <p className={labelClassName}>{label}</p>
       </Flex>
       <input type='checkbox' onChange={e => updateState(e)} checked={status} />
       <span className={styles.checkmark}></span>

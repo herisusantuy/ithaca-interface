@@ -1,6 +1,4 @@
-type IconProps = {
-  color?: string;
-};
+import { IconProps } from './types';
 
 const ChevronDown = ({ color = '#9D9DAA' }: IconProps) => {
   return (

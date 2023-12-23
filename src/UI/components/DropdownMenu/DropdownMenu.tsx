@@ -35,6 +35,7 @@ type DropdownMenuProps = {
   iconEnd?: ReactNode;
   className?: string;
   type?: string;
+  hasDropdown?: boolean;
 };
 
 const DropdownMenu = ({
@@ -49,16 +50,16 @@ const DropdownMenu = ({
   iconEnd,
   className,
   type,
+  hasDropdown = true,
 }: DropdownMenuProps) => {
-
-  const lastSegment = useLastUrlSegment()
+  const lastSegment = useLastUrlSegment();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<DropDownOption | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const optionsRef = useRef<HTMLDivElement | null>(null);
-  const [optionsPostion, setOptionsPosition] = useState({ width: 0, top: 0, left: 0 });
+  const [optionsPosition, setOptionsPosition] = useState({ width: 0, top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -87,6 +88,9 @@ const DropdownMenu = ({
   });
 
   const handleDropdownClick = () => {
+    if (!hasDropdown) {
+      return
+    }
     const containerRect = containerRef.current?.getBoundingClientRect();
     setOptionsPosition({
       width: containerRect?.width ?? 100,
@@ -119,12 +123,14 @@ const DropdownMenu = ({
             {iconStart && iconStart}
             <span>{selectedOption?.name ?? <span className={styles.placeholder}>-</span>}</span>
           </Flex>
-          <div className={styles.iconEnd}>
+          {hasDropdown && (
+            <div className={styles.iconEnd}>
               {iconEnd && iconEnd}
-            <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
-              <Dropdown />
+              <div className={`${styles.icon} ${isDropdownOpen ? styles.isActive : ''}`}>
+                <Dropdown />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         {mounted &&
           document.querySelector<HTMLElement>('#portal') &&
@@ -133,9 +139,9 @@ const DropdownMenu = ({
               <ul
                 className={`${styles.options} ${!isDropdownOpen ? styles.isHidden : ''}`}
                 style={{
-                  width: `${optionsPostion.width}px`,
-                  left: `${optionsPostion.left}px`,
-                  top: `${optionsPostion.top}px`,
+                  width: `${optionsPosition.width}px`,
+                  left: `${optionsPosition.left}px`,
+                  top: `${optionsPosition.top}px`,
                 }}
               >
                 {options &&

@@ -1,5 +1,5 @@
 .hamburger {
-  display: none;
+  display: flex;
   cursor: pointer;
   transition-property: filter;
   transition-duration: 0.15s;
@@ -10,10 +10,6 @@
 
   &:before {
     display: none !important;
-  }
-
-  @include breakpoint(tablet) {
-    display: flex;
   }
 }
 
@@ -72,5 +68,4 @@
 
 .inner::after {
   bottom: -(rem(4));
-  width: rem(13);
 }

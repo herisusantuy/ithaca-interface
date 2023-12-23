@@ -40,7 +40,7 @@ type ModalProps = {
   isLoading?: boolean;
   isOpen: boolean;
   hideFooter?: boolean;
-  className?: string;
+  showCloseIcon?: boolean;
 };
 
 const Modal = ({
@@ -51,7 +51,7 @@ const Modal = ({
   isLoading,
   isOpen,
   hideFooter,
-  className,
+  showCloseIcon = true,
 }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
@@ -92,9 +92,11 @@ const Modal = ({
       >
         <div className={styles.modalHeader}>
           <h4 className={styles.modalTitle}>{title}</h4>
-          <Button onClick={onCloseModal} className={styles.buttonClose} title='Click to close modal'>
-            <ModalClose />
-          </Button>
+          {showCloseIcon ? (
+            <Button onClick={onCloseModal} className={styles.buttonClose} title='Click to close modal'>
+              <ModalClose />
+            </Button>
+          ) : null}
         </div>
         <div className={styles.modalContent}>{children}</div>
         {!hideFooter && onSubmitOrder ? (

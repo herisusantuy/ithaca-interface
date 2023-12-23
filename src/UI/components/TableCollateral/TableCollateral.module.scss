@@ -46,9 +46,9 @@
       &:last-child {
         width: calc(rem(248) + rem(80));
 
-        @include breakpoint(tablet) {
-          display: none;
-        }
+        // @include breakpoint(tablet) {
+        //   display: none;
+        // }
       }
     }
   }
@@ -111,9 +111,9 @@
       width: auto;
       width: calc(rem(248) + rem(80));
 
-      @include breakpoint(tablet) {
-        display: none;
-      }
+      // @include breakpoint(tablet) {
+      //   display: none;
+      // }
     }
 
     svg {

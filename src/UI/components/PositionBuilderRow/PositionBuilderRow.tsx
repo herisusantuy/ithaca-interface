@@ -131,7 +131,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
   };
 
   const calcIv = () => {
-    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '-';
+    if (!strike || isInvalidNumber(getNumber(unitPrice))) return '- %';
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
     const diff = expiry.diff(current)
@@ -141,9 +141,9 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       strike: strike,
       time: dayjs.duration(diff).asYears(),
       isCall: payoff === 'Call',
-      underlying:currentSpotPrice
+      underlying: currentSpotPrice
     }
-    return ithacaSDK.calculation.calcSigma(params).toFixed(1) + '%'
+    return (ithacaSDK.calculation.calcSigma(params) * 100).toFixed(1) + '%'
   }
 
   const renderValues = () => (

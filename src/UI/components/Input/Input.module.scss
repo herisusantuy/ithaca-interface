@@ -21,8 +21,7 @@
   border-radius: rem(12);
   transition: $transition_all;
   position: relative;
-  height: rem(34);
-  
+  height: rem(36);
 
   &:before {
     content: '';
@@ -55,6 +54,7 @@
     border: 0;
     color: var(--white);
     width: 100%;
+    height: fit-content;
   }
 
   svg {
@@ -101,9 +101,12 @@
 }
 
 .footer {
-  font-size: rem(9);
+  height: rem(14);
+  padding-left: rem(2);
+  font-size: rem(12);
   font-style: italic;
   color: var(--white-60);
+  // margin-top: -(rem(4)) !important;
 }
 
 .labelDropdown {

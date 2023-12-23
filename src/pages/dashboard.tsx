@@ -36,7 +36,7 @@ const DASHBOARD_TABS = [
   },
   {
     id: 'fundLockHistory',
-    label: 'Fund Lock History',
+    label: 'FundLock History',
     content: <TableFundLock />,
   },
 ];
@@ -50,7 +50,7 @@ const Dashboard = () => {
       <Main>
         <Container>
           <CollateralPanel />
-          <Panel margin='p-30 mt-15 p-tablet-16'>
+          <Panel margin='p-desktop-30 mt-15 p-tablet-16'>
             <Tabs tabs={DASHBOARD_TABS} activeTab={dashboardTab} onChange={setDashboardTab} />
           </Panel>
         </Container>

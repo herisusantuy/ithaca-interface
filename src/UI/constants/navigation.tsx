@@ -3,6 +3,8 @@ export type NavigationItems = {
   path: string;
   titleKey: string;
   displayText: string;
+  disabled?: boolean;
+  children?: NavigationItems[];
 };
 
 export const NAVIGATION_ITEMS: NavigationItems[] = [
@@ -16,9 +18,4 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     titleKey: 'Click to visit leaderboard',
     displayText: 'Leaderboard',
   },
-  // {
-  //   path: '/referral-code',
-  //   titleKey: 'Click to visit referrals',
-  //   displayText: 'My Refferal Code',
-  // },
 ];

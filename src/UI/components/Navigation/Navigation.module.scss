@@ -25,13 +25,8 @@
   }
 
   &.isActive {
-    @include font-size('text-sm', 'semibold');
     cursor: default;
     color: var(--white);
-
-    @include breakpoint(tablet) {
-      @include font-size('text-sm', 'semibold');
-    }
   }
 }
 
@@ -46,4 +41,9 @@
   background: rgba(94, 225, 146, 0.42);
   color: var(--green-30);
   font-family: $lato;
+}
+
+.disabled {
+  color: var(--white-20) !important;
+  cursor: inherit;
 }

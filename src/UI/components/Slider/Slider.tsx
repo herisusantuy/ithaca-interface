@@ -55,6 +55,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
     const newMinVal = Math.min(+e.target.value, maxValue);
     if (lockFirst && newMinVal === min) {
       setMinValue(stepList[1]);
+      if (onChange) onChange({ min: stepList[1], max: maxValue });
     }
     else {
       setMinValue(newMinVal);
@@ -66,6 +67,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
     const newMaxVal = Math.max(+e.target.value, minValue);
     if (lockFirst && newMaxVal === min) {
       setMinValue(stepList[1]);
+      if (onChange) onChange({ min: minValue, max: stepList[1] });
     }
     else {
       setMaxValue(newMaxVal);
@@ -89,6 +91,7 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
   const setMinMaxValue = (item: number) => {
     if (!range) {
       if (lockFirst && item === min) {
+        if (onChange) onChange({ min: minValue, max: stepList[1] });
         setMaxValue(stepList[1]);
       }
       else {
@@ -131,19 +134,25 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
           const offestPosition = (width / 100) * minPos + offsetX;
           if (cursorPoint < (width / 100) * minPos) {
             setMinValue(checkValidMinMaxValue(stepList, value));
+            if (onChange) onChange({ min: checkValidMinMaxValue(stepList, value), max: maxValue });
           } else if (cursorPoint > (width / 100) * maxPos) {
             setMaxValue(checkValidMinMaxValue(stepList, value));
+            if (onChange) onChange({ min: minValue, max: checkValidMinMaxValue(stepList, value) });
           } else {
             const rangeItemValue = min + Math.round(((max - min) / width) * offestPosition);
             const betweenVal = minValue + (maxValue - minValue) / 2;
             if (rangeItemValue > maxValue) {
               setMaxValue(checkValidMinMaxValue(stepList, rangeItemValue));
+              if (onChange) onChange({ min: minValue, max: checkValidMinMaxValue(stepList, rangeItemValue)});
             } else if (rangeItemValue < minValue) {
               setMinValue(checkValidMinMaxValue(stepList, rangeItemValue));
+              if (onChange) onChange({ min: checkValidMinMaxValue(stepList, rangeItemValue), max: maxValue});
             } else if (betweenVal < rangeItemValue) {
               setMaxValue(checkValidMinMaxValue(stepList, rangeItemValue));
+              if (onChange) onChange({ min: minValue, max: checkValidMinMaxValue(stepList, rangeItemValue)});
             } else if (betweenVal >= rangeItemValue) {
               setMinValue(checkValidMinMaxValue(stepList, rangeItemValue));
+              if (onChange) onChange({ min: checkValidMinMaxValue(stepList, rangeItemValue), max: maxValue});
             }
           }
         }
@@ -151,14 +160,17 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
         const validValue = checkValidMinMaxValue(stepList, value)
         if (lockFirst && validValue === min) {
           setMaxValue(stepList[1]);
+          if (onChange) onChange({ min: minValue, max: stepList[1]});
         }
         else {
           setMaxValue(validValue);
+          if (onChange) onChange({ min: minValue, max: validValue});
         }
       }
     } else {
       if (range) {
         if (value > maxValue) {
+          if (onChange) onChange({ min: minValue, max: checkValidMinMaxValue(stepList, value)});
           setMaxValue(checkValidMinMaxValue(stepList, value));
         } else if (value < minValue) {
           setMinValue(checkValidMinMaxValue(stepList, value));
@@ -166,17 +178,21 @@ const Slider = ({ value, min, max, step = 1, range = false, label = 2, showLabel
           const betweenVal = minValue + (maxValue - minValue) / 2;
           if (value >= betweenVal) {
             setMaxValue(checkValidMinMaxValue(stepList, value));
+            if (onChange) onChange({ min: minValue, max: checkValidMinMaxValue(stepList, value)});
           } else {
             setMinValue(checkValidMinMaxValue(stepList, value));
+            if (onChange) onChange({ min: checkValidMinMaxValue(stepList, value), max: maxValue});
           }
         }
       } else {
         const validValue = checkValidMinMaxValue(stepList, value)
         if (lockFirst && validValue === min) {
           setMaxValue(stepList[1]);
+          if (onChange) onChange({ min: minValue, max: stepList[1]});
         }
         else {
           setMaxValue(validValue);
+          if (onChange) onChange({ min: minValue, max: validValue});
         }
       }
     }

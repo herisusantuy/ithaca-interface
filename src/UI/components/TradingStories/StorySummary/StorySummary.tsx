@@ -11,7 +11,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import Flex from '@/UI/layouts/Flex/Flex';
 
 // Utils
-import { getNumber, getNumberFormat } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberFormat } from '@/UI/utils/Numbers';
 import { useLastUrlSegment } from '@/UI/hooks/useLastUrlSegment';
 
 // SDK
@@ -24,12 +24,13 @@ import styles from './StorySummary.module.scss';
 // Types
 type Props = {
   showCollateral?: boolean;
+  hidePremium?: boolean;
   summary?: OrderDetails;
   onSubmit: () => void;
   className?: string;
 };
- 
-const StorySummary = ({ showCollateral = false, summary, onSubmit, className }: Props) => {
+
+const StorySummary = ({ showCollateral = false, summary, onSubmit, className, hidePremium = true }: Props) => {
   const { currencyPrecision } = useAppStore();
   const lastSegment = useLastUrlSegment()
   const classes = `${styles.orderSummary} ${className || ''}`.trim();
@@ -49,11 +50,11 @@ const StorySummary = ({ showCollateral = false, summary, onSubmit, className }: 
               <h3>
                 {summary
                   ? getNumberFormat(
-                      toPrecision(
-                        summary.orderLock.numeraireAmount - getNumber(summary.order.totalNetPrice),
-                        currencyPrecision.strike
-                      )
+                    toPrecision(
+                      summary.orderLock.numeraireAmount - getNumber(summary.order.totalNetPrice),
+                      currencyPrecision.strike
                     )
+                  )
                   : '-'}
               </h3>
               <LogoUsdc />
@@ -62,14 +63,16 @@ const StorySummary = ({ showCollateral = false, summary, onSubmit, className }: 
           </Flex>
         </div>
       )}
-      <div className={styles.summary}>
-        <h5>Total Premium</h5>
-        <div className={styles.summaryInfoWrapper}>
-          <h3>{summary ? getNumberFormat(summary.order.totalNetPrice) : '-'}</h3>
-          <LogoUsdc />
-          <p>USDC</p>
+      {hidePremium &&
+        <div className={styles.summary}>
+          <h5>Total Premium</h5>
+          <div className={styles.summaryInfoWrapper}>
+            <h3>{summary ? formatNumberByCurrency(getNumber(summary.order.totalNetPrice), 'string', 'USDC') : '-'}</h3>
+            <LogoUsdc />
+            <p>USDC</p>
+          </div>
         </div>
-      </div>
+      }
       <div className={styles.summary}>
         <h6>Platform Fee</h6>
         <div className={styles.summaryInfoWrapper}>

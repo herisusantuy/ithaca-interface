@@ -56,6 +56,7 @@ import Card from '@/UI/components/Card/Card';
 import TableLeaderboard from '@/UI/components/TableLeaderboard/TableLeaderboard';
 import ToastTest from '@/UI/components/Toast/ToastTest';
 import DatePicker from '@/UI/components/DatePicker/DatePicker';
+import ModalAcknowledgeTerms from '../components/ModalAcknowledgeTerms/ModalAcknowledgeTerms';
 
 // Layouts
 import Container from '@/UI/layouts/Container/Container';
@@ -88,7 +89,7 @@ const COMPONENT_GROUPS = [
       },
       {
         name: 'Balance',
-        component: <Balance fundLock={0} balance={'0'} margin='mtb-20' />,
+        component: <Balance selectedCurrency='USDC' fundLock={0} balance={'0'} margin='mtb-20' />,
         status: 'Approved',
       },
       {
@@ -620,6 +621,11 @@ const COMPONENT_GROUPS = [
             <ToastTest />
           </Flex>
         ),
+        status: 'To Review',
+      },
+      {
+        name: 'ModalAcknowledgeTerms',
+        component: <ModalAcknowledgeTerms isOpen={true} onCloseModal={() => {}} />,
         status: 'To Review',
       },
     ],

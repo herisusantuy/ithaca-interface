@@ -11,14 +11,18 @@ export interface CollateralSummary extends FundLockState {
 export const TABLE_COLLATERAL_HEADERS: string[] = [
   'Asset',
   'Balance',
-  'Fundlock Value',
+  'FundLock Value',
   'Net of Current Orders',
   'Live Order Collateral Net Value',
   '',
 ];
 
+export type TableCollateralSummary = {
+  [token: string]: CollateralSummary;
+};
+
 // Table strategy data
-export const TABLE_COLLATERAL_SUMMARY: { [token: string]: CollateralSummary } = {
+export const TABLE_COLLATERAL_SUMMARY: TableCollateralSummary = {
   WETH: {
     currency: 'WETH',
     currencyLogo: <LogoEth />,

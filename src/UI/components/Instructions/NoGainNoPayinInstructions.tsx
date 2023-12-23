@@ -1,65 +1,78 @@
+import { useMemo } from 'react';
+
 // Components
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Add from '@/UI/components/Icons/Add';
 import Subtract from '@/UI/components/Icons/Subtract';
-import ChevronRightHighlighted from '@/UI/components/Icons/ChevronRightHighlighted';
-import ChevronLeftHighlighted from '@/UI/components/Icons/ChevronLeftHighlighted';
+import ChevronLeftRight from '@/UI/components/Icons/ChevronLeftRight';
 
 // Styles
 import styles from './Instructions.module.scss';
+import dayjs from 'dayjs';
+import Minus from '../Icons/Minus';
+import UpsideDownside from './UpsideDownside';
 
 type NoGainNoPayinInstructionsProps = {
-  type?: string;
+  type?: 'Call' | 'Put';
+  currentExpiryDate: string;
 };
 
-const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsProps) => {
+const NoGainNoPayinInstructions = ({ type = 'Call', currentExpiryDate }: NoGainNoPayinInstructionsProps) => {
+
+  const renderCurrentExpiryDate = useMemo(() => {
+    return (
+      <>
+        Price @
+        <span className={`${styles.italic}  hide-psuedo p-0`}>
+          {dayjs(currentExpiryDate).format('DD MMM YY')}
+        </span>
+      </>
+    )
+  }, [currentExpiryDate]);
+  
   return (
     <div className={styles.container}>
       <p>
         i. Select <LogoEth /> Price Reference.
       </p>
-      <p>
-        ii. Select minimum Expected <LogoEth />
-        <span className='flex-column-center'>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Upside
-          </span>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Downside
-          </span>
-        </span>
-        move from <LogoEth /> Price Reference.
-      </p>
-      <p className='pl-54'>
-        (maximum potential <LogoUsdc /> loss if <LogoEth /> Price at Expiry = <LogoEth /> Price Reference)
-      </p>
+    
+      <div className={styles.gridContainer}>
+        {/* First row */}
+        <p>ii. Select minimum expected</p>
+        <p className='ml-6 mr-6'><LogoEth /></p>
+        <p>
+          <UpsideDownside type={type} />
+          move from
+        </p>
+        <p className='ml-6'><LogoEth /> Price Reference.</p>
+
+        {/* Second row */}
+        <p className='justify-end'>(maximum potential</p>
+        <p className='ml-6 mr-6'><LogoUsdc /></p>
+        <p>loss if <LogoEth /> {renderCurrentExpiryDate}=</p>
+        <p className='ml-6'><LogoEth /> Price Reference.)</p>
+      </div>
+
       <p>
         iii. Post minimum expected <LogoEth className='ml-10' />
-        <span className='flex-column-center'>
-          <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Upside
-          </span>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            Downside
-          </span>
-        </span>
+        <UpsideDownside type={type} />
         as collateral.
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price at Expiry
-        <ChevronRightHighlighted />
+        - If <LogoEth /> {renderCurrentExpiryDate}
+        <ChevronLeftRight colorGreater={type === 'Call' ? '#54565b' : 'white'} colorLess={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
-        Price Reference <Add />
+        Price Reference {type === 'Call' ? <Add /> : <Minus color='#c5c5d9'/> }
         <span className='flex-column-center'>
-          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
-            min Upside
-          </span>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
+            min Upside 
+          </span>
+          <span className={type == 'Put' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Downside
           </span>
         </span>
-        , receive <LogoEth /> Price at Expiry <Subtract />
+        , receive <LogoEth /> {renderCurrentExpiryDate} <Subtract />
         <span className='flex-column-center'>
           <span className={type == 'Call' ? 'color-white hide-psuedo p-0' : 'color-white-30 hide-psuedo p-0'}>
             min Upside
@@ -71,7 +84,8 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
         .
       </p>
       <p className='pl-18'>
-        - If <LogoEth /> Price at Expiry <ChevronLeftHighlighted />
+        - If <LogoEth /> {renderCurrentExpiryDate} 
+        <ChevronLeftRight colorLess={type === 'Call' ? '#54565b' : 'white'} colorGreater={type === 'Call' ? 'white' : '#54565b'} /> 
         <LogoEth className='ml-6' />
         Price Reference, receive collateral back.
       </p>
@@ -80,3 +94,4 @@ const NoGainNoPayinInstructions = ({ type = 'Call' }: NoGainNoPayinInstructionsP
 };
 
 export default NoGainNoPayinInstructions;
+  
