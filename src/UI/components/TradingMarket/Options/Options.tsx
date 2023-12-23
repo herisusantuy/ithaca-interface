@@ -44,7 +44,7 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
+import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 dayjs.extend(duration);
 
@@ -365,6 +365,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         />
       )}
       {!compact && <OrderSummaryMarkets
+        asContainer={false}
         limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
         collatarelUSDC={

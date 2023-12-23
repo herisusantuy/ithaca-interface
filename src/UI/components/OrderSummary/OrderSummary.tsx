@@ -11,7 +11,7 @@ import styles from './OrderSummary.module.scss';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import Warning from '../Icons/Warning';
 import ArrowUpRight from '../Icons/ArrowUpRight';
-import { useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
 import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
@@ -23,16 +23,25 @@ import { TABLE_COLLATERAL_SUMMARY } from '@/UI/constants/tableCollateral';
 import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
-type OrderSummaryProps = {
+type OrderSummaryMarketsProps = {
   limit: string | number;
   collatarelETH: string | number;
   collatarelUSDC: string | number;
   premium?: string | number;
   fee: string | number;
   submitAuction: () => void;
+  asContainer?: boolean;
 };
 
-const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee, submitAuction }: OrderSummaryProps) => {
+const OrderSummaryMarkets = ({
+  limit,
+  collatarelETH,
+  collatarelUSDC,
+  premium = '-',
+  fee,
+  submitAuction,
+  asContainer = true,
+}: OrderSummaryMarketsProps) => {
   const { isAuthenticated, ithacaSDK, systemInfo } = useAppStore();
   const publicClient = usePublicClient();
   const { address } = useAccount();
@@ -40,12 +49,12 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
   const [collateralSummary, setCollateralSummary] = useState(TABLE_COLLATERAL_SUMMARY);
   const [selectedCurrency, setSelectedCurrency] = useState<{ name: string; value: string }>({
     name: 'USDC',
-    value: 'USDC'
+    value: 'USDC',
   });
   const [modalAmount, setModalAmount] = useState('');
   const [transactionInProgress, setTransactionInProgress] = useState(false);
-  
-  const device = useDevice()
+
+  const device = useDevice();
 
   useBalance({
     address,
@@ -71,7 +80,6 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
     },
   });
 
-
   const fetchFundlockState = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
@@ -82,9 +90,8 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
         ['WETH']: { ...summary['WETH'], ...fundlockWETH },
         ['USDC']: { ...summary['USDC'], ...fundlockUSDC },
       }));
-    }
-    catch (e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   }, [ithacaSDK, isAuthenticated]);
 
@@ -94,49 +101,63 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
 
   const handleSubmitToAuction = () => {
     if (Number(premium) >= collateralSummary['USDC'].fundLockValue) {
-      setModalOpen(true)
+      setModalOpen(true);
     } else {
-      submitAuction()
+      submitAuction();
     }
-  }
+  };
+
+  const Container = ({ children }: { children: ReactNode }) =>
+    asContainer ? (
+      <Panel margin={`'br-20 p-20 ${device === 'desktop' ? 'mt-125' : 'mt-16'}`}>{children}</Panel>
+    ) : (
+      <>{children}</>
+    );
 
   return (
-    <Panel margin={`'br-20 p-20 ${ (device === 'desktop') ? 'mt-125' : 'mt-16' }`}>
-      <Flex 
-        direction={ (device === 'desktop') ? 'row-space-between' : 'column-space-between' } 
-        gap={(device !== 'desktop') ? 'gap-16' : 'gap-6' 
-      }>
-        <h3 className={`mb-0 ${ (device !== 'desktop') && 'full-width' }`}>Order Summary</h3>
+    <Container>
+      {!asContainer && <h3 className={`mb-12 mt-10 ${device !== 'desktop' && 'full-width'}`}>Order Summary</h3>}
+      <Flex
+        direction={device === 'desktop' ? 'row-space-between' : 'column-space-between'}
+        gap={device !== 'desktop' ? 'gap-16' : 'gap-6'}
+      >
+        {asContainer && <h3 className={`mb-0 ${device !== 'desktop' && 'full-width'}`}>Order Summary</h3>}
         <div className={styles.orderWrapper}>
-          <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
+          <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5>Order Limit</h5>
             <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
-        <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
+        <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
           <h5>Collateral Requirement</h5>
-          <Flex direction={ (device === 'desktop') ? 'row' : 'justify-end'} gap='gap-10'>
+          <Flex direction={device === 'desktop' ? 'row' : 'justify-end'} gap='gap-10'>
             <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
             <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </Flex>
         <div className={styles.platformWrapper}>
-          <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
+          <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5 className=''>Platform Fee</h5>
             <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
-        <Flex direction={ (device === 'desktop') ? 'column' : 'row-space-between'} gap='gap-6'>
+        <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
           <h5 className='color-white'>Total Premium</h5>
-          <CurrencyDisplay amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'} symbol={<LogoUsdc />} currency='USDC' />
+          <CurrencyDisplay
+            amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'}
+            symbol={<LogoUsdc />}
+            currency='USDC'
+          />
         </Flex>
         <Flex direction='column'>
           <Button size='lg' title='Click to submit to auction' onClick={handleSubmitToAuction}>
             Submit to Auction
           </Button>
-          {Number(premium) > collateralSummary['USDC'].fundLockValue && <div className={styles.balanceWarning}>
-            <Warning /> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight />
-          </div>}
+          {Number(premium) > collateralSummary['USDC'].fundLockValue && (
+            <div className={styles.balanceWarning}>
+              <Warning /> <div className={styles.balanceText}>Insufficient Balance</div> <ArrowUpRight />
+            </div>
+          )}
         </Flex>
       </Flex>
       <Modal
@@ -205,8 +226,8 @@ const OrderSummary = ({ limit, collatarelETH, collatarelUSDC, premium = '-', fee
           />
         )}
       </Modal>
-    </Panel>
+    </Container>
   );
 };
 
-export default OrderSummary;
+export default OrderSummaryMarkets;
