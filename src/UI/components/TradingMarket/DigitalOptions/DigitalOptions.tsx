@@ -140,9 +140,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
+
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error(`Order estimation for ${binaryCallOrPut} failed`, error);
@@ -335,11 +338,10 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
             : '-'
         }
         premium={orderDetails?.order.totalNetPrice}
-        fee={1.5}
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
         submitAuction={handleSubmit} />}
       {/* {!compact && <Greeks />} */}
     </>
   );
 };
-
 export default DigitalOptions;

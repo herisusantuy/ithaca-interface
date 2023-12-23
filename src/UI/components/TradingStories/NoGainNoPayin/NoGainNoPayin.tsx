@@ -114,9 +114,11 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const updateOrderDetails = async (order: ClientConditionalOrder) => {
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast

@@ -153,9 +153,11 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast
