@@ -113,7 +113,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
-
+  
   const dataToRows = (res: Order[]) => {
     setData(
       res.map(row => ({
@@ -289,11 +289,18 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
 
   // Slice the data to only show 9 results
   useEffect(() => {
-    let filterData = productFilter(data, productArray);
-    filterData = sideFilter(filterData, sideArray);
-    filterData = currencyFilter(filterData, currencyArray);
-    setSlicedData(filterData.slice(pageStart, pageEnd));
-  }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
+    const data = JSON.parse(
+      '{"clientOrderId":1744140865017957,"details":"","orderDate":"22 Dec 23 17:20","currencyPair":"WETH/USDC","product":"Position Builder","side":"BUY","tenor":"07 Jan 99","wethAmount":-1,"usdcAmount":0,"orderLimit":1,"expandedInfo":[{"type":"Spot","side":"BUY","expiryDate":"12 Jul 9901","size":1}]}'
+    );
+    setSlicedData([data, data, data]);
+  }, []);
+  // useEffect(() => {
+  //   let filterData = productFilter(data, productArray);
+  //   filterData = sideFilter(filterData, sideArray);
+  //   filterData = currencyFilter(filterData, currencyArray);
+  //   console.log("DEBUG INFO 23/12/2023 13:34:42",JSON.stringify(filterData.slice(pageStart, pageEnd)[0]))
+  //   setSlicedData(filterData.slice(pageStart, pageEnd));
+  // }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -437,7 +444,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       case TABLE_TYPE.ORDER:
         return TABLE_ORDER_HEADERS_FOR_POSITIONS;
       case TABLE_TYPE.LIVE:
-        return TABLE_ORDER_LIVE_ORDERS
+        return TABLE_ORDER_LIVE_ORDERS;
       default:
         return TABLE_ORDER_HEADERS;
     }
@@ -452,7 +459,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
               title='Click to cancel all orders'
               className={styles.cancelAllBtn}
               onClick={handleCancelAllOrder}
-              variant='link'
+              variant='clear'
             >
               Cancel All
             </Button>
@@ -619,18 +626,20 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       default:
         return (
           <>
-            <div className={styles.cell}>{row.orderDate && renderDate(row.orderDate)}</div>
-            <div className={styles.cell}>
+            <div className={styles.cellContent}>
+              {row.orderDate && renderDate(row.orderDate)}
+            </div>
+            <div className={styles.cellContent}>
               <div className={styles.currency}>{row.currencyPair}</div>
             </div>
-            <div className={styles.cell}>{row.product}</div>
-            <div className={styles.cell}>{getSideIcon(row.side)}</div>
-            <div className={styles.cell}>{row.tenor && renderDate(row.tenor)}</div>
-            <div className={styles.cell}>
+            <div className={styles.cellContent}>{row.product}</div>
+            <div className={styles.cellContent}>{getSideIcon(row.side)}</div>
+            <div className={styles.cellContent}>{row.tenor && renderDate(row.tenor)}</div>
+            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>
               <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
             </div>
-            <div className={styles.cell}>{row.orderLimit}</div>
-            <div className={styles.cell}>
+            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>{row.orderLimit}</div>
+            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>
               {cancelOrder && (
                 <Button
                   title='Click to cancel order'
@@ -654,64 +663,67 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         return <ExpandedTable data={row.expandedInfo || []} />;
     }
   };
-
+  // 'Collateral Amount',
+  // 'Order Limit',
   return (
     <>
-      <div className={tableClass.trim()}>
-        <div className={`${styles.row} ${styles.header}`}>
-          {getTableHeaders().map((header, idx) => (
-            <div className={styles.cell} key={idx}>
-              {getHeaderTemplate(header)}
-            </div>
-          ))}
-        </div>
-        {slicedData.length > 0 ? (
-          slicedData.map((row, rowIndex) => {
-            const isRowExpanded = expandedRow.includes(rowIndex);
+      <div className={`${styles.gridContainerTable}`}>
+        {/* THEAD */}
+        {getTableHeaders().map((header, idx) => {
+        
+          return (
+          <div className={styles.cell} key={idx} style={{justifyContent: header.alignment}}>
+            {getHeaderTemplate(header.name)}
+          </div>
+        )})}
 
-            return (
-              <Fragment key={rowIndex}>
-                <div className={`${styles.row} ${isRowExpanded ? styles.isExpanded : ''}`}>
-                  <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                    <Button
-                      title='Click to expand dropdown'
-                      className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
-                    >
-                      <DropdownOutlined />
-                    </Button>
-                  </div>
-                  {getTableRowTemplate(row, rowIndex)}
-                </div>
-                <AnimatePresence>
-                  {isRowExpanded && (
-                    <motion.div
-                      className={styles.tableRowExpanded}
-                      initial='closed'
-                      animate='open'
-                      exit='closed'
-                      variants={variants}
-                    >
-                      {row.expandedInfo && getExpandedTableTemplate(row)}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Fragment>
-            );
-          })
-        ) : isLoading ? (
-          <Container size='loader' margin='ptb-150'>
-            <Loader type='lg' />
-          </Container>
-        ) : (
-          <p className={styles.emptyTable}>No results found</p>
-        )}
+        <div className={styles.line} style={{marginTop: 5, marginBottom: 7}} />
+        {/* TBODY */}
+        {slicedData.map((row, rowIndex) => {
+          const isRowExpanded = expandedRow.includes(rowIndex);
+          // const isRowExpanded = true;
+          return (
+            <>
+              {rowIndex > 0 && <div className={styles.line} style={{marginTop: 4, marginBottom: 7}} />}
+              <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
+                <Button
+                  title='Click to expand dropdown'
+                  className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
+                >
+                  <DropdownOutlined />
+                </Button>
+              </div>
+
+              {getTableRowTemplate(row, rowIndex)}
+
+              <AnimatePresence>
+                {isRowExpanded && (
+                  <motion.div
+                    className={styles.tableRowExpanded}
+                    initial='closed'
+                    animate='open'
+                    exit='closed'
+                    variants={variants}
+                  >
+                    <div className={styles.tableExpanderContainer}>
+                      <div className={styles.gridContainerTable}>
+                        {getExpandedTableTemplate(row)}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          );
+        })}
       </div>
+      
 
       <Flex direction='row-space-between' margin='mt-35'>
         {description ? (
           <TableDescription
             {...collateralData}
-            // totalCollateral={30}
+            
           />
         ) : (
           <div />
