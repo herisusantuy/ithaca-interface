@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useAccount } from 'wagmi';
-import { useAppStore } from '@/UI/lib/zustand/store';
+
 // Components
 import Meta from '@/UI/components/Meta/Meta';
 import Main from '@/UI/layouts/Main/Main';
@@ -14,8 +13,12 @@ import DiscordIcon from '@/UI/components/Icons/Discord';
 import TelegramIcon from '@/UI/components/Icons/Telegram';
 import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 // API
-import { GetOLMemberData, JoinDiscord, JoinTelegram, JoinTwitter } from './PointsAPI';
+import { GetOLMemberData, JoinDiscord, JoinTelegram, JoinTwitter } from '@/UI/components/Points/PointsAPI';
+import { useAccount } from 'wagmi';
+import { useAppStore } from '@/UI/lib/zustand/store';
+
 // Styles
 import styles from './points-program.module.scss';
 import DiscordAuth from '@/UI/components/DiscordAuth/DiscordAuth';

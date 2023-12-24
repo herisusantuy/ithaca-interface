@@ -7,25 +7,18 @@ import Container from '@/UI/layouts/Container/Container';
 import Card2 from '@/UI/components/Card/Card2';
 import Panel from '@/UI/layouts/Panel/Panel';
 import TableReferralsLeaderBoard from '@/UI/components/TableReferralsLeaderBoard/TableReferralsLeaderBoard';
+import Loader from '@/UI/components/Loader/Loader';
 
 // Utils
-import { GetReferrals } from '@/pages/points-program/PointsAPI';
+import { GetReferrals } from '@/UI/components/Points/PointsAPI';
 import { useAppStore } from '@/UI/lib/zustand/store';
+import { useAccount } from 'wagmi';
+
+// Constants
+import { leaderboardMemberType, TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
 
 // Styles
 import styles from '@/pages/referrals-leaderboard/referrals-leaderboard.module.scss';
-import { useAccount } from 'wagmi';
-import Loader from '@/UI/components/Loader/Loader';
-import { TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
-
-type member = {
-  ranking: number;
-  referrerToken: string;
-  acceptedInvites: number;
-  username: string;
-  invitedBy: string;
-  colors: [string, string];
-};
 
 const getRandomColor = (): string => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -34,27 +27,30 @@ const getRandomColor = (): string => {
 const ReferralsLeaderboard = () => {
   const { isAuthenticated } = useAppStore();
   const { isConnected } = useAccount();
-  const [currentUser, setCurrentUser] = useState<member>();
-  const [members, setMembers] = useState<member[]>([]);
+  const [currentUser, setCurrentUser] = useState<leaderboardMemberType>();
+  const [members, setMembers] = useState<leaderboardMemberType[]>([]);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     if (!isConnected || !isAuthenticated) return;
-    GetReferrals().then(res => {
+    GetReferrals({ page }).then(res => {
       if (res) {
         const { currentUser, referralsData } = res;
 
-        setCurrentUser({ ranking: 0, ...currentUser });
-        const membersData: member[] = (Object.values(referralsData) as member[]).map((userData: member) => {
-          const colors: [string, string] = [getRandomColor(), getRandomColor()];
-          return {
-            ranking: 0,
-            username: userData.username,
-            acceptedInvites: userData.acceptedInvites,
-            referrerToken: userData.referrerToken,
-            invitedBy: '',
-            colors: colors,
-          };
-        });
+        setCurrentUser({ ranking: 0, ...currentUser[0] });
+        const membersData: leaderboardMemberType[] = (Object.values(referralsData) as leaderboardMemberType[]).map(
+          (userData: leaderboardMemberType) => {
+            const colors: [string, string] = [getRandomColor(), getRandomColor()];
+            return {
+              ranking: 0,
+              username: userData.username,
+              acceptedInvites: userData.acceptedInvites,
+              referrerToken: userData.referrerToken,
+              invitedBy: '',
+              colors: colors,
+            };
+          }
+        );
 
         membersData
           .sort((a, b) => b.acceptedInvites - a.acceptedInvites)
@@ -66,7 +62,9 @@ const ReferralsLeaderboard = () => {
 
   useEffect(() => {
     if (members.length && currentUser) {
-      const currentUserData: member | undefined = members.find(member => member.username === currentUser.username);
+      const currentUserData: leaderboardMemberType | undefined = members.find(
+        member => member.username === currentUser.username
+      );
       if (currentUserData) setCurrentUser(currentUserData);
     }
   }, [members]);
@@ -92,7 +90,7 @@ const ReferralsLeaderboard = () => {
                 </div>
                 <Panel margin='p-30 p-tablet-16'>
                   {members.length ? (
-                    <TableReferralsLeaderBoard data={members} />
+                    <TableReferralsLeaderBoard data={members} page={page} setPage={(page: number) => setPage(page)} />
                   ) : (
                     <div className={styles.loaderWrapper}>
                       <Loader type={'sm'} />
@@ -107,7 +105,11 @@ const ReferralsLeaderboard = () => {
                   <Card2 label='Accepted Invites' value={8} />
                 </div>
                 <Panel margin='p-30 p-tablet-16'>
-                  <TableReferralsLeaderBoard data={TABLE_REFERRALS_LEADERBOARD_DATA} />
+                  <TableReferralsLeaderBoard
+                    data={TABLE_REFERRALS_LEADERBOARD_DATA}
+                    page={page}
+                    setPage={(page: number) => setPage(page)}
+                  />
                 </Panel>
               </>
             )}

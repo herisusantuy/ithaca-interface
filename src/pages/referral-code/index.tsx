@@ -8,17 +8,17 @@ import Meta from '@/UI/components/Meta/Meta';
 import Panel from '@/UI/layouts/Panel/Panel';
 import Button from '@/UI/components/Button/Button';
 import Loader from '@/UI/components/Loader/Loader';
+import Toast from '@/UI/components/Toast/Toast';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 // Utils
-import { GetOLMemberData } from '@/pages/points-program/PointsAPI';
+import { useAccount } from 'wagmi';
+import { GetOLMemberData } from '@/UI/components/Points/PointsAPI';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import useToast from '@/UI/hooks/useToast';
 
 // Styles
 import styles from '@/pages/referral-code/referral-code.module.scss';
-import Toast from '@/UI/components/Toast/Toast';
-import { useAccount } from 'wagmi';
 
 const ReferralCode = () => {
   const { isAuthenticated } = useAppStore();

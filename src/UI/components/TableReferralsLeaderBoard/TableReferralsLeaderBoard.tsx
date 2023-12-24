@@ -26,6 +26,8 @@ import styles from './TableReferralsLeaderBoard.module.scss';
 // Types
 type TableReferralsLeaderBoardProps = {
   data: ReferralsLeaderboardEntry[];
+  page: number;
+  setPage: (page: number) => void;
 };
 
 type SortConfig = {
@@ -33,7 +35,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending';
 };
 
-const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => {
+const TableReferralsLeaderBoard = ({ data, page, setPage }: TableReferralsLeaderBoardProps) => {
   const initialSortConfig: SortConfig = {
     key: 'ranking',
     direction: 'ascending',
@@ -46,14 +48,12 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
     User: 'username',
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(initialSortConfig);
 
   const pageLimit = 9;
 
-  // Handle page change in pagination
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setPage(page);
   };
 
   // Sort the data
@@ -130,7 +130,7 @@ const TableReferralsLeaderBoard = ({ data }: TableReferralsLeaderBoardProps) => 
           <Pagination
             totalItems={data.length}
             itemsPerPage={pageLimit}
-            currentPage={currentPage}
+            currentPage={page}
             onPageChange={handlePageChange}
           />
         </Flex>

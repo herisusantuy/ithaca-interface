@@ -1,4 +1,4 @@
-// export type memberParams = any;
+import { PointsProgramMember, ReferralsRequestProps } from '@/UI/constants/pointsProgram';
 
 const RequestHandle = async ({ method = 'POST', data, path }: { method?: string; data?: object; path: string }) => {
   const headers = {
@@ -42,7 +42,7 @@ export const JoinPointsProgram = async (referralToken?: string) => {
   return await RequestHandle({ data: data, path: 'points/join' });
 };
 
-export const GetOLMemberData = async (referralToken?: string): Promise<any> => {
+export const GetOLMemberData = async (referralToken?: string): Promise<PointsProgramMember> => {
   const session = getSessionInfo();
 
   const result = await RequestHandle({ method: 'GET', path: `ol/member?card=${session.ethAddress}` });
@@ -83,10 +83,13 @@ export const JoinTelegram = async () => {
   return await RequestHandle({ data: data, path: 'ol/event' });
 };
 
-export const GetReferrals = async () => {
+export const GetReferrals = async ({ page }: ReferralsRequestProps) => {
   const session = getSessionInfo();
 
-  return await RequestHandle({ method: 'GET', path: `ol/referrals?card=${session.ethAddress}` });
+  return await RequestHandle({
+    method: 'GET',
+    path: `ol/referrals?card=${session.ethAddress}&page=${page}&count=9`,
+  });
 };
 
 export const UpdateUsername = async (name: string) => {

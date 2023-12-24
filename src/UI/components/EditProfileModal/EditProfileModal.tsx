@@ -12,7 +12,7 @@ import WalletIcon from '../Icons/Wallet';
 import CopyIcon from '../Icons/CopyIcon';
 
 // Utils
-import { GetOLMemberData, UpdateUsername } from '@/pages/points-program/PointsAPI';
+import { GetOLMemberData, UpdateUsername } from '@/UI/components/Points/PointsAPI';
 import { formatEthAddress } from '@/UI/utils/Numbers';
 import useToast from '@/UI/hooks/useToast';
 
