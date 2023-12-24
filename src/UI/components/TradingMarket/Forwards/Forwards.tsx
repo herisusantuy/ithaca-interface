@@ -42,7 +42,7 @@ import { SIDE_OPTIONS } from '@/UI/constants/options';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
-import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
+import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } = useAppStore();
@@ -278,6 +278,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
         />
       )}
       {!compact && <OrderSummaryMarkets
+        asContainer={false}
         limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
         collatarelUSDC={
