@@ -15,7 +15,7 @@ import { PointsProgramAccountsEnum } from '@/UI/constants/pointsProgram';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 // API
-import { GetOLMemberData, JoinDiscord, JoinTelegram, JoinTwitter } from '@/UI/components/Points/PointsAPI';
+import { GetOLMemberData, JoinDiscord, JoinTelegram, JoinTwitter, SSEConnect } from '@/UI/components/Points/PointsAPI';
 import { useAccount } from 'wagmi';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
@@ -41,12 +41,20 @@ const PointsProgram = () => {
 
   const [isOLConnected, setIsOLConnected] = useState<boolean | null>(null);
   const [referralToken, setReferralToken] = useState<string>();
+  const [socketListening, setSocketListening] = useState<boolean>(false);
   const [actionsPerformed, setActionsPerformed] = useState<PointProgramActions>({
     WALLET: false,
     TWITTER: false,
     DISCORD: false,
     TELEGRAM: false,
   });
+
+  useEffect(() => {
+    if (!socketListening) {
+      SSEConnect();
+      setSocketListening(true);
+    }
+  }, [socketListening]);
 
   useEffect(() => {
     const token = searchParams.get('referral');

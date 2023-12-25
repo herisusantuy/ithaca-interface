@@ -46,7 +46,7 @@ const ReferralsLeaderboard = () => {
               username: userData.username,
               acceptedInvites: userData.acceptedInvites || 0,
               referrerToken: userData.referrerToken,
-              invitedBy: '',
+              invitedBy: userData.invitedBy,
               colors: colors,
             };
           }

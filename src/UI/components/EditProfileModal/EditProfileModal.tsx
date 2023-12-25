@@ -72,7 +72,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
   };
 
   const handleSaveChanges = () => {
-    UpdateUsername(leaderboardName).then(() => {
+    UpdateUsername(leaderboardName).then(res => {
       showToast(
         {
           id: new Date().getTime(),

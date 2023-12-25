@@ -1,5 +1,22 @@
 import { PointsProgramMember, ReferralsRequestProps } from '@/UI/constants/pointsProgram';
 
+export const SSEConnect = () => {
+  const sse = new EventSource('http://localhost:8000/sse');
+
+  sse.onopen = () => {
+    console.log('SSE is connected successfully');
+  };
+
+  sse.onmessage = event => {
+    console.log(`SSE Message: ${event.data}`);
+  };
+
+  sse.onerror = event => {
+    console.log('SSE Error occurred: ', event);
+    sse.close();
+  };
+};
+
 const RequestHandle = async ({ method = 'POST', data, path }: { method?: string; data?: object; path: string }) => {
   const headers = {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -18,8 +35,8 @@ const RequestHandle = async ({ method = 'POST', data, path }: { method?: string;
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     return await response.json();
-  } catch (e) {
-    return e;
+  } catch (error) {
+    return error;
   }
 };
 
