@@ -55,10 +55,10 @@ const PointsProgram = () => {
 
   useEffect(() => {
     if (!isConnected || !isAuthenticated) return;
-    SetIsOLConnected(false);
+    setIsOLConnected(false);
     GetOLMemberData(referralToken).then(data => {
       if (data) {
-        SetIsOLConnected(true);
+        setIsOLConnected(true);
         if (data.labels && data.labels.length) {
           const actionPerforming: PointProgramActions = actionsPerformed;
           const labelsArray: OpenLoyaltyLabel[] = Object.values(data.labels);
@@ -95,7 +95,7 @@ const PointsProgram = () => {
         WALLET: false,
       }));
       resetActions();
-      SetIsOLConnected(null);
+      setIsOLConnected(null);
     },
   });
 
