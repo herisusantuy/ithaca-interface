@@ -39,7 +39,7 @@ const PointsProgram = () => {
   const { isConnected } = useAccount();
   const searchParams = useSearchParams();
 
-  const [isOLConnected, SetIsOLConnected] = useState<boolean | null>(null);
+  const [isOLConnected, setIsOLConnected] = useState<boolean | null>(null);
   const [referralToken, setReferralToken] = useState<string>();
   const [actionsPerformed, setActionsPerformed] = useState<PointProgramActions>({
     WALLET: false,
