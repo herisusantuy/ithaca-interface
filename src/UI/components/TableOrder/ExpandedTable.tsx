@@ -25,46 +25,45 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
   return (
     <>
       <EmptyDiv />
-      <div className={styles.headerExpandedTable}>
-        Strategy
-      </div>
+      <div className={styles.headerExpandedTable}>Strategy</div>
       <EmptyDiv />
       {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (
-        <div className={styles.cell} style={{flexDirection: 'column', justifyContent: header.alignment, alignItems: header.alignment}}>
+        <div
+          className={styles.cell}
+          style={{ flexDirection: 'column', justifyContent: header.alignment, alignItems: header.alignment }}
+        >
           <div className={styles.cell} key={idx}>
             {header.name}
           </div>
         </div>
       ))}
       <EmptyDiv />
-      <div style={{gridColumn: 'b/i'}}>
-        <div className={styles.line} />
+      <div style={{ gridColumn: 'b/i' }}>
+        <div className={styles.separator} />
       </div>
       <EmptyDiv />
       {[...data, ...data].map((item, index) => (
-          <>
-            <div style={{gridColumn: 'a/j', marginTop: 5}}>
-            </div>
-            <EmptyDiv />
-            <div className={`${styles.cellContentExpanded} ${styles.bolded}`}>{item.type}</div>
-            <EmptyDiv />
-            <EmptyDiv />
-            <div className={styles.cellContentExpanded}>{getSideIcon(item.side)}</div>
-            <div className={styles.cellContentExpanded}>
-              <span className={styles.date}>{item.expiryDate}</span>
-            </div>
-            <div className={styles.cellContentExpanded} style={{justifyContent: 'flex-end'}}>
-              <SingleCurrencyAmount amount={item.size} symbol={<LogoEth />} currency='WETH' />
-            </div>
-            <div className={styles.cellContentExpanded} style={{justifyContent: 'flex-end'}}>
-              <SingleCurrencyAmount amount={item.strike} symbol={<LogoUsdc />} currency='USDC' />
-            </div>
-            
-            <EmptyDiv />
-          </>
-        ))}
-        <div style={{gridColumn: 'a/j', marginTop: 15}}>
-        </div>
+        <>
+          <div style={{ gridColumn: 'a/j', marginTop: 5 }}></div>
+          <EmptyDiv />
+          <div className={`${styles.cellContentExpanded} ${styles.bolded}`}>{item.type}</div>
+          <EmptyDiv />
+          <EmptyDiv />
+          <div className={styles.cellContentExpanded}>{getSideIcon(item.side)}</div>
+          <div className={styles.cellContentExpanded}>
+            <span className={styles.date}>{item.expiryDate}</span>
+          </div>
+          <div className={styles.cellContentExpanded} style={{ justifyContent: 'flex-end' }}>
+            <SingleCurrencyAmount amount={item.size} symbol={<LogoEth />} currency='WETH' />
+          </div>
+          <div className={styles.cellContentExpanded} style={{ justifyContent: 'flex-end' }}>
+            <SingleCurrencyAmount amount={item.strike} symbol={<LogoUsdc />} currency='USDC' />
+          </div>
+
+          <EmptyDiv />
+        </>
+      ))}
+      <div style={{ gridColumn: 'a/j', marginTop: 15 }}></div>
     </>
   );
 };

@@ -230,6 +230,11 @@
   }
 }
 
+.filterDropdownContainer {
+  left: rem(-100);
+  position: relative;
+}
+
 .filterDropdown {
   @include spacing(padding, 16, 'all');
   position: absolute;
@@ -280,6 +285,7 @@
   @include font-size('text-xs', 'regular');
   padding: rem(150) 0;
   text-align: center;
+  align-self: center;
 }
 
 .isOpacity {
@@ -289,6 +295,7 @@
 
 .gridContainerTable {
   // width: '100%';
+  position: relative;
   display: grid;
   grid-template-columns: [a] 100px [b] 1fr [c] 1fr [d] 1fr [e] 1fr [f] 1fr [g] 1fr [h] 1fr [i] 1fr [j];
 
@@ -300,6 +307,7 @@
   // margin-bottom: 0.2rem;
 
   .cell {
+    position: relative;
     align-items: center;
     display: flex;
     // justify-content: center;
@@ -348,7 +356,7 @@
   gap: rem(16)
 }
 
-.line {
+.separator {
   grid-column: a/j;
   // border-top: 1px solid red;
   border-top: rem(1) solid var(--white-rgba-10);

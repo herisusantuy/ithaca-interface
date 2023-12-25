@@ -64,6 +64,7 @@ import Loader from '../Loader/Loader';
 import DropdownOutlined from '../Icons/DropdownOutlined';
 import ExpandedPositionTable from './ExpandedPositionTable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { transformClientOpenOrders } from './helpers';
 dayjs.extend(customParseFormat);
 
 // Types
@@ -113,31 +114,6 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
-  
-  const dataToRows = (res: Order[]) => {
-    setData(
-      res.map(row => ({
-        clientOrderId: row.orderId,
-        details: '',
-        orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'),
-        currencyPair: row.collateral?.currencyPair || row.details[0].currencyPair,
-        product: row.orderDescr,
-        side: row.details.length === 1 ? row.details[0].side : '',
-        tenor: dayjs(row.details[0].expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'),
-        wethAmount: row.collateral?.underlierAmount,
-        usdcAmount: row.collateral?.numeraireAmount,
-        orderLimit: row.netPrice,
-        expandedInfo: row.details.map(leg => ({
-          type: leg.contractDto.payoff,
-          side: leg.side,
-          expiryDate: dayjs(leg.expiry.toString(), 'YYYYMMDD').format('DD MMM YY'),
-          size: leg.originalQty,
-          strike: leg.contractDto.economics.strike,
-          enterPrice: leg.execPrice,
-        })),
-      })) as TableRowDataWithExpanded[]
-    );
-  };
 
   const positionsDataToRows = (res: Position[]) => {
     setData(
@@ -174,7 +150,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       switch (type) {
         case TABLE_TYPE.LIVE:
           ithacaSDK.orders.clientOpenOrders().then(res => {
-            dataToRows(res);
+            setData(transformClientOpenOrders(res));
             setLoading(false);
           });
           if (description) {
@@ -198,7 +174,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
           break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {
-            dataToRows(res);
+            setData(transformClientOpenOrders(res));
             setLoading(false);
           });
           break;
@@ -287,20 +263,12 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     };
   }, []);
 
-  // Slice the data to only show 9 results
   useEffect(() => {
-    const data = JSON.parse(
-      '{"clientOrderId":1744140865017957,"details":"","orderDate":"22 Dec 23 17:20","currencyPair":"WETH/USDC","product":"Position Builder","side":"BUY","tenor":"07 Jan 99","wethAmount":-1,"usdcAmount":0,"orderLimit":1,"expandedInfo":[{"type":"Spot","side":"BUY","expiryDate":"12 Jul 9901","size":1}]}'
-    );
-    setSlicedData([data, data, data]);
-  }, []);
-  // useEffect(() => {
-  //   let filterData = productFilter(data, productArray);
-  //   filterData = sideFilter(filterData, sideArray);
-  //   filterData = currencyFilter(filterData, currencyArray);
-  //   console.log("DEBUG INFO 23/12/2023 13:34:42",JSON.stringify(filterData.slice(pageStart, pageEnd)[0]))
-  //   setSlicedData(filterData.slice(pageStart, pageEnd));
-  // }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
+    let filterData = productFilter(data, productArray);
+    filterData = sideFilter(filterData, sideArray);
+    filterData = currencyFilter(filterData, currencyArray);
+    setSlicedData(filterData.slice(pageStart, pageEnd));
+  }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -607,11 +575,6 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     }
   };
 
-  // Get table className
-  const tableClass = `${styles.table} ${!isAuthenticated ? styles.isOpacity : ''} ${
-    type === TABLE_TYPE.ORDER ? styles.isOrder : ''
-  }`;
-
   const getTableRowTemplate = (row: TableRowDataWithExpanded, rowIndex: number) => {
     switch (type) {
       case TABLE_TYPE.ORDER:
@@ -626,20 +589,20 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       default:
         return (
           <>
-            <div className={styles.cellContent}>
-              {row.orderDate && renderDate(row.orderDate)}
-            </div>
+            <div className={styles.cellContent}>{row.orderDate && renderDate(row.orderDate)}</div>
             <div className={styles.cellContent}>
               <div className={styles.currency}>{row.currencyPair}</div>
             </div>
             <div className={styles.cellContent}>{row.product}</div>
             <div className={styles.cellContent}>{getSideIcon(row.side)}</div>
             <div className={styles.cellContent}>{row.tenor && renderDate(row.tenor)}</div>
-            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>
+            <div className={styles.cellContent} style={{ justifyContent: 'flex-end' }}>
               <CollateralAmount wethAmount={row.wethAmount} usdcAmount={row.usdcAmount} />
             </div>
-            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>{row.orderLimit}</div>
-            <div className={styles.cellContent} style={{justifyContent: 'flex-end'}}>
+            <div className={styles.cellContent} style={{ justifyContent: 'flex-end' }}>
+              {row.orderLimit}
+            </div>
+            <div className={styles.cellContent} style={{ justifyContent: 'flex-end' }}>
               {cancelOrder && (
                 <Button
                   title='Click to cancel order'
@@ -663,70 +626,67 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
         return <ExpandedTable data={row.expandedInfo || []} />;
     }
   };
-  // 'Collateral Amount',
-  // 'Order Limit',
+  
   return (
     <>
       <div className={`${styles.gridContainerTable}`}>
         {/* THEAD */}
         {getTableHeaders().map((header, idx) => {
-        
           return (
-          <div className={styles.cell} key={idx} style={{justifyContent: header.alignment}}>
-            {getHeaderTemplate(header.name)}
-          </div>
-        )})}
-
-        <div className={styles.line} style={{marginTop: 5, marginBottom: 7}} />
-        {/* TBODY */}
-        {slicedData.map((row, rowIndex) => {
-          const isRowExpanded = expandedRow.includes(rowIndex);
-          return (
-            <>
-              {rowIndex > 0 && <div className={styles.line} style={{marginTop: 4, marginBottom: 7}} />}
-              <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
-                <Button
-                  title='Click to expand dropdown'
-                  className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
-                >
-                  <DropdownOutlined />
-                </Button>
-              </div>
-
-              {getTableRowTemplate(row, rowIndex)}
-
-              <AnimatePresence>
-                {isRowExpanded && (
-                  <motion.div
-                    className={styles.tableRowExpanded}
-                    initial='closed'
-                    animate='open'
-                    exit='closed'
-                    variants={variants}
-                  >
-                    <div className={styles.tableExpanderContainer}>
-                      <div className={styles.gridContainerTable}>
-                        {getExpandedTableTemplate(row)}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
+            <div className={styles.cell} key={idx} style={{ justifyContent: header.alignment }}>
+              {getHeaderTemplate(header.name)}
+            </div>
           );
         })}
+
+        <div className={styles.separator} style={{ marginTop: 5, marginBottom: 7 }} />
+
+        {slicedData.length > 0 ? (
+          slicedData.map((row, rowIndex) => {
+            const isRowExpanded = expandedRow.includes(rowIndex);
+            return (
+              <>
+                {rowIndex > 0 && <div className={styles.separator} style={{ marginTop: 4, marginBottom: 7 }} />}
+                <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
+                  <Button
+                    title='Click to expand dropdown'
+                    className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
+                  >
+                    <DropdownOutlined />
+                  </Button>
+                </div>
+
+                {getTableRowTemplate(row, rowIndex)}
+
+                <AnimatePresence>
+                  {isRowExpanded && (
+                    <motion.div
+                      className={styles.tableRowExpanded}
+                      initial='closed'
+                      animate='open'
+                      exit='closed'
+                      variants={variants}
+                    >
+                      <div className={styles.tableExpanderContainer}>
+                        <div className={styles.gridContainerTable}>{getExpandedTableTemplate(row)}</div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            );
+          })
+        ) : isLoading ? (
+          <Container size='loader' margin='ptb-150'>
+            <Loader type='lg' />
+          </Container>
+        ) : (
+          <p className={styles.emptyTable}>No results found</p>
+        )}
       </div>
-      
 
       <Flex direction='row-space-between' margin='mt-35'>
-        {description ? (
-          <TableDescription
-            {...collateralData}
-            
-          />
-        ) : (
-          <div />
-        )}
+        {description ? <TableDescription {...collateralData} /> : <div />}
         <Pagination
           totalItems={data.length}
           itemsPerPage={pageLimit}
