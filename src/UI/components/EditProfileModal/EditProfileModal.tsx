@@ -32,7 +32,6 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
   const { toastList, showToast } = useToast();
 
   useEffect(() => {
-    console.log();
     if (isAuthenticated) {
       getAccountInfo();
     }
@@ -44,6 +43,10 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
 
   const openDialog = () => {
     setIsOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
   };
 
   const getAccountInfo = async () => {
@@ -90,12 +93,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
         </button>
       )}
 
-      <Modal
-        isOpen={isOpen}
-        onCloseModal={() => setIsOpen(false)}
-        title='Edit Profile'
-        className={styles.editProfileModal}
-      >
+      <Modal isOpen={isOpen} onCloseModal={closeDialog} title='Edit Profile' className={styles.editProfileModal}>
         <div className={styles.dialogBody}>
           <div className={styles.profilePhotoCtrl}>
             <Avatar />

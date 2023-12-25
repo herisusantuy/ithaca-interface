@@ -44,7 +44,7 @@ const ReferralsLeaderboard = () => {
             return {
               ranking: 0,
               username: userData.username,
-              acceptedInvites: userData.acceptedInvites,
+              acceptedInvites: userData.acceptedInvites || 0,
               referrerToken: userData.referrerToken,
               invitedBy: '',
               colors: colors,

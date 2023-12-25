@@ -18,8 +18,8 @@ const RequestHandle = async ({ method = 'POST', data, path }: { method?: string;
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     return await response.json();
-  } catch {
-    return undefined;
+  } catch (e) {
+    return e;
   }
 };
 
