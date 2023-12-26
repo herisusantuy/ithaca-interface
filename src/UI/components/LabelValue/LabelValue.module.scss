@@ -1,17 +1,17 @@
 .labelValue {
-  @include spacing(padding, 12, 'left');
   display: flex;
   flex-direction: column;
   gap: rem(4);
   position: relative;
   width: 100%;
-  padding: rem(12) 0;
-  border-bottom: rem(1) solid var(--white-10);
-  @include breakpoint (tablet) {
+  padding-bottom: rem(10);
+  border-left: none;
+  
+  @include breakpoint(tablet) {
+    @include spacing(padding, 12, 'left');
     padding: 0 0 0 rem(16);
     border-bottom: none;
     border-left: rem(1) solid var(--white-10);
-    
   }
 }
 

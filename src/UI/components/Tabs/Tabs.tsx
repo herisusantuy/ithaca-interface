@@ -44,7 +44,7 @@ const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
     return tabId === activeTab ? styles.isActive : '';
   };
 
-  const buttonsClass = `${styles.buttons} ${className || ''}`;
+  const buttonsClass = `${styles.buttons} ${className || ''} mb-24`;
 
   // Transform tabs into dropdown options
   const dropdownOptions: DropDownOption[] = tabs.map(tab => ({

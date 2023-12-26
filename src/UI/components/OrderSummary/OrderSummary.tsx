@@ -128,12 +128,14 @@ const OrderSummary = ({
             <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
-        <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
+        <Flex direction={device === 'desktop' ? 'column' : 'row-space-between-start'} gap='gap-6'>
           <h5>Collateral Requirement</h5>
-          <Flex direction={device === 'desktop' ? 'row' : 'justify-end'} gap='gap-10'>
-            <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
-            <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
-          </Flex>
+          <div>
+            <Flex direction={device === 'desktop' ? 'row' : 'column'} gap='gap-10'>
+              <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
+              <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
+            </Flex>
+          </div>
         </Flex>
         <div className={styles.platformWrapper}>
           <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>

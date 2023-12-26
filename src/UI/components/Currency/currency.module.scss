@@ -5,3 +5,14 @@
     width: auto;
   }
 }
+
+.divider {
+  border-bottom: rem(1) solid var(--white-10);
+  margin-bottom: rem(10);
+
+  @include breakpoint(tablet) {
+    border-bottom: none;
+    width: auto;
+    margin-bottom: 0;
+  }
+}
