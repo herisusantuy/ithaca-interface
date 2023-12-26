@@ -1,70 +1,24 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
-
-// Lib
-import { useAppStore } from '@/UI/lib/zustand/store';
-
-// SDK
-import { Order, PortfolioCollateral, Position } from '@ithaca-finance/sdk';
-
-// Constants
-import {
-  TABLE_ORDER_HEADERS,
-  TABLE_ORDER_HEADERS_FOR_POSITIONS,
-  TableRowData,
-  TableRowDataWithExpanded,
-  TABLE_ORDER_DATA_WITH_EXPANDED,
-  TableDescriptionProps,
-  TABLE_ORDER_LIVE_ORDERS,
-} from '@/UI/constants/tableOrder';
-
 // Utils
-import {
-  getSideIcon,
-  orderDateSort,
-  orderLimitSort,
-  renderDate,
-  tenorSort,
-  variants,
-  CURRENCY_PAIR_LABEL,
-  FilterItemProps,
-  PRODUCT_LABEL,
-  SIDE_LABEL,
-  productFilter,
-  sideFilter,
-  currencyFilter,
-} from '@/UI/utils/TableOrder';
+import { CURRENCY_PAIR_LABEL, FilterItemProps, PRODUCT_LABEL, SIDE_LABEL } from '@/UI/utils/TableOrder';
 
 // Hooks
 import { useEscKey } from '@/UI/hooks/useEscKey';
 
 // Components
-import Pagination from '@/UI/components/Pagination/Pagination';
-import TableDescription from '@/UI/components/TableDescription/TableDescription';
-import Delete from '@/UI/components/Icons/Delete';
 import Button from '@/UI/components/Button/Button';
-import CollateralAmount from '@/UI/components/CollateralAmount/CollateralAmount';
-import Modal from '@/UI/components/Modal/Modal';
-import Summary from '@/UI/components/Summary/Summary';
-import ExpandedTable from '@/UI/components/TableOrder/ExpandedTable';
+import { CheckBoxControlled } from '@/UI/components/CheckBox/CheckBox';
 import Sort from '@/UI/components/Icons/Sort';
-import Filter from '@/UI/components/Icons/Filter';
-import CheckBox from '@/UI/components/CheckBox/CheckBox';
-import DisconnectedWallet from '@/UI/components/DisconnectedWallet/DisconnectedWallet';
-
-// Layout
-import Flex from '@/UI/layouts/Flex/Flex';
 
 // Styles
-import styles from '../TableOrder.module.scss';
-import Container from '@/UI/layouts/Container/Container';
-import Loader from '../../Loader/Loader';
-import DropdownOutlined from '../../Icons/DropdownOutlined';
-import ExpandedPositionTable from '../ExpandedPositionTable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { getTableHeaders, transformClientOpenOrders } from '../helpers';
+import styles from '../TableOrder.module.scss';
+import { getTableHeaders } from '../helpers';
+import { Separator } from './SingleOrderRow';
+import { ClearFilters, ShowFilterButton } from './helperComponents';
 dayjs.extend(customParseFormat);
+
 
 const HeaderColumns = props => {
   const {
@@ -81,76 +35,47 @@ const HeaderColumns = props => {
     type,
     handleCancelAllOrder,
   } = props;
-  const [productChecked, setProductChecked] = useState<boolean>(false);
-  const [filterHeader, setFilterHeader] = useState<string>('');
-  const [visible, setVisible] = useState<boolean>(false);
+  const [filterHeader, setFilterHeader] = useState<string | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
-  const [currencyChecked, setCurrencyChecked] = useState<boolean>(false);
-  const [sideChecked, setSideChecked] = useState<boolean>(false);
-  const selectedLabeStatus = (label: string, status: boolean) => {
-    console.log("DEBUG INFO 24/12/2023 10:56:44",'wchodze')
+
+  const selectedLabeStatus = (label: string, isChecked: boolean) => {
     if (filterHeader == 'Currency Pair') {
-      console.log("DEBUG INFO 24/12/2023 10:56:20",'jeden')
-      setCurrencyChecked(false);
-      const filter = currencyArray.slice();
-      console.log("DEBUG INFO 24/12/2023 10:55:55",filter)
-      if (status) {
-        filter.push(label);
-        setCurrencyArray(filter);
+      if (isChecked) {
+        setCurrencyArray([...currencyArray, label]);
       } else {
-        const indexToRemove = filter.indexOf(label);
-        if (indexToRemove !== -1) {
-          filter.splice(indexToRemove, 1);
-          setCurrencyArray(filter);
-        }
+        setCurrencyArray(currencyArray.filter((item: string) => item !== label));
       }
     } else if (filterHeader == 'Product') {
-      setProductChecked(false);
-      const filter = productArray.slice();
-      if (status) {
-        filter.push(label);
-        setProductArray(filter);
+      if (isChecked) {
+        setProductArray([...productArray, label.toUpperCase()]);
       } else {
-        const indexToRemove = filter.indexOf(label);
-        if (indexToRemove !== -1) {
-          filter.splice(indexToRemove, 1);
-          setProductArray(filter);
-        }
+        setProductArray(productArray.filter((item: string) => item !== label.toUpperCase()));
       }
     } else if (filterHeader == 'Side') {
-      // setSideChecked(true)
-      const filter = sideArray.slice();
-      if (status) {
-        filter.push(label.toUpperCase());
-        setSideArray(filter);
+      if (isChecked) {
+        setSideArray([...sideArray, label.toUpperCase()]);
       } else {
-        const indexToRemove = filter.indexOf(label.toUpperCase());
-        if (indexToRemove !== -1) {
-          filter.splice(indexToRemove, 1);
-          setSideArray(filter);
-        }
+        setSideArray(sideArray.filter((item: string) => item !== label.toUpperCase()));
       }
     }
   };
 
   // Set visible filter bar for show/hide filter box
-  const showFilterBar = (header: string) => {
-    // console.log("DEBUG INFO 24/12/2023 10:36:34",header, filterHeader)
+  const showFilterBar = (header: string) => () => {
     if (header === filterHeader) {
-      setVisible(!visible);
+      setFilterHeader(null);
     } else {
-      console.log("DEBUG INFO 24/12/2023 10:37:03",'wchodze')
       setFilterHeader(header);
-      setVisible(true);
-      
     }
   };
-   // Close Esc key for dropdown menu filter
-   useEscKey(() => {
-    if (visible) {
-      setVisible(false);
+
+  // Close Esc key for dropdown menu filter
+  useEscKey(() => {
+    if (filterHeader) {
+      setFilterHeader(null);
     }
   });
+
   // Outside handle click for hide dialog
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -162,7 +87,7 @@ const HeaderColumns = props => {
         productRef.current &&
         !productRef.current.contains(event.target as Node)
       ) {
-        setVisible(false);
+        setFilterHeader(null);
       }
     };
 
@@ -171,9 +96,9 @@ const HeaderColumns = props => {
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, []);
-  // console.log("DEBUG INFO 24/12/2023 10:26:17",containerRef)
+
   const getHeaderIcon = (header: string) => {
-    
+    const filterClass = header === filterHeader ? '' : styles.hide;
     switch (header) {
       case 'Order Date':
       case 'Tenor':
@@ -193,73 +118,48 @@ const HeaderColumns = props => {
       case 'Currency Pair': {
         return (
           <>
-            <Button
-              title='Click to view filter options'
-              className={styles.filter}
-              onClick={() => showFilterBar(header)}
-            >
-              <Filter fill={currencyArray.length > 0 ? true : false} />
-            </Button>
-            
-            <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
-              ref={containerRef}
-            >
+            <ShowFilterButton onClick={showFilterBar(header)} fill={currencyArray.length > 0} />
+            <div className={`${styles.filterDropdown} ${filterClass}`} ref={containerRef}>
               {CURRENCY_PAIR_LABEL.map((item: FilterItemProps, idx: number) => {
                 return (
-                  <CheckBox
+                  <CheckBoxControlled
+                    checked={currencyArray.includes(item.label.toUpperCase())}
                     key={idx}
                     label={item.label}
                     component={item.component}
                     onChange={selectedLabeStatus}
-                    clearCheckMark={currencyChecked}
                   />
                 );
               })}
-              <Button
-                title='Click to clear filter options'
-                className={`${styles.clearAll} ${currencyArray.length > 0 ? styles.selected : ''}`}
+              <ClearFilters
                 onClick={() => clearFilterArray('currency')}
-              >
-                Clear All
-              </Button>
+                className={currencyArray.length > 0 ? styles.selected : ''}
+              />
             </div>
-       
           </>
         );
       }
       case 'Product': {
         return (
           <>
-            <Button
-              title='Click to view filter options'
-              className={styles.filter}
-              onClick={() => showFilterBar(header)}
-            >
-              <Filter fill={productArray.length > 0 ? true : false} />
-            </Button>
+            <ShowFilterButton onClick={showFilterBar(header)} fill={productArray.length > 0} />
             <div className={styles.filterDropdownContainer}>
-            <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
-              ref={productRef}
-            >
-              {PRODUCT_LABEL.map((item: string, idx: number) => {
-                return (
-                  <CheckBox key={idx} label={item} onChange={selectedLabeStatus} clearCheckMark={productChecked} />
-                );
-              })}
-              <Button
-                title='Click to clear filter options'
-                className={`${styles.clearAll} ${productArray.length > 0 ? styles.selected : ''}`}
-                onClick={() => clearFilterArray('product')}
-              >
-                Clear All
-              </Button>
-            </div>
+              <div className={`${styles.filterDropdown} ${filterClass}`} ref={productRef}>
+                {PRODUCT_LABEL.map((item: string, idx: number) => {
+                  return (
+                    <CheckBoxControlled
+                      checked={productArray.includes(item.toUpperCase())}
+                      key={idx}
+                      label={item}
+                      onChange={selectedLabeStatus}
+                    />
+                  );
+                })}
+                <ClearFilters
+                  onClick={() => clearFilterArray('product')}
+                  className={productArray.length > 0 ? styles.selected : ''}
+                />
+              </div>
             </div>
           </>
         );
@@ -267,42 +167,24 @@ const HeaderColumns = props => {
       case 'Side': {
         return (
           <>
-            
-            <Button
-              title='Click to view filter options'
-              className={styles.filter}
-              onClick={() => showFilterBar(header)}
-            >
-              <Filter fill={sideArray.length > 0 ? true : false} />
-            </Button>
-            
-            <div
-              className={`${styles.filterDropdown} ${
-                !visible ? styles.hide : header !== filterHeader ? styles.hide : ''
-              }`}
-              ref={sideRef}
-            >
+            <ShowFilterButton onClick={showFilterBar(header)} fill={sideArray.length > 0} />
+            <div className={`${styles.filterDropdown} ${filterClass}`} ref={sideRef}>
               {SIDE_LABEL.map((item: FilterItemProps, idx: number) => {
                 return (
-                  <CheckBox
+                  <CheckBoxControlled
+                    checked={sideArray.includes(item.label.toUpperCase())}
                     key={idx}
                     label={item.label}
                     component={item.component}
                     onChange={selectedLabeStatus}
-                    clearCheckMark={sideChecked}
                   />
                 );
               })}
-              <Button
-                title='Click to clear filter options'
-                className={`${styles.clearAll} ${sideArray.length > 0 ? styles.selected : ''}`}
-                onClick={() => {clearFilterArray('side');setSideChecked(false)}}
-              >
-                Clear All
-                {sideChecked ? 'true' : 'false'}
-              </Button>
+              <ClearFilters
+                onClick={() => clearFilterArray('side')}
+                className={sideArray.length > 0 ? styles.selected : ''}
+              />
             </div>
-            
           </>
         );
       }
@@ -328,26 +210,26 @@ const HeaderColumns = props => {
         default:
           return (
             <>
-              {header} {getHeaderIcon(header)}
+              {header}
+              {getHeaderIcon(header)}
             </>
           );
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [handleCancelAllOrder, visible, filterHeader, sideArray, sideChecked]
+    [handleCancelAllOrder, filterHeader, sideArray]
   );
+
   return (
     <>
       {getTableHeaders(type).map((header, idx) => {
         return (
-          <>
             <div className={styles.cell} key={idx} style={{ justifyContent: header.alignment }}>
               {getHeaderTemplate(header.name)}
             </div>
-          </>
         );
       })}
-      <div className={styles.separator} style={{ marginTop: 5, marginBottom: 7 }} />
+      {/* Bottom border of headers */}
+      <Separator />
     </>
   );
 };

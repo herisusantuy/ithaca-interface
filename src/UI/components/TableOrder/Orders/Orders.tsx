@@ -241,8 +241,6 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
   const pageStart = (currentPage - 1) * pageLimit;
   const pageEnd = pageStart + pageLimit;
 
-  console.log('DEBUG INFO 24/12/2023 10:54:18', currencyArray);
-
   useEffect(() => {
     let filterData = productFilter(data, productArray);
     filterData = sideFilter(filterData, sideArray);
@@ -251,9 +249,9 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
   }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      setDataLoaded(true);
-    }
+    // if (data.length > 0) {
+    //   setDataLoaded(true);
+    // }
   }, [data]);
 
   useEffect(() => {
@@ -261,7 +259,7 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
       updateSort('Order Date', false);
       setIsSorted(true);
     }
-  }, [dataLoaded, isSorted]);
+  }, [data, isSorted, slicedData]);
 
   // Handle row expand and collapse
   const handleRowExpand = (rowIndex: number) => {
@@ -309,20 +307,15 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
     }
   };
 
-  // checkbox clickable status
-
   const clearFilterArray = (label: string) => {
     switch (label) {
       case 'side': {
-        // setSideChecked(true);
         return setSideArray([]);
       }
       case 'product': {
-        // setProductChecked(true);
         return setProductArray([]);
       }
       case 'currency': {
-        // setCurrencyChecked(true);
         return setCurrencyArray([]);
       }
     }

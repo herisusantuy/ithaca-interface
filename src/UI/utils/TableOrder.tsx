@@ -65,8 +65,7 @@ export const sideFilter = (data: TableRowDataWithExpanded[], filterArray: string
   if (filterArray.length == 0) {
     return data;
   }
-  //   const filteredData = data.filter((item: TableRowDataWithExpanded) => item.side === '+');
-  console.log("DEBUG INFO 24/12/2023 11:03:14",filterArray, data)
+
   const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.side.toUpperCase()));
   return filteredData;
 };
@@ -86,8 +85,13 @@ export const currencyFilter = (data: TableRowDataWithExpanded[], filterArray: st
   if (filterArray.length == 0) {
     return data;
   }
-  console.log("DEBUG INFO 24/12/2023 10:59:57",data, filterArray)
-  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.currencyPair));
+
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => {
+    console.log("DEBUG INFO 25/12/2023 13:01:10",item.currencyPair, filterArray)
+    const containsElement = filterArray.some(element => item.currencyPair.includes(element));
+    return containsElement
+    // return filterArray.includes(item.currencyPair)
+  });
   return filteredData;
 };
 
