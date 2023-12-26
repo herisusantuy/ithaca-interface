@@ -146,7 +146,7 @@ const OrderSummary = ({
         <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
           <h5 className='color-white'>Total Premium</h5>
           <CurrencyDisplay
-            amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'}
+            amount={premium !== '-' ? Number(premium).toFixed(2) : '-'}
             symbol={<LogoUsdc />}
             currency='USDC'
           />
