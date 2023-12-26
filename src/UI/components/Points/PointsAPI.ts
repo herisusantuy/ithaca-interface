@@ -1,4 +1,4 @@
-import { PointsProgramMember, ReferralsRequestProps } from '@/UI/constants/pointsProgram';
+import { PointsProgramMember, ReferralsRequestProps, ReferralsDataType } from '@/UI/constants/pointsProgram';
 
 export const SSEConnect = () => {
   const sse = new EventSource('http://localhost:8000/sse');
@@ -100,8 +100,15 @@ export const JoinTelegram = async () => {
   return await RequestHandle({ data: data, path: 'ol/event' });
 };
 
-export const GetReferrals = async ({ page }: ReferralsRequestProps) => {
+export const GetReferrals = async ({ page }: ReferralsRequestProps): Promise<ReferralsDataType> => {
   const session = getSessionInfo();
+
+  const result = await RequestHandle({ method: 'GET', path: `ol/member?card=${session.ethAddress}` });
+
+  if (!result.isExist) {
+    await JoinPointsProgram();
+    return await GetReferrals({ page });
+  }
 
   return await RequestHandle({
     method: 'GET',

@@ -13,9 +13,9 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     titleKey: 'Click to visit register',
     displayText: 'Register',
   },
-  {
-    path: '/referrals-leaderboard',
-    titleKey: 'Click to visit leaderboard',
-    displayText: 'Leaderboard',
-  },
+  // {
+  //   path: '/referrals-leaderboard',
+  //   titleKey: 'Click to visit leaderboard',
+  //   displayText: 'Leaderboard',
+  // },
 ];

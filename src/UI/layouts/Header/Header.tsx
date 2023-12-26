@@ -88,7 +88,8 @@ const Header = ({ className }: HeaderProps) => {
             {!tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            <EditProfileModal trigger={<UserProfileIcon />} />
+            {/* TODO: add EditProfileModal after editing a profile will not remove user shortcuts */}
+            {/*<EditProfileModal trigger={<UserProfileIcon />} />*/}
             <Wallet />
             {(tabletBreakpoint || mobileBreakpoint) && (
               <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />

@@ -7,16 +7,7 @@ export enum tableReferralsLeaderBoardEnums {
 
 export const TABLE_REFERRALS_LEADERBOARD_HEADERS = Object.values(tableReferralsLeaderBoardEnums);
 
-export type leaderboardMemberType = {
-  ranking: number;
-  referrerToken: string;
-  acceptedInvites: number;
-  username: string;
-  invitedBy: string;
-  colors: [string, string];
-};
-
-export type ReferralsLeaderboardEntry = {
+export type LeaderboardMemberType = {
   ranking: number;
   username: string;
   invitedBy: string;
@@ -25,7 +16,7 @@ export type ReferralsLeaderboardEntry = {
   colors: [string, string];
 };
 
-export const TABLE_REFERRALS_LEADERBOARD_DATA: ReferralsLeaderboardEntry[] = [
+export const TABLE_REFERRALS_LEADERBOARD_DATA: LeaderboardMemberType[] = [
   {
     ranking: 1,
     username: '0x4c31...c0ed',

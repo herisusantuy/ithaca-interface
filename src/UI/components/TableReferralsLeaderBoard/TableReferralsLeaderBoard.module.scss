@@ -79,6 +79,13 @@
           display: none;
         }
       }
+
+      .username {
+        max-width: calc(100% - rem(40));
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
 
     &:nth-child(4) {

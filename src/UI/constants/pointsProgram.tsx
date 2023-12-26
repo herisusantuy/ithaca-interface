@@ -22,3 +22,16 @@ export type PointsProgramMember = {
 export type ReferralsRequestProps = {
   page: number;
 };
+
+export type ReferralMemberType = {
+  acceptedInvites: number;
+  id: string;
+  invitedBy: string;
+  referrerToken: string;
+  username: string;
+};
+
+export type ReferralsDataType = {
+  currentUser: [ReferralMemberType];
+  referralsData: ReferralMemberType[];
+};

@@ -15,20 +15,42 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import { useAccount } from 'wagmi';
 
 // Constants
-import { leaderboardMemberType, TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
+import { LeaderboardMemberType, TABLE_REFERRALS_LEADERBOARD_DATA } from '@/UI/constants/referralsLeaderBoard';
+import { ReferralMemberType } from '@/UI/constants/pointsProgram';
 
 // Styles
 import styles from '@/pages/referrals-leaderboard/referrals-leaderboard.module.scss';
 
-const getRandomColor = (): string => {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+// TODO: Temp
+const colors = [
+  '#4BB475',
+  '#FF3F57',
+  '#7C1158',
+  '#B5B5F8',
+  '#6545A4',
+  '#786028',
+  '#FF772A',
+  '#18B5B5',
+  '#50E991',
+  '#A855F7',
+  '#4421AF',
+  '#B33DC6',
+  '#7AD136',
+  '#D7658B',
+  '#00836E',
+];
+
+const getRandomColor = (): [string, string] => {
+  const randomIndex = Math.floor(Math.random() * colors.length - 1);
+  return [colors[randomIndex], colors[randomIndex]];
+  // return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
 
 const ReferralsLeaderboard = () => {
   const { isAuthenticated } = useAppStore();
   const { isConnected } = useAccount();
-  const [currentUser, setCurrentUser] = useState<leaderboardMemberType>();
-  const [members, setMembers] = useState<leaderboardMemberType[]>([]);
+  const [currentUser, setCurrentUser] = useState<LeaderboardMemberType>();
+  const [members, setMembers] = useState<LeaderboardMemberType[]>([]);
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
@@ -37,10 +59,22 @@ const ReferralsLeaderboard = () => {
       if (res) {
         const { currentUser, referralsData } = res;
 
-        setCurrentUser({ ranking: 0, ...currentUser[0] });
-        const membersData: leaderboardMemberType[] = (Object.values(referralsData) as leaderboardMemberType[]).map(
-          (userData: leaderboardMemberType) => {
-            const colors: [string, string] = [getRandomColor(), getRandomColor()];
+        if (!currentUser[0]) {
+          setCurrentUser({
+            ranking: 0,
+            referrerToken: '',
+            acceptedInvites: 0,
+            username: '',
+            invitedBy: '',
+            colors: getRandomColor(),
+          });
+        } else if (currentUser[0]) {
+          setCurrentUser({ ranking: 0, colors: getRandomColor(), ...currentUser[0] });
+        }
+
+        const membersData: LeaderboardMemberType[] = (Object.values(referralsData) as ReferralMemberType[]).map(
+          (userData: ReferralMemberType) => {
+            const colors: [string, string] = getRandomColor();
             return {
               ranking: 0,
               username: userData.username,
@@ -62,7 +96,7 @@ const ReferralsLeaderboard = () => {
 
   useEffect(() => {
     if (members.length && currentUser) {
-      const currentUserData: leaderboardMemberType | undefined = members.find(
+      const currentUserData: LeaderboardMemberType | undefined = members.find(
         member => member.username === currentUser.username
       );
       if (currentUserData) setCurrentUser(currentUserData);

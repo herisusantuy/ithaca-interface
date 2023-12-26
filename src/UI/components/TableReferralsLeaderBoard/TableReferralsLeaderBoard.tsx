@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 
 // Constants
 import {
-  ReferralsLeaderboardEntry,
+  LeaderboardMemberType,
   TABLE_REFERRALS_LEADERBOARD_HEADERS,
   tableReferralsLeaderBoardEnums,
 } from '@/UI/constants/referralsLeaderBoard';
@@ -25,13 +25,13 @@ import styles from './TableReferralsLeaderBoard.module.scss';
 
 // Types
 type TableReferralsLeaderBoardProps = {
-  data: ReferralsLeaderboardEntry[];
+  data: LeaderboardMemberType[];
   page: number;
   setPage: (page: number) => void;
 };
 
 type SortConfig = {
-  key: keyof ReferralsLeaderboardEntry;
+  key: keyof LeaderboardMemberType;
   direction: 'ascending' | 'descending';
 };
 
@@ -41,7 +41,7 @@ const TableReferralsLeaderBoard = ({ data, page, setPage }: TableReferralsLeader
     direction: 'ascending',
   };
 
-  const headerToKeyMap: Record<tableReferralsLeaderBoardEnums, keyof ReferralsLeaderboardEntry> = {
+  const headerToKeyMap: Record<tableReferralsLeaderBoardEnums, keyof LeaderboardMemberType> = {
     Ranking: 'ranking',
     'Invited By': 'invitedBy',
     'Accepted Invites': 'acceptedInvites',
@@ -80,12 +80,21 @@ const TableReferralsLeaderBoard = ({ data, page, setPage }: TableReferralsLeader
   }, [data, sortConfig]);
 
   // Handle sorting
-  const requestSort = (key: keyof ReferralsLeaderboardEntry) => {
+  const requestSort = (key: keyof LeaderboardMemberType) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
+  };
+
+  const getTruncateString = (str: string) => {
+    if (str.length >= 12) {
+      const firstPart = str.slice(0, 4);
+      const lastPart = str.slice(-4);
+      return firstPart + '...' + lastPart;
+    }
+    return str;
   };
 
   return (
@@ -113,7 +122,7 @@ const TableReferralsLeaderBoard = ({ data, page, setPage }: TableReferralsLeader
             <div className={styles.cell}>{leader.ranking}</div>
             <div className={styles.cell}>
               <Avatar colors={leader.colors} />
-              {leader.username}
+              <p className={styles.username}>{getTruncateString(leader.username.replace(/\s/g, ''))}</p>
             </div>
             <div className={styles.cell}>{leader.invitedBy}</div>
             <div className={styles.cell}>{getNumberFormat(leader.acceptedInvites)}</div>
