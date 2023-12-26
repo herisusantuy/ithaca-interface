@@ -103,8 +103,9 @@ const Wallet = () => {
                   </button> */}
 
                   <button onClick={openAccountModal} type='button' className={styles.connectedWallet}>
-                    {account.displayName}
+                    <span className={styles.displayName}>{account.displayName}</span>
                     <ConnectWalletIcon />
+                    <ChevronDown className={styles.chevron} />
                     {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
                   </button>
                 </div>

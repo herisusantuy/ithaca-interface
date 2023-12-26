@@ -15,7 +15,7 @@ import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Constants
-import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+import { DESKTOP_BREAKPOINT, MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Styles
 import styles from './Header.module.scss';
@@ -35,6 +35,7 @@ const Header = ({ className }: HeaderProps) => {
   const { data: walletClient } = useWalletClient();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
   const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const desktopBreakpoint = useMediaQuery(DESKTOP_BREAKPOINT);
 
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
@@ -65,6 +66,8 @@ const Header = ({ className }: HeaderProps) => {
     onDisconnect: disconnect,
   });
 
+  const { address } = useAccount();
+
   useEffect(() => {
     if (!walletClient) return;
     initIthacaSDK(walletClient);
@@ -83,13 +86,13 @@ const Header = ({ className }: HeaderProps) => {
             >
               <Logo />
             </span>
-            {!tabletBreakpoint && !mobileBreakpoint && <Navigation />}
+            {!desktopBreakpoint && !tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            <Bell />
+            {address && <Bell />}
             {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
             <Wallet />
-            {(tabletBreakpoint || mobileBreakpoint) && (
+            {(desktopBreakpoint || tabletBreakpoint || mobileBreakpoint) && (
               <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />
             )}
             {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}

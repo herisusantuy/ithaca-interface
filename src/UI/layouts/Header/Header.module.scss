@@ -40,6 +40,13 @@
     left: 0;
     border-radius: rem(22);
   }
+
+  @include breakpoint(mobile) {
+    max-width: rem(663);
+  }
+  @include breakpoint(desktop) {
+    max-width: map-get($container-sizes, xl);
+  }
 }
 
 .container {
@@ -75,12 +82,12 @@
 .right {
   gap: rem(25);
 
-  @include breakpoint(tablet) {
-    gap: rem(10);
+  @include breakpoint(mobile) {
+    gap: rem(8);
   }
 
   button {
-    border-radius: rem(16) !important;
+    border-radius: rem(14) !important;
     position: relative !important;
     cursor: pointer;
 
@@ -93,7 +100,7 @@
       content: '';
       display: block;
       position: absolute;
-      border-radius: rem(16);
+      border-radius: rem(14);
       top: -(rem(0.5));
       bottom: -(rem(0.5));
       right: -(rem(0.5));

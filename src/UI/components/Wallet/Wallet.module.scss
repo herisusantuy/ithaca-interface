@@ -6,22 +6,45 @@
   justify-content: center;
   align-items: center;
   gap: 14px;
-  padding: rem(5) rem(5) rem(5) rem(19) !important;
+  padding: rem(5) rem(5) rem(5) rem(19);
   color: var(--white);
   border-width: rem(0);
 
-  @include breakpoint(tablet) {
-    @include font-size('text-xs', 'bold');
-    padding: rem(5) rem(10) !important;
+  @include breakpoint(desktop) {
+    @include font-size('text-sm', 'medium');
+    padding: rem(5) rem(5) rem(5) rem(32) !important;
+    gap: rem(14) !important;
+  }
+
+  @include breakpoint(mobile) {
+    @include font-size('text-xs', 'medium');
+    gap: rem(5);
+    padding: rem(5) rem(5);
   }
 
   &:before {
     background: linear-gradient(var(--white-10) 0%, rgba(94, 225, 146, 0) 100%) !important;
   }
+
+  .displayName {
+    display: none; // Hide on mobile by default
+
+    @include breakpoint(desktop) {
+      display: inline; // Show on desktop
+    }
+  }
+
+  .chevron {
+    display: inline;
+
+    @include breakpoint(desktop) {
+      display: none;
+    }
+  }
 }
 
 .connectWallet {
-  @include font-size('text-xs', 'bold');
+  @include font-size('text-xs', 'medium');
   font-family: $roboto;
   background: #419165 !important;
   padding: rem(9.5) rem(15.5) !important;
@@ -29,7 +52,7 @@
   border-width: rem(0);
   white-space: nowrap;
   cursor: pointer;
-  border-radius: rem(16);
+  border-radius: rem(14);
   position: relative;
 
   @include breakpoint(tablet) {
@@ -43,7 +66,7 @@
     content: '';
     display: block;
     position: absolute;
-    border-radius: rem(16);
+    border-radius: rem(14);
     top: -(rem(0.5));
     bottom: -(rem(0.5));
     right: -(rem(0.5));
@@ -67,7 +90,7 @@
   white-space: nowrap;
   cursor: pointer;
   gap: 14px;
-  padding: rem(7) rem(16) !important;
+  padding: rem(7) rem(14) !important;
   color: var(--white);
   border-width: rem(0);
 
@@ -75,7 +98,7 @@
     content: '';
     display: block;
     position: absolute;
-    border-radius: rem(16);
+    border-radius: rem(14);
     top: -(rem(0.5));
     bottom: -(rem(0.5));
     right: -(rem(0.5));
