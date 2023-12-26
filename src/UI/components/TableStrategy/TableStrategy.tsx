@@ -22,7 +22,6 @@ type StrategyTableProps = {
 };
 
 const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: StrategyTableProps) => {
-  console.log(strategies);
   return (
     <>
       <div className={`${styles.table} mb-15`}>
