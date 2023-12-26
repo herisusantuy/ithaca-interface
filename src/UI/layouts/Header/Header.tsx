@@ -80,7 +80,7 @@ const Header = ({ className }: HeaderProps) => {
             <span
               className={styles.logo}
               onClick={() => {
-                router.push('/trading/position-builder');
+                router.push('/trading/dynamic-option-strategies');
               }}
             >
               <Logo />
