@@ -41,7 +41,7 @@ import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
-import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
+import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
@@ -320,6 +320,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
       )}
 
       {!compact && <OrderSummaryMarkets
+        asContainer={false}
         limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
         collatarelUSDC={

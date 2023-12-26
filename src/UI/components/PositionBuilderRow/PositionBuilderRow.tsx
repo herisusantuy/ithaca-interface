@@ -135,15 +135,14 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
     const diff = expiry.diff(current)
-    const params = {
-      rate: 0,
-      price: unitPrice,
-      strike: strike,
-      time: dayjs.duration(diff).asYears(),
-      isCall: payoff === 'Call',
-      underlying: currentSpotPrice
-    }
-    return (ithacaSDK.calculation.calcSigma(params) * 100).toFixed(1) + '%'
+    const sigma = ithacaSDK.calculation.impliedVolatility(
+      payoff === 'Call', 
+      currentSpotPrice, 
+      getNumber(strike), 
+      dayjs.duration(diff).asYears(), 
+      getNumber(unitPrice)
+    );
+    return (sigma * 100).toFixed(1) + '%'
   }
 
   const renderValues = () => (

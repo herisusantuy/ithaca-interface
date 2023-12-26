@@ -1,5 +1,5 @@
 // Constants
-import { TABLE_STRATEGY_HEADERS } from '@/UI/constants/tableStrategy';
+import { TABLE_STRATEGY_HEADERS, TABLE_STRATEGY_HEADERS_STORIES } from '@/UI/constants/tableStrategy';
 
 // Utils
 import { displaySideIcon } from '@/UI/utils/Icons';
@@ -26,21 +26,37 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: S
     <>
       <div className={`${styles.table} mb-15`}>
         <div
-          style={{ gridTemplateColumns: !hideClear ? 'repeat(8, minmax(0, 1fr))' : ' repeat(7, minmax(0, 1fr))' }}
+          style={{
+            gridTemplateColumns: !strategies[0]?.referencePrice
+              ? 'repeat(6, minmax(0, 1fr))'
+              : !hideClear
+              ? 'repeat(8, minmax(0, 1fr))'
+              : 'repeat(7, minmax(0, 1fr))',
+          }}
           className={styles.header}
         >
-          {TABLE_STRATEGY_HEADERS.map((header, idx) => {
-            return (
-              <div className={styles.cell} key={idx}>
-                {header}
-              </div>
-            );
-          })}
+          {strategies[0]?.referencePrice
+            ? TABLE_STRATEGY_HEADERS.map((header, idx) => (
+                <div className={styles.cell} key={idx}>
+                  {header}
+                </div>
+              ))
+            : TABLE_STRATEGY_HEADERS_STORIES.map((header, idx) => (
+                <div className={styles.cell} key={idx}>
+                  {header}
+                </div>
+              ))}
         </div>
         {strategies.length ? (
           strategies.map((strategy, idx) => (
             <div
-              style={{ gridTemplateColumns: !hideClear ? 'repeat(8, minmax(0, 1fr))' : ' repeat(7, minmax(0, 1fr))' }}
+              style={{
+                gridTemplateColumns: !strategies[0]?.referencePrice
+                  ? 'repeat(6, minmax(0, 1fr))'
+                  : !hideClear
+                  ? 'repeat(8, minmax(0, 1fr))'
+                  : 'repeat(7, minmax(0, 1fr))',
+              }}
               className={styles.row}
               key={idx}
             >
@@ -55,7 +71,9 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: S
               <div className={styles.cell}>{displaySideIcon(strategy.leg.side)}</div>
               <div className={styles.cell}>{strategy.leg.quantity}</div>
               <div className={styles.cell}>{Number(strategy.strike)}</div>
-              <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
+              {strategy.referencePrice && (
+                <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
+              )}
               {!hideClear && (
                 <div className={styles.cell}>
                   <Button title='Click to remove row' variant='icon' onClick={() => removeRow && removeRow(idx)}>

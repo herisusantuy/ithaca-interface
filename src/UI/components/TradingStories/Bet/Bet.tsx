@@ -3,6 +3,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -17,6 +18,7 @@ import BetInstructions from '@/UI/components/Instructions/BetInstructions';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
 import Toast from '@/UI/components/Toast/Toast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -42,20 +44,33 @@ import { calculateAPY } from '@/UI/utils/APYCalc';
 //Styles
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
-const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => { 
-  const { currentSpotPrice, currencyPrecision, currentExpiryDate, ithacaSDK, getContractsByPayoff } = useAppStore();
+const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
+  const {
+    currentSpotPrice,
+    currencyPrecision,
+    currentExpiryDate,
+    ithacaSDK,
+    getContractsByPayoff,
+    unFilteredContractList,
+  } = useAppStore();
 
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const strikes = binaryPutContracts ? Object.keys(binaryPutContracts).map(strike => parseFloat(strike)) : [];
 
   const [insideOrOutside, setInsideOrOutside] = useState<'INSIDE' | 'OUTSIDE'>('INSIDE');
-  const [strike, setStrike] = useState({ min: strikes[Math.ceil((strikes.length/2)) -1], max: strikes[strikes.length > 1 ? Math.ceil(strikes.length/2) : 0] });
+  const [strike, setStrike] = useState({
+    min: strikes[Math.ceil(strikes.length / 2) - 1],
+    max: strikes[strikes.length > 1 ? Math.ceil(strikes.length / 2) : 0],
+  });
   const [capitalAtRisk, setCapitalAtRisk] = useState('');
   const [targetEarn, setTargetEarn] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const { toastList, position, showToast } = useToast();
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
   const handleBetTypeChange = (betType: 'INSIDE' | 'OUTSIDE') => {
     setInsideOrOutside(betType);
@@ -66,19 +81,22 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
     setCapitalAtRisk(capitalAtRisk);
   };
 
-
   useEffect(() => {
-    handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn))
-  }, [capitalAtRisk, strike, insideOrOutside, targetEarn])
+    handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn));
+  }, [capitalAtRisk, strike, insideOrOutside, targetEarn]);
 
-  const handleTargetEarnChange = async (amount:string) => {
+  const handleTargetEarnChange = async (amount: string) => {
     const targetEarn = getNumberValue(amount);
     setTargetEarn(targetEarn);
     await handleStrikeChange(strike, insideOrOutside === 'INSIDE', getNumber(capitalAtRisk), getNumber(targetEarn));
-
   };
 
-  const handleStrikeChange = async (strike: { min: number; max: number }, inRange: boolean, capitalAtRisk: number, targetEarn: number) => {
+  const handleStrikeChange = async (
+    strike: { min: number; max: number },
+    inRange: boolean,
+    capitalAtRisk: number,
+    targetEarn: number
+  ) => {
     if (isInvalidNumber(capitalAtRisk) || isInvalidNumber(targetEarn)) {
       setOrderDetails(undefined);
       setPayoffMap(undefined);
@@ -98,7 +116,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       ? binaryPutContracts[strike.min]
       : binaryCallContracts[strike.max];
 
-    const quantity = `${targetEarn}` as `${number}`
+    const quantity = `${targetEarn}` as `${number}`;
     let legMin: Leg = {
       contractId: minContract.contractId,
       quantity,
@@ -119,14 +137,17 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       legs: [legMin, legMax],
     } as ClientConditionalOrder;
 
-    const strikeDiff = (strikes[strikes.length - 1] - strikes[0])/7/4;
-    const payoffMap = estimateOrderPayoff([
-      { ...minContract, ...legMin, premium: capitalAtRisk / targetEarn },
-      { ...maxContract, ...legMax, premium: 0 },
-    ], {
-      min: strikes[0] - strikeDiff,
-      max: strikes[strikes.length -1] +strikeDiff
-    });
+    const strikeDiff = (strikes[strikes.length - 1] - strikes[0]) / 7 / 4;
+    const payoffMap = estimateOrderPayoff(
+      [
+        { ...minContract, ...legMin, premium: capitalAtRisk / targetEarn },
+        { ...maxContract, ...legMax, premium: 0 },
+      ],
+      {
+        min: strikes[0] - strikeDiff,
+        max: strikes[strikes.length - 1] + strikeDiff,
+      }
+    );
 
     setPayoffMap(payoffMap);
 
@@ -141,11 +162,30 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
       console.error('Order estimation for bet failed', error);
     }
   };
-
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    const newPositionBuilderStrategies = orderDetails.order.legs.map(leg => {
+      const contract = unFilteredContractList.find(contract => contract.contractId == leg.contractId);
+      if (!contract) throw new Error(`Contract not found for leg with contractId ${leg.contractId}`);
+
+      return {
+        leg: leg,
+        strike: contract.economics.strike,
+        payoff: contract.payoff,
+        // referencePrice: contract.economics.strike,
+      } as unknown as PositionBuilderStrategy;
+    });
+
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    setAuctionSubmission({
+      order: orderDetails?.order,
+      type: 'Bet',
+    });
+    setSubmitModal(true);
+  };
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, 'Bet');
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -161,10 +201,19 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   };
 
   const getAPY = () => {
-    if (isInvalidNumber(getNumber(capitalAtRisk)) || isInvalidNumber(getNumber(targetEarn)) || !strike.max || !strike.min) {
+    if (
+      isInvalidNumber(getNumber(capitalAtRisk)) ||
+      isInvalidNumber(getNumber(targetEarn)) ||
+      !strike.max ||
+      !strike.min
+    ) {
       return <span>-%</span>;
     }
-    const apy = calculateAPY(`${binaryCallContracts[strike.max].economics.expiry}`, getNumber(capitalAtRisk), getNumber(targetEarn))
+    const apy = calculateAPY(
+      `${binaryCallContracts[strike.max].economics.expiry}`,
+      getNumber(capitalAtRisk),
+      getNumber(targetEarn)
+    );
     return <span>{`${apy}%`}</span>;
   };
 
@@ -178,7 +227,13 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
   }, [insideOrOutside]);
 
   const renderInstruction = () => {
-    return <>{!compact && showInstructions && <BetInstructions type={insideOrOutside} currentExpiryDate={currentExpiryDate.toString()} />}</>;
+    return (
+      <>
+        {!compact && showInstructions && (
+          <BetInstructions type={insideOrOutside} currentExpiryDate={currentExpiryDate.toString()} />
+        )}
+      </>
+    );
   };
 
   return (
@@ -242,8 +297,15 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
               icon={<LogoUsdc />}
             />
           </LabeledInput>
-          <LabeledInput label='Target Earn' lowerLabel={<span>Expected APR
-          <span className='color-white ml-6'>{getAPY()}</span></span>}>
+          <LabeledInput
+            label='Target Earn'
+            lowerLabel={
+              <span>
+                Expected APR
+                <span className='color-white ml-6'>{getAPY()}</span>
+              </span>
+            }
+          >
             <Input
               type='number'
               value={targetEarn}
@@ -255,7 +317,6 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
         </Flex>
       )}
 
-
       <ChartPayoff
         // id='bet-chart'
         id={`bet-chart${compact ? '-compact' : ''}`}
@@ -265,6 +326,22 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
         showKeys={false}
         showPortial={!compact}
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={positionBuilderStrategies}
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
 

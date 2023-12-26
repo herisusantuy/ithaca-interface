@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -18,6 +19,7 @@ import Asset from '@/UI/components/Asset/Asset';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
@@ -36,7 +38,8 @@ import useToast from '@/UI/hooks/useToast';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate, unFilteredContractList } =
+    useAppStore();
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -49,7 +52,10 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   const [multiplier, setMultiplier] = useState('');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const { toastList, position, showToast } = useToast();
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
   const handleCallOrPutChange = async (callOrPut: 'Call' | 'Put') => {
     setCallOrPut(callOrPut);
@@ -66,7 +72,6 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     if (!priceReference) return;
   };
 
-
   const handlePriceReferenceChange = () => {
     if (maxPotentialLoss ? isInvalidNumber(getNumber(maxPotentialLoss)) : isInvalidNumber(getNumber(multiplier))) {
       setOrderDetails(undefined);
@@ -79,7 +84,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
     const buyContractId = buyContracts[priceReference].contractId;
     const sellContractId = sellContracts[priceReference].contractId;
 
-    const sellQuantity = getNumber(multiplier) * getNumber(maxPotentialLoss)
+    const sellQuantity = getNumber(multiplier) * getNumber(maxPotentialLoss);
 
     const buyLeg: Leg = { contractId: buyContractId, quantity: multiplier as `${number}`, side: 'BUY' };
     const sellLeg: Leg = { contractId: sellContractId, quantity: `${sellQuantity}`, side: 'SELL' };
@@ -103,7 +108,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       },
     ]);
     setPayoffMap(payoffMap);
-    updateOrderDetails(order)
+    updateOrderDetails(order);
   };
 
   const updateOrderDetails = async (order: ClientConditionalOrder) => {
@@ -117,16 +122,37 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
       // Add toast
       console.error('Order estimation for No Gain, No Payin’ failed', error);
     }
-  }
+  };
 
   useEffect(() => {
-    handlePriceReferenceChange()
-  }, [multiplier, maxPotentialLoss, priceReference, callOrPut, ])
+    handlePriceReferenceChange();
+  }, [multiplier, maxPotentialLoss, priceReference, callOrPut]);
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    const newPositionBuilderStrategies = orderDetails.order.legs.map(leg => {
+      const contract = unFilteredContractList.find(contract => contract.contractId == leg.contractId);
+      if (!contract) throw new Error(`Contract not found for leg with contractId ${leg.contractId}`);
+
+      return {
+        leg: leg,
+        strike: contract.economics.strike,
+        payoff: contract.payoff,
+        // referencePrice: contract.economics.strike,
+      } as unknown as PositionBuilderStrategy;
+    });
+
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    setAuctionSubmission({
+      order: orderDetails?.order,
+      type: 'No Gain, No Payin’',
+    });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, 'No Gain, No Payin’');
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -147,7 +173,13 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
   }, []);
 
   const renderInstruction = () => {
-    return <>{!compact && showInstructions && <NoGainNoPayinInstructions type={callOrPut} currentExpiryDate={currentExpiryDate.toString()} />}</>;
+    return (
+      <>
+        {!compact && showInstructions && (
+          <NoGainNoPayinInstructions type={callOrPut} currentExpiryDate={currentExpiryDate.toString()} />
+        )}
+      </>
+    );
   };
 
   return (
@@ -156,7 +188,20 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
 
       <Flex direction='column' margin={compact ? 'mb-10' : 'mb-17'} gap='gap-12'>
         <Flex gap='gap-15' margin={compact ? '' : 'mt-17'}>
-          {!compact && <LabeledControl label='Type' labelClassName='mt-2'>
+          {!compact && (
+            <LabeledControl label='Type' labelClassName='mt-2'>
+              <RadioButton
+                labelClassName={radioButtonStyles.microLabels}
+                size={compact ? 'compact' : 'regular'}
+                width={compact ? 140 : 186}
+                options={TYPE_OPTIONS}
+                selectedOption={callOrPut}
+                name={compact ? 'callOrPutCompact' : 'callOrPut'}
+                onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
+              />
+            </LabeledControl>
+          )}
+          {compact && (
             <RadioButton
               labelClassName={radioButtonStyles.microLabels}
               size={compact ? 'compact' : 'regular'}
@@ -166,16 +211,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               name={compact ? 'callOrPutCompact' : 'callOrPut'}
               onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
             />
-          </LabeledControl>}
-          {compact && <RadioButton
-            labelClassName={radioButtonStyles.microLabels}
-            size={compact ? 'compact' : 'regular'}
-            width={compact ? 140 : 186}
-            options={TYPE_OPTIONS}
-            selectedOption={callOrPut}
-            name={compact ? 'callOrPutCompact' : 'callOrPut'}
-            onChange={value => handleCallOrPutChange(value as 'Call' | 'Put')}
-          />}
+          )}
 
           {!compact && (
             <>
@@ -197,14 +233,25 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 />
               </LabeledControl>
 
-
-              <LabeledControl  icon={<LogoEth />} label={<span>Breakeven Price <span className='italic'>{`(Price Reference ${callOrPut === 'Call' ? ' + Min Upside' : ' - Min Downside'})`}</span></span>} labelClassName='mb-16 color-white'>
+              <LabeledControl
+                icon={<LogoEth />}
+                label={
+                  <span>
+                    Breakeven Price{' '}
+                    <span className='italic'>{`(Price Reference ${
+                      callOrPut === 'Call' ? ' + Min Upside' : ' - Min Downside'
+                    })`}</span>
+                  </span>
+                }
+                labelClassName='mb-16 color-white'
+              >
                 <Flex>
                   <span className='fs-md-bold color-white'>
-                    {priceReference &&
-                      !isInvalidNumber(getNumber(maxPotentialLoss)) ? callOrPut === 'Call' ? toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
-                    :  toPrecision(getNumber(priceReference) - getNumber(maxPotentialLoss), currencyPrecision.strike)
-                  : ''}
+                    {priceReference && !isInvalidNumber(getNumber(maxPotentialLoss))
+                      ? callOrPut === 'Call'
+                        ? toPrecision(getNumber(priceReference) + getNumber(maxPotentialLoss), currencyPrecision.strike)
+                        : toPrecision(getNumber(priceReference) - getNumber(maxPotentialLoss), currencyPrecision.strike)
+                      : ''}
                   </span>
                   <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
                 </Flex>
@@ -225,7 +272,9 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                   {!isInvalidNumber(getNumber(multiplier)) &&
                     !isInvalidNumber(getNumber(maxPotentialLoss)) &&
                     formatNumberByCurrency(
-                      toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike), 'string', 'USDC'
+                      toPrecision(getNumber(multiplier) * getNumber(maxPotentialLoss), currencyPrecision.strike),
+                      'string',
+                      'USDC'
                     )}
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
@@ -244,7 +293,23 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         showPortial={!compact}
       />
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} hidePremium={true} />}
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={positionBuilderStrategies}
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
+
+      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
 
       <Toast toastList={toastList} position={position} />
     </>

@@ -272,15 +272,14 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD')
     const diff = expiry.diff(current)
-    const params = {
-      rate: 0,
-      price: unitPrice,
-      strike: strike,
-      time: dayjs.duration(diff).asYears(),
-      isCall: type === 'Call',
-      underlying: currentSpotPrice
-    }
-    return (ithacaSDK.calculation.calcSigma(params) * 100).toFixed(1) + '%'
+    const sigma = ithacaSDK.calculation.impliedVolatility(
+      type === 'Call', 
+      currentSpotPrice, 
+      getNumber(strike), 
+      dayjs.duration(diff).asYears(), 
+      getNumber(unitPrice)
+    );
+    return (sigma * 100).toFixed(1) + '%'
   }
 
   return (

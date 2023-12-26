@@ -14,7 +14,7 @@ const TradingLayout = () => {
   const pathname = usePathname();
 
   return (
-    <Flex margin='mb-24' direction='row-space-between'>
+    <Flex direction='row-space-between'>
       <Tabs
         tabs={TRADING_TABS_ITEMS}
         className='mb-0'

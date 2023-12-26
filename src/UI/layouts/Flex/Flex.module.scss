@@ -3,7 +3,7 @@
   position: relative;
   flex-wrap: wrap;
   width: 100%;
-  @include breakpoint (desktop) {
+  @include breakpoint(desktop) {
     width: auto;
   }
 }
@@ -50,6 +50,12 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.flex--row-space-between-start {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .flex--row-start-space-between {
