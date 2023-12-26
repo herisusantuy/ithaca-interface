@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -29,6 +30,7 @@ import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
 import TwinWinInstructions from '../../Instructions/TwinWinInstructions';
 import LogoEth from '../../Icons/LogoEth';
@@ -44,7 +46,8 @@ const BonusTwinWin = ({
   radioChosen = 'Bonus',
   onRadioChange,
 }: TradingStoriesProps) => {
-  const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff } = useAppStore();
+  const { ithacaSDK, currencyPrecision, currentSpotPrice, getContractsByPayoff, unFilteredContractList } =
+    useAppStore();
   const forwardContracts = getContractsByPayoff('Forward');
   const putContracts = getContractsByPayoff('Put');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
@@ -63,7 +66,10 @@ const BonusTwinWin = ({
   const [total, setTotal] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const { toastList, position, showToast } = useToast();
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
   useEffect(() => {
     if (radioChosen) {
@@ -185,11 +191,31 @@ const BonusTwinWin = ({
       console.error(`Order estimation for ${bonusOrTwinWin} failed`, error);
     }
   };
-
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    const newPositionBuilderStrategies = orderDetails.order.legs.map(leg => {
+      const contract = unFilteredContractList.find(contract => contract.contractId == leg.contractId);
+      if (!contract) throw new Error(`Contract not found for leg with contractId ${leg.contractId}`);
+
+      return {
+        leg: leg,
+        strike: contract.economics.strike,
+        payoff: contract.payoff,
+        // referencePrice: contract.economics.strike,
+      } as unknown as PositionBuilderStrategy;
+    });
+
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    setAuctionSubmission({
+      order: orderDetails?.order,
+      type: bonusOrTwinWin,
+    });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, bonusOrTwinWin);
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -295,6 +321,22 @@ const BonusTwinWin = ({
           strike: priceReference,
         }}
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={positionBuilderStrategies}
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
 
