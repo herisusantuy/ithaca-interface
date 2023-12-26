@@ -1,0 +1,63 @@
+.mainPanel {
+  padding: rem(36) rem(52) rem(24) rem(52);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: rem(420);
+  height: rem(260);
+
+  @include breakpoint2(tablet) {
+    padding: rem(39) rem(60);
+  }
+
+  p {
+    font-family: $lato;
+    font-size: rem(18);
+    margin-bottom: rem(32);
+
+    @include breakpoint2(tablet) {
+      font-size: rem(16);
+      font-weight: 500;
+      margin-bottom: rem(24);
+    }
+  }
+
+  a {
+    font-size: rem(24);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: rem(36);
+    text-decoration: underline;
+    word-break: break-word;
+    @include breakpoint2(tablet) {
+      font-size: rem(18);
+      font-weight: 700;
+      margin-bottom: rem(24);
+    }
+  }
+
+  button {
+    width: rem(125);
+    font-size: rem(12);
+    @include breakpoint2(tablet) {
+      padding: rem(10) rem(16);
+      height: auto;
+    }
+  }
+}
+
+.referralPanel {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-family: $lato;
+    color: var(--white);
+    font-size: rem(24);
+    font-weight: 400;
+    padding: rem(40) 0;
+  }
+}

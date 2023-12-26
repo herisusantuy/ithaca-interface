@@ -14,12 +14,12 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/trading/position-builder',
+        destination: '/trading/dynamic-option-strategies',
         permanent: true,
       },
       {
         source: '/trading',
-        destination: '/trading/position-builder',
+        destination: '/trading/dynamic-option-strategies',
         permanent: true,
       },
     ];

@@ -9,7 +9,12 @@ export type NavigationItems = {
 
 export const NAVIGATION_ITEMS: NavigationItems[] = [
   {
-    path: '/trading/position-builder',
+    path: '/points-program',
+    titleKey: 'Click to visit points',
+    displayText: 'Points',
+  },
+  {
+    path: '/trading/dynamic-option-strategies',
     titleKey: 'Click to visit trading',
     displayText: 'Trading',
   },
@@ -23,27 +28,10 @@ export const NAVIGATION_ITEMS: NavigationItems[] = [
     titleKey: 'Click to visit analytics',
     displayText: 'Analytics',
     disabled: true
-  },
+  },  
   // {
-  //   path: '#',
-  //   titleKey: 'Click to view more',
-  //   displayText: 'More',
-  //   children: [
-  //     {
-  //       path: '/profile',
-  //       titleKey: 'Click to visit profile',
-  //       displayText: 'Profile',
-  //     },
-  //     {
-  //       path: '/rewards',
-  //       titleKey: 'Click to visit rewards earned',
-  //       displayText: 'Rewards Earned',
-  //     },
-  //     {
-  //       path: '#',
-  //       titleKey: 'Click to switch dark to light mode',
-  //       displayText: 'Light mode',
-  //     },
-  //   ],
+  //   path: '/referrals-leaderboard',
+  //   titleKey: 'Click to visit leaderboard',
+  //   displayText: 'Leaderboard',
   // },
 ];

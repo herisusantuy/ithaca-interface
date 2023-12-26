@@ -22,6 +22,8 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
+import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
+import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
 import { useAccount, useWalletClient } from 'wagmi';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
@@ -81,7 +83,7 @@ const Header = ({ className }: HeaderProps) => {
             <span
               className={styles.logo}
               onClick={() => {
-                router.push('/trading/position-builder');
+                router.push('/trading/dynamic-option-strategies');
               }}
             >
               <Logo />
@@ -89,8 +91,8 @@ const Header = ({ className }: HeaderProps) => {
             {!desktopBreakpoint && !tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            {address && <Bell />}
-            {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
+            {/* TODO: add EditProfileModal after editing a profile will not remove user shortcuts */}
+            {/*<EditProfileModal trigger={<UserProfileIcon />} />*/}
             <Wallet />
             {(desktopBreakpoint || tabletBreakpoint || mobileBreakpoint) && (
               <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />

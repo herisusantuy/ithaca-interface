@@ -40,6 +40,7 @@ type ModalProps = {
   isLoading?: boolean;
   isOpen: boolean;
   hideFooter?: boolean;
+  className?: string;
   showCloseIcon?: boolean;
 };
 
@@ -51,6 +52,7 @@ const Modal = ({
   isLoading,
   isOpen,
   hideFooter,
+  className,
   showCloseIcon = true,
 }: ModalProps) => {
   useEffect(() => {
@@ -84,7 +86,7 @@ const Modal = ({
     >
       <motion.div
         onClick={(e: React.MouseEvent<Element, Event>) => e.stopPropagation()}
-        className={styles.modal}
+        className={`${styles.modal} ${className}`}
         variants={animatedModal}
         initial='hidden'
         animate='visible'
@@ -116,12 +118,14 @@ const Modal = ({
     </motion.div>
   );
 
-  return ReactDOM.createPortal(
-    <AnimatePresence initial={true} mode='wait'>
-      {isOpen && modalContent}
-    </AnimatePresence>,
-    document.body
-  );
+  return isOpen && document.body
+    ? ReactDOM.createPortal(
+        <AnimatePresence initial={true} mode='wait'>
+          {modalContent}
+        </AnimatePresence>,
+        document.body
+      )
+    : null;
 };
 
 export default Modal;

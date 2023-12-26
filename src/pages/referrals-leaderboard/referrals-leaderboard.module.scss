@@ -1,0 +1,41 @@
+.wrapper {
+  text-align: center;
+
+  h1 {
+    font-family: $lato;
+    color: var(--white);
+    font-size: rem(24);
+    font-weight: 400;
+    padding: rem(40) 0;
+  }
+
+  .connectButton {
+    width: rem(125);
+    font-size: rem(12);
+    margin-top: rem(32);
+    @include breakpoint2(tablet) {
+      padding: rem(10) rem(16);
+      height: auto;
+    }
+  }
+
+  .leaderBoardCardsContainer {
+    display: flex;
+    gap: rem(16);
+    @include spacing('margin', 16, 'bottom');
+
+    div.TableReferralsLeaderBoard_cell {
+      text-align: left;
+    }
+  }
+
+  .loaderWrapper {
+    width: 100%;
+    height: rem(590);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
