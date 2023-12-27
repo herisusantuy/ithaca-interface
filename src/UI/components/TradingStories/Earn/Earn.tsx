@@ -484,7 +484,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
 
       {!compact && radioChosen === 'Riskless Earn' && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label='Loan' lowerLabel='Lend' labelClassName='ml-40'>
+          <LabeledInput label='Lend' lowerLabel='Loan' labelClassName='ml-40'>
             <Input
               type='number'
               width={80}
