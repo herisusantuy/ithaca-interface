@@ -4,7 +4,6 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 
 // Styles
 import styles from './CollateralAmount.module.scss';
-import CurrencyDisplay from '../CurrencyDisplay/CurrencyDisplay';
 
 // Types
 type CollateralAmountProps = {
@@ -12,11 +11,13 @@ type CollateralAmountProps = {
   usdcAmount: number;
 };
 
-// const 
-{/* <CurrencyDisplay amount={item.size} symbol={<LogoEth />} currency='WETH' />
- */}
+type SingleCurrencyAmountProps = {
+  amount: number;
+  symbol: JSX.Element;
+  currency: string;
+}
 
-export const SingleCurrencyAmount = ({amount, symbol, currency}) => {
+export const SingleCurrencyAmount = ({amount, symbol, currency}: SingleCurrencyAmountProps) => {
   return (
     <div className={styles.container}>  
       <span className={styles.amount}>{amount}</span>
