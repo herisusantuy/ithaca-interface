@@ -72,7 +72,6 @@ export const sideFilter = (data: TableRowDataWithExpanded[], filterArray: string
 
 // Product filter(in this case filter value is Forward, Call)
 export const productFilter = (data: TableRowDataWithExpanded[], filterArray: string[]) => {
-  //   const filterArray = ['Forward', 'Call'];
   if (filterArray.length == 0) {
     return data;
   }
@@ -87,10 +86,8 @@ export const currencyFilter = (data: TableRowDataWithExpanded[], filterArray: st
   }
 
   const filteredData = data.filter((item: TableRowDataWithExpanded) => {
-    console.log("DEBUG INFO 25/12/2023 13:01:10",item.currencyPair, filterArray)
     const containsElement = filterArray.some(element => item.currencyPair.includes(element));
     return containsElement
-    // return filterArray.includes(item.currencyPair)
   });
   return filteredData;
 };

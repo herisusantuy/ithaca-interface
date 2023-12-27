@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment } from 'react';
 // Constants
 import { TABLE_ORDER_EXPANDED_HEADERS, TableExpandedRowData } from '@/UI/constants/tableOrder';
 
@@ -6,13 +6,12 @@ import { TABLE_ORDER_EXPANDED_HEADERS, TableExpandedRowData } from '@/UI/constan
 import { getSideIcon } from '@/UI/utils/TableOrder';
 
 // Components
-import CurrencyDisplay from '@/UI/components/CurrencyDisplay/CurrencyDisplay';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 
 // Styles
-import styles from './TableOrder.module.scss';
 import { SingleCurrencyAmount } from '../CollateralAmount/CollateralAmount';
+import styles from './TableOrder.module.scss';
 
 // Types
 type ExpandedTableProps = {
@@ -22,7 +21,6 @@ type ExpandedTableProps = {
 const EmptyDiv = () => <div></div>;
 
 const ExpandedTable = ({ data }: ExpandedTableProps) => {
-  console.log('DEBUG INFO 23/12/2023 13:32:42', data);
   return (
     <>
       <EmptyDiv />
