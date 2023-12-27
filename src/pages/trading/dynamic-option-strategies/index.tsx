@@ -13,7 +13,7 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import { PrepackagedStrategy, LINEAR_STRATEGIES, STRUCTURED_STRATEGIES, SIDE } from '@/UI/constants/prepackagedStrategies';
 
 // Utils
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
 
@@ -534,16 +534,17 @@ const Index = () => {
               orderSummary={
                 <>
                   <OrderSummary
-                    limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
-                    collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                    limit={formatNumberByCurrency(Number(orderSummary?.order.totalNetPrice), 'string', 'USDC') || '-'}
+                    collatarelETH={orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
                     collatarelUSDC={
                       orderSummary
-                        ? formatNumber(
+                        ? formatNumberByCurrency(
                             toPrecision(
                               orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                               currencyPrecision.strike
                             ),
-                            'string'
+                            'string',
+                            'USDC'
                           )
                         : '-'
                     }
