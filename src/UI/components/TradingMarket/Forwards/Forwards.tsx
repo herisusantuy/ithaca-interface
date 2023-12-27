@@ -14,8 +14,6 @@ import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Input from '@/UI/components/Input/Input';
 import LogoEth from '@/UI/components/Icons/LogoEth';
-import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
-import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
@@ -25,7 +23,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -34,7 +32,6 @@ import {
   ClientConditionalOrder,
   createClientOrderId,
   calculateNetPrice,
-  calcCollateralRequirement,
   toPrecision,
 } from '@ithaca-finance/sdk';
 import LabeledControl from '../../LabeledControl/LabeledControl';
@@ -152,17 +149,17 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
     }
   };
 
-  const calcCollateral = () => {
-    if (isInvalidNumber(getNumber(size))) return '-';
-    const contract = currentOrNextAuction === 'CURRENT' ? currentForwardContract : nextAuctionForwardContract;
-    const leg = {
-      contractId: contract.contractId,
-      quantity: size,
-      side: buyOrSell,
-    };
-    const collateral = calcCollateralRequirement(leg, 'Forward', 0, currencyPrecision.strike);
-    return getNumberFormat(collateral, 'double');
-  };
+  // const calcCollateral = () => {
+  //   if (isInvalidNumber(getNumber(size))) return '-';
+  //   const contract = currentOrNextAuction === 'CURRENT' ? currentForwardContract : nextAuctionForwardContract;
+  //   const leg = {
+  //     contractId: contract.contractId,
+  //     quantity: size,
+  //     side: buyOrSell,
+  //   };
+  //   const collateral = calcCollateralRequirement(leg, 'Forward', 0, currencyPrecision.strike);
+  //   return getNumberFormat(collateral, 'double');
+  // };
 
   useEffect(() => {
     handleSizeChange('1');

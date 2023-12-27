@@ -35,6 +35,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
     if (isAuthenticated) {
       getAccountInfo();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
   };
 
   const handleSaveChanges = () => {
-    UpdateUsername(leaderboardName).then(res => {
+    UpdateUsername(leaderboardName).then(() => {
       showToast(
         {
           id: new Date().getTime(),

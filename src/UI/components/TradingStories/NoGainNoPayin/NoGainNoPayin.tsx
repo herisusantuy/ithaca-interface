@@ -23,7 +23,7 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumberByCurrency, getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
