@@ -9,13 +9,23 @@ import Delete from '@/UI/components/Icons/Delete';
 // Styles
 import DropdownOutlined from '../../Icons/DropdownOutlined';
 import styles from '../TableOrder.module.scss';
+import { TableRowDataWithExpanded } from '@/UI/constants/tableOrder';
+
+type SingleOrderRowProps = {
+  row: TableRowDataWithExpanded;
+  cancelOrder?: boolean;
+  handleCancelOrderClick: (index: number) => void;
+  rowIndex: number;
+  handleRowExpand: (index: number) => void;
+  expandedRow: number[];
+}
 
 export const Separator = (props: { className?: string }) => {
   const { className } = props;
   return <div className={`${styles.separator} ${className}`} style={{ marginTop: 4, marginBottom: 7 }} />;
 };
 
-const SingleOrderRow = props => {
+const SingleOrderRow = (props: SingleOrderRowProps) => {
   const { row, cancelOrder, handleCancelOrderClick, rowIndex, handleRowExpand, expandedRow } = props;
   return (
     <>
