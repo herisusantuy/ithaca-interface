@@ -330,7 +330,7 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
           orderDetails
             ? formatNumber(
               toPrecision(
-                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                orderDetails.orderLock.numeraireAmount,
                 currencyPrecision.strike
               ),
               'string'

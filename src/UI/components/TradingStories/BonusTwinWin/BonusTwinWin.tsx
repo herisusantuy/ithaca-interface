@@ -13,22 +13,23 @@ import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
-import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Asset from '@/UI/components/Asset/Asset';
 import Toast from '@/UI/components/Toast/Toast';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
+
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { BONUS_TWIN_WIN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, createClientOrderId } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import BonusInstructions from '@/UI/components/Instructions/BonusInstructions';
@@ -62,7 +63,7 @@ const BonusTwinWin = ({
   const [bonusOrTwinWin, setBonusOrTwinWin] = useState<'Bonus' | 'Twin Win'>((radioChosen as 'Bonus') || 'Bonus');
   const [koBarrier, setKoBarrier] = useState<string>(barrierStrikes[barrierStrikes.length - 3]);
   const [multiplier, setMultiplier] = useState('');
-  const [price, setPrice] = useState('100');
+  const [price, setPrice] = useState('2100');
   const [total, setTotal] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
@@ -340,7 +341,24 @@ const BonusTwinWin = ({
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
 
       <Toast toastList={toastList} position={position} />
     </>

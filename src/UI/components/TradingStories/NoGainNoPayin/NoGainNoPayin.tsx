@@ -20,10 +20,12 @@ import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
+
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumberByCurrency, getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, formatNumberByCurrency, getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -268,7 +270,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
               <Input type='number' value={multiplier} onChange={({ target }) => handleMultiplierChange(target.value)} />
             </LabeledControl>
 
-            <LabeledControl label='Total Collateral' labelClassName='mb-16 color-white'>
+            {/* <LabeledControl label='Total Collateral' labelClassName='mb-16 color-white'>
               <Flex>
                 <span className='fs-md-bold color-white'>
                   {!isInvalidNumber(getNumber(multiplier)) &&
@@ -281,7 +283,7 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
                 </span>
                 <Asset icon={<LogoUsdc />} label='USDC' size='xs' />
               </Flex>
-            </LabeledControl>
+            </LabeledControl> */}
           </Flex>
         )}
       </Flex>
@@ -311,7 +313,25 @@ const NoGainNoPayin = ({ showInstructions, compact, chartHeight }: TradingStorie
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
+
 
       <Toast toastList={toastList} position={position} />
     </>

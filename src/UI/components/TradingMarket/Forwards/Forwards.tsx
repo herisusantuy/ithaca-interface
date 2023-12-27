@@ -281,7 +281,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
       )}
       {!compact && <OrderSummaryMarkets
         asContainer={false}
-        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        limit={Number(orderDetails?.order.totalNetPrice).toFixed(2) || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
         collatarelUSDC={
           orderDetails

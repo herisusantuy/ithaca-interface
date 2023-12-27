@@ -13,6 +13,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Toast from '@/UI/components/Toast/Toast';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -40,7 +41,6 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 dayjs.extend(duration);
 

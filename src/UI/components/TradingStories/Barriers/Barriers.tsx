@@ -15,6 +15,7 @@ import BarrierDescription from '@/UI/components/Instructions/BarrierDescription'
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -25,6 +26,7 @@ import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/op
 
 // Utils
 import {
+  formatNumber,
   formatNumberByCurrency,
   getNumber,
   getNumberFormat,
@@ -35,7 +37,7 @@ import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartP
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, createClientOrderId, calculateNetPrice } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId, calculateNetPrice, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import LogoEth from '../../Icons/LogoEth';
 import PriceLabel from '../../PriceLabel/PriceLabel';
@@ -527,7 +529,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 width={80}
               />
             </LabeledControl>
-            <LabeledControl label='Collateral' labelClassName='justify-end'>
+            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoEth />}
@@ -535,9 +537,9 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                   orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'
                 }
               />
-            </LabeledControl>
+            </LabeledControl> */}
 
-            <LabeledControl label='Premium' labelClassName='justify-end'>
+            {/* <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoUsdc />}
@@ -545,7 +547,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                   orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'
                 }
               />
-            </LabeledControl>
+            </LabeledControl> */}
           </Flex>
         </Flex>
       )}
@@ -589,7 +591,25 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
+
     </>
   );
 };
