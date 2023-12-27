@@ -12,7 +12,7 @@ import Remove from '@/UI/components/Icons/Remove';
 import styles from './TableStrategy.module.scss';
 import { PositionBuilderStrategy } from '@/pages/trading/position-builder';
 import Dot from '../Dot/Dot';
-import { formatNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency } from '@/UI/utils/Numbers';
 
 type StrategyTableProps = {
   strategies: PositionBuilderStrategy[];
@@ -72,7 +72,7 @@ const TableStrategy = ({ strategies, removeRow, clearAll, hideClear = false }: S
               <div className={styles.cell}>{strategy.leg.quantity}</div>
               <div className={styles.cell}>{Number(strategy.strike)}</div>
               {strategy.referencePrice && (
-                <div className={styles.cell}>{formatNumber(Number(strategy.referencePrice), 'string')}</div>
+                <div className={styles.cell}>{formatNumberByCurrency(Number(strategy.referencePrice), 'string', 'USDC')}</div>
               )}
               {!hideClear && (
                 <div className={styles.cell}>

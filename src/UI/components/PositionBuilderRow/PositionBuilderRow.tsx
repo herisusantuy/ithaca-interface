@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
-import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -105,14 +105,15 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
       leg.contractId = forwardContracts.contractId;
     }
-    return formatNumber(
+    return formatNumberByCurrency(
       calcCollateralRequirement(
         leg,
         title === 'Forwards' ? 'Forward' : payoff,
         getNumber(strike),
         currencyPrecision.strike
       ),
-      'string'
+      '',
+      'WETH'
     );
   };
 
@@ -127,7 +128,9 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
       leg.contractId = forwardContracts.contractId;
     }
-    return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
+
+    const finalPrice = Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike))
+    return formatNumberByCurrency(finalPrice, 'string', 'USDC');
   };
 
   const calcIv = () => {
