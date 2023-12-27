@@ -92,6 +92,7 @@ const ReferralsLeaderboard = () => {
         setMembers(membersData);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, isAuthenticated]);
 
   useEffect(() => {
@@ -101,6 +102,8 @@ const ReferralsLeaderboard = () => {
       );
       if (currentUserData) setCurrentUser(currentUserData);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members]);
 
   useAccount({

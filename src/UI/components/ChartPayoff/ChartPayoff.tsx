@@ -93,7 +93,7 @@ const ChartPayoff = (props: ChartDataProps) => {
   });
   const [upSide, setUpSide] = useState<boolean>(false);
   const [downSide, setDownSide] = useState<boolean>(false);
-  const [minimize, setMinimize] = useState<number>(0);
+  // const [minimize, setMinimize] = useState<number>(0);
   const [maximize, setMaximize] = useState<number>(0);
   const [modifiedData, setModifiedData] = useState<PayoffDataProps[]>([]);
   const [off, setOff] = useState<number | undefined>();
@@ -152,7 +152,7 @@ const ChartPayoff = (props: ChartDataProps) => {
 
     setDashedColor(chartDashedColorArray[dashedColorIndex - 1]);
     setMaximize(Math.max(...tempData.map(i => i.value)));
-    setMinimize(Math.min(...tempData.map(i => i.value)));
+    // setMinimize(Math.min(...tempData.map(i => i.value)));
     const breakPoints = breakPointList(tempData)
     setBreakPoints(breakPoints);
     if (caller === 'Forwards') {

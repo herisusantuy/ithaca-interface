@@ -6,7 +6,6 @@ import Navigation from '@/UI/components/Navigation/Navigation';
 import Logo from '@/UI/components/Logo/Logo';
 import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
-import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
 // import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
@@ -22,8 +21,6 @@ import styles from './Header.module.scss';
 import { useClickOutside } from '@/UI/hooks/useClickoutside';
 import { useEscKey } from '@/UI/hooks/useEscKey';
 import { useRouter } from 'next/navigation';
-import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
-import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
 import { useAccount, useWalletClient } from 'wagmi';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
@@ -68,7 +65,6 @@ const Header = ({ className }: HeaderProps) => {
     onDisconnect: disconnect,
   });
 
-  const { address } = useAccount();
 
   useEffect(() => {
     if (!walletClient) return;

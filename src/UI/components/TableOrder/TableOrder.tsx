@@ -306,6 +306,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       updateSort('Order Date', false);
       setIsSorted(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataLoaded, isSorted]);
 
   // Handle row expand and collapse
@@ -464,8 +465,8 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
             </>
           );
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleCancelAllOrder]
   );
 

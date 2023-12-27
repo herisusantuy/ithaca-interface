@@ -23,6 +23,7 @@ const Wallet = () => {
 
   useEffect(() => {
     getSession();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const handleAgreeAndContinue = async () => {
