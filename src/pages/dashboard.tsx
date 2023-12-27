@@ -33,7 +33,7 @@ const DASHBOARD_TABS = [
   {
     id: 'tradeHistory',
     label: 'Trade History',
-    content: <TableOrder type={TABLE_TYPE.TRADE} cancelOrder={false} description={false} />,
+    content: <Orders type={TABLE_TYPE.TRADE} cancelOrder={false} />,
   },
   {
     id: 'fundLockHistory',

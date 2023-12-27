@@ -77,6 +77,7 @@ const ExpandableTable = props => {
         return <ExpandedTable data={row.expandedInfo || []} />;
     }
   };
+  const className = type === TABLE_TYPE.LIVE ? styles.gridContainerTable : styles.gridContainerTableNoCancel;
   return (
     <AnimatePresence>
       {isRowExpanded && (
@@ -88,7 +89,7 @@ const ExpandableTable = props => {
           variants={variants}
         >
           <div className={styles.tableExpanderContainer}>
-            <div className={styles.gridContainerTable}>{getExpandedTableTemplate(row)}</div>
+            <div className={className}>{getExpandedTableTemplate(row)}</div>
           </div>
         </motion.div>
       )}

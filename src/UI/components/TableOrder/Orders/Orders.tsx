@@ -98,7 +98,6 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
   });
   // const [headers, setHeaders] = useState<string[]>(TABLE_ORDER_HEADERS);
   const [sortHeader, setSortHeader] = useState<string>('');
-  const [filterHeader, setFilterHeader] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(true);
   const [direction, setDirection] = useState<boolean>(true);
 
@@ -110,43 +109,12 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
 
   const { ithacaSDK, isAuthenticated, unFilteredContractList } = useAppStore();
 
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
 
   // Define Ref variables for outside clickable
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sideRef = useRef<HTMLDivElement | null>(null);
   const productRef = useRef<HTMLDivElement | null>(null);
-
-  const positionsDataToRows = (res: Position[]) => {
-    setData(
-      res.map(row => {
-        const contract = unFilteredContractList.find(c => c.contractId === row.contractId);
-        return {
-          // clientOrderId: row.orderId, // Missing
-          details: '',
-          // orderDate: dayjs(row.revDate).format('DD MMM YY HH:mm'), // Missing
-          currencyPair: contract?.economics.currencyPair, // Look up from contract
-          product: contract?.payoff, // Look up from Contract
-          // side: row.details.length === 1 ? row.details[0].side : '', // Missing
-          tenor: dayjs(contract?.economics.expiry.toString(), 'YYMMDDHHm').format('DD MMM YY'), // Look up from contract
-          // wethAmount: row.collateral?.numeraireAmount, // Missing
-          // usdcAmount: row.collateral?.underlierAmount, // Missing
-          // orderLimit: row.netPrice, // Missing
-          expandedInfo: [
-            {
-              // Dummy data to be replaced with actual data
-              type: 'CALL',
-              side: 'BUY',
-              size: 2000,
-              strike: 400,
-              enterPrice: 400,
-            },
-          ],
-        };
-      }) as TableRowDataWithExpanded[]
-    );
-  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -169,12 +137,6 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
             });
           }
           break;
-        case TABLE_TYPE.ORDER:
-          ithacaSDK.client.currentPositions().then(res => {
-            positionsDataToRows(res);
-            setLoading(false);
-          });
-          break;
         case TABLE_TYPE.TRADE:
           ithacaSDK.client.tradeHistory().then(res => {
             setData(transformClientOpenOrders(res));
@@ -183,7 +145,7 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
           break;
         default:
           setLoading(false);
-          setData(TABLE_ORDER_DATA_WITH_EXPANDED);
+          setData([]);
           break;
       }
     }
@@ -247,12 +209,6 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
     filterData = currencyFilter(filterData, currencyArray);
     setSlicedData(filterData.slice(pageStart, pageEnd));
   }, [data, productArray, pageEnd, pageStart, sideArray, currencyArray]);
-
-  useEffect(() => {
-    // if (data.length > 0) {
-    //   setDataLoaded(true);
-    // }
-  }, [data]);
 
   useEffect(() => {
     if (!isSorted && slicedData.length > 0) {
@@ -324,10 +280,11 @@ const Orders = ({ type, cancelOrder = true, description = true }: TableOrderProp
   const displayIsLoading = !slicedData.length && isLoading && isAuthenticated;
   const displayNoResults = !slicedData.length && !isLoading;
   const displayTable = slicedData.length > 0;
+  const containerClassName = cancelOrder ? styles.gridContainerTable : styles.gridContainerTableNoCancel;
   return (
     <>
       {/* Table */}
-      <div className={`${styles.gridContainerTable}`}>
+      <div className={`${containerClassName}`}>
         <HeaderColumns
           updateSort={updateSort}
           currencyArray={currencyArray}
