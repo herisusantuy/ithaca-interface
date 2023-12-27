@@ -6,7 +6,6 @@ import Navigation from '@/UI/components/Navigation/Navigation';
 import Logo from '@/UI/components/Logo/Logo';
 import SlidingNav from '@/UI/components/SlidingNav/SlidingNav';
 import Hamburger from '@/UI/components/Hamburger/Hamburger';
-import Bell from '@/UI/components/Icons/Bell';
 import Wallet from '@/UI/components/Wallet/Wallet';
 // import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
@@ -15,7 +14,7 @@ import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
 
 // Constants
-import { MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
+import { DESKTOP_BREAKPOINT, MOBILE_BREAKPOINT, TABLET_BREAKPOINT } from '@/UI/constants/breakpoints';
 
 // Styles
 import styles from './Header.module.scss';
@@ -35,6 +34,7 @@ const Header = ({ className }: HeaderProps) => {
   const { data: walletClient } = useWalletClient();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
   const mobileBreakpoint = useMediaQuery(MOBILE_BREAKPOINT);
+  const desktopBreakpoint = useMediaQuery(DESKTOP_BREAKPOINT);
 
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
@@ -65,6 +65,7 @@ const Header = ({ className }: HeaderProps) => {
     onDisconnect: disconnect,
   });
 
+
   useEffect(() => {
     if (!walletClient) return;
     initIthacaSDK(walletClient);
@@ -78,18 +79,18 @@ const Header = ({ className }: HeaderProps) => {
             <span
               className={styles.logo}
               onClick={() => {
-                router.push('/trading/position-builder');
+                router.push('/trading/dynamic-option-strategies');
               }}
             >
               <Logo />
             </span>
-            {!tabletBreakpoint && !mobileBreakpoint && <Navigation />}
+            {!desktopBreakpoint && !tabletBreakpoint && !mobileBreakpoint && <Navigation />}
           </div>
           <div className={styles.right}>
-            <Bell />
-            {/*<Rewards onClick={toggleRewardsDropdown} strokeColor={isRewardsOpen ? 'white' : undefined} />*/}
+            {/* TODO: add EditProfileModal after editing a profile will not remove user shortcuts */}
+            {/*<EditProfileModal trigger={<UserProfileIcon />} />*/}
             <Wallet />
-            {(tabletBreakpoint || mobileBreakpoint) && (
+            {(desktopBreakpoint || tabletBreakpoint || mobileBreakpoint) && (
               <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />
             )}
             {isRewardsOpen && <RewardsDropdown value={123} ref={rewardsDropdownRef} />}

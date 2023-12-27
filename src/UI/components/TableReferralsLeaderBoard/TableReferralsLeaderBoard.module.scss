@@ -1,0 +1,144 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  height: rem(590);
+}
+
+.header {
+  @include spacing(padding, 10, 'left+right');
+  @include spacing(padding, 10, 'bottom');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  align-items: center;
+  font-family: $roboto;
+  color: var(--white-60);
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  .cell {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: rem(6);
+    @include font-size('text-xs', 'regular');
+    width: calc(100% / 4);
+
+    &:nth-child(1) {
+      width: 20%;
+    }
+    &:last-child {
+      white-space: nowrap;
+    }
+    &:nth-child(2) {
+      width: 30%;
+    }
+
+    &:nth-child(4) {
+      justify-content: flex-end;
+    }
+
+    @include breakpoint2(tablet) {
+      @include font-size('text-xxs', 'regular');
+    }
+  }
+
+  @include breakpoint2(tablet) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.row {
+  @include spacing(padding, 10, 'all');
+  border-bottom: rem(1) solid var(--white-rgba-10);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+
+  .cell {
+    @include font-size('text-md', 'regular');
+    font-family: $roboto;
+    width: calc(100% / 4);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &:nth-child(1) {
+      width: 20%;
+    }
+    &:nth-child(2) {
+      display: flex;
+      align-items: center;
+      gap: rem(10);
+      width: 30%;
+      @include breakpoint2(mobile) {
+        > svg {
+          display: none;
+        }
+      }
+
+      .username {
+        max-width: calc(100% - rem(40));
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+
+    &:nth-child(4) {
+      text-align: right;
+    }
+
+    @include breakpoint2(tablet) {
+      @include font-size('text-sm', 'regular');
+
+      svg {
+        height: rem(16);
+        width: rem(16);
+      }
+    }
+
+    @include breakpoint2(mobile) {
+      @include font-size('text-xs', 'regular');
+
+      svg {
+        display: none;
+      }
+    }
+  }
+
+  @include breakpoint2(tablet) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.emptyTable {
+  @include font-size('text-xs', 'regular');
+  @include spacing(padding, 16, 'top');
+  text-align: center;
+}
+
+.sort {
+  padding: 0;
+  background: none;
+  height: auto;
+  border-radius: rem(4);
+
+  &:before {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--white-5);
+  }
+}
+
+.sort {
+  svg path {
+    stroke: inherit;
+  }
+}

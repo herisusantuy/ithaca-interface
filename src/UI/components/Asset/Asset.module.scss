@@ -2,9 +2,8 @@
   display: flex;
   align-items: center;
   gap: rem(8);
-  border-bottom: rem(1) solid var(--white-10);
   width: 100%;
-  @include breakpoint (tablet) {
+  @include breakpoint(tablet) {
     border-bottom: none;
     width: auto;
   }

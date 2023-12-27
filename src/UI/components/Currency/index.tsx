@@ -11,31 +11,27 @@ import CountdownTimer from '../CountdownTimer/CountdownTimer';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import { getNumber } from '@/UI/utils/Numbers';
 
-import styles from './currency.module.scss'
+import styles from './currency.module.scss';
 
 type CurrencyProps = {
   onExpiryChange: () => void;
-}
+};
 
-export const Currency = ({
-  onExpiryChange
-} 
-: CurrencyProps) => {
-
+export const Currency = ({ onExpiryChange }: CurrencyProps) => {
   const device = useDevice();
   const { currentExpiryDate, expiryList, setCurrentExpiryDate } = useAppStore();
   const [list, setList] = useState([...expiryList]);
   useEffect(() => {
     const l = [...expiryList];
     // l.shift()
-    setList([...l])
-  }, [expiryList])
+    setList([...l]);
+  }, [expiryList]);
   return (
     <Flex gap={device !== 'phone' ? 'gap-12' : 'gap-0'} margin='mb-24'>
-      <div className={styles.currency__info}>
+      <div className={`${styles.currency__info} ${styles.divider}`}>
         <Asset icon={<LogoEth />} label='ETH' />
       </div>
-      <div className={styles.currency__info}>
+      <div className={`${styles.currency__info} ${styles.divider}`}>
         <LabelValue
           label='Expiry Date'
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +40,7 @@ export const Currency = ({
             value: dayjs(`${date}`, 'YYYYMMDD').format('DD MMM YY'),
           }))}
           onChange={value => {
-            onExpiryChange()
+            onExpiryChange();
             setCurrentExpiryDate(getNumber(dayjs(value, 'DD MMM YY').format('YYYYMMDD')));
           }}
           value={dayjs(`${currentExpiryDate}`, 'YYYYMMDD').format('DD MMM YY')}

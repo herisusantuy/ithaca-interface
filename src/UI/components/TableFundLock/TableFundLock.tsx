@@ -65,7 +65,7 @@ const TableFundLock = () => {
     ithacaSDK.fundlock.fundlockHistory().then(res => {
       const walletAddresses = Object.keys(systemInfo.tokenAddress).reduce(
         (obj, key) => {
-          obj[systemInfo.tokenAddress[key] as string] = key;
+          obj[systemInfo.tokenAddress[key].toLowerCase() as string] = key;
           return obj;
         },
         {} as Record<string, string>
@@ -81,6 +81,7 @@ const TableFundLock = () => {
   const convertToRows = (data: FundlockHistory[], auction: string, walletAddresses: Record<string, string>) => {
     return data.map(d => {
       const token = walletAddresses[d.token];
+      console.log(walletAddresses);
       return {
         orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,

@@ -2,6 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
+import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
 
 // Components
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
@@ -13,6 +14,7 @@ import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import BarrierDescription from '@/UI/components/Instructions/BarrierDescription';
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
+import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -22,7 +24,13 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { formatNumberByCurrency, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import {
+  formatNumberByCurrency,
+  getNumber,
+  getNumberFormat,
+  getNumberValue,
+  isInvalidNumber,
+} from '@/UI/utils/Numbers';
 import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -39,7 +47,9 @@ import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
-  const { ithacaSDK, getContractsByPayoff, currentExpiryDate, currencyPrecision } = useAppStore();
+  const { ithacaSDK, getContractsByPayoff, currentExpiryDate, currencyPrecision, unFilteredContractList } =
+    useAppStore();
+
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
@@ -55,7 +65,10 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
   const [payoffMap, setPayoffMap] = useState<PayoffMap[]>();
 
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const { toastList, position, showToast } = useToast();
+  const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
+  const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
   let strikes: string[];
   if (callContracts) {
@@ -309,10 +322,14 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     if (price === undefined) {
       setUnitPrice(getNumberFormat(unitPrice));
     }
-    const totalPrice = price !== undefined ? legs.reduce((acc, leg) => {
-      acc = (getNumber(leg.quantity) * price) + acc;
-      return acc;
-    }, 0) : unitPrice
+    const totalPrice =
+      price !== undefined
+        ? legs.reduce((acc, leg) => {
+            acc = getNumber(leg.quantity) * price + acc;
+            return acc;
+          }, 0)
+        : unitPrice;
+
     const order: ClientConditionalOrder = {
       clientOrderId: createClientOrderId(),
       totalNetPrice: `${totalPrice}`,
@@ -334,10 +351,33 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     }
   };
 
+  console.log(orderDetails);
+
   const handleSubmit = async () => {
     if (!orderDetails) return;
+    const newPositionBuilderStrategies = orderDetails.order.legs.map(leg => {
+      const contract = unFilteredContractList.find(contract => contract.contractId == leg.contractId);
+      if (!contract) throw new Error(`Contract not found for leg with contractId ${leg.contractId}`);
+
+      return {
+        leg: leg,
+        strike: contract.economics.strike,
+        payoff: contract.payoff,
+        referencePrice: orderDetails.order.totalNetPrice,
+      } as unknown as PositionBuilderStrategy;
+    });
+
+    setPositionBuilderStrategies(newPositionBuilderStrategies);
+    setAuctionSubmission({
+      order: orderDetails?.order,
+      type: 'Barriers',
+    });
+    setSubmitModal(true);
+  };
+
+  const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
     try {
-      await ithacaSDK.orders.newOrder(orderDetails.order, 'Barriers');
+      await ithacaSDK.orders.newOrder(order, orderDescr);
     } catch (error) {
       showToast(
         {
@@ -485,15 +525,22 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
               />
             </LabeledControl>
             <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34 min-width-71 color-white-60' icon={<LogoEth />} 
-                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'}/>
+              <PriceLabel
+                className='height-34 min-width-71 color-white-60'
+                icon={<LogoEth />}
+                label={
+                  orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'
+                }
+              />
             </LabeledControl>
 
             <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoUsdc />}
-                label={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'}
+                label={
+                  orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'
+                }
               />
             </LabeledControl>
           </Flex>
@@ -522,6 +569,22 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         showKeys={false}
         showPortial={!compact}
       />
+
+      {orderDetails && (
+        <SubmitModal
+          isOpen={submitModal}
+          closeModal={val => setSubmitModal(val)}
+          submitOrder={() => {
+            if (!auctionSubmission) return;
+            submitToAuction(auctionSubmission.order, auctionSubmission.type);
+            setAuctionSubmission(undefined);
+            setSubmitModal(false);
+          }}
+          auctionSubmission={auctionSubmission}
+          positionBuilderStrategies={positionBuilderStrategies}
+          orderSummary={orderDetails as unknown as OrderSummary}
+        />
+      )}
 
       {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
     </>

@@ -23,6 +23,7 @@ const Wallet = () => {
 
   useEffect(() => {
     getSession();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const handleAgreeAndContinue = async () => {
@@ -103,8 +104,9 @@ const Wallet = () => {
                   </button> */}
 
                   <button onClick={openAccountModal} type='button' className={styles.connectedWallet}>
-                    {account.displayName}
+                    <span className={styles.displayName}>{account.displayName}</span>
                     <ConnectWalletIcon />
+                    <ChevronDown className={styles.chevron} />
                     {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
                   </button>
                 </div>

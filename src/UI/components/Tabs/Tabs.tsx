@@ -27,10 +27,11 @@ type TabsProps = {
   tabs: Tab[];
   className?: string;
   activeTab: string;
+  responsive?: boolean;
   onChange?: (tabId: string) => void;
 };
 
-const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
+const Tabs = ({ tabs, className, activeTab, onChange, responsive = true }: TabsProps) => {
   const router = useRouter();
   const tabletBreakpoint = useMediaQuery(TABLET_BREAKPOINT);
 
@@ -44,7 +45,7 @@ const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
     return tabId === activeTab ? styles.isActive : '';
   };
 
-  const buttonsClass = `${styles.buttons} ${className || ''}`;
+  const buttonsClass = `${styles.buttons} ${className || ''} mb-24`;
 
   // Transform tabs into dropdown options
   const dropdownOptions: DropDownOption[] = tabs.map(tab => ({
@@ -67,7 +68,7 @@ const Tabs = ({ tabs, className, activeTab, onChange }: TabsProps) => {
 
   return (
     <>
-      {tabletBreakpoint ? (
+      {responsive && tabletBreakpoint ? (
         <DropdownMenu
           options={dropdownOptions}
           value={activeOption}

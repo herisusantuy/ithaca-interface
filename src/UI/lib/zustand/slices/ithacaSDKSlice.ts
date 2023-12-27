@@ -4,6 +4,7 @@ import { Contract, IthacaNetwork, IthacaSDK, Order, ReferencePrice, SystemInfo }
 import { WalletClient } from 'wagmi';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { isLocalhost } from '@/UI/utils/RainbowKit';
+
 dayjs.extend(customParseFormat);
 
 export interface AuctionTimes {
@@ -118,7 +119,6 @@ export const createIthacaSDKSlice: StateCreator<IthacaSDKSlice> = (set, get) => 
         onError: (ev: Event) => {
           console.log(ev);
         },
-        // TODO: add totalOpenOrdersCount in the Order object if needed
         onMessage: (payload: Omit<Order, 'collateral'> & { totalOpenOrdersCount?: number }) => {
           set({
             openOrdersCount: payload?.totalOpenOrdersCount,

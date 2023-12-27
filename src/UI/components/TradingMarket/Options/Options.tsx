@@ -10,10 +10,7 @@ import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Input from '@/UI/components/Input/Input';
 import LogoEth from '@/UI/components/Icons/LogoEth';
-import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
-import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
-import Greeks from '@/UI/components/Greeks/Greeks';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Toast from '@/UI/components/Toast/Toast';
 
@@ -25,7 +22,7 @@ import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
 import { SIDE_OPTIONS, TYPE_OPTIONS } from '@/UI/constants/options';
 
 // Utils
-import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // SDK
@@ -33,7 +30,6 @@ import { useAppStore } from '@/UI/lib/zustand/store';
 import {
   ClientConditionalOrder,
   Leg,
-  calcCollateralRequirement,
   calculateNetPrice,
   createClientOrderId,
   toPrecision,
@@ -44,7 +40,7 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import OrderSummaryMarkets from '../../OrderSummaryMarkets/OrderSummaryMarkets';
+import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 dayjs.extend(duration);
 
@@ -196,38 +192,21 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
     const current = dayjs();
     const expiry = dayjs(currentExpiryDate.toString(), 'YYYYMMDD');
     const diff = expiry.diff(current);
-    const params = {
-      rate: 0,
-      price: unitPrice,
-      strike: strike,
-      time: dayjs.duration(diff).asYears(),
-      isCall: callOrPut === 'Call',
-      underlying: currentSpotPrice,
-    };
-    const sigma = ithacaSDK.calculation.calcSigma(params);
-    setIv(sigma * 100);
-    setGreeks(
-      ithacaSDK.calculation.calcOption({
-        rate: 0,
-        sigma,
-        strike,
-        time: dayjs.duration(diff).asYears(),
-        isCall: callOrPut === 'Call',
-        underlying: currentSpotPrice,
-      })
+    const sigma = ithacaSDK.calculation.impliedVolatility(
+      callOrPut === 'Call', 
+      currentSpotPrice, 
+      getNumber(strike), 
+      dayjs.duration(diff).asYears(), 
+      getNumber(unitPrice)
     );
-  };
-
-  const calcCollateral = () => {
-    if (!strike || isInvalidNumber(getNumber(size))) return '-';
-    const contract = callOrPut === 'Call' ? callContracts[strike] : putContracts[strike];
-    const leg = {
-      contractId: contract.contractId,
-      quantity: size,
-      side: buyOrSell,
-    };
-    const collateral = calcCollateralRequirement(leg, callOrPut, getNumber(strike), currencyPrecision.strike);
-    return getNumberFormat(collateral, 'double');
+    setIv(sigma * 100);
+    setGreeks(ithacaSDK.calculation.blackFormulaExtended(
+      callOrPut === 'Call', 
+      currentSpotPrice, 
+      getNumber(strike), 
+      dayjs.duration(diff).asYears(), 
+      sigma)
+    );
   };
 
   useEffect(() => {
@@ -311,22 +290,6 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
                 onChange={({ target }) => handleUnitPriceChange(target.value)}
               />
             </LabeledControl>
-            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
-              <PriceLabel className='height-34' icon={<LogoEth />} label={calcCollateral()} />
-            </LabeledControl>
-
-            <LabeledControl label='Premium' labelClassName='justify-end'>
-              <PriceLabel
-                className='height-34'
-                icon={<LogoUsdc />}
-                label={orderDetails ? getNumberFormat(orderDetails.order.totalNetPrice) : '-'}
-              />
-            </LabeledControl> */}
-
-            {/** Add disabled logic, add wrong network and not connected logic */}
-            {/* <Button size='sm' title='Click to submit to auction' onClick={handleSubmit} className='align-self-end'>
-              Submit to Auction
-            </Button> */}
           </>
         )}
       </Flex>
@@ -365,6 +328,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
         />
       )}
       {!compact && <OrderSummaryMarkets
+        asContainer={false}
         limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
         collatarelUSDC={

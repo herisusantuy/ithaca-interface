@@ -84,7 +84,7 @@ const CollateralPanel = () => {
         address: systemInfo.tokenAddress[currency] as `0x${string}`,
         abi: parseAbi(['function mint(address to, uint256 amount) external']),
         functionName: 'mint',
-        args: [walletClient.account.address, parseUnits('100', systemInfo.tokenDecimals[currency])],
+        args: [walletClient.account.address, parseUnits('5000', systemInfo.tokenDecimals[currency])],
       });
       await publicClient.waitForTransactionReceipt({ hash });
     } catch (error) {
