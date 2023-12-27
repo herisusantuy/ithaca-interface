@@ -109,7 +109,7 @@ const OrderSummary = ({
 
   const Container = ({ children }: { children: ReactNode }) =>
     asContainer ? (
-      <Panel margin={`'br-20 p-20 ${device === 'desktop' ? 'mt-125' : 'mt-16'}`}>{children}</Panel>
+      <Panel margin={`'br-20 p-20 ${device === 'desktop' ? '' : 'mt-16'}`}>{children}</Panel>
     ) : (
       <>{children}</>
     );
