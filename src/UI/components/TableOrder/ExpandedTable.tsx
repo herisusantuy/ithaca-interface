@@ -28,6 +28,7 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
       <EmptyDiv />
       {TABLE_ORDER_EXPANDED_HEADERS.map((header, idx) => (
         <div
+          key={idx}
           className={styles.cell}
           style={{ flexDirection: 'column', justifyContent: header.alignment, alignItems: header.alignment }}
         >

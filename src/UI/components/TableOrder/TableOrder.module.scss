@@ -43,11 +43,9 @@
       border-bottom: rem(1) solid var(--white-rgba-10);
 
       .cell {
-        // color: red!important;
         position: relative;
         @include font-size('text-xs', 'regular');
         align-items: center;
-        // gap: rem(2);
         color: var(--white-60);
 
         .isClickable {
@@ -300,21 +298,18 @@
     align-items: center;
     display: flex;
     @include font-size('text-xs', 'regular');
-        align-items: center;
-        color: var(--white-60);
+    color: var(--white-60);
   }
 
   .cellContent {
     align-items: center;
     display: flex;
-    align-items: center;
     color: var(--white);
     @include font-size('text-md', 'regular');
     font-family: $roboto;
   }
 
   .cellContentExpanded {
-    align-items: center;
     display: flex;
     @include font-size('text-sm', 'medium');
     align-items: center;
