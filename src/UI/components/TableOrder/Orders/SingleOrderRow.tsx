@@ -30,7 +30,7 @@ const SingleOrderRow = (props: SingleOrderRowProps) => {
   return (
     <>
       {rowIndex > 0 && <Separator />}
-      <div onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
+      <div onKeyDown={() => handleRowExpand(rowIndex)} onClick={() => handleRowExpand(rowIndex)} className={styles.cell}>
         <Button
           title='Click to expand dropdown'
           className={`${styles.dropdown} ${expandedRow.includes(rowIndex) ? styles.isActive : ''}`}
