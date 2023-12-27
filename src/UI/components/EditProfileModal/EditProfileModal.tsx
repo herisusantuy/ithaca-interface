@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { useAppStore } from '@/UI/lib/zustand/store';
 import { useAccount } from 'wagmi';
 
 //Components
@@ -11,6 +10,9 @@ import Toast from '../Toast/Toast';
 import WalletIcon from '../Icons/Wallet';
 import CopyIcon from '../Icons/CopyIcon';
 
+// Constants
+import { LeaderboardUserDataType } from '@/UI/constants/pointsProgram';
+
 // Utils
 import { GetOLMemberData, UpdateUsername } from '@/UI/components/Points/PointsAPI';
 import { formatEthAddress } from '@/UI/utils/Numbers';
@@ -18,45 +20,61 @@ import useToast from '@/UI/hooks/useToast';
 
 // Styles
 import styles from './EditProfileModal.module.scss';
+import Loader from '@/UI/components/Loader/Loader';
 
 type EditProfileProps = {
   trigger: ReactElement;
 };
 
 const EditProfileModal = ({ trigger }: EditProfileProps) => {
-  const { isAuthenticated } = useAppStore();
   const [showTrigger, setShowTrigger] = useState(false);
   const { address, isConnected } = useAccount();
-  const [leaderboardName, setLeaderboardName] = useState('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toastList, showToast } = useToast();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      getAccountInfo();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  const [leaderboardUserData, setLeaderboardUserData] = useState<LeaderboardUserDataType>({
+    username: null,
+    avatarUrl: null,
+    isHide: false,
+  });
+
+  const cleanUserData = () => {
+    setLeaderboardUserData({
+      username: null,
+      avatarUrl: null,
+      isHide: false,
+    });
+  };
 
   useEffect(() => {
     setShowTrigger(isConnected);
   }, [isConnected]);
 
   const openDialog = () => {
+    if (leaderboardUserData.username === null) {
+      setIsLoading(true);
+      GetOLMemberData().then(member => {
+        const { firstName } = member;
+        const avatarUrl = member.labels.find(label => label.key === 'avatar');
+        const isHide = member.labels.find(label => label.key === 'isHide');
+
+        setLeaderboardUserData(prevState => {
+          return {
+            username: firstName,
+            avatarUrl: avatarUrl?.value || '',
+            isHide: isHide?.value === 'true' || false,
+          };
+        });
+        setIsLoading(false);
+      });
+    }
     setIsOpen(true);
   };
 
   const closeDialog = () => {
     setIsOpen(false);
-  };
-
-  const getAccountInfo = async () => {
-    if (isAuthenticated) {
-      GetOLMemberData().then(member => {
-        const { firstName } = member;
-        setLeaderboardName(firstName);
-      });
-    }
+    cleanUserData();
   };
 
   const copyAddress = () => {
@@ -73,7 +91,7 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
   };
 
   const handleSaveChanges = () => {
-    UpdateUsername(leaderboardName).then(() => {
+    UpdateUsername(leaderboardUserData).then(() => {
       showToast(
         {
           id: new Date().getTime(),
@@ -86,6 +104,20 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
     });
   };
 
+  const handleChangeUsername = (value: string) => {
+    setLeaderboardUserData(prevState => ({
+      ...prevState,
+      username: value,
+    }));
+  };
+
+  const handleChangeAvatarVisible = (value: boolean) => {
+    setLeaderboardUserData(prevState => ({
+      ...prevState,
+      isHide: value,
+    }));
+  };
+
   return (
     <>
       {showTrigger && (
@@ -95,41 +127,67 @@ const EditProfileModal = ({ trigger }: EditProfileProps) => {
       )}
 
       <Modal isOpen={isOpen} onCloseModal={closeDialog} title='Edit Profile' className={styles.editProfileModal}>
-        <div className={styles.dialogBody}>
-          <div className={styles.profilePhotoCtrl}>
-            <Avatar />
-            {/*<Button title='' variant='secondary' className={styles.hideAvatarBtn}>*/}
-            {/*  Hide Avatar*/}
-            {/*</Button>*/}
+        {isLoading ? (
+          <div className={styles.loaderWrapper}>
+            <Loader />
           </div>
-          <Input
-            id='leaderboardName'
-            value={leaderboardName}
-            onChange={({ target: { value } }) => setLeaderboardName(value)}
-            label='Leaderboard Name'
-            type='text'
-            className={styles.leaderboardName}
-          />
-          <div className={styles.walletAddressField}>
-            <label>Connected Wallet (Hidden)</label>
-            <div className={styles.walletAddress}>
-              <WalletIcon />
-              {address ? (
-                <>
-                  <span className={styles.ethAddress}>{formatEthAddress(`${address}`)}</span>
-                  <button className={styles.transparentBtn} onClick={copyAddress}>
-                    <CopyIcon />
-                  </button>
-                </>
+        ) : (
+          <div className={styles.dialogBody}>
+            <div className={styles.profilePhotoCtrl}>
+              {leaderboardUserData.avatarUrl && !leaderboardUserData.isHide ? (
+                <img className={styles.avatar} src={leaderboardUserData.avatarUrl} alt='Leaderboard avatarUrl' />
               ) : (
-                <></>
+                <Avatar />
+              )}
+              {leaderboardUserData.isHide ? (
+                <Button
+                  title=''
+                  variant='secondary'
+                  className={styles.hideAvatarBtn}
+                  onClick={() => handleChangeAvatarVisible(false)}
+                >
+                  Show Avatar
+                </Button>
+              ) : (
+                <Button
+                  title=''
+                  variant='secondary'
+                  className={styles.hideAvatarBtn}
+                  onClick={() => handleChangeAvatarVisible(true)}
+                >
+                  Hide Avatar
+                </Button>
               )}
             </div>
+            <Input
+              id='leaderboardName'
+              value={leaderboardUserData.username || ''}
+              onChange={({ target: { value } }) => handleChangeUsername(value)}
+              label='Leaderboard Name'
+              type='text'
+              className={styles.leaderboardName}
+            />
+            <div className={styles.walletAddressField}>
+              <label>Connected Wallet (Hidden)</label>
+              <div className={styles.walletAddress}>
+                <WalletIcon />
+                {address ? (
+                  <>
+                    <span className={styles.ethAddress}>{formatEthAddress(`${address}`)}</span>
+                    <button className={styles.transparentBtn} onClick={copyAddress}>
+                      <CopyIcon />
+                    </button>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            <Button onClick={handleSaveChanges} title=''>
+              Save Changes
+            </Button>
           </div>
-          <Button onClick={handleSaveChanges} title=''>
-            Save Changes
-          </Button>
-        </div>
+        )}
       </Modal>
       <Toast toastList={toastList} position='bottom-right' autoDelete={true} autoDeleteTime={2000} />
     </>

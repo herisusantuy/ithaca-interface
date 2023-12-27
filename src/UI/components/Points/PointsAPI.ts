@@ -1,7 +1,12 @@
-import { PointsProgramMember, ReferralsRequestProps, ReferralsDataType } from '@/UI/constants/pointsProgram';
+import {
+  PointsProgramMember,
+  ReferralsRequestProps,
+  ReferralsDataType,
+  LeaderboardUserDataType,
+} from '@/UI/constants/pointsProgram';
 
 export const SSEConnect = () => {
-  const sse = new EventSource('http://localhost:8000/sse');
+  const sse = new EventSource(`${process.env.NEXT_PUBLIC_BACKEND_POINTS_URL}/sse`);
 
   sse.onopen = () => {
     console.log('SSE is connected successfully');
@@ -116,13 +121,17 @@ export const GetReferrals = async ({ page }: ReferralsRequestProps): Promise<Ref
   });
 };
 
-export const UpdateUsername = async (name: string) => {
+export const UpdateUsername = async ({ username, avatarUrl, isHide }: LeaderboardUserDataType) => {
   const session = getSessionInfo();
 
   const data = {
     customer: {
       loyaltyCardNumber: session.ethAddress,
-      firstName: name,
+      firstName: username,
+    },
+    avatar: {
+      url: avatarUrl,
+      isHide: isHide,
     },
   };
 
