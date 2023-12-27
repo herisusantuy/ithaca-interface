@@ -127,7 +127,21 @@ const adjustPayoffs = (payoffs: PayoffMap[], significantChanges: PayoffMapWithIn
 
 const sortPayoffs = (payoffs: PayoffMap[], mod10: boolean) => {
   payoffs.sort((a, b) => {
-    if (a.x !== b.x) return a.x - b.x;
-    return mod10 ? a.total - b.total : b.total - a.total;
+    if (a.x !== b.x) {
+      return a.x - b.x;
+    }
+    if (mod10) {
+      if (a.total < b.total) {
+        return a.total - b.total;
+      } else {
+        return b.total - a.total;
+      }
+    } else {
+      if (a.total < b.total) {
+        return b.total - a.total;
+      } else {
+        return a.total - b.total;
+      }
+    }
   });
 };
