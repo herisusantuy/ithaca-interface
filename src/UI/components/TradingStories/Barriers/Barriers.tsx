@@ -47,21 +47,23 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import styles from './Barriers.module.scss';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+import { ContractDetails } from '@/UI/lib/zustand/slices/ithacaSDKSlice';
+import { getBarrierStrikes, getStrikes } from './Barriers.utils';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate, currencyPrecision, unFilteredContractList } =
     useAppStore();
-
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
-
+  const [barrierStrikes, setBarrierStrikes] = useState(getBarrierStrikes(callContracts, '1900', 'UP'));
+  const [strikes, setStrikes] = useState(getStrikes(callContracts, '2300', 'UP'));
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [upOrDown, setUpOrDown] = useState<'UP' | 'DOWN'>('UP');
   const [inOrOut, setInOrOut] = useState<'IN' | 'OUT'>('IN');
   const [strike, setStrike] = useState<string>('1900');
-  const [barrier, setBarrier] = useState<string | undefined>('2300');
+  const [barrier, setBarrier] = useState<string>('2300');
   const [size, setSize] = useState('');
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -72,36 +74,6 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
-  let strikes: string[];
-  if (callContracts) {
-    const strikeInitialData = Object.keys(callContracts);
-    strikeInitialData.pop();
-    strikeInitialData.shift();
-    strikes = strikeInitialData.reduce<string[]>((strikeArr, currStrike) => {
-      const isValidStrike = barrier
-        ? upOrDown === 'UP'
-          ? parseFloat(currStrike) < parseFloat(barrier)
-          : parseFloat(currStrike) > parseFloat(barrier)
-        : true;
-      if (isValidStrike) strikeArr.push(currStrike);
-      return strikeArr;
-    }, []);
-  } else {
-    strikes = [];
-  }
-
-  const barrierStrikes = callContracts
-    ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
-        const isValidStrike = strike
-          ? upOrDown === 'UP'
-            ? parseFloat(currStrike) > parseFloat(strike)
-            : parseFloat(currStrike) < parseFloat(strike)
-          : true;
-        if (isValidStrike) strikeArr.push(currStrike);
-        return strikeArr;
-      }, [])
-    : [];
-
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
@@ -110,9 +82,22 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
+    const strikes = getStrikes(callContracts, strike, upOrDown)
+    const barrierStrikes = getBarrierStrikes(callContracts, strike, upOrDown)
+    setBarrierStrikes(barrierStrikes)
+    setStrikes(strikes)
+    let b = barrier;
+    if (upOrDown === 'DOWN') {
+      b = barrierStrikes[barrierStrikes.length-1]
+      setBarrier(b)
+    }
+    else {
+      b = barrierStrikes[0]
+      setBarrier(b)
+    }
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, b, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
@@ -328,9 +313,9 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     const totalPrice =
       price !== undefined
         ? legs.reduce((acc, leg) => {
-            acc = getNumber(leg.quantity) * price + acc;
-            return acc;
-          }, 0)
+          acc = getNumber(leg.quantity) * price + acc;
+          return acc;
+        }, 0)
         : unitPrice;
 
     const order: ClientConditionalOrder = {
@@ -355,8 +340,6 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
       console.error('Order estimation for barriers failed', error);
     }
   };
-
-  console.log(orderDetails);
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
