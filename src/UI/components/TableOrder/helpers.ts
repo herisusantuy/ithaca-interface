@@ -28,7 +28,7 @@ export const transformClientOpenOrders = (orders: Order[]) => {
   })) as TableRowDataWithExpanded[]
 }
 
-export const getTableHeaders = (type) => {
+export const getTableHeaders = (type: TABLE_TYPE) => {
   switch (type) {
     case TABLE_TYPE.ORDER:
       return TABLE_ORDER_HEADERS_FOR_POSITIONS;

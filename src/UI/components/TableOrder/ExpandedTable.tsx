@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 // Constants
 import { TABLE_ORDER_EXPANDED_HEADERS, TableExpandedRowData } from '@/UI/constants/tableOrder';
 
@@ -43,7 +44,7 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
       </div>
       <EmptyDiv />
       {[...data, ...data].map((item, index) => (
-        <>
+        <Fragment key={index}>
           <div style={{ gridColumn: 'a/j', marginTop: 5 }}></div>
           <EmptyDiv />
           <div className={`${styles.cellContentExpanded} ${styles.bolded}`}>{item.type}</div>
@@ -61,7 +62,7 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
           </div>
 
           <EmptyDiv />
-        </>
+        </Fragment>
       ))}
       <div style={{ gridColumn: 'a/j', marginTop: 15 }}></div>
     </>

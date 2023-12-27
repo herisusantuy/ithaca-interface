@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import dayjs from 'dayjs';
 // Utils
 import { CURRENCY_PAIR_LABEL, FilterItemProps, PRODUCT_LABEL, SIDE_LABEL } from '@/UI/utils/TableOrder';
 
@@ -12,22 +11,31 @@ import { CheckBoxControlled } from '@/UI/components/CheckBox/CheckBox';
 import Sort from '@/UI/components/Icons/Sort';
 
 // Styles
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import styles from '../TableOrder.module.scss';
 import { getTableHeaders } from '../helpers';
 import { Separator } from './SingleOrderRow';
 import { ClearFilters, ShowFilterButton } from './helperComponents';
-dayjs.extend(customParseFormat);
+import { TABLE_TYPE } from './Orders';
 
+interface HeaderColumnsProps {
+  updateSort: (header: string, dir: boolean) => void;
+  currencyArray: string[];
+  clearFilterArray: (type: string) => void;
+  productArray: string[];
+  sideArray: string[];
+  setSideArray: (arr: string[]) => void;
+  setProductArray: (arr: string[]) => void;
+  setCurrencyArray: (arr: string[]) => void;
+  type: TABLE_TYPE;
+  handleCancelAllOrder: () => void;
+}
 
-const HeaderColumns = props => {
+const HeaderColumns = (props: HeaderColumnsProps) => {
   const {
     updateSort,
     currencyArray,
-    containerRef,
     clearFilterArray,
     productArray,
-    productRef,
     sideArray,
     setSideArray,
     setProductArray,
@@ -36,7 +44,11 @@ const HeaderColumns = props => {
     handleCancelAllOrder,
   } = props;
   const [filterHeader, setFilterHeader] = useState<string | null>(null);
+  
+  // Define Ref variables for outside clickable
   const sideRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const productRef = useRef<HTMLDivElement | null>(null);
 
   const selectedLabeStatus = (label: string, isChecked: boolean) => {
     if (filterHeader == 'Currency Pair') {
@@ -222,11 +234,13 @@ const HeaderColumns = props => {
   return (
     <>
       {getTableHeaders(type).map((header, idx) => {
-        return (
+        if (typeof header !== 'string') {
+          return (
             <div className={styles.cell} key={idx} style={{ justifyContent: header.alignment }}>
               {getHeaderTemplate(header.name)}
             </div>
-        );
+          );
+        }
       })}
       {/* Bottom border of headers */}
       <Separator />

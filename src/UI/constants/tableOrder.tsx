@@ -25,8 +25,13 @@ export type TableRowDataWithExpanded = TableRowData & {
   expandedInfo?: TableExpandedRowData[];
 };
 
+type TableHeaders = {
+  name: string;
+  alignment: string;
+}
+
 // Table order headers
-export const TABLE_ORDER_HEADERS: string[] = [
+export const TABLE_ORDER_HEADERS: TableHeaders[] = [
   {name: 'Details', alignment: 'initial'},
   {name: 'Order Date', alignment: 'initial'},
   {name: 'Currency Pair', alignment: 'initial'},
@@ -37,7 +42,7 @@ export const TABLE_ORDER_HEADERS: string[] = [
   {name: 'Order Limit', alignment: 'flex-end'},
 ];
 
-export const TABLE_ORDER_LIVE_ORDERS: string[] = [
+export const TABLE_ORDER_LIVE_ORDERS: TableHeaders[] = [
   ...TABLE_ORDER_HEADERS,
   {name: 'Cancel All', alignment: 'flex-end'},
 ];
@@ -53,7 +58,7 @@ export type TableDescriptionProps = {
 };
 
 // Table order expanded headers
-export const TABLE_ORDER_EXPANDED_HEADERS: string[] = [
+export const TABLE_ORDER_EXPANDED_HEADERS: TableHeaders[] = [
   {name: '', alignment: 'flex-start'},
   {name: 'Type', alignment: 'flex-start'},
   {name: '', alignment: 'flex-start'},

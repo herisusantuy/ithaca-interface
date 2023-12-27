@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 // Components
 import Button from '@/UI/components/Button/Button';
 import Filter from '@/UI/components/Icons/Filter';
