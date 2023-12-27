@@ -32,9 +32,10 @@ import DisconnectedWallet from '../DisconnectedWallet/DisconnectedWallet';
 import { useAppStore } from '@/UI/lib/zustand/store';
 import dayjs from 'dayjs';
 import { formatUnits } from 'viem';
-import { formatNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency } from '@/UI/utils/Numbers';
 import Loader from '../Loader/Loader';
 import Container from '@/UI/layouts/Container/Container';
+import { Currency } from '../Balance/Balance';
 
 type FundlockHistory = {
   amount: bigint;
@@ -82,11 +83,12 @@ const TableFundLock = () => {
     return data.map(d => {
       const token = walletAddresses[d.token];
       console.log(walletAddresses);
+      console.log("DEBUG INFO 27/12/2023 14:48:32",token)
       return {
         orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,
         auction: auction,
-        amount: formatNumber(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string'),
+        amount: formatNumberByCurrency(Number(formatUnits(d.amount, systemInfo.tokenDecimals[token])), 'string', token as Currency),
         currency: token,
       };
     });

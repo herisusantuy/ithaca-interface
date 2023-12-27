@@ -13,7 +13,7 @@ import Warning from '../Icons/Warning';
 import ArrowUpRight from '../Icons/ArrowUpRight';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
-import { formatNumber, getNumberValue } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumberValue } from '@/UI/utils/Numbers';
 import Modal from '../Modal/Modal';
 import { useAccount, useBalance, usePublicClient } from 'wagmi';
 import Input from '../Input/Input';
@@ -109,7 +109,7 @@ const OrderSummary = ({
 
   const Container = ({ children }: { children: ReactNode }) =>
     asContainer ? (
-      <Panel margin={`'br-20 p-20 ${device === 'desktop' ? 'mt-125' : 'mt-16'}`}>{children}</Panel>
+      <Panel margin={`'br-20 p-20 ${device === 'desktop' ? '' : 'mt-16'}`}>{children}</Panel>
     ) : (
       <>{children}</>
     );
@@ -146,7 +146,7 @@ const OrderSummary = ({
         <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
           <h5 className='color-white'>Total Premium</h5>
           <CurrencyDisplay
-            amount={premium !== '-' ? formatNumber(Number(premium), 'string') : '-'}
+            amount={premium !== '-' ? formatNumberByCurrency(Number(premium), 'string', 'USDC') : '-'}
             symbol={<LogoUsdc />}
             currency='USDC'
           />

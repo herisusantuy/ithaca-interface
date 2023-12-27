@@ -29,7 +29,7 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 import styles from './riskless-lending.module.scss';
 
 // Types
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
@@ -284,17 +284,17 @@ const Index = () => {
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
-                  collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                  limit={formatNumberByCurrency(Number(orderSummary?.order.totalNetPrice), 'string', 'USDC') || '-'}
+                  collatarelETH={orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
                   collatarelUSDC={
                     orderSummary
-                      ? formatNumber(toPrecision(
+                      ? formatNumberByCurrency(toPrecision(
                         orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                         currencyPrecision.strike
-                      ), 'string')
+                      ), 'string', 'USDC')
                       : '-'
                   }
-                  premium={formatNumber(Number(orderSummary?.order.totalNetPrice) || 0, 'string') || '-'}
+                  premium={orderSummary?.order.totalNetPrice}
                   fee={1.5}
                   submitAuction={() => {
                     if (!orderSummary) return;
