@@ -91,9 +91,7 @@ export function estimateOrderPayoff(legs: OptionLeg[], customRange?: CustomRange
   const significantChanges = calculateSignificantChanges(payoffs, stdDev);
   const mod10 = adjustPayoffs(payoffs, significantChanges);
 
-  sortPayoffs(payoffs, mod10);
-
-  return payoffs;
+  return sortPayoffs(payoffs, mod10);
 }
 
 const calculateSignificantChanges = (payoffs: PayoffMap[], stdDev: number) => {
@@ -117,8 +115,8 @@ const adjustPayoffs = (payoffs: PayoffMap[], significantChanges: PayoffMapWithIn
   let mod10 = false;
   significantChanges.forEach(change => {
     if (change.index < payoffs.length - 1) {
-      const nextPayoff = payoffs[change.index + (Math.abs(change.x) % 10 !== 0 ? 0 : 1)];
-      mod10 = mod10 || Math.abs(change.x) % 10 !== 0;
+      const nextPayoff = payoffs[change.index + (Math.abs(Math.round(change.x)) % 10 !== 0 ? 0 : 1)];
+      mod10 = mod10 || Math.abs(Math.round(change.x)) % 10 !== 0;
       payoffs.push({ ...nextPayoff, x: change.x + (mod10 ? 1 : 0) });
     }
   });
@@ -144,4 +142,6 @@ const sortPayoffs = (payoffs: PayoffMap[], mod10: boolean) => {
       }
     }
   });
+
+  return payoffs;
 };
