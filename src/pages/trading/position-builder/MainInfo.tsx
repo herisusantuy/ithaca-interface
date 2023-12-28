@@ -37,6 +37,7 @@ const MainInfo = ({ handleAddStrategy }: IMainInfo) => {
       ) : null}
       {getProductOptions(currentExpiryDate).map(option => (
         <SingleOptionRow
+          key={option.value}
           isSelected={product === option.value || device === 'desktop'}
           handleAddStrategy={handleAddStrategy}
           options={option.options}
