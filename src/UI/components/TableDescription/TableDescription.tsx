@@ -25,7 +25,7 @@ const TableDescription = ({
 }: TableDescriptionProps) => {
   const rows = [
     {
-      label: 'Possible Collateral release: ',
+      label: 'Total Collateral Required: ',
       values: [
         { value: possibleReleaseX, Icon: LogoEth },
         { value: possibleReleaseY, Icon: LogoUsdc },
