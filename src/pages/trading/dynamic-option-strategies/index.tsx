@@ -1,5 +1,5 @@
 // Packages
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // SDK
 import { ClientConditionalOrder, Leg, OrderLock, toPrecision } from '@ithaca-finance/sdk';
@@ -18,7 +18,7 @@ import {
 } from '@/UI/constants/prepackagedStrategies';
 
 // Utils
-import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
+import { getNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
 
@@ -73,6 +73,8 @@ type SectionType = {
   style: string;
 };
 
+const MAX_LEGS_COUNT = 5;
+
 const Index = () => {
   // State
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<DynamicOptionStrategy[]>([]);
@@ -90,6 +92,10 @@ const Index = () => {
   const [invertSide, setInvertSide] = useState('BUY');
   const device = useDevice();
 
+  const canAddNewLeg = useMemo(() => {
+    return strategy.strategies.length < MAX_LEGS_COUNT
+  }, [strategy.strategies])
+  
   const sections: SectionType[] = [
     { name: 'Product', style: styles.product },
     { name: 'Type', style: styles.type },
@@ -245,6 +251,9 @@ const Index = () => {
   };
 
   const addPosition = () => {
+    if (!canAddNewLeg) {
+      return;
+    }
     let size = 1;
     if (strategy.strategies.length) {
       const test = strategy.strategies.reduce((arr, s, i) => {
@@ -522,6 +531,7 @@ const Index = () => {
                     )}
                     <div className={styles.buttonWrapper}>
                       <Button
+                        disabled={!canAddNewLeg}
                         title='Click to add Position '
                         size='sm'
                         variant='secondary'
