@@ -15,6 +15,7 @@ import BarrierDescription from '@/UI/components/Instructions/BarrierDescription'
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -25,6 +26,7 @@ import { IN_OUT_OPTIONS, SIDE_OPTIONS, UP_DOWN_OPTIONS } from '@/UI/constants/op
 
 // Utils
 import {
+  formatNumber,
   formatNumberByCurrency,
   getNumber,
   getNumberFormat,
@@ -35,7 +37,7 @@ import { OptionLeg, PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartP
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
-import { ClientConditionalOrder, Leg, createClientOrderId, calculateNetPrice } from '@ithaca-finance/sdk';
+import { ClientConditionalOrder, Leg, createClientOrderId, calculateNetPrice, toPrecision } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
 import LogoEth from '../../Icons/LogoEth';
 import PriceLabel from '../../PriceLabel/PriceLabel';
@@ -45,21 +47,23 @@ import LogoUsdc from '../../Icons/LogoUsdc';
 import styles from './Barriers.module.scss';
 import { DESCRIPTION_OPTIONS } from '@/UI/constants/tabCard';
 import radioButtonStyles from '@/UI/components/RadioButton/RadioButton.module.scss';
+import { ContractDetails } from '@/UI/lib/zustand/slices/ithacaSDKSlice';
+import { getBarrierStrikes, getStrikes } from './Barriers.utils';
 
 const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: TradingStoriesProps) => {
   const { ithacaSDK, getContractsByPayoff, currentExpiryDate, currencyPrecision, unFilteredContractList } =
     useAppStore();
-
   const callContracts = getContractsByPayoff('Call');
   const putContracts = getContractsByPayoff('Put');
   const binaryCallContracts = getContractsByPayoff('BinaryCall');
   const binaryPutContracts = getContractsByPayoff('BinaryPut');
-
+  const [barrierStrikes, setBarrierStrikes] = useState(getBarrierStrikes(callContracts, '1900', 'UP'));
+  const [strikes, setStrikes] = useState(getStrikes(callContracts, '2300', 'UP'));
   const [buyOrSell, setBuyOrSell] = useState<'BUY' | 'SELL'>('BUY');
   const [upOrDown, setUpOrDown] = useState<'UP' | 'DOWN'>('UP');
   const [inOrOut, setInOrOut] = useState<'IN' | 'OUT'>('IN');
   const [strike, setStrike] = useState<string>('1900');
-  const [barrier, setBarrier] = useState<string | undefined>('2300');
+  const [barrier, setBarrier] = useState<string>('2300');
   const [size, setSize] = useState('');
   const [unitPrice, setUnitPrice] = useState('-');
   const [orderDetails, setOrderDetails] = useState<OrderDetails>();
@@ -70,36 +74,6 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
   const [positionBuilderStrategies, setPositionBuilderStrategies] = useState<PositionBuilderStrategy[]>([]);
 
-  let strikes: string[];
-  if (callContracts) {
-    const strikeInitialData = Object.keys(callContracts);
-    strikeInitialData.pop();
-    strikeInitialData.shift();
-    strikes = strikeInitialData.reduce<string[]>((strikeArr, currStrike) => {
-      const isValidStrike = barrier
-        ? upOrDown === 'UP'
-          ? parseFloat(currStrike) < parseFloat(barrier)
-          : parseFloat(currStrike) > parseFloat(barrier)
-        : true;
-      if (isValidStrike) strikeArr.push(currStrike);
-      return strikeArr;
-    }, []);
-  } else {
-    strikes = [];
-  }
-
-  const barrierStrikes = callContracts
-    ? Object.keys(callContracts).reduce<string[]>((strikeArr, currStrike) => {
-        const isValidStrike = strike
-          ? upOrDown === 'UP'
-            ? parseFloat(currStrike) > parseFloat(strike)
-            : parseFloat(currStrike) < parseFloat(strike)
-          : true;
-        if (isValidStrike) strikeArr.push(currStrike);
-        return strikeArr;
-      }, [])
-    : [];
-
   const handleBuyOrSellChange = async (buyOrSell: 'BUY' | 'SELL') => {
     setBuyOrSell(buyOrSell);
     if (!strike || !barrier) return;
@@ -108,9 +82,22 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
+    const strikes = getStrikes(callContracts, strike, upOrDown)
+    const barrierStrikes = getBarrierStrikes(callContracts, strike, upOrDown)
+    setBarrierStrikes(barrierStrikes)
+    setStrikes(strikes)
+    let b = barrier;
+    if (upOrDown === 'DOWN') {
+      b = barrierStrikes[barrierStrikes.length-1]
+      setBarrier(b)
+    }
+    else {
+      b = barrierStrikes[0]
+      setBarrier(b)
+    }
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
-    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, barrier, getNumber(size));
+    await prepareOrderLegs(buyOrSell, upOrDown, strike, inOrOut, b, getNumber(size));
   };
 
   const handleInOrOutChange = async (inOrOut: 'IN' | 'OUT') => {
@@ -255,6 +242,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
           side: buyOrSell,
         };
 
+
         legs = [buyPutLeg, buyBinaryPutLeg];
         referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
         estimatePayoffData = [
@@ -320,14 +308,19 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
     const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     if (price === undefined) {
-      setUnitPrice(getNumberFormat(unitPrice));
+      if (Number(unitPrice) < 0) {
+        setUnitPrice('0')
+      }
+      else {
+        setUnitPrice(formatNumberByCurrency(Number(unitPrice), 'string', 'USDC'));
+      }
     }
     const totalPrice =
       price !== undefined
         ? legs.reduce((acc, leg) => {
-            acc = getNumber(leg.quantity) * price + acc;
-            return acc;
-          }, 0)
+          acc = getNumber(leg.quantity) * price + acc;
+          return acc;
+        }, 0)
         : unitPrice;
 
     const order: ClientConditionalOrder = {
@@ -341,17 +334,17 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast
       console.error('Order estimation for barriers failed', error);
     }
   };
-
-  console.log(orderDetails);
 
   const handleSubmit = async () => {
     if (!orderDetails) return;
@@ -524,7 +517,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                 width={80}
               />
             </LabeledControl>
-            <LabeledControl label='Collateral' labelClassName='justify-end'>
+            {/* <LabeledControl label='Collateral' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoEth />}
@@ -532,9 +525,9 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                   orderDetails ? formatNumberByCurrency(orderDetails.orderLock.numeraireAmount, 'string', 'WETH') : '-'
                 }
               />
-            </LabeledControl>
+            </LabeledControl> */}
 
-            <LabeledControl label='Premium' labelClassName='justify-end'>
+            {/* <LabeledControl label='Premium' labelClassName='justify-end'>
               <PriceLabel
                 className='height-34 min-width-71 color-white-60'
                 icon={<LogoUsdc />}
@@ -542,7 +535,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
                   orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'USDC') : '-'
                 }
               />
-            </LabeledControl>
+            </LabeledControl> */}
           </Flex>
         </Flex>
       )}
@@ -586,7 +579,25 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
+
     </>
   );
 };

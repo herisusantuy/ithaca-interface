@@ -15,13 +15,13 @@ import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import LogoEth from '@/UI/components/Icons/LogoEth';
 import Input from '@/UI/components/Input/Input';
-import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Utils
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 
 // Constants
@@ -183,9 +183,11 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast
@@ -255,9 +257,11 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast
@@ -557,7 +561,25 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
+
 
       <Toast toastList={toastList} position={position} />
     </>

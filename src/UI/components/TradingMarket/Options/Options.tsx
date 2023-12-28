@@ -13,6 +13,7 @@ import LogoEth from '@/UI/components/Icons/LogoEth';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Toast from '@/UI/components/Toast/Toast';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -40,7 +41,6 @@ import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import OptionInstructions from '../../Instructions/OptionDescription';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 dayjs.extend(duration);
 
@@ -151,9 +151,11 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error(`Order estimation for ${callOrPut} failed`, error);
@@ -335,7 +337,7 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
           orderDetails
             ? formatNumberByCurrency(
               toPrecision(
-                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                orderDetails.orderLock.numeraireAmount,
                 currencyPrecision.strike
               ),
               'string',
@@ -343,8 +345,8 @@ const Options = ({ showInstructions, compact, chartHeight }: TradingStoriesProps
             )
             : '-'
         }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
         premium={orderDetails?.order.totalNetPrice}
-        fee={1.5}
         submitAuction={handleSubmit} />}
     </>
   );

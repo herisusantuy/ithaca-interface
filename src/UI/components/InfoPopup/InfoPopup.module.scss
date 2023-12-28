@@ -1,7 +1,7 @@
 .popupContainer {
   position: absolute !important;
   right: rem(52);
-  bottom: rem(126);
+  bottom: rem(100);
   box-sizing: border-box;
   background: rgba(33,32,39,0.8);
   box-shadow: rem(2) rem(2) rem(4) 0 rgba(0, 0, 0, 0.15), 0 0 rem(4) 0 rgba(43, 46, 58, 0.15) inset, 0 0 rem(15) 0 rgba(43, 46, 58, 0.15) inset;
@@ -48,6 +48,6 @@
 
 .popupGreeksContainer {
   right: rem(40);
-  bottom: rem(110);
+  bottom: rem(100);
   padding: unset;
 }

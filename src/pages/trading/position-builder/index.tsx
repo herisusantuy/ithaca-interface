@@ -45,6 +45,7 @@ export interface PositionBuilderStrategy {
 export type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
+  orderFees: OrderLock;
 };
 
 export type AuctionSubmission = {
@@ -101,9 +102,12 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
+
       setOrderSummary({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
@@ -177,7 +181,7 @@ const Index = () => {
                         : '-'
                     }
                     premium={orderSummary?.order.totalNetPrice}
-                    fee={1.5}
+                    fee={orderSummary ? orderSummary.orderFees.numeraireAmount : '-'}
                     submitAuction={() => {
                       if (orderSummary?.order) {
                         setSubmitModal(true);

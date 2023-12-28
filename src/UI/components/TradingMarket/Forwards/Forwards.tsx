@@ -113,9 +113,11 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error(`Order estimation for forward failed`, error);
@@ -291,7 +293,7 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
             : '-'
         }
         premium={orderDetails?.order.totalNetPrice}
-        fee={1.5}
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
         submitAuction={handleSubmit} />}
     </>
   );

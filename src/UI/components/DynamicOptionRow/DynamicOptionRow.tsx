@@ -155,7 +155,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
     setProduct(product);
     setTypeList(PRODUCT_TYPES[product]);
     setType(type || PRODUCT_TYPES[product][0].value);
-    setStrikeList({ ...getContractsByPayoff(product === 'Forward' ? 'Forward' : PRODUCT_TYPES[product][0].value) })
+    setStrikeList({ ...getContractsByPayoff(product === 'Forward' ? 'Forward' : (type || PRODUCT_TYPES[product][0].value)) })
   };
 
   const handleTypeChange = (type: string) => {
