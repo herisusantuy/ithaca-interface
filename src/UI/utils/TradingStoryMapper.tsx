@@ -18,35 +18,35 @@ const storyMap: {
     component: Bet,
     height: {
       compact: { mobile: 71, tablet: 71, desktop: 71 },
-      normal: { withInstructions: 160, withoutInstructions: 316 },
+      normal: { withInstructions: 135, withoutInstructions: 312 },
     },
   },
   earnChart: {
     component: Earn,
     height: {
       compact: { mobile: 88, tablet: 88, desktop: 88 },
-      normal: { withInstructions: 194, withoutInstructions: 320 },
+      normal: { withInstructions: 164, withoutInstructions: 294 },
     },
   },
   noGainNoPayinChart: {
     component: NoGainNoPayin,
     height: {
       compact: { mobile: 75, tablet: 75, desktop: 75 },
-      normal: { withInstructions: 168, withoutInstructions: 350 },
+      normal: { withInstructions: 154, withoutInstructions: 342 },
     },
   },
   bonusTwinWinChart: {
     component: BonusTwinWin,
     height: {
       compact: { mobile: 75, tablet: 75, desktop: 75 },
-      normal: { withInstructions: 320, withoutInstructions: 408 },
+      normal: { withInstructions: 292, withoutInstructions: 380 },
     },
   },
   barriersChart: {
     component: Barriers,
     height: {
       compact: { mobile: 61.5, tablet: 61.5, desktop: 61.5 },
-      normal: { withInstructions: 238, withoutInstructions: 420 },
+      normal: { withInstructions: 228, withoutInstructions: 404 },
     },
   },
   optionsChart: {

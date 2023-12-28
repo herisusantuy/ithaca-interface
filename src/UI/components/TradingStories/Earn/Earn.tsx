@@ -522,7 +522,7 @@ const Earn = ({ showInstructions, compact, chartHeight, radioChosen, onRadioChan
         compact={compact}
         // chartData={((!compact && radioChosen === 'Risky Earn') ||(compact && riskyOrRiskless === 'Risky Earn')) && payoffMap ? payoffMap : CHART_FAKE_DATA}
         chartData={payoffMap ?? CHART_FAKE_DATA}
-        height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 96 : 362) : chartHeight}
+        height={!compact && radioChosen === 'Riskless Earn' ? (showInstructions ? 106 : 369) : chartHeight}
         showKeys={false}
         showPortial={radioChosen === 'Risky Earn'}
         infoPopup={
