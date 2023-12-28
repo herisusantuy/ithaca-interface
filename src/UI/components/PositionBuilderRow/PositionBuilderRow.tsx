@@ -46,7 +46,6 @@ type SectionType = {
 };
 
 const PositionBuilderRow = ({ title, options, addStrategy, sizeIcon }: PositionBuilderRowProps) => {
-  console.log("DEBUG INFO 28/12/2023 09:42:03",sizeIcon)
   // Store
   const { currencyPrecision, currentExpiryDate, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK, spotContract } =
   useAppStore();

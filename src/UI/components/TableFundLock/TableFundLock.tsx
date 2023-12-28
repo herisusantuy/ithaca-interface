@@ -83,7 +83,6 @@ const TableFundLock = () => {
     return data.map(d => {
       const token = walletAddresses[d.token];
       console.log(walletAddresses);
-      console.log("DEBUG INFO 27/12/2023 14:48:32",token)
       return {
         orderData: dayjs(Number(d.blockTimestamp) * 1000).format('DD MMM YY HH:mm'),
         asset: token,
