@@ -16,6 +16,7 @@ import Plus from '@/UI/components/Icons/Plus';
 import Input from '@/UI/components/Input/Input';
 import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
+import Flex from '@/UI/layouts/Flex/Flex';
 
 // Layouts
 import Panel from '@/UI/layouts/Panel/Panel';
@@ -284,24 +285,24 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
 
   return (
     <>
-      <Panel margin='ptb-8 plr-6 br-20 mb-14 mt-10'>
+      <Panel margin='br-20 mb-14 mt-10' className={styles.panel}>
         <div className={styles.parent}>
           <div className={styles.title}>
             {(device !== 'desktop') &&
-              <>
+              <Flex direction='row-space-between-start'>
+                <p className={styles.subtitle}>Product</p>
                 <div className={styles.removeButton}>
                   <Button title='Click to remove row' variant='icon' onClick={removeStrategy}>
                     <Remove />
                   </Button>
                 </div>
-                <p className={styles.subtitle}>Product</p>
-              </>}
+              </Flex>}
             <RadioButton
               options={PRODUCT_OPTIONS}
               selectedOption={product}
               name={`${id}-product`}
               onChange={handleProductChange}
-              width={290}
+              radioButtonClassName={styles.radioButtonProduct}
             />
           </div>
           <div className={styles.type}>
@@ -313,6 +314,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
                   selectedOption={type}
                   name={`${id}-type`}
                   onChange={handleTypeChange}
+                  radioButtonClassName={styles.radioButtonType}
                 />
               </> :
               <RadioButton
@@ -356,7 +358,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
             />
           </div>
           <div className={styles.strike}>
-            {(device !== 'desktop') && <p className={styles.subtitle}>Strike</p>}
+            {(product !== 'Forward') && (device !== 'desktop') && <p className={styles.subtitle}>Strike</p>}
             {product !== 'Forward' ? (
               <DropdownMenu
                 value={strike ? { name: strike, value: strike } : undefined}
@@ -368,7 +370,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               <div className={styles.forwardPlaceholder} />
             )}
           </div>
-          <div className={styles.unitPrice}>
+          <div className={`${product === 'Forward' ? styles.unitPriceForwards : styles.unitPrice}`}>
             {(device !== 'desktop') && <p className={styles.subtitle}>Unit Price</p>}
             <Input
               className={styles.dynamicOptionsInput}

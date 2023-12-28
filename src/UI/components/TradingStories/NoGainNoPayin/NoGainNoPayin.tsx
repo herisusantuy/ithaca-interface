@@ -25,7 +25,7 @@ import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumber, formatNumberByCurrency, getNumber, getNumberFormat, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, formatNumberByCurrency, getNumber, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';

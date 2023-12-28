@@ -1,8 +1,6 @@
 // Props
 import { PayoffDataProps, SpecialDotLabel } from '@/UI/constants/charts/charts';
 import { LabelPositionProp } from '@/UI/utils/CalcChartPayoff';
-import { getNumberFormat } from '@/UI/utils/Numbers';
-import LogoUsdc from '../Icons/LogoUsdc';
 
 // Types
 type LabelProps = {

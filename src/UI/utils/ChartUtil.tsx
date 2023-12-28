@@ -22,17 +22,17 @@ const isIncrementing = (arr: PayoffDataProps[]) => {
   }
 
   return result;
-}
+};
 
 export const isIncrementingByBreakPoints = (arr: PayoffDataProps[], breakPoints: SpecialDotLabel[]) => {
   if (breakPoints && breakPoints.length) {
     const lastBreakPoint = breakPoints[breakPoints.length - 1];
     const initialItemIndex = arr.findIndex(item => item.x === lastBreakPoint.x);
 
-    return isIncrementing(arr.slice(initialItemIndex+1));
+    return isIncrementing(arr.slice(initialItemIndex + 1));
   }
 
-  return isIncrementing(arr)
+  return isIncrementing(arr);
 };
 
 export const isDecrementing = (arr: PayoffDataProps[]) => {
@@ -75,7 +75,6 @@ export const gradientOffset1 = (data: PayoffDataProps[]) => {
 };
 
 export const gradientOffset = (xAxis: number, height: number, data: PayoffDataProps[]) => {
-
   const max = Math.max(...data.map(i => i.value));
   const min = Math.min(...data.map(i => i.value));
   if (max <= 0) {
@@ -87,24 +86,38 @@ export const gradientOffset = (xAxis: number, height: number, data: PayoffDataPr
   return max / (max - min);
 };
 
-export const showGradientTags = (off: number, color: string, dashedColor: string, id: string, selectedLeg: string, notStraightLine = true) => {
+export const showGradientTags = (
+  off: number,
+  color: string,
+  dashedColor: string,
+  id: string,
+  selectedLeg: string,
+  notStraightLine = true
+) => {
   return (
     <defs>
       {/* Area gradient */}
-      {selectedLeg === 'total' &&
-      <linearGradient id={`fillGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
-        {off !== 1 ? (
-          <>
-            <stop offset='0%' stopColor='#4bb475' stopOpacity={0.2} />
-          </>) : ''}
-        {off !== 1 ? <stop offset={off === 0? 1 : off} stopColor='#4bb475' stopOpacity={0} />: ''}
-        {off !== 1 && off !== 0 ? <stop offset={off} stopColor='#8884d8' stopOpacity={0} /> : ''}
-        {off !== 0 ? <stop offset={off === 1? 0 : off} stopColor='#FF3F57' stopOpacity={0} />: ''}
-        {off !== 0 ? (
-          <>
-            <stop offset='100%' stopColor='#FF3F57' stopOpacity={0.3} />
-          </>) : ''}
-      </linearGradient>}
+      {selectedLeg === 'total' && (
+        <linearGradient id={`fillGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
+          {off !== 1 ? (
+            <>
+              <stop offset='0%' stopColor='#4bb475' stopOpacity={0.2} />
+            </>
+          ) : (
+            ''
+          )}
+          {off !== 1 ? <stop offset={off === 0 ? 1 : off} stopColor='#4bb475' stopOpacity={0} /> : ''}
+          {off !== 1 && off !== 0 ? <stop offset={off} stopColor='#8884d8' stopOpacity={0} /> : ''}
+          {off !== 0 ? <stop offset={off === 1 ? 0 : off} stopColor='#FF3F57' stopOpacity={0} /> : ''}
+          {off !== 0 ? (
+            <>
+              <stop offset='100%' stopColor='#FF3F57' stopOpacity={0.3} />
+            </>
+          ) : (
+            ''
+          )}
+        </linearGradient>
+      )}
 
       <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>
         <feGaussianBlur in='SourceGraphic' stdDeviation='2' result='blur' />
@@ -115,21 +128,49 @@ export const showGradientTags = (off: number, color: string, dashedColor: string
         {off !== 1 ? (
           <>
             <stop offset='0%' stopColor={selectedLeg === 'total' ? '#4bb475' : color} stopOpacity={1} />
-          </>) : ''}
-        {off !== 1 ? <stop offset={off === 0? 1 : off- 0.1} stopColor={selectedLeg === 'total' ? '#4bb475' : color}  stopOpacity={1} />: ''}
-        {notStraightLine ? <stop offset={off === 1? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color}  stopOpacity={1} /> : ''}
-        {off !== 0 ? <stop offset={off === 1? 0 : off+ 0.1} stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />: ''}
+          </>
+        ) : (
+          ''
+        )}
+        {off !== 1 ? (
+          <stop
+            offset={off === 0 ? 1 : off - 0.1}
+            stopColor={selectedLeg === 'total' ? '#4bb475' : color}
+            stopOpacity={1}
+          />
+        ) : (
+          ''
+        )}
+        {notStraightLine ? (
+          <stop offset={off === 1 ? 0 : off} stopColor={selectedLeg === 'total' ? '#fff' : color} stopOpacity={1} />
+        ) : (
+          ''
+        )}
+        {off !== 0 ? (
+          <stop
+            offset={off === 1 ? 0 : off + 0.1}
+            stopColor={selectedLeg === 'total' ? '#FF3F57' : color}
+            stopOpacity={1}
+          />
+        ) : (
+          ''
+        )}
         {off !== 0 ? (
           <>
-            <stop offset='100%' stopColor={selectedLeg === 'total' ? '#FF3F57' : color}  stopOpacity={1} />
-          </>) : ''}
+            <stop offset='100%' stopColor={selectedLeg === 'total' ? '#FF3F57' : color} stopOpacity={1} />
+          </>
+        ) : (
+          ''
+        )}
       </linearGradient>
 
-      {dashedColor && <linearGradient id={`dashGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
-        <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
-        <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
-        <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
-      </linearGradient>}
+      {dashedColor && (
+        <linearGradient id={`dashGradient-${id}`} x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='90%' stopColor={dashedColor} stopOpacity={0.4} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.3} />
+          <stop offset='5%' stopColor={dashedColor} stopOpacity={0.1} />
+        </linearGradient>
+      )}
     </defs>
   );
 };
@@ -168,7 +209,7 @@ export const showGradientTags1 = (off: number, color: string, dashedColor: strin
       </defs>
     );
   } else if (off <= 0.1) {
-    console.log(off)
+    console.log(off);
     return (
       <defs>
         {/* Area gradient */}
@@ -787,13 +828,27 @@ export const breakPointList = (data: PayoffDataProps[]) => {
   let preTanValue = 0;
   for (let i = 0; i < data.length - 1; i++) {
     const tanValue = (data[i].value - data[i + 1].value) / (data[i].x - data[i + 1].x);
-    if (preTanValue !== tanValue && Math.round((preTanValue / tanValue) * 10) / 10 !== 1 && data[i].value !== 0) {
+    if (
+      tanValue === Infinity ||
+      (preTanValue !== tanValue && Math.round((preTanValue / tanValue) * 10) / 10 !== 1 && data[i].value !== 0)
+    ) {
       preTanValue = tanValue;
-      if (i === 0) continue;
-      offsets.push({
-        x: data[i].x,
-        value: data[i].value,
-      });
+      const existingObject = offsets.find(offset => offset.value === data[i].value);
+      if (existingObject) {
+        if (Math.abs(data[i].x - existingObject.x) > 1) {
+          offsets.push({
+            x: data[i].x,
+            value: data[i].value,
+          });
+        } else if (data[i].x % 10 === 0) {
+          existingObject.x = data[i].x;
+        }
+      } else {
+        offsets.push({
+          x: data[i].x,
+          value: data[i].value,
+        });
+      }
     }
   }
 
@@ -807,7 +862,7 @@ export const breakPointList = (data: PayoffDataProps[]) => {
       if (nextX - item.x >= step) {
         return true;
       } else {
-        return Math.abs(array[index + 1].value - item.value) > deviation
+        return Math.abs(array[index + 1].value - item.value) > deviation;
       }
     }
   });
@@ -879,12 +934,14 @@ export const makingChartData = (data: any[], key: KeyOption, dashed: KeyOption) 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getLegs = (data: any[]) => {
-  const keys = Object.keys(data[0]).filter(item => !['x'].includes(item)).map((k) => {
-    return {
-      option: k.split('@')[0],
-      value: k
-    }
-  });
+  const keys = Object.keys(data[0])
+    .filter(item => !['x'].includes(item))
+    .map(k => {
+      return {
+        option: k.split('@')[0],
+        value: k,
+      };
+    });
   return keys;
 };
 

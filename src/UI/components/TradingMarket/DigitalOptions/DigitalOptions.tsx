@@ -12,16 +12,13 @@ import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import DropdownMenu from '@/UI/components/DropdownMenu/DropdownMenu';
 import LogoUsdc from '@/UI/components/Icons/LogoUsdc';
 import Input from '@/UI/components/Input/Input';
-import LogoEth from '@/UI/components/Icons/LogoEth';
-import PriceLabel from '@/UI/components/PriceLabel/PriceLabel';
-import Button from '@/UI/components/Button/Button';
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumber, getNumber, getNumberFormat, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -34,18 +31,15 @@ import {
   ClientConditionalOrder,
   createClientOrderId,
   calculateNetPrice,
-  calcCollateralRequirement,
   toPrecision,
 } from '@ithaca-finance/sdk';
 import useToast from '@/UI/hooks/useToast';
-import { useDevice } from '@/UI/hooks/useDevice';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
 import DigitalInstructions from '../../Instructions/DigitalInstructions';
 import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
 
 const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, getContractsByPayoff, currentExpiryDate } = useAppStore();
-  const device = useDevice();
   const [binaryCallContracts, setBinaryCallContracts] = useState(getContractsByPayoff('BinaryCall'));
   const [binaryPutContracts, setBinaryPutContracts] = useState(getContractsByPayoff('BinaryPut'));
   const strikeList = Object.keys(getContractsByPayoff('BinaryCall')).map(strike => ({ name: strike, value: strike }));
@@ -179,17 +173,17 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
     }
   };
 
-  const calcCollateral = () => {
-    if (!strike || isInvalidNumber(getNumber(size))) return '-';
-    const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
-    const leg = {
-      contractId: contract.contractId,
-      quantity: size,
-      side: buyOrSell,
-    };
-    const collateral = calcCollateralRequirement(leg, binaryCallOrPut, getNumber(strike), currencyPrecision.strike);
-    return getNumberFormat(collateral, 'double');
-  };
+  // const calcCollateral = () => {
+  //   if (!strike || isInvalidNumber(getNumber(size))) return '-';
+  //   const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
+  //   const leg = {
+  //     contractId: contract.contractId,
+  //     quantity: size,
+  //     side: buyOrSell,
+  //   };
+  //   const collateral = calcCollateralRequirement(leg, binaryCallOrPut, getNumber(strike), currencyPrecision.strike);
+  //   return getNumberFormat(collateral, 'double');
+  // };
 
   useEffect(() => {
     const contract = binaryCallOrPut === 'BinaryCall' ? binaryCallContracts[strike] : binaryPutContracts[strike];
@@ -324,16 +318,17 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
       {!compact && <OrderSummaryMarkets
         asContainer={false}
-        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
-        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        limit={formatNumberByCurrency(Number(orderDetails?.order.totalNetPrice), 'string', 'USDC') || '-'}
+        collatarelETH={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'WETH') : '-'}
         collatarelUSDC={
           orderDetails
-            ? formatNumber(
+            ? formatNumberByCurrency(
               toPrecision(
                 orderDetails.orderLock.numeraireAmount,
                 currencyPrecision.strike
               ),
-              'string'
+              'string',
+              'USDC'
             )
             : '-'
         }

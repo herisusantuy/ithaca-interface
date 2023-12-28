@@ -291,7 +291,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
       {!compact && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label='Bet' lowerLabel='Capital At Risk' labelClassName='justify-end'>
+          <LabeledInput label='Bet' lowerLabel='Capital At Risk'>
             <Input
               type='number'
               value={capitalAtRisk}
@@ -302,12 +302,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           </LabeledInput>
           <LabeledInput
             label='Target Earn'
-            lowerLabel={
-              <span>
-                Expected APR
-                <span className='color-white ml-6'>{getAPY()}</span>
-              </span>
-            }
+            lowerLabel={null}
           >
             <Input
               type='number'

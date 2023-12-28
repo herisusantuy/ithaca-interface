@@ -93,6 +93,7 @@ const PointsProgram = () => {
         }
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, isAuthenticated]);
 
   // reset completed action on wallet disconnect

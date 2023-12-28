@@ -2,7 +2,7 @@
 import { CollateralSummary, TABLE_COLLATERAL_HEADERS } from '@/UI/constants/tableCollateral';
 
 // Utils
-import { formatNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency } from '@/UI/utils/Numbers';
 
 // SDK
 import { useAppStore } from '@/UI/lib/zustand/store';
@@ -13,6 +13,7 @@ import Asset from '@/UI/components/Asset/Asset';
 
 // Styles
 import styles from './TableCollateral.module.scss';
+import { Currency } from '../Balance/Balance';
 
 // Types
 type CollateralTableProps = {
@@ -42,10 +43,10 @@ const TableCollateral = ({ collateralSummary, deposit, withdraw, faucet }: Colla
           <div className={styles.cell}>
             <Asset icon={collateralSummary[currency].currencyLogo} label={currency} />
           </div>
-          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].walletBalance), 'string')}</div>
-          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].fundLockValue), 'string')}</div>
-          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].settleValue), 'string')}</div>
-          <div className={styles.cell}>{formatNumber(Number(collateralSummary[currency].orderValue), 'string')}</div>
+          <div className={styles.cell}>{formatNumberByCurrency(Number(collateralSummary[currency].walletBalance), 'string', currency as Currency)}</div>
+          <div className={styles.cell}>{formatNumberByCurrency(Number(collateralSummary[currency].fundLockValue), 'string', currency as Currency)}</div>
+          <div className={styles.cell}>{formatNumberByCurrency(Number(collateralSummary[currency].settleValue), 'string', currency as Currency)}</div>
+          <div className={styles.cell}>{formatNumberByCurrency(Number(collateralSummary[currency].orderValue), 'string', currency as Currency)}</div>
           <div className={styles.cell}>
             <Button
               title={`Click to deposit ${currency}`}
