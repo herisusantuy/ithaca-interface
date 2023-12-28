@@ -82,18 +82,17 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
   const handleUpOrDownChange = async (upOrDown: 'UP' | 'DOWN') => {
     setUpOrDown(upOrDown);
-    const strikes = getStrikes(callContracts, strike, upOrDown)
-    const barrierStrikes = getBarrierStrikes(callContracts, strike, upOrDown)
-    setBarrierStrikes(barrierStrikes)
-    setStrikes(strikes)
+    const strikes = getStrikes(callContracts, strike, upOrDown);
+    const barrierStrikes = getBarrierStrikes(callContracts, strike, upOrDown);
+    setBarrierStrikes(barrierStrikes);
+    setStrikes(strikes);
     let b = barrier;
     if (upOrDown === 'DOWN') {
-      b = barrierStrikes[barrierStrikes.length-1]
-      setBarrier(b)
-    }
-    else {
-      b = barrierStrikes[0]
-      setBarrier(b)
+      b = barrierStrikes[barrierStrikes.length - 1];
+      setBarrier(b);
+    } else {
+      b = barrierStrikes[0];
+      setBarrier(b);
     }
     if (onRadioChange) onRadioChange(DESCRIPTION_OPTIONS[`${upOrDown}_${inOrOut}`]);
     if (!strike || !barrier) return;
@@ -242,7 +241,6 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
           side: buyOrSell,
         };
 
-
         legs = [buyPutLeg, buyBinaryPutLeg];
         referencePrices = [buyPutContract.referencePrice, buyBinaryPutContract.referencePrice];
         estimatePayoffData = [
@@ -309,18 +307,17 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
     const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     if (price === undefined) {
       if (Number(unitPrice) <= 0) {
-        setUnitPrice('0')
-      }
-      else {
+        setUnitPrice('0');
+      } else {
         setUnitPrice(formatNumberByCurrency(Number(unitPrice), 'string', 'USDC'));
       }
     }
     const totalPrice =
       price !== undefined
         ? legs.reduce((acc, leg) => {
-          acc = getNumber(leg.quantity) * price + acc;
-          return acc;
-        }, 0)
+            acc = getNumber(leg.quantity) * price + acc;
+            return acc;
+          }, 0)
         : unitPrice;
 
     const order: ClientConditionalOrder = {
@@ -338,7 +335,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
       setOrderDetails({
         order,
         orderLock,
-        orderFees
+        orderFees,
       });
     } catch (error) {
       // Add toast
@@ -356,7 +353,6 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         leg: leg,
         strike: contract.economics.strike,
         payoff: contract.payoff,
-        referencePrice: orderDetails.order.totalNetPrice,
       } as unknown as PositionBuilderStrategy;
     });
 
@@ -579,25 +575,21 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
         />
       )}
 
-      {!compact && <OrderSummary
-        asContainer={false}
-        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
-        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
-        collatarelUSDC={
-          orderDetails
-            ? formatNumber(
-              toPrecision(
-                orderDetails.orderLock.numeraireAmount,
-                currencyPrecision.strike
-              ),
-              'string'
-            )
-            : '-'
-        }
-        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
-        premium={orderDetails?.order.totalNetPrice}
-        submitAuction={handleSubmit} />}
-
+      {!compact && (
+        <OrderSummary
+          asContainer={false}
+          limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+          collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+          collatarelUSDC={
+            orderDetails
+              ? formatNumber(toPrecision(orderDetails.orderLock.numeraireAmount, currencyPrecision.strike), 'string')
+              : '-'
+          }
+          fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+          premium={orderDetails?.order.totalNetPrice}
+          submitAuction={handleSubmit}
+        />
+      )}
     </>
   );
 };

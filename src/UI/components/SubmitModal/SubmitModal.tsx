@@ -67,8 +67,7 @@ const SubmitModal = ({
         >
           Confirm
         </Button>
-        <div className={styles.divider}></div>
-        <Flex margin='mb-14'>
+        <Flex margin='mb-16'>
           <h5 className='flexGrow'>Order Limit</h5>
           <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
@@ -78,7 +77,7 @@ const SubmitModal = ({
             <span className={styles.currencyLabel}>USDC</span>
           </div>
         </Flex>
-        <Flex margin='mb-14'>
+        <Flex margin='mb-16'>
           <h5 className='flexGrow'>Collateral Requirement</h5>
           <div>
             <div className={styles.valueWrapper}>
@@ -106,21 +105,21 @@ const SubmitModal = ({
             </div>
           </div>
         </Flex>
-        <Flex margin='mb-14'>
+        <Flex margin='mb-16'>
+          <h5 className='flexGrow'>Platform Fee</h5>
+          <div className={styles.valueWrapper}>
+            <span className={styles.amountLabel}>{formatNumberByCurrency(1.5, 'string', 'USDC')}</span>
+            <LogoUsdc />
+            <span className={styles.currencyLabel}>USDC</span>
+          </div>
+        </Flex>
+        <div className={styles.divider} />
+        <Flex margin='mb-16'>
           <h5 className='flexGrow color-white'>Total Premium</h5>
           <div className={styles.valueWrapper}>
             <span className={styles.amountLabel}>
               {formatNumberByCurrency(Number(auctionSubmission?.order.totalNetPrice) || 0, 'string', 'USDC') || '-'}
             </span>
-            <LogoUsdc />
-            <span className={styles.currencyLabel}>USDC</span>
-          </div>
-        </Flex>
-        <div className={styles.divider}></div>
-        <Flex margin='mb-14'>
-          <h5 className='flexGrow'>Platform Fee</h5>
-          <div className={styles.valueWrapper}>
-            <span className={styles.amountLabel}>{formatNumberByCurrency(1.5, 'string', 'USDC')}</span>
             <LogoUsdc />
             <span className={styles.currencyLabel}>USDC</span>
           </div>
