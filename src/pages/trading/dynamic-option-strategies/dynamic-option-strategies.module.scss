@@ -50,8 +50,23 @@
   }
 }
 
+.containerWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: rem(16);
+
+  @include breakpoint(tablet) {
+    gap: rem(32);
+  }
+}
+
 .dropDownWrapper {
-  width: rem(200);
+  width: 100%;
+
+  @include breakpoint(tablet) {
+    width: rem(150);
+  }
 }
 
 .prePackagedContainer {
@@ -74,10 +89,12 @@
 }
 
 .parent {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: rem(12);
+  padding-left: rem(8);
+  display: flex;
+  flex-direction: row;;
+  // grid-template-columns: repeat(7, 1fr);
+  // grid-template-rows: 1fr;
+  gap: rem(10);
   align-items: center;
 
   p {
@@ -89,31 +106,31 @@
   }
 
   .product p {
-    left: rem(6);
+    width: rem(290);
   }
 
   .type p {
-    left: rem(188);
+    width: rem(170);
   }
 
   .side p {
-    left: rem(258);
+    width: rem(41);
   }
 
   .size p {
-    left: rem(182);
+    width: rem(100);
   }
 
   .strike p {
-    left: rem(184);
+    width: rem(100);
   }
 
   .unitPrice p {
-    left: rem(176);
+    width: rem(100);
   }
 
   .action p {
-    left: rem(73);
+    width: rem(16);
   }
 }
 
@@ -153,6 +170,10 @@
   float: right;
 }
 
+.buttonWrapper {
+  margin-bottom: rem(16);
+}
+
 .strategiesPlaceholder {
   width: rem(921);
   height: rem(94);
@@ -166,7 +187,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: rem(16);
-  @include breakpoint (tablet) {
+  @include breakpoint(tablet) {
     margin-bottom: rem(24);
   }
 }

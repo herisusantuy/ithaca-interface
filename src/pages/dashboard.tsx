@@ -17,12 +17,13 @@ const TableOrder = dynamic(() => import('@/UI/components/TableOrder/TableOrder')
 import Main from '@/UI/layouts/Main/Main';
 import Container from '@/UI/layouts/Container/Container';
 import Panel from '@/UI/layouts/Panel/Panel';
+import Orders from '@/UI/components/TableOrder/Orders/Orders';
 
 const DASHBOARD_TABS = [
   {
     id: 'liveOrders',
     label: 'Live Orders',
-    content: <TableOrder type={TABLE_TYPE.LIVE} />,
+    content: <Orders type={TABLE_TYPE.LIVE} />,
   },
   {
     id: 'positions',
@@ -32,7 +33,7 @@ const DASHBOARD_TABS = [
   {
     id: 'tradeHistory',
     label: 'Trade History',
-    content: <TableOrder type={TABLE_TYPE.TRADE} cancelOrder={false} description={false} />,
+    content: <Orders type={TABLE_TYPE.TRADE} cancelOrder={false} />,
   },
   {
     id: 'fundLockHistory',

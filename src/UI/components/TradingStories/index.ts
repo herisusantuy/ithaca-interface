@@ -12,6 +12,7 @@ export interface TradingStoriesProps {
 export interface OrderDetails {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
+  orderFees: OrderLock;
 }
 
 export { default as Bet } from './Bet/Bet';

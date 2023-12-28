@@ -9,6 +9,8 @@ import Hamburger from '@/UI/components/Hamburger/Hamburger';
 import Wallet from '@/UI/components/Wallet/Wallet';
 // import Rewards from '@/UI/components/Icons/Rewards';
 import RewardsDropdown from '@/UI/components/RewardsDropdown/RewardsDropdown';
+import EditProfileModal from '@/UI/components/EditProfileModal/EditProfileModal';
+import UserProfileIcon from '@/UI/components/Icons/UserProfileIcon';
 
 // Hooks
 import useMediaQuery from '@/UI/hooks/useMediaQuery';
@@ -65,7 +67,6 @@ const Header = ({ className }: HeaderProps) => {
     onDisconnect: disconnect,
   });
 
-
   useEffect(() => {
     if (!walletClient) return;
     initIthacaSDK(walletClient);
@@ -88,7 +89,7 @@ const Header = ({ className }: HeaderProps) => {
           </div>
           <div className={styles.right}>
             {/* TODO: add EditProfileModal after editing a profile will not remove user shortcuts */}
-            {/*<EditProfileModal trigger={<UserProfileIcon />} />*/}
+            <EditProfileModal trigger={<UserProfileIcon />} />
             <Wallet />
             {(desktopBreakpoint || tabletBreakpoint || mobileBreakpoint) && (
               <Hamburger onClick={handleHamburgerClick} isActive={isHamburgerOpen} />

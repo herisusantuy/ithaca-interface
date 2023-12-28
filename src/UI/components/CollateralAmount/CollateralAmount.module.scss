@@ -1,39 +1,18 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: rem(1.7);
-  width: 100%;
-}
-
-.amount {
-  @include font-size('text-sm', 'regular');
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-
-  > span:first-child {
-    flex: 1;
-    text-align: right;
-    margin-right: rem(7);
-  }
-
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 auto;
-
-    svg {
-      width: rem(16);
-      height: rem(16);
-    }
-  }
-
-  > span:last-child {
-    flex: 1;
-    text-align: left;
-    margin-left: rem(7);
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  gap: 5px;
+  row-gap: 0px;
+  .currency {
     color: var(--white-60);
+    text-align: right;
+    @include font-size('text-sm', 'regular');
+  }
+
+  .amount {
+    @include font-size('text-sm', 'regular');
+    text-align: right;
   }
 }
+
+

@@ -3,15 +3,17 @@
   grid-template-columns: 35% 35% calc(30% - (rem(6) * ( 3 - 1 ))) ;
   grid-template-rows: repeat(3, auto);
   grid-column-gap: rem(6);
-  grid-row-gap: rem(12);
+  grid-row-gap: rem(10);
   align-items: center;
   @include breakpoint (tablet) {
-    grid-template-columns: calc((34% - rem(40)) - ( rem(10) * 4 )) rem(40) 22% 22% 22%;
+    grid-row-gap: rem(16) !important;
+    grid-template-columns: calc((43% - rem(40)) - ( rem(10) * 4 )) rem(40) 19% 19% 19%;
     grid-template-rows: repeat(2, auto);
     grid-column-gap: rem(10);
     // padding: rem(16);
   }
   @include breakpoint (desktop) {
+    grid-column-gap: rem(6);
     grid-template-columns: auto;
     grid-template-rows: 1fr;
   }
@@ -35,13 +37,41 @@
   }
 }
 
+.panel {
+  padding: rem(16);
+
+  @include breakpoint (desktop) {
+    padding: rem(8)
+  }
+}
+
 .title {
   grid-area: 1 / 1 / 2 / 4;
   @include breakpoint (tablet) {
-    grid-area: 1 / 1 / 2 / 2;
+    grid-area: 1 / 1 / 2 / 6;
   }
   @include breakpoint (desktop) {
     grid-area: 1 / 1 / 2 / 2;
+  }
+}
+
+.radioButtonProduct {
+  width: 100%;
+
+  @include breakpoint (tablet) {
+    width: rem(308);
+  }
+
+  @include breakpoint (desktop) {
+    width: rem(290);
+  }
+}
+
+.radioButtonType {
+  width: rem(223);
+
+  @include breakpoint (tablet) {
+    width: rem(170);
   }
 }
 
@@ -95,6 +125,16 @@
   }
 }
 
+.unitPriceForwards {
+  grid-area: 3 / 2 / 4 / 3;
+  @include breakpoint (tablet) {
+    grid-area: 2 / 4 / 3 / 5;
+  }
+  @include breakpoint (desktop) {
+    grid-area: 1 / 6 / 2 / 7;
+  }
+}
+
 .premium {
   grid-area: 1 / 7 / 2 / 8;
 }
@@ -124,9 +164,6 @@
 }
 
 .removeButton {
-  position: absolute;
-  top: rem(16);
-  right: rem(16);
   width: rem(16);
   height: rem(16);
   background: hsla(0, 0%, 100%, 0.10);

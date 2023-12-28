@@ -438,7 +438,7 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
       case TABLE_TYPE.ORDER:
         return TABLE_ORDER_HEADERS_FOR_POSITIONS;
       case TABLE_TYPE.LIVE:
-        return TABLE_ORDER_LIVE_ORDERS
+        return TABLE_ORDER_LIVE_ORDERS;
       default:
         return TABLE_ORDER_HEADERS;
     }
@@ -660,11 +660,15 @@ const TableOrder = ({ type, cancelOrder = true, description = true }: TableOrder
     <>
       <div className={tableClass.trim()}>
         <div className={`${styles.row} ${styles.header}`}>
-          {getTableHeaders().map((header, idx) => (
-            <div className={styles.cell} key={idx}>
-              {getHeaderTemplate(header)}
-            </div>
-          ))}
+          {getTableHeaders().map((header, idx) => {
+            if (typeof header === 'string') {
+              return (
+                <div className={styles.cell} key={idx}>
+                  {getHeaderTemplate(header)}
+                </div>
+              );
+            }
+          })}
         </div>
         {slicedData.length > 0 ? (
           slicedData.map((row, rowIndex) => {

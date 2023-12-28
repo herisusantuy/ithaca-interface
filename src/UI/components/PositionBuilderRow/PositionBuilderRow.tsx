@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
-import { formatNumber, formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -128,7 +128,9 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
       leg.contractId = forwardContracts.contractId;
     }
-    return formatNumberByCurrency(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string', 'USDC');
+
+    const finalPrice = Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike))
+    return formatNumberByCurrency(finalPrice, 'string', 'USDC');
   };
 
   const calcIv = () => {

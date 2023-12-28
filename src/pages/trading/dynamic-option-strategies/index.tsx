@@ -10,10 +10,15 @@ import useToast from '@/UI/hooks/useToast';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Constants
-import { PrepackagedStrategy, LINEAR_STRATEGIES, STRUCTURED_STRATEGIES, SIDE } from '@/UI/constants/prepackagedStrategies';
+import {
+  PrepackagedStrategy,
+  LINEAR_STRATEGIES,
+  STRUCTURED_STRATEGIES,
+  SIDE,
+} from '@/UI/constants/prepackagedStrategies';
 
 // Utils
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
 import ReadyState from '@/UI/utils/ReadyState';
 
@@ -60,6 +65,7 @@ export interface DynamicOptionStrategy {
 type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
+  orderFees: OrderLock;
 };
 
 type SectionType = {
@@ -75,13 +81,12 @@ const Index = () => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [strategy, setStrategy] = useState(LINEAR_STRATEGIES[0]);
   // Store
-  const { ithacaSDK, currencyPrecision, getContractsByPayoff } =
-    useAppStore();
+  const { ithacaSDK, currencyPrecision, getContractsByPayoff } = useAppStore();
   const { toastList, position, showToast } = useToast();
   const [auctionSubmission, setAuctionSubmission] = useState<AuctionSubmission | undefined>();
-  const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map((s) => s.size));
-  const [linkToggle, setLinkToggle] = useState<'right'|'left'>('right');
-  const [strategyType, setSetStrategyType] = useState<'LINEAR'|'STRUCTURED'>('LINEAR');
+  const [sharedSize, setSharedSize] = useState(LINEAR_STRATEGIES[0].strategies.map(s => s.size));
+  const [linkToggle, setLinkToggle] = useState<'right' | 'left'>('right');
+  const [strategyType, setSetStrategyType] = useState<'LINEAR' | 'STRUCTURED'>('LINEAR');
   const [invertSide, setInvertSide] = useState('BUY');
   const device = useDevice();
 
@@ -94,21 +99,23 @@ const Index = () => {
     { name: 'Unit Price', style: styles.unitPrice },
   ];
   const handleStrategyChange = (strat: string, type: 'LINEAR' | 'STRUCTURED') => {
-    const newStrategy = (type === 'LINEAR' ? LINEAR_STRATEGIES : STRUCTURED_STRATEGIES).find(s => s.key === strat) as PrepackagedStrategy;
+    const newStrategy = (type === 'LINEAR' ? LINEAR_STRATEGIES : STRUCTURED_STRATEGIES).find(
+      s => s.key === strat
+    ) as PrepackagedStrategy;
     if (newStrategy.key === strategy.key) return;
     setSetStrategyType(type);
     setOrderSummary(undefined);
     setChartData(undefined);
     setPositionBuilderStrategies([]);
-    setSharedSize(newStrategy.strategies.map((s) => s.size));
+    setSharedSize(newStrategy.strategies.map(s => s.size));
     setLinkToggle('right');
-    setStrategy({...{
-      label: newStrategy?.label,
-      key: newStrategy?.key,
-      strategies: newStrategy ? [
-        ...newStrategy.strategies
-      ] : [],
-    }});
+    setStrategy({
+      ...{
+        label: newStrategy?.label,
+        key: newStrategy?.key,
+        strategies: newStrategy ? [...newStrategy.strategies] : [],
+      },
+    });
   };
 
   const getPositionBuilderSummary = async (positionBuilderStrategies: DynamicOptionStrategy[]) => {
@@ -144,9 +151,11 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderSummary({
         order,
-        orderLock
+        orderLock,
+        orderFees
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
@@ -160,31 +169,32 @@ const Index = () => {
   };
 
   const handleInvertSide = (side: string) => {
-    const strats = strategy.strategies.map((strat) => {
+    const strats = strategy.strategies.map(strat => {
       return {
         ...strat,
-        side: (strat.side === 'BUY' ? 'SELL' : 'BUY') as SIDE
-      }
+        side: (strat.side === 'BUY' ? 'SELL' : 'BUY') as SIDE,
+      };
     });
     setInvertSide(side);
     setStrategy({
       ...strategy,
-      strategies: [
-        ...strats
-      ]
+      strategies: [...strats],
     });
-  }
+  };
 
   const handleLinkChange = (isLinked: boolean, index: number) => {
     if (isLinked) {
-      const otherLinked = strategy.strategies.reduce((arr,s, index) => {
+      const otherLinked = strategy.strategies.reduce((arr, s, index) => {
         if (s.linked) {
           arr.push(index);
         }
-        return arr
+        return arr;
       }, [] as number[]);
       if (otherLinked.length) {
-        const largest = Math.max.apply(null, otherLinked.map((i) => sharedSize[i]))        
+        const largest = Math.max.apply(
+          null,
+          otherLinked.map(i => sharedSize[i])
+        );
         const sizes = [...sharedSize];
         sizes[index] = largest;
         setSharedSize([...sizes]);
@@ -197,12 +207,11 @@ const Index = () => {
       if (otherLinked.length + 1 === strategy.strategies.length) {
         setLinkToggle('right');
       }
-    }
-    else {
-      setLinkToggle('left')
+    } else {
+      setLinkToggle('left');
     }
     strategy.strategies[index].linked = isLinked;
-    setStrategy({...strategy});
+    setStrategy({ ...strategy });
   };
 
   const handleRemoveStrategy = (index: number) => {
@@ -212,7 +221,7 @@ const Index = () => {
     newstrategies.splice(index, 1);
     const shared = [...sharedSize];
     shared.splice(index, 1);
-    setSharedSize([...shared])
+    setSharedSize([...shared]);
     setStrategy({
       ...strategy,
       strategies: newstrategies,
@@ -238,9 +247,9 @@ const Index = () => {
   const addPosition = () => {
     let size = 1;
     if (strategy.strategies.length) {
-      const test = strategy.strategies.reduce((arr, s, i)=> {
+      const test = strategy.strategies.reduce((arr, s, i) => {
         if (s.linked) {
-          arr.push(sharedSize[i])
+          arr.push(sharedSize[i]);
         }
         return arr;
       }, [] as number[]);
@@ -258,11 +267,11 @@ const Index = () => {
           side: SIDE.BUY,
           size: size || 1,
           strike: 0,
-          linked: true
+          linked: true,
         },
       ],
     });
-    setSharedSize([...sharedSize,size || 1])
+    setSharedSize([...sharedSize, size || 1]);
   };
 
   const submitToAuction = async (order: ClientConditionalOrder, orderDescr: string) => {
@@ -299,53 +308,43 @@ const Index = () => {
                       setChartData(undefined);
                     }}
                   />
-                  {(device !== 'desktop') ? (
+                  {device !== 'desktop' ? (
                     <div className={styles.moduleHeader}>
-                      <h3 className='mb-0'>Dynamic Option Strategy</h3>
-                      <Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
-                            const newStrats = strategy.strategies.map((s) => {
+                      <h3 className='mb-0'>Dynamic Option Strategies</h3>
+                      <Toggle
+                        defaultState={linkToggle}
+                        size='sm'
+                        rightLabel='Link all'
+                        rightLabelClass='link-icon'
+                        onChange={side => {
+                          const newStrats = strategy.strategies.map(s => {
+                            return {
+                              ...s,
+                              linked: side === 'right',
+                            };
+                          });
+                          setStrategy({ ...strategy, strategies: newStrats });
+                          if (side === 'right') {
+                            const largest = Math.max.apply(null, sharedSize);
+                            setSharedSize(Array(newStrats.length).fill(largest));
+                            const strats = positionBuilderStrategies.map(s => {
+                              const leg = {
+                                ...s.leg,
+                                quantity: `${largest}` as `${number}`,
+                              };
                               return {
                                 ...s,
-                                linked: side === 'right'
-                              }
+                                leg,
+                              };
                             });
-                            setStrategy({...strategy,
-                            strategies: newStrats})
-                            if (side === 'right') {
-                                const largest = Math.max.apply(null,  sharedSize);
-                                setSharedSize(Array(newStrats.length).fill(largest));
-                                const strats = positionBuilderStrategies.map((s) => {
-                                  const leg = {
-                                    ...s.leg,
-                                    quantity: `${largest}` as `${number}`
-                                  };
-                                  return {
-                                    ...s,
-                                    leg
-                                  }
-                                });
-                                setPositionBuilderStrategies([...strats]);
-                                getPositionBuilderSummary([...strats]);
-                              }
-                            }
-                        }
+                            setPositionBuilderStrategies([...strats]);
+                            getPositionBuilderSummary([...strats]);
+                          }
+                        }}
                       />
-                      <RadioButton
-                        options={[
-                          { option: <Plus />, value: 'BUY' },
-                          { option: <Minus />, value: 'SELL' },
-                        ]}
-                        size='vertical-compact'
-                        selectedOption={invertSide}
-                        name='invert-side'
-                        orientation='vertical'
-                        onChange={value => handleInvertSide(value)}
-                      />
-                      <span className='color-white fs-xs'>Invert Side</span>
                     </div>
-                  ) :
-                  (
-                    <h3>Dynamic Option Strategy</h3>
+                  ) : (
+                    <h3>Dynamic Option Strategies</h3>
                   )}
                   <div className='mb-24'>
                     <Flex direction='row-space-between'>
@@ -354,14 +353,18 @@ const Index = () => {
                           <div className={styles.prePackagedTitle}>Linear Combinations</div>
                           <div className={styles.dropDownWrapper}>
                             <DropdownMenu
-                              width={200}
-                              value={strategyType === 'LINEAR' ? {
-                                name: strategy.label,
-                                value: strategy.key,
-                              } : {
-                                name: '-',
-                                value: ''
-                              }}
+                              width={150}
+                              value={
+                                strategyType === 'LINEAR'
+                                  ? {
+                                      name: strategy.label,
+                                      value: strategy.key,
+                                    }
+                                  : {
+                                      name: '-',
+                                      value: '',
+                                    }
+                              }
                               options={LINEAR_STRATEGIES.map(strat => {
                                 return {
                                   name: strat.label,
@@ -376,14 +379,18 @@ const Index = () => {
                           <div className={styles.prePackagedTitle}>Structured Products</div>
                           <div className={styles.dropDownWrapper}>
                             <DropdownMenu
-                              width={200}
-                              value={strategyType === 'STRUCTURED' ? {
-                                name: strategy.label,
-                                value: strategy.key,
-                              } : {
-                                name: '-',
-                                value: ''
-                              }}
+                              width={150}
+                              value={
+                                strategyType === 'STRUCTURED'
+                                  ? {
+                                      name: strategy.label,
+                                      value: strategy.key,
+                                    }
+                                  : {
+                                      name: '-',
+                                      value: '',
+                                    }
+                              }
                               options={STRUCTURED_STRATEGIES.map(strat => {
                                 return {
                                   name: strat.label,
@@ -395,57 +402,63 @@ const Index = () => {
                           </div>
                         </div>
                       </Flex>
-                      { (device === 'desktop') &&
-                        <><Toggle defaultState={linkToggle} size='sm' rightLabel='Link all' rightLabelClass='link-icon' onChange={(side) => {
-                            const newStrats = strategy.strategies.map((s) => {
-                              return {
-                                ...s,
-                                linked: side === 'right'
-                              }
-                            });
-                            setStrategy({...strategy,
-                            strategies: newStrats})
-                            if (side === 'right') {
-                                const largest = Math.max.apply(null,  sharedSize);
+                      {device === 'desktop' && (
+                        <Flex gap='gap-12'>
+                          <Toggle
+                            defaultState={linkToggle}
+                            size='sm'
+                            rightLabel='Link all'
+                            rightLabelClass='link-icon'
+                            onChange={side => {
+                              const newStrats = strategy.strategies.map(s => {
+                                return {
+                                  ...s,
+                                  linked: side === 'right',
+                                };
+                              });
+                              setStrategy({ ...strategy, strategies: newStrats });
+                              if (side === 'right') {
+                                const largest = Math.max.apply(null, sharedSize);
                                 setSharedSize(Array(newStrats.length).fill(largest));
-                                const strats = positionBuilderStrategies.map((s) => {
+                                const strats = positionBuilderStrategies.map(s => {
                                   const leg = {
                                     ...s.leg,
-                                    quantity: `${largest}` as `${number}`
+                                    quantity: `${largest}` as `${number}`,
                                   };
                                   return {
                                     ...s,
-                                    leg
-                                  }
+                                    leg,
+                                  };
                                 });
                                 setPositionBuilderStrategies([...strats]);
                                 getPositionBuilderSummary([...strats]);
                               }
-                            }
-                        }/>
-                        <RadioButton
-                          options={[
-                            { option: <Plus />, value: 'BUY' },
-                            { option: <Minus />, value: 'SELL' },
-                          ]}
-                          size='vertical-compact'
-                          width={24}
-                          selectedOption={invertSide}
-                          name='invert-side'
-                          orientation='vertical'
-                          onChange={value => handleInvertSide(value)}
-                        />
-                        <span className='color-white fs-xs'>Invert Side</span>
-                        </>
-                      }
+                            }}
+                          />
+                          <Flex gap='gap-8' direction='row-space-between'>
+                            <RadioButton
+                              options={[
+                                { option: <Plus />, value: 'BUY' },
+                                { option: <Minus />, value: 'SELL' },
+                              ]}
+                              size='vertical-compact'
+                              width={24}
+                              selectedOption={invertSide}
+                              name='invert-side'
+                              orientation='vertical'
+                              onChange={value => handleInvertSide(value)}
+                            />
+                            <span className='color-white fs-xs'>Invert Side</span>
+                          </Flex>
+                        </Flex>
+                      )}
                     </Flex>
                   </div>
                   <div className={styles.strategiesWrapper}>
                     {strategy.strategies.length ? (
                       <>
                         <div className={styles.parent}>
-                          {
-                            (device === 'desktop') &&
+                          {device === 'desktop' && (
                             <>
                               {sections.map((section, index) => (
                                 <div key={index} className={section.style}>
@@ -454,7 +467,7 @@ const Index = () => {
                               ))}
                               <div className={styles.action}></div>
                             </>
-                          }
+                          )}
                         </div>
                         {strategy.strategies.map((strat, index) => {
                           return (
@@ -463,11 +476,11 @@ const Index = () => {
                               key={`strategy-${index}-${strategy.key}`}
                               strategy={strat}
                               linked={strat.linked}
-                              sizeChange={(size:number) => {
+                              sizeChange={(size: number) => {
                                 if (strat.linked) {
-                                  const sizes = strategy.strategies.map((s, index) => 
-                                    s.linked ? size :  sharedSize[index]
-                                  )
+                                  const sizes = strategy.strategies.map((s, index) =>
+                                    s.linked ? size : sharedSize[index]
+                                  );
                                   setSharedSize([...sizes]);
                                   const strats = positionBuilderStrategies.map((s, i) => {
                                     const st = strategy.strategies[i];
@@ -475,14 +488,13 @@ const Index = () => {
                                       ...s,
                                       leg: {
                                         ...s.leg,
-                                        quantity: st.linked ? `${size}` as `${number}` : s.leg.quantity
-                                      }
-                                    }
+                                        quantity: st.linked ? (`${size}` as `${number}`) : s.leg.quantity,
+                                      },
+                                    };
                                   });
                                   setPositionBuilderStrategies(strats);
                                   getPositionBuilderSummary([...strats]);
-                                }
-                                else {
+                                } else {
                                   const sizes = [...sharedSize];
                                   sizes[index] = size;
                                   setSharedSize([...sizes]);
@@ -490,15 +502,15 @@ const Index = () => {
                                     ...positionBuilderStrategies[index],
                                     leg: {
                                       ...positionBuilderStrategies[index].leg,
-                                      quantity: `${size}`
-                                    }
+                                      quantity: `${size}`,
+                                    },
                                   };
                                   setPositionBuilderStrategies(positionBuilderStrategies);
                                   getPositionBuilderSummary(positionBuilderStrategies);
                                 }
                               }}
                               sharedSize={sharedSize[index].toString()}
-                              linkChange={(isLinked) => handleLinkChange(isLinked, index)}
+                              linkChange={isLinked => handleLinkChange(isLinked, index)}
                               updateStrategy={strat => handleStrategyUpdate(strat, index)}
                               removeStrategy={() => handleRemoveStrategy(index)}
                             />
@@ -508,7 +520,7 @@ const Index = () => {
                     ) : (
                       <div className={styles.strategiesPlaceholder}></div>
                     )}
-                    <div>
+                    <div className={styles.buttonWrapper}>
                       <Button
                         title='Click to add Position '
                         size='sm'
@@ -534,21 +546,22 @@ const Index = () => {
               orderSummary={
                 <>
                   <OrderSummary
-                    limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
-                    collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                    limit={formatNumberByCurrency(Number(orderSummary?.order.totalNetPrice), 'string', 'USDC') || '-'}
+                    collatarelETH={orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
                     collatarelUSDC={
                       orderSummary
-                        ? formatNumber(
+                        ? formatNumberByCurrency(
                             toPrecision(
                               orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                               currencyPrecision.strike
                             ),
-                            'string'
+                            'string',
+                            'USDC'
                           )
                         : '-'
                     }
                     premium={orderSummary?.order.totalNetPrice}
-                    fee={1.5}
+                    fee={orderSummary ? orderSummary.orderFees.numeraireAmount : '-'}
                     submitAuction={() => {
                       if (!orderSummary) return;
                       setSubmitModal(true);
@@ -560,7 +573,7 @@ const Index = () => {
                   />
                   <SubmitModal
                     isOpen={submitModal}
-                    closeModal={(val) => setSubmitModal(val)}
+                    closeModal={val => setSubmitModal(val)}
                     submitOrder={() => {
                       if (!auctionSubmission) return;
                       submitToAuction(auctionSubmission.order, auctionSubmission.type);
@@ -569,7 +582,8 @@ const Index = () => {
                     }}
                     auctionSubmission={auctionSubmission}
                     positionBuilderStrategies={positionBuilderStrategies}
-                    orderSummary={orderSummary}/>
+                    orderSummary={orderSummary}
+                  />
                   <Toast toastList={toastList} position={position} />
                 </>
               }

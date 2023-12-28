@@ -35,3 +35,9 @@ export type ReferralsDataType = {
   currentUser: [ReferralMemberType];
   referralsData: ReferralMemberType[];
 };
+
+export type LeaderboardUserDataType = {
+  username: string | null;
+  avatarUrl: string | null;
+  isHide: boolean;
+};

@@ -19,10 +19,11 @@ import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import LabeledInput from '@/UI/components/LabeledInput/LabeledInput';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
+import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -153,9 +154,11 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       // Add toast
@@ -288,7 +291,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
 
       {!compact && (
         <Flex gap='gap-36' margin='mt-13 mb-17'>
-          <LabeledInput label='Bet' lowerLabel='Capital At Risk' labelClassName='justify-end'>
+          <LabeledInput label='Bet' lowerLabel='Capital At Risk'>
             <Input
               type='number'
               value={capitalAtRisk}
@@ -299,12 +302,7 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
           </LabeledInput>
           <LabeledInput
             label='Target Earn'
-            lowerLabel={
-              <span>
-                Expected APR
-                <span className='color-white ml-6'>{getAPY()}</span>
-              </span>
-            }
+            lowerLabel={null}
           >
             <Input
               type='number'
@@ -343,7 +341,26 @@ const Bet = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) =>
         />
       )}
 
-      {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />}
+      {/* {!compact && <StorySummary summary={orderDetails} onSubmit={handleSubmit} />} */}
+      {!compact && <OrderSummaryMarkets
+        asContainer={false}
+        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
+        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        collatarelUSDC={
+          orderDetails
+            ? formatNumber(
+              toPrecision(
+                orderDetails.orderLock.numeraireAmount,
+                currencyPrecision.strike
+              ),
+              'string'
+            )
+            : '-'
+        }
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        premium={orderDetails?.order.totalNetPrice}
+        submitAuction={handleSubmit} />}
+
 
       <Toast toastList={toastList} position={position} />
     </>

@@ -65,14 +65,13 @@ export const sideFilter = (data: TableRowDataWithExpanded[], filterArray: string
   if (filterArray.length == 0) {
     return data;
   }
-  //   const filteredData = data.filter((item: TableRowDataWithExpanded) => item.side === '+');
-  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.side));
+
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.side.toUpperCase()));
   return filteredData;
 };
 
 // Product filter(in this case filter value is Forward, Call)
 export const productFilter = (data: TableRowDataWithExpanded[], filterArray: string[]) => {
-  //   const filterArray = ['Forward', 'Call'];
   if (filterArray.length == 0) {
     return data;
   }
@@ -85,7 +84,11 @@ export const currencyFilter = (data: TableRowDataWithExpanded[], filterArray: st
   if (filterArray.length == 0) {
     return data;
   }
-  const filteredData = data.filter((item: TableRowDataWithExpanded) => filterArray.includes(item.currencyPair));
+
+  const filteredData = data.filter((item: TableRowDataWithExpanded) => {
+    const containsElement = filterArray.some(element => item.currencyPair.includes(element));
+    return containsElement
+  });
   return filteredData;
 };
 

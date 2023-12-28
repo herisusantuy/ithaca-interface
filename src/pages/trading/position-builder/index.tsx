@@ -25,7 +25,7 @@ import Sidebar from '@/UI/layouts/Sidebar/Sidebar';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumber, getNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber } from '@/UI/utils/Numbers';
 import ReadyState from '@/UI/utils/ReadyState';
 
 // Styles
@@ -45,6 +45,7 @@ export interface PositionBuilderStrategy {
 export type OrderSummary = {
   order: ClientConditionalOrder;
   orderLock: OrderLock;
+  orderFees: OrderLock;
 };
 
 export type AuctionSubmission = {
@@ -101,9 +102,12 @@ const Index = () => {
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
+
       setOrderSummary({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error('Order estimation for position builder failed', error);
@@ -162,21 +166,22 @@ const Index = () => {
               orderSummary={
                 <>
                   <OrderSummary
-                    limit={formatNumber(Number(orderSummary?.order.totalNetPrice), 'string') || '-'}
-                    collatarelETH={orderSummary ? formatNumber(orderSummary.orderLock.underlierAmount, 'string') : '-'}
+                    limit={formatNumberByCurrency(Number(orderSummary?.order.totalNetPrice), 'string', 'USDC') || '-'}
+                    collatarelETH={orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
                     collatarelUSDC={
                       orderSummary
-                        ? formatNumber(
+                        ? formatNumberByCurrency(
                             toPrecision(
                               orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
                               currencyPrecision.strike
                             ),
-                            'string'
+                            'string',
+                            'USDC'
                           )
                         : '-'
                     }
                     premium={orderSummary?.order.totalNetPrice}
-                    fee={1.5}
+                    fee={orderSummary ? orderSummary.orderFees.numeraireAmount : '-'}
                     submitAuction={() => {
                       if (orderSummary?.order) {
                         setSubmitModal(true);

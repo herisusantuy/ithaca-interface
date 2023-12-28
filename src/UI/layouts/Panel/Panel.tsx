@@ -8,10 +8,11 @@ import styles from './Panel.module.scss';
 type PanelProps = {
   margin?: string;
   children: ReactNode;
+  className?: string;
 };
 
-const Panel = ({ children, margin = 'm-0' }: PanelProps) => {
-  return <div className={`${styles.panel} ${margin && margin}`}>{children}</div>;
+const Panel = ({ children, margin = 'm-0', className='' }: PanelProps) => {
+  return <div className={`${styles.panel} ${margin && margin} ${className}`}>{children}</div>;
 };
 
 export default Panel;

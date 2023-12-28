@@ -18,7 +18,7 @@ import Toast from '@/UI/components/Toast/Toast';
 
 // Utils
 import { PayoffMap, estimateOrderPayoff } from '@/UI/utils/CalcChartPayoff';
-import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Constants
 import { CHART_FAKE_DATA } from '@/UI/constants/charts/charts';
@@ -134,9 +134,12 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
     try {
       const orderLock = await ithacaSDK.calculation.estimateOrderLock(order);
+      const orderFees = await ithacaSDK.calculation.estimateOrderFees(order);
+
       setOrderDetails({
         order,
         orderLock,
+        orderFees
       });
     } catch (error) {
       console.error(`Order estimation for ${binaryCallOrPut} failed`, error);
@@ -315,25 +318,25 @@ const DigitalOptions = ({ showInstructions, compact, chartHeight }: TradingStori
 
       {!compact && <OrderSummaryMarkets
         asContainer={false}
-        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
-        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
+        limit={formatNumberByCurrency(Number(orderDetails?.order.totalNetPrice), 'string', 'USDC') || '-'}
+        collatarelETH={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'WETH') : '-'}
         collatarelUSDC={
           orderDetails
-            ? formatNumber(
+            ? formatNumberByCurrency(
               toPrecision(
-                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
+                orderDetails.orderLock.numeraireAmount,
                 currencyPrecision.strike
               ),
-              'string'
+              'string',
+              'USDC'
             )
             : '-'
         }
         premium={orderDetails?.order.totalNetPrice}
-        fee={1.5}
+        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
         submitAuction={handleSubmit} />}
       {/* {!compact && <Greeks />} */}
     </>
   );
 };
-
 export default DigitalOptions;
