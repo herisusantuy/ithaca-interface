@@ -33,7 +33,7 @@ const TableCollateral = ({ collateralSummary, deposit, withdraw, faucet }: Colla
         {TABLE_COLLATERAL_HEADERS.map((header, idx) => {
           return (
             <div className={styles.cell} key={idx}>
-              {header}
+              <p>{header}</p>
             </div>
           );
         })}

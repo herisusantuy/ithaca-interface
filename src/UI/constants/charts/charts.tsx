@@ -77,14 +77,14 @@ export const PAYOFF_DUMMY_DATA: PayoffDataProps[] = [
 // ];
 
 export const CHART_FAKE_DATA = [
-  { x: 1300, total: 40000, leg1: 0, leg2: 20000, leg3: 20000, leg4: 0, leg5: 0 },
-  { x: 1310, total: 38000, leg1: 0, leg2: 19000, leg3: 19000, leg4: 0, leg5: 0 },
-  { x: 1320, total: 36000, leg1: 0, leg2: 18000, leg3: 18000, leg4: 0, leg5: 0 },
-  { x: 1330, total: 34000, leg1: 0, leg2: 17000, leg3: 17000, leg4: 0, leg5: 0 },
-  { x: 1340, total: 32000, leg1: 0, leg2: 16000, leg3: 16000, leg4: 0, leg5: 0 },
-  { x: 1350, total: 30000, leg1: 0, leg2: 15000, leg3: 15000, leg4: 0, leg5: 0 },
-  { x: 1360, total: 28000, leg1: 0, leg2: 14000, leg3: 14000, leg4: 0, leg5: 0 },
-  { x: 1370, total: 26000, leg1: 0, leg2: 13000, leg3: 13000, leg4: 0, leg5: 0 },
+  { x: 1300, total: 0},
+  { x: 1310, total: 0},
+  { x: 1320, total: 0},
+  { x: 1330, total: 0},
+  { x: 1340, total: 0},
+  { x: 1350, total: 0},
+  { x: 1360, total: 0},
+  { x: 1370, total: 0},
 ];
 
 // Table order data

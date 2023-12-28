@@ -24,11 +24,11 @@ import { useDevice } from '@/UI/hooks/useDevice';
 
 // Types
 type OrderSummaryProps = {
-  limit: string | number;
-  collatarelETH: string | number;
-  collatarelUSDC: string | number;
+  limit?: string | number;
+  collatarelETH?: string | number;
+  collatarelUSDC?: string | number;
   premium?: string | number;
-  fee: string | number;
+  fee?: string | number;
   submitAuction: () => void;
   asContainer?: boolean;
 };
@@ -125,22 +125,22 @@ const OrderSummary = ({
         <div className={styles.orderWrapper}>
           <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5>Order Limit</h5>
-            <CurrencyDisplay amount={limit} symbol={<LogoUsdc />} currency='USDC' />
+            <CurrencyDisplay amount={formatNumberByCurrency(Number(limit), 'string', 'USDC')} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
         <Flex direction={device === 'desktop' ? 'column' : 'row-space-between-start'} gap='gap-6'>
           <h5>Collateral Requirement</h5>
           <div>
             <Flex direction={device === 'desktop' ? 'row' : 'column'} gap='gap-10'>
-              <CurrencyDisplay amount={collatarelETH} symbol={<LogoEth />} currency='WETH' />
-              <CurrencyDisplay amount={collatarelUSDC} symbol={<LogoUsdc />} currency='USDC' />
+              <CurrencyDisplay amount={formatNumberByCurrency(Number(collatarelETH), 'string', 'WETH')} symbol={<LogoEth />} currency='WETH' />
+              <CurrencyDisplay amount={formatNumberByCurrency(Number(collatarelUSDC), 'string', 'USDC')} symbol={<LogoUsdc />} currency='USDC' />
             </Flex>
           </div>
         </Flex>
         <div className={styles.platformWrapper}>
           <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>
             <h5 className=''>Platform Fee</h5>
-            <CurrencyDisplay amount={fee} symbol={<LogoUsdc />} currency='USDC' />
+            <CurrencyDisplay amount={formatNumberByCurrency(Number(fee), 'string', 'USDC')} symbol={<LogoUsdc />} currency='USDC' />
           </Flex>
         </div>
         <Flex direction={device === 'desktop' ? 'column' : 'row-space-between'} gap='gap-6'>

@@ -2,7 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
-import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
+import { PositionBuilderStrategy, AuctionSubmission } from '@/pages/trading/position-builder';
 
 // Components
 import ChartPayoff from '@/UI/components/ChartPayoff/ChartPayoff';
@@ -15,7 +15,7 @@ import BarrierDescription from '@/UI/components/Instructions/BarrierDescription'
 import StorySummary from '@/UI/components/TradingStories/StorySummary/StorySummary';
 import Toast from '@/UI/components/Toast/Toast';
 import SubmitModal from '@/UI/components/SubmitModal/SubmitModal';
-import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
+import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -308,7 +308,7 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
     const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     if (price === undefined) {
-      if (Number(unitPrice) < 0) {
+      if (Number(unitPrice) <= 0) {
         setUnitPrice('0')
       }
       else {
@@ -575,11 +575,11 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
           }}
           auctionSubmission={auctionSubmission}
           positionBuilderStrategies={positionBuilderStrategies}
-          orderSummary={orderDetails as unknown as OrderSummary}
+          orderSummary={orderDetails}
         />
       )}
 
-      {!compact && <OrderSummaryMarkets
+      {!compact && <OrderSummary
         asContainer={false}
         limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
         collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}

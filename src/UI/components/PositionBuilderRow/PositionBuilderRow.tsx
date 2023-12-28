@@ -113,7 +113,7 @@ const PositionBuilderRow = ({ title, options, addStrategy, sizeIcon }: PositionB
         getNumber(strike),
         currencyPrecision.strike
       ),
-      '',
+      'string',
       'WETH'
     );
   };

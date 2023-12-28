@@ -82,7 +82,7 @@ export const formatNumberByCurrency = (value: number, type: string, currency: 'U
   }
   const absValue = value * (isNeg ? -1 : 1);
 
-  if (value === undefined) return '-';
+  if (!value) return '-';
   if (absValue > 1000000000000) {
     return formatDividedValue(value, 1000000000000, 'T');
   } else if (absValue > 1000000000) {

@@ -284,16 +284,9 @@ const Index = () => {
               }
               orderSummary={
                 <OrderSummary
-                  limit={formatNumberByCurrency(Number(orderSummary?.order.totalNetPrice), 'string', 'USDC') || '-'}
-                  collatarelETH={orderSummary ? formatNumberByCurrency(orderSummary.orderLock.underlierAmount, 'string', 'WETH') : '-'}
-                  collatarelUSDC={
-                    orderSummary
-                      ? formatNumberByCurrency(toPrecision(
-                        orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice),
-                        currencyPrecision.strike
-                      ), 'string', 'USDC')
-                      : '-'
-                  }
+                  limit={orderSummary?.order.totalNetPrice}
+                  collatarelETH={orderSummary?.orderLock.underlierAmount}
+                  collatarelUSDC={orderSummary && orderSummary.orderLock.numeraireAmount - getNumber(orderSummary.order.totalNetPrice)}
                   premium={orderSummary?.order.totalNetPrice}
                   fee={1.5}
                   submitAuction={() => {

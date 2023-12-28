@@ -2,7 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '../../TradingStories';
-import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
+import { PositionBuilderStrategy, AuctionSubmission } from '@/pages/trading/position-builder';
 
 import dayjs from 'dayjs';
 
@@ -39,7 +39,7 @@ import { SIDE_OPTIONS } from '@/UI/constants/options';
 import useToast from '@/UI/hooks/useToast';
 import { useDevice } from '@/UI/hooks/useDevice';
 import ForwardInstructions from '../../Instructions/ForwardInstructions';
-import OrderSummaryMarkets from '../../OrderSummary/OrderSummary';
+import OrderSummary from '../../OrderSummary/OrderSummary';
 
 const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProps) => {
   const { ithacaSDK, currencyPrecision, currentExpiryDate, getContractsByPayoff, spotContract } = useAppStore();
@@ -273,27 +273,16 @@ const Forwards = ({ showInstructions, compact, chartHeight }: TradingStoriesProp
               },
             ] as unknown as PositionBuilderStrategy[]
           }
-          orderSummary={orderDetails as unknown as OrderSummary}
+          orderSummary={orderDetails}
         />
       )}
-      {!compact && <OrderSummaryMarkets
+      {!compact && <OrderSummary
         asContainer={false}
-        limit={formatNumberByCurrency(Number(orderDetails?.order.totalNetPrice), 'string', 'USDC') || '-'}
-        collatarelETH={orderDetails ? formatNumberByCurrency(orderDetails.orderLock.underlierAmount, 'string', 'WETH') : '-'}
-        collatarelUSDC={
-          orderDetails
-            ? formatNumberByCurrency(
-              toPrecision(
-                orderDetails.orderLock.numeraireAmount - getNumber(orderDetails.order.totalNetPrice),
-                currencyPrecision.strike
-              ),
-              'string',
-              'USDC'
-            )
-            : '-'
-        }
+        limit={orderDetails?.order.totalNetPrice}
+        collatarelETH={orderDetails?.orderLock.underlierAmount}
+        collatarelUSDC={orderDetails?.orderLock.numeraireAmount}
         premium={orderDetails?.order.totalNetPrice}
-        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        fee={orderDetails?.orderFees.numeraireAmount}
         submitAuction={handleSubmit} />}
     </>
   );

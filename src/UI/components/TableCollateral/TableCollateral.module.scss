@@ -4,6 +4,10 @@
   z-index: 1;
   position: relative;
 
+p {
+  white-space: pre-line;
+}
+
   .header,
   .row {
     display: flex;

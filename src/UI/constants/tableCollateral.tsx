@@ -12,7 +12,7 @@ export const TABLE_COLLATERAL_HEADERS: string[] = [
   'Asset',
   'Balance',
   'FundLock Value',
-  'Net of Current Orders',
+  'Collateral Locked\nNet of Current Orders',
   'Live Order Collateral Net Value',
   '',
 ];
