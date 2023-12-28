@@ -28,7 +28,7 @@ const ModalAcknowledgeTerms = ({
   const [terms, setTerms] = useState([
     {
       id: 1,
-      name: 'I acknowledge that I have read, understand and agree to the Terms of Use. I understand the risks and disclaimers, and understand that we have no control over your assets or the Ithaca Protocol.',
+      name: 'I acknowledge that I have thoroughly read, reviewed and understood the General Terms and Conditions of Use and Privacy Policy provided by the Sapiens Foundation and that I agree with them. I acknowledge that these terms govern my use of Sapiens Foundation’s offering.\nFurthermore, I recognize the inherent volatility and risk associated with digital asset transactions, including but not limited to market fluctuations, regulatory changes, and technological uncertainty. I agree and understand that Sapiens Foundation shall not be held liable for any losses that I may incur due to such risks inherent in dealing with digital assets.',
       isChecked: false,
     },
     {
@@ -52,18 +52,20 @@ const ModalAcknowledgeTerms = ({
 
   return (
     <Modal
-      title='Acknowledge Terms'
+      title='Acknowledge Terms & Conditions'
       isOpen={isOpen}
       isLoading={isLoading}
       onCloseModal={onCloseModal}
       hideFooter={false}
       showCloseIcon={false}
     >
+      {/* Check the boxes to confirm your agreement with the General Terms & Conditions of Use and Privacy Policy */}
+
       <div className={styles.acknowledgeTerms}>
         <p className={styles.title}>
-          Check the boxes to confirm your agreement to the{' '}
+          Check the boxes to confirm your agreement with the {' '}
           <a href='/term' target='_blank'>
-            Terms of Use
+          General Terms & Conditions of Use
           </a>{' '}
           and{' '}
           <a href='/privacy' target='_blank'>
