@@ -42,7 +42,7 @@ const ExpandedTable = ({ data }: ExpandedTableProps) => {
         <div className={styles.separator} />
       </div>
       <EmptyDiv />
-      {[...data, ...data].map((item, index) => (
+      {data.map((item, index) => (
         <Fragment key={index}>
           <div style={{ gridColumn: 'a/j', marginTop: 5 }}></div>
           <EmptyDiv />
