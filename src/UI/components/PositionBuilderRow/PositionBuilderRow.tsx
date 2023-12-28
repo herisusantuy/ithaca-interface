@@ -37,6 +37,7 @@ type PositionBuilderRowProps = {
   title: string;
   options: { option: string | ReactNode; value: string }[];
   addStrategy: (strategy: PositionBuilderStrategy) => void;
+  sizeIcon: ReactNode;
 };
 
 type SectionType = {
@@ -44,7 +45,7 @@ type SectionType = {
   style: string;
 };
 
-const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowProps) => {
+const PositionBuilderRow = ({ title, options, addStrategy, sizeIcon }: PositionBuilderRowProps) => {
   // Store
   const { currencyPrecision, currentExpiryDate, getContractsByPayoff, getContractsByExpiry, currentSpotPrice, ithacaSDK, spotContract } =
   useAppStore();
@@ -212,7 +213,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             <Input
               type='number'
               value={size}
-              icon={title === 'Digital Options' ? <LogoUsdc /> :<LogoEth />}
+              icon={sizeIcon}
               width={105}
               increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               onChange={({ target }) => handleSizeChange(target.value)}

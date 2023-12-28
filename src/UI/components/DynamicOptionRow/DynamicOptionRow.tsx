@@ -353,7 +353,7 @@ const DynamicOptionRow = ({ updateStrategy, strategy, id, removeStrategy, linkCh
               type='number'
 
               value={size}
-              icon={product === 'digital-option' ?  <LogoUsdc/> : <LogoEth />}
+              icon={product === 'digital-option' ? <LogoUsdc /> : <LogoEth />}
               onChange={({ target }) => handleSizeChange(target.value)}
             />
           </div>
