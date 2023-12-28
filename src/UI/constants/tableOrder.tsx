@@ -25,21 +25,26 @@ export type TableRowDataWithExpanded = TableRowData & {
   expandedInfo?: TableExpandedRowData[];
 };
 
+type TableHeaders = {
+  name: string;
+  alignment: string;
+}
+
 // Table order headers
-export const TABLE_ORDER_HEADERS: string[] = [
-  'Details',
-  'Order Date',
-  'Currency Pair',
-  'Product',
-  'Side',
-  'Tenor',
-  'Collateral Amount',
-  'Order Limit',
+export const TABLE_ORDER_HEADERS: TableHeaders[] = [
+  {name: 'Details', alignment: 'initial'},
+  {name: 'Order Date', alignment: 'initial'},
+  {name: 'Currency Pair', alignment: 'initial'},
+  {name: 'Product', alignment: 'initial'},
+  {name: 'Side', alignment: 'initial'},
+  {name: 'Tenor', alignment: 'initial'},
+  {name: 'Collateral Amount', alignment: 'flex-end'},
+  {name: 'Order Limit', alignment: 'flex-end'},
 ];
 
-export const TABLE_ORDER_LIVE_ORDERS: string[] = [
+export const TABLE_ORDER_LIVE_ORDERS: TableHeaders[] = [
   ...TABLE_ORDER_HEADERS,
-  'Cancel All',
+  {name: 'Cancel All', alignment: 'flex-end'},
 ];
 
 export const TABLE_ORDER_HEADERS_FOR_POSITIONS: string[] = ['Details', 'Product', 'Strike', 'Type', 'Quantity'];
@@ -53,7 +58,17 @@ export type TableDescriptionProps = {
 };
 
 // Table order expanded headers
-export const TABLE_ORDER_EXPANDED_HEADERS: string[] = ['Type', 'Side', 'Expiry Date', 'Size', 'Strike', 'Enter Price'];
+export const TABLE_ORDER_EXPANDED_HEADERS: TableHeaders[] = [
+  {name: '', alignment: 'flex-start'},
+  {name: 'Type', alignment: 'flex-start'},
+  {name: '', alignment: 'flex-start'},
+  {name: '', alignment: 'flex-start'},
+  {name: 'Side', alignment: 'flex-start'},
+  {name: 'Expiry Date', alignment: 'flex-start'},
+  {name: 'Size', alignment: 'flex-end'},
+  {name: 'Strike', alignment: 'flex-end'},
+  {name: '', alignment: 'flex-start'}
+];
 
 export const TABLE_ORDER_EXPANDED_HEADERS_FOR_POSITIONS: string[] = ['Type', 'Collateral (ETH)', 'Collateral (USDC)', 'Order Limit'];
 

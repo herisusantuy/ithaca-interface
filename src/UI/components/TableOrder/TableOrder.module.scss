@@ -46,7 +46,6 @@
         position: relative;
         @include font-size('text-xs', 'regular');
         align-items: center;
-        gap: rem(2);
         color: var(--white-60);
 
         .isClickable {
@@ -277,8 +276,94 @@
   @include font-size('text-xs', 'regular');
   padding: rem(150) 0;
   text-align: center;
+  align-self: center;
 }
 
 .isOpacity {
   opacity: 0.1;
+}
+
+@mixin table-utilies {
+  position: relative;
+  display: grid;
+  .cell {
+    position: relative;
+    align-items: center;
+    display: flex;
+    @include font-size('text-xs', 'regular');
+    color: var(--white-60);
+  }
+
+  .cellContent {
+    align-items: center;
+    display: flex;
+    color: var(--white);
+    @include font-size('text-md', 'regular');
+    font-family: $roboto;
+  }
+
+  .cellContentExpanded {
+    display: flex;
+    @include font-size('text-sm', 'medium');
+    align-items: center;
+    color: var(--white);
+    font-family: $roboto;
+
+    &.bolded {
+      @include font-size('text-sm', 'semibold');
+    }
+  }
+
+
+  .tableRowExpanded {
+    margin-top: 5px;
+    grid-column: a/j;
+  }
+
+  .tableExpanderContainer {
+    border-radius: rem(16);
+    background: var(--gray-rgba-20);
+    padding-top: rem(16);
+    margin-bottom: rem(16);
+    gap: rem(16)
+  }
+
+  .separator {
+    grid-column: a/j;
+    border-top: rem(1) solid var(--white-rgba-10);
+    margin-bottom: 3px;
+    margin-top: 3px;
+  }
+
+  .headerExpandedTable {
+    color: var(--white);
+    @include font-size('text-md', 'semibold');
+    margin-bottom: rem(16);
+    grid-column: b/i;
+  }
+}
+
+.gridContainerTable {
+  grid-template-columns: [a] 100px [b] 1fr [c] 1fr [d] 1fr [e] 1fr [f] 1fr [g] 1fr [h] 1fr [i] 1fr [j];
+  @include table-utilies();
+}
+
+.gridContainerTableNoCancel {
+  grid-template-columns: [a] 100px [b] 1fr [c] 1fr [d] 1fr [e] 1fr [f] 1fr [g] 1fr [h] 1fr [i] 50px [j];
+  @include table-utilies();
+}
+
+.cancelAllBtn {
+  color: var(--red-20);
+  font-family: $roboto;
+  font-size: rem(12);
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-align: right;
+  white-space: nowrap;
+  padding: 0;
+  &:hover {
+    background-color: transparent;
+  }
 }

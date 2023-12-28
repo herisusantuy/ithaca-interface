@@ -11,6 +11,21 @@ type CollateralAmountProps = {
   usdcAmount: number;
 };
 
+type SingleCurrencyAmountProps = {
+  amount: number;
+  symbol: JSX.Element;
+  currency: string;
+}
+
+export const SingleCurrencyAmount = ({amount, symbol, currency}: SingleCurrencyAmountProps) => {
+  return (
+    <div className={styles.container}>  
+      <span className={styles.amount}>{amount}</span>
+      <div>{symbol}</div>
+      <span className={styles.currency}>{currency}</span>
+    </div>
+  )
+}
 const CollateralAmount = ({ wethAmount, usdcAmount }: CollateralAmountProps) => {
   const amounts = [
     { amount: wethAmount, Logo: LogoEth, currency: 'WETH' },
@@ -20,13 +35,13 @@ const CollateralAmount = ({ wethAmount, usdcAmount }: CollateralAmountProps) => 
   return (
     <div className={styles.container}>
       {amounts.map(({ amount, Logo, currency }) => (
-        <div key={currency} className={styles.amount}>
-          <span>{amount}</span>
-          <div className={styles.logo}>
+        <>
+          <span className={styles.amount}>{amount}</span>
+          <div>
             <Logo />
           </div>
-          <span>{currency}</span>
-        </div>
+          <span className={styles.currency}>{currency}</span>
+        </>
       ))}
     </div>
   );

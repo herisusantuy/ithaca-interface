@@ -17,6 +17,26 @@ type CheckBoxType = {
   labelClassName?: string;
 };
 
+export const CheckBoxControlled = (props: CheckBoxType) => {
+  const { component, label, checked = false, onChange, labelClassName, className } = props;
+
+  const updateState = (e: ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(label, !checked)
+    }
+  };
+
+  return (
+    <label className={`${styles.container} ${className}`}>
+      <Flex>
+        {component} <p className={labelClassName}>{label}</p>
+      </Flex>
+      <input type='checkbox' onChange={e => updateState(e)} checked={checked} />
+      <span className={styles.checkmark}></span>
+    </label>
+  );
+};
+
 const CheckBox = (props: CheckBoxType) => {
   const { component, label, checked = false, clearCheckMark, onChange, labelClassName, className } = props;
   const [status, setStatus] = useState<boolean>(checked);
