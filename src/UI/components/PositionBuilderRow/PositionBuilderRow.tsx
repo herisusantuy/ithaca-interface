@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import { useAppStore } from '@/UI/lib/zustand/store';
 
 // Utils
-import { formatNumber, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
+import { formatNumber, formatNumberByCurrency, getNumber, getNumberValue, isInvalidNumber } from '@/UI/utils/Numbers';
 
 // Components
 import Button from '@/UI/components/Button/Button';
@@ -105,14 +105,15 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
       leg.contractId = forwardContracts.contractId;
     }
-    return formatNumber(
+    return formatNumberByCurrency(
       calcCollateralRequirement(
         leg,
         title === 'Forwards' ? 'Forward' : payoff,
         getNumber(strike),
         currencyPrecision.strike
       ),
-      'string'
+      'string',
+      'WETH'
     );
   };
 
@@ -127,7 +128,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
       const forwardContracts = payoff === 'Forward' ? getContractsByExpiry(`${currentExpiryDate}`, 'Forward')[strike] : spotContract;
       leg.contractId = forwardContracts.contractId;
     }
-    return formatNumber(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string');
+    return formatNumberByCurrency(Number(calculateNetPrice([leg], [getNumber(unitPrice)], currencyPrecision.strike)), 'string', 'USDC');
   };
 
   const calcIv = () => {
@@ -209,7 +210,7 @@ const PositionBuilderRow = ({ title, options, addStrategy }: PositionBuilderRowP
             <Input
               type='number'
               value={size}
-              icon={<LogoEth />}
+              icon={title === 'Digital Options' ? <LogoUsdc /> :<LogoEth />}
               width={105}
               increment={(direction) => size && handleSizeChange((direction === 'UP' ? Number(size) + 1 : Number(size) -1).toString())}
               onChange={({ target }) => handleSizeChange(target.value)}
