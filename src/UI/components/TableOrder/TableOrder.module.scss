@@ -74,7 +74,6 @@
     }
 
     .cell {
-      // color: red!important;
       @include font-size('text-md', 'regular');
       font-family: $roboto;
       display: flex;
@@ -116,7 +115,6 @@
   &.isOrder {
     .row {
       .cell {
-        // color: red!important;
         flex-basis: 20%;
         justify-content: flex-start;
         &:nth-child(3) {
@@ -226,11 +224,6 @@
   .time {
     @include spacing(margin, 8, 'left');
   }
-}
-
-.filterDropdownContainer {
-  left: rem(-100);
-  position: relative;
 }
 
 .filterDropdown {

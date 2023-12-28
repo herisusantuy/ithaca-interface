@@ -44,7 +44,7 @@ const HeaderColumns = (props: HeaderColumnsProps) => {
     handleCancelAllOrder,
   } = props;
   const [filterHeader, setFilterHeader] = useState<string | null>(null);
-  
+
   // Define Ref variables for outside clickable
   const sideRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -155,23 +155,21 @@ const HeaderColumns = (props: HeaderColumnsProps) => {
         return (
           <>
             <ShowFilterButton onClick={showFilterBar(header)} fill={productArray.length > 0} />
-            <div className={styles.filterDropdownContainer}>
-              <div className={`${styles.filterDropdown} ${filterClass}`} ref={productRef}>
-                {PRODUCT_LABEL.map((item: string, idx: number) => {
-                  return (
-                    <CheckBoxControlled
-                      checked={productArray.includes(item.toUpperCase())}
-                      key={idx}
-                      label={item}
-                      onChange={selectedLabeStatus}
-                    />
-                  );
-                })}
-                <ClearFilters
-                  onClick={() => clearFilterArray('product')}
-                  className={productArray.length > 0 ? styles.selected : ''}
-                />
-              </div>
+            <div className={`${styles.filterDropdown} ${filterClass}`} ref={productRef}>
+              {PRODUCT_LABEL.map((item: string, idx: number) => {
+                return (
+                  <CheckBoxControlled
+                    checked={productArray.includes(item.toUpperCase())}
+                    key={idx}
+                    label={item}
+                    onChange={selectedLabeStatus}
+                  />
+                );
+              })}
+              <ClearFilters
+                onClick={() => clearFilterArray('product')}
+                className={productArray.length > 0 ? styles.selected : ''}
+              />
             </div>
           </>
         );
