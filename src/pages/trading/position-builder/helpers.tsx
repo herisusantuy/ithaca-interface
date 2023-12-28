@@ -43,3 +43,6 @@ export const getProductOptions = (currentExpiryDate: number): ProductOption[] =>
     ],
   },
 ];
+
+// solves issue: found page without a React Component as default export
+export default getProductOptions
