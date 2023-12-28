@@ -2,7 +2,7 @@
 // Packages
 import React, { useEffect, useState } from 'react';
 import { OrderDetails, TradingStoriesProps } from '..';
-import { PositionBuilderStrategy, AuctionSubmission, OrderSummary } from '@/pages/trading/position-builder';
+import { PositionBuilderStrategy, AuctionSubmission } from '@/pages/trading/position-builder';
 
 // Layouts
 import Flex from '@/UI/layouts/Flex/Flex';
@@ -16,7 +16,7 @@ import RadioButton from '@/UI/components/RadioButton/RadioButton';
 import LabeledControl from '@/UI/components/LabeledControl/LabeledControl';
 import Asset from '@/UI/components/Asset/Asset';
 import Toast from '@/UI/components/Toast/Toast';
-import OrderSummaryMarkets from '@/UI/components/OrderSummary/OrderSummary';
+import OrderSummary from '@/UI/components/OrderSummary/OrderSummary';
 
 
 // Constants
@@ -337,27 +337,17 @@ const BonusTwinWin = ({
           }}
           auctionSubmission={auctionSubmission}
           positionBuilderStrategies={positionBuilderStrategies}
-          orderSummary={orderDetails as unknown as OrderSummary}
+          orderSummary={orderDetails}
         />
       )}
 
-      {!compact && <OrderSummaryMarkets
+      {!compact && <OrderSummary
         asContainer={false}
-        limit={formatNumber(Number(orderDetails?.order.totalNetPrice), 'string') || '-'}
-        collatarelETH={orderDetails ? formatNumber(orderDetails.orderLock.underlierAmount, 'string') : '-'}
-        collatarelUSDC={
-          orderDetails
-            ? formatNumber(
-              toPrecision(
-                orderDetails.orderLock.numeraireAmount,
-                currencyPrecision.strike
-              ),
-              'string'
-            )
-            : '-'
-        }
-        fee={orderDetails ? orderDetails.orderFees.numeraireAmount : '-'}
+        limit={orderDetails?.order.totalNetPrice}
+        collatarelETH={orderDetails?.orderLock.underlierAmount}
+        collatarelUSDC={orderDetails?.orderLock.numeraireAmount}
         premium={orderDetails?.order.totalNetPrice}
+        fee={orderDetails?.orderFees.numeraireAmount}
         submitAuction={handleSubmit} />}
 
       <Toast toastList={toastList} position={position} />
