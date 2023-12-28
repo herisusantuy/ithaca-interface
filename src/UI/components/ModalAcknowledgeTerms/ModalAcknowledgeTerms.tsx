@@ -59,7 +59,6 @@ const ModalAcknowledgeTerms = ({
       hideFooter={false}
       showCloseIcon={false}
     >
-      {/* Check the boxes to confirm your agreement with the General Terms & Conditions of Use and Privacy Policy */}
 
       <div className={styles.acknowledgeTerms}>
         <p className={styles.title}>
