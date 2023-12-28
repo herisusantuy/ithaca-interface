@@ -308,7 +308,12 @@ const Barriers = ({ showInstructions, compact, chartHeight, onRadioChange }: Tra
 
     const unitPrice = calculateNetPrice(legs, referencePrices, currencyPrecision.strike, size);
     if (price === undefined) {
-      setUnitPrice(getNumberFormat(unitPrice));
+      if (Number(unitPrice) < 0) {
+        setUnitPrice('0')
+      }
+      else {
+        setUnitPrice(formatNumberByCurrency(Number(unitPrice), 'string', 'USDC'));
+      }
     }
     const totalPrice =
       price !== undefined
