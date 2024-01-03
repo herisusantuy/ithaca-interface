@@ -33,10 +33,10 @@ class MyDocument extends Document {
           <meta name='msapplication-TileColor' content='#0B0E15' />
           <meta name='theme-color' content='#ffffff' />
           <meta property='og:type' content='website' />
-          <meta property='og:image' content='https://i.ibb.co/dPSFNpJ/og.jpg' />
+          <meta property='og:image' content='/ithaca-og-image.png' />
           <meta name='twitter:card' content='summary_large_image' />
           <meta property='twitter:domain' content='https://app.ithaca.finance/' />
-          <meta name='twitter:image' content='https://i.ibb.co/dPSFNpJ/og.jpg' />
+          <meta name='twitter:image' content='/ithaca-og-image.png' />
           <meta name='twitter:card' content='summary_large_image' />
           <link rel='icon' href='/favicon/favicon.ico' />
           <link rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-touch-icon.png' />
@@ -47,8 +47,8 @@ class MyDocument extends Document {
         </Head>
         <body>
           <Main />
-          <div id="portal" />
-          <div id="datePicker" />
+          <div id='portal' />
+          <div id='datePicker' />
           <NextScript />
         </body>
       </Html>
